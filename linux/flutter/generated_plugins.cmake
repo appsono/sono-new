@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  on_audio_query_linux
+  sono_query
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
