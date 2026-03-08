@@ -11,15 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  on_audio_query:
+  sono_query:
     git:
-      # yes, I'm still using on_audio_query, because it's the best solution I've found
-      # and because I've made my own version of it already.
-      url: https://github.com/appsono/on_audio_query.git
-      path: packages/on_audio_query
-      ref: v3.0.5
-
+      url: https://github.com/appsono/sono_query.git
+      ref: v0.1.0
   flutter_dotenv: ^6.0.0
+  permission_handler: ^12.0.1
 
 dev_dependencies:
   flutter_test:
