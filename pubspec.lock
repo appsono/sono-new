@@ -321,8 +321,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.1.0"
-      resolved-ref: "32e88b8b5ef38723b1c9221ec858f48f0b50b1c3"
+      ref: "v0.1.1"
+      resolved-ref: "03a4072cde0ab787bfc8d06ca093b15d183f6289"
       url: "https://github.com/appsono/sono_query.git"
     source: git
     version: "0.1.0"
