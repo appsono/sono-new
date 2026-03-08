@@ -1,17 +1,18 @@
-# sono
+## How will metadata handling work this time?
 
-A new Flutter project.
+This time I won't rely on `on_audio_query`. Instead I will build<br>
+my own package.
 
-## Getting Started
+For the base it will use [audio_metadata_reader](https://pub.dev/packages/audio_metadata_reader),<br>
+then I will just build the required public API, models, etc. and connect it with the<br>
+app.
 
-This project is a starting point for a Flutter application.
+This hopefully won't take that long.
+The package will then be made available on the [GitHub Orga](https://github.com/appsono/) under the name:<br>
+**`sono_query`**
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Why audio_metadata_reader?
+It already supports a lot of platforms, which will make it easier for me to port the app<br>
+to Linux, Windows, iOS you name it. The reason why is, because it's written in pure<br>
+Dart so it has no native code, like `on_audio_query` did.

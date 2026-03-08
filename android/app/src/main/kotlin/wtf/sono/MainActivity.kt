@@ -1,4 +1,4 @@
-package com.example.sono
+package wtf.sono
 
 import io.flutter.embedding.android.FlutterActivity
 
