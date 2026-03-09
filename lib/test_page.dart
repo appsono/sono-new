@@ -86,8 +86,12 @@ class _TestPageState extends State<TestPage> {
   Widget _buildSongsList() {
     if (_songs == null || _songs!.isEmpty) {
       return const Center(
-        child: Text(
-          "No songs found :( Tap button to refresh so I'll find some",
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("No songs found :("),
+            Text("Tap button to refresh so I'll find some"),
+          ],
         ),
       );
     }
