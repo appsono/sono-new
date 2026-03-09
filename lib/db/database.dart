@@ -48,6 +48,18 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<List<Album>> getAllAlbums() => select(albums).get();
 
+  Future<List<(Album, String?)>> getAllAlbumsWithArtists() async {
+    final query = select(
+      albums,
+    ).join([leftOuterJoin(artists, artists.id.equalsExp(albums.artistId))]);
+    final rows = await query.get();
+    return rows.map((row) {
+      final album = row.readTable(albums);
+      final artist = row.readTableOrNull(artists);
+      return (album, artist?.name);
+    }).toList();
+  }
+
   Future<List<Album>> getAlbumsByArtist(int artistId) =>
       (select(albums)..where((a) => a.artistId.equals(artistId))).get();
 

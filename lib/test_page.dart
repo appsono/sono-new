@@ -14,9 +14,9 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  List<(Song, String?)>? _songsWithArtists;
+  List<(Song, String?)>? _songs;
   List<Artist>? _artists;
-  List<Album>? _albums;
+  List<(Album, String?)>? _albums;
   bool _scanning = false;
   String? _error;
   int _tab = 0;
@@ -28,11 +28,11 @@ class _TestPageState extends State<TestPage> {
   }
 
   Future<void> _loadFromDb() async {
-    final songsWithArtists = await db.getAllSongsWithArtists();
+    final songs = await db.getAllSongsWithArtists();
     final artists = await db.getAllArtists();
-    final albums = await db.getAllAlbums();
+    final albums = await db.getAllAlbumsWithArtists();
     setState(() {
-      _songsWithArtists = songsWithArtists;
+      _songs = songs;
       _artists = artists;
       _albums = albums;
     });
@@ -84,15 +84,17 @@ class _TestPageState extends State<TestPage> {
   }
 
   Widget _buildSongsList() {
-    if (_songsWithArtists == null || _songsWithArtists!.isEmpty) {
+    if (_songs == null || _songs!.isEmpty) {
       return const Center(
-        child: Text("No songs found :( Tap button to refresh so I'll find some"),
+        child: Text(
+          "No songs found :( Tap button to refresh so I'll find some",
+        ),
       );
     }
     return ListView.builder(
-      itemCount: _songsWithArtists!.length,
+      itemCount: _songs!.length,
       itemBuilder: (context, index) {
-        final (song, artistName) = _songsWithArtists![index];
+        final (song, artistName) = _songs![index];
         return ListTile(
           leading: _CoverArt(path: song.path),
           title: Text(song.title),
@@ -125,7 +127,7 @@ class _TestPageState extends State<TestPage> {
     return ListView.builder(
       itemCount: _albums!.length,
       itemBuilder: (context, index) {
-        final album = _albums![index];
+        final (album, artistName) = _albums![index];
         return ListTile(
           leading: album.cover != null
               ? Image.memory(
@@ -137,6 +139,7 @@ class _TestPageState extends State<TestPage> {
                 )
               : const Icon(Icons.album),
           title: Text(album.title),
+          subtitle: Text(artistName ?? 'Unkown artist'),
         );
       },
     );
@@ -145,7 +148,7 @@ class _TestPageState extends State<TestPage> {
 
 String _buildSubtitle(Song song, String? artistName) {
   final parts = <String>[];
-  if (artistName != null) parts.add(artistName);
+  parts.add(artistName ?? 'Unkown artist');
   if (song.genre != null) parts.add(song.genre!);
   if (song.duration != null) {
     final d = Duration(milliseconds: song.duration!);
