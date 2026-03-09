@@ -10,6 +10,7 @@ class ScanService {
   Future<void> scan() async {
     final paths = await SonoQuery.getSongs();
     final currentPaths = <String>[];
+    final toInsert = <SongsCompanion>[];
 
     for (final song in paths) {
       currentPaths.add(song.path);
@@ -31,11 +32,11 @@ class ScanService {
       }
 
       //insert song
-      await db.insertSong(
+      toInsert.add(
         SongsCompanion.insert(
           path: song.path,
           title: song.title,
-          duration: Value(song.duration?.inMicroseconds),
+          duration: Value(song.duration?.inMilliseconds),
           genre: Value(song.genre),
           releaseDate: Value(song.releaseDate),
           albumId: Value(albumId),
@@ -43,6 +44,11 @@ class ScanService {
         ),
       );
     }
+
+    //batch insert all songs at once
+    await db.batch((batch) {
+      batch.insertAll(db.songs, toInsert);
+    });
 
     //remove songs that no longer exist
     await db.removeDeletedSongs(currentPaths);
