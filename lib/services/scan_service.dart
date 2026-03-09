@@ -1,6 +1,7 @@
 import 'package:sono_query/sono_query.dart';
 import 'package:drift/drift.dart';
 import 'package:sono/db/database.dart';
+import 'package:sono/helper/artist_utils.dart';
 
 class ScanService {
   final SonoDatabase db;
@@ -27,8 +28,12 @@ class ScanService {
       //get or create album
       int? albumId;
       if (song.album != null && song.album!.isNotEmpty && artistId != null) {
+        final mainArtist = getMainArtist(song.artist);
+        final mainArtistId = mainArtist != null
+            ? await db.getOrCreateArtist(mainArtist)
+            : artistId;
         final cover = await SonoQuery.getCover(song.path);
-        albumId = await db.getOrCreateAlbum(song.album!, artistId, cover);
+        albumId = await db.getOrCreateAlbum(song.album!, mainArtistId, cover);
       }
 
       //insert song

@@ -86,7 +86,7 @@ class _TestPageState extends State<TestPage> {
   Widget _buildSongsList() {
     if (_songsWithArtists == null || _songsWithArtists!.isEmpty) {
       return const Center(
-        child: Text('No songs found :( Tap to refresh Ill find some'),
+        child: Text("No songs found :( Tap button to refresh so I'll find some"),
       );
     }
     return ListView.builder(
