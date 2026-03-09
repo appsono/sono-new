@@ -19,11 +19,19 @@ dependencies:
   flutter_dotenv: ^6.0.0
   permission_handler: ^12.0.1
 
+  # db stuff
+  drift: ^2.32.0
+  sqlite3_flutter_libs: ^0.6.0+eol
+  path_provider: ^2.1.5
+  path: ^1.9.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
+  drift_dev: ^2.32.0
+  build_runner: ^2.12.2
 
 flutter:
   uses-material-design: true
