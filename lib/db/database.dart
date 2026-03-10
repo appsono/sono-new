@@ -23,6 +23,22 @@ class SonoDatabase extends _$SonoDatabase {
     return into(artists).insert(ArtistsCompanion.insert(name: name));
   }
 
+  Future<void> ensureArtistsExist(Set<String> names) async {
+    if (names.isEmpty) return;
+    await batch((b) {
+      b.insertAll(
+        artists,
+        names.map((n) => ArtistsCompanion.insert(name: n)).toList(),
+        mode: InsertMode.insertOrIgnore,
+      );
+    });
+  }
+
+  Future<Map<String, int>> getArtistIdMap() async {
+    final rows = await select(artists).get();
+    return {for (final a in rows) a.name: a.id};
+  }
+
   Future<List<Artist>> getAllArtists() => select(artists).get();
 
   /// ==== Albums ====
@@ -46,6 +62,28 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
+  Future<void> ensureAlbumsExist(Set<(String, int)> albumKeys) async {
+    if (albumKeys.isEmpty) return;
+    await batch((b) {
+      b.insertAll(
+        albums,
+        albumKeys
+            .map((k) => AlbumsCompanion.insert(
+                  title: k.$1,
+                  artistId: k.$2,
+                  cover: const Value(null),
+                ))
+            .toList(),
+        mode: InsertMode.insertOrIgnore,
+      );
+    });
+  }
+
+  Future<Map<(String, int), int>> getAlbumIdMap() async {
+    final rows = await select(albums).get();
+    return {for (final a in rows) (a.title, a.artistId): a.id};
+  }
+
   Future<List<Album>> getAllAlbums() => select(albums).get();
 
   Future<List<(Album, String?)>> getAllAlbumsWithArtists() async {
@@ -67,6 +105,11 @@ class SonoDatabase extends _$SonoDatabase {
   Future<void> insertSong(SongsCompanion song) => into(songs).insert(song);
 
   Future<List<Song>> getAllSongs() => select(songs).get();
+
+  Future<Set<String>> getAllSongPaths() async {
+    final rows = await (selectOnly(songs)..addColumns([songs.path])).get();
+    return rows.map((row) => row.read(songs.path)!).toSet();
+  }
 
   Future<List<(Song, String?)>> getAllSongsWithArtists() async {
     final query = select(
@@ -93,14 +136,8 @@ class SonoDatabase extends _$SonoDatabase {
     return count != null;
   }
 
-  Future<void> removeDeletedSongs(List<String> currentPaths) async {
-    final allSongs = await select(songs).get();
-    final pathSet = currentPaths.toSet();
-    for (final song in allSongs) {
-      if (!pathSet.contains(song.path)) {
-        await (delete(songs)..where((s) => s.id.equals(song.id))).go();
-      }
-    }
+  Future<void> removeDeletedSongs(Set<String> currentPaths) async {
+    await (delete(songs)..where((s) => s.path.isNotIn(currentPaths))).go();
   }
 }
 

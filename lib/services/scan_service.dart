@@ -1,4 +1,4 @@
-import 'package:sono_query/sono_query.dart';
+import 'package:sono_query/sono_query.dart' as sq;
 import 'package:drift/drift.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/helper/artist_utils.dart';
@@ -9,31 +9,53 @@ class ScanService {
   ScanService(this.db);
 
   Future<void> scan() async {
-    final paths = await SonoQuery.getSongs();
-    final currentPaths = <String>[];
-    final toInsert = <SongsCompanion>[];
+    final songs = await sq.SonoQuery.getSongs();
+    final existingPaths = await db.getAllSongPaths();
 
-    for (final song in paths) {
-      currentPaths.add(song.path);
+    //filter to only new songs
+    final newSongs = songs.where((s) => !existingPaths.contains(s.path)).toList();
+    if (newSongs.isEmpty) {
+      await db.removeDeletedSongs(songs.map((s) => s.path).toSet());
+      return;
+    }
 
-      //skip if already in db
-      if (await db.songExists(song.path)) continue;
-
-      //get or create artist
-      int? artistId;
+    //collect all unique artist names needed
+    final artistNames = <String>{};
+    for (final song in newSongs) {
       if (song.artist != null && song.artist!.isNotEmpty) {
-        artistId = await db.getOrCreateArtist(song.artist!);
+        artistNames.add(song.artist!);
+        final main = getMainArtist(song.artist);
+        if (main != null) artistNames.add(main);
       }
+    }
 
-      //get or create album
+    //batch create all artists > then load IDs in one go
+    await db.ensureArtistsExist(artistNames);
+    final artistCache = await db.getArtistIdMap();
+
+    //batch create all albums
+    final albumKeys = <(String, int)>{};
+    for (final song in newSongs) {
+      if (song.album != null && song.album!.isNotEmpty) {
+        final artistName = getMainArtist(song.artist) ?? song.artist;
+        if (artistName != null && artistCache.containsKey(artistName)) {
+          albumKeys.add((song.album!, artistCache[artistName]!));
+        }
+      }
+    }
+    await db.ensureAlbumsExist(albumKeys);
+    final albumCache = await db.getAlbumIdMap();
+
+    //build all song companions
+    final toInsert = <SongsCompanion>[];
+    for (final song in newSongs) {
+      final artistId = song.artist != null ? artistCache[song.artist!] : null;
+      final mainArtist = getMainArtist(song.artist) ?? song.artist;
+      final mainArtistId = mainArtist != null ? artistCache[mainArtist] : null;
+
       int? albumId;
-      if (song.album != null && song.album!.isNotEmpty && artistId != null) {
-        final mainArtist = getMainArtist(song.artist);
-        final mainArtistId = mainArtist != null
-            ? await db.getOrCreateArtist(mainArtist)
-            : artistId;
-        final cover = await SonoQuery.getCover(song.path);
-        albumId = await db.getOrCreateAlbum(song.album!, mainArtistId, cover);
+      if (song.album != null && mainArtistId != null) {
+        albumId = albumCache[(song.album!, mainArtistId)];
       }
 
       //insert song
@@ -55,7 +77,6 @@ class ScanService {
       batch.insertAll(db.songs, toInsert);
     });
 
-    //remove songs that no longer exist
-    await db.removeDeletedSongs(currentPaths);
+    await db.removeDeletedSongs(songs.map((s) => s.path).toSet());
   }
 }
