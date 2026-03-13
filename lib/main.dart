@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'test_page.dart';
@@ -9,5 +10,7 @@ void main() async {
 }
 
 Future<void> requestPermission() async {
-  await Permission.audio.request();
+  if (Platform.isAndroid || Platform.isIOS) {
+    await Permission.audio.request();
+  }
 }

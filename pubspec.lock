@@ -649,11 +649,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.1.5"
-      resolved-ref: "272f6fec1f97cb84bf9c30f172098a461a1a6c23"
+      ref: "v0.1.6"
+      resolved-ref: "891d31a5fcd3092633ee7b71e9aba386ad45aca5"
       url: "https://github.com/appsono/sono_query.git"
     source: git
-    version: "0.1.5"
+    version: "0.1.6"
   source_gen:
     dependency: transitive
     description:
