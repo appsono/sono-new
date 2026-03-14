@@ -7,6 +7,7 @@
     <!-- Audio or so -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:label="sono"
@@ -35,8 +36,13 @@
             android:value="2" />
 
         <service
-            android:name="com.ryanheise.audioservice.AudioServiceActivity"
-            android:exported="false" />
+            android:name="com.ryanheise.audioservice.AudioService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowseService"/>
+            </intent-filter>
+        </service>
         
     </application>
     <queries>
