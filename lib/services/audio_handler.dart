@@ -1,15 +1,20 @@
+import 'dart:io';
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sono_query/sono_query.dart' as query;
 import 'package:sono/services/audio_service.dart' as sono;
 import 'package:sono/db/database.dart';
 
 class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   final sono.AudioService _audio = sono.AudioService.instance;
+  final SonoDatabase _db;
 
-  SonoAudioHandler() {
+  SonoAudioHandler(this._db) {
     //bridge media_kit playing state > audio_service playback state
-    _audio.playingStream.listen((playing) => _brodcastState());
-    _audio.positionStream.listen((_) => _brodcastState());
-    _audio.durationStream.listen((_) => _brodcastState());
+    _audio.playingStream.listen((playing) => _broadcastState());
+    _audio.positionStream.listen((_) => _broadcastState());
+    _audio.durationStream.listen((_) => _broadcastState());
 
     //bridge current song > audio_service mediaItem
     _audio.currentSongStream.listen((song) {
@@ -17,10 +22,36 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     });
   }
 
-  void _updateMediaItem(Song song) {
+  Future<void> _updateMediaItem(Song song) async {
+    Uri? finalArtUri;
+    try {
+      final Uint8List? imageBytes = await query.SonoQuery.getCover(song.path);
+
+      if (imageBytes != null && imageBytes.isNotEmpty) {
+        final tempDir = await getTemporaryDirectory();
+
+        final file = File('${tempDir.path}/cover_cache_${song.id}.jpg');
+        await file.writeAsBytes(imageBytes);
+
+        finalArtUri = Uri.file(file.path);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to cache artwork: $e');
+      }
+    }
+
+    String? artistName;
+    if (song.artistId != null) {
+      final artist = await _db.getArtistById(song.artistId!);
+      artistName = artist?.name;
+    }
+
     final item = MediaItem(
       id: song.path,
       title: song.title,
+      artist: artistName ?? 'Unkown artist',
+      artUri: finalArtUri,
       duration: song.duration != null
           ? Duration(milliseconds: song.duration!)
           : null,
@@ -28,7 +59,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     mediaItem.add(item);
   }
 
-  void _brodcastState() {
+  void _broadcastState() {
     playbackState.add(
       PlaybackState(
         controls: [

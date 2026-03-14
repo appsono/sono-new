@@ -15,7 +15,7 @@ void main() async {
   MediaKit.ensureInitialized();
   sono.AudioService.instance.init();
   audioHandler = await AudioService.init(
-    builder: () => SonoAudioHandler(),
+    builder: () => SonoAudioHandler(db),
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'wtf.sono.audio',
       androidNotificationChannelName: 'Now Playing',
