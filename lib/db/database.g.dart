@@ -1006,17 +1006,478 @@ class SongsCompanion extends UpdateCompanion<Song> {
   }
 }
 
+class SongWithArtistViewData extends DataClass {
+  final int id;
+  final String path;
+  final String title;
+  final int? duration;
+  final String? genre;
+  final DateTime? releaseDate;
+  final int? albumId;
+  final int? artistId;
+  final String? artistName;
+  const SongWithArtistViewData({
+    required this.id,
+    required this.path,
+    required this.title,
+    this.duration,
+    this.genre,
+    this.releaseDate,
+    this.albumId,
+    this.artistId,
+    this.artistName,
+  });
+  factory SongWithArtistViewData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SongWithArtistViewData(
+      id: serializer.fromJson<int>(json['id']),
+      path: serializer.fromJson<String>(json['path']),
+      title: serializer.fromJson<String>(json['title']),
+      duration: serializer.fromJson<int?>(json['duration']),
+      genre: serializer.fromJson<String?>(json['genre']),
+      releaseDate: serializer.fromJson<DateTime?>(json['releaseDate']),
+      albumId: serializer.fromJson<int?>(json['albumId']),
+      artistId: serializer.fromJson<int?>(json['artistId']),
+      artistName: serializer.fromJson<String?>(json['artistName']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'path': serializer.toJson<String>(path),
+      'title': serializer.toJson<String>(title),
+      'duration': serializer.toJson<int?>(duration),
+      'genre': serializer.toJson<String?>(genre),
+      'releaseDate': serializer.toJson<DateTime?>(releaseDate),
+      'albumId': serializer.toJson<int?>(albumId),
+      'artistId': serializer.toJson<int?>(artistId),
+      'artistName': serializer.toJson<String?>(artistName),
+    };
+  }
+
+  SongWithArtistViewData copyWith({
+    int? id,
+    String? path,
+    String? title,
+    Value<int?> duration = const Value.absent(),
+    Value<String?> genre = const Value.absent(),
+    Value<DateTime?> releaseDate = const Value.absent(),
+    Value<int?> albumId = const Value.absent(),
+    Value<int?> artistId = const Value.absent(),
+    Value<String?> artistName = const Value.absent(),
+  }) => SongWithArtistViewData(
+    id: id ?? this.id,
+    path: path ?? this.path,
+    title: title ?? this.title,
+    duration: duration.present ? duration.value : this.duration,
+    genre: genre.present ? genre.value : this.genre,
+    releaseDate: releaseDate.present ? releaseDate.value : this.releaseDate,
+    albumId: albumId.present ? albumId.value : this.albumId,
+    artistId: artistId.present ? artistId.value : this.artistId,
+    artistName: artistName.present ? artistName.value : this.artistName,
+  );
+  @override
+  String toString() {
+    return (StringBuffer('SongWithArtistViewData(')
+          ..write('id: $id, ')
+          ..write('path: $path, ')
+          ..write('title: $title, ')
+          ..write('duration: $duration, ')
+          ..write('genre: $genre, ')
+          ..write('releaseDate: $releaseDate, ')
+          ..write('albumId: $albumId, ')
+          ..write('artistId: $artistId, ')
+          ..write('artistName: $artistName')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    path,
+    title,
+    duration,
+    genre,
+    releaseDate,
+    albumId,
+    artistId,
+    artistName,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SongWithArtistViewData &&
+          other.id == this.id &&
+          other.path == this.path &&
+          other.title == this.title &&
+          other.duration == this.duration &&
+          other.genre == this.genre &&
+          other.releaseDate == this.releaseDate &&
+          other.albumId == this.albumId &&
+          other.artistId == this.artistId &&
+          other.artistName == this.artistName);
+}
+
+class $SongWithArtistViewView
+    extends ViewInfo<$SongWithArtistViewView, SongWithArtistViewData>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$SonoDatabase attachedDatabase;
+  $SongWithArtistViewView(this.attachedDatabase, [this._alias]);
+  $SongsTable get songs => attachedDatabase.songs.createAlias('t0');
+  $ArtistsTable get artists => attachedDatabase.artists.createAlias('t1');
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    path,
+    title,
+    duration,
+    genre,
+    releaseDate,
+    albumId,
+    artistId,
+    artistName,
+  ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'song_with_artist_view';
+  @override
+  Map<SqlDialect, String>? get createViewStatements => null;
+  @override
+  $SongWithArtistViewView get asDslTable => this;
+  @override
+  SongWithArtistViewData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SongWithArtistViewData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      path: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}path'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      duration: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration'],
+      ),
+      genre: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}genre'],
+      ),
+      releaseDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}release_date'],
+      ),
+      albumId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}album_id'],
+      ),
+      artistId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}artist_id'],
+      ),
+      artistName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}artist_name'],
+      ),
+    );
+  }
+
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    generatedAs: GeneratedAs(songs.id, false),
+    type: DriftSqlType.int,
+  );
+  late final GeneratedColumn<String> path = GeneratedColumn<String>(
+    'path',
+    aliasedName,
+    false,
+    generatedAs: GeneratedAs(songs.path, false),
+    type: DriftSqlType.string,
+  );
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    generatedAs: GeneratedAs(songs.title, false),
+    type: DriftSqlType.string,
+  );
+  late final GeneratedColumn<int> duration = GeneratedColumn<int>(
+    'duration',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(songs.duration, false),
+    type: DriftSqlType.int,
+  );
+  late final GeneratedColumn<String> genre = GeneratedColumn<String>(
+    'genre',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(songs.genre, false),
+    type: DriftSqlType.string,
+  );
+  late final GeneratedColumn<DateTime> releaseDate = GeneratedColumn<DateTime>(
+    'release_date',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(songs.releaseDate, false),
+    type: DriftSqlType.dateTime,
+  );
+  late final GeneratedColumn<int> albumId = GeneratedColumn<int>(
+    'album_id',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(songs.albumId, false),
+    type: DriftSqlType.int,
+  );
+  late final GeneratedColumn<int> artistId = GeneratedColumn<int>(
+    'artist_id',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(songs.artistId, false),
+    type: DriftSqlType.int,
+  );
+  late final GeneratedColumn<String> artistName = GeneratedColumn<String>(
+    'artist_name',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(artists.name, false),
+    type: DriftSqlType.string,
+  );
+  @override
+  $SongWithArtistViewView createAlias(String alias) {
+    return $SongWithArtistViewView(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => (attachedDatabase.selectOnly(songs)..addColumns($columns))
+      .join([leftOuterJoin(artists, artists.id.equalsExp(songs.artistId))]);
+  @override
+  Set<String> get readTables => const {'songs', 'artists'};
+}
+
+class AlbumWithArtistViewData extends DataClass {
+  final int id;
+  final String title;
+  final int artistId;
+  final Uint8List? cover;
+  final String? artistName;
+  const AlbumWithArtistViewData({
+    required this.id,
+    required this.title,
+    required this.artistId,
+    this.cover,
+    this.artistName,
+  });
+  factory AlbumWithArtistViewData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AlbumWithArtistViewData(
+      id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      artistId: serializer.fromJson<int>(json['artistId']),
+      cover: serializer.fromJson<Uint8List?>(json['cover']),
+      artistName: serializer.fromJson<String?>(json['artistName']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
+      'artistId': serializer.toJson<int>(artistId),
+      'cover': serializer.toJson<Uint8List?>(cover),
+      'artistName': serializer.toJson<String?>(artistName),
+    };
+  }
+
+  AlbumWithArtistViewData copyWith({
+    int? id,
+    String? title,
+    int? artistId,
+    Value<Uint8List?> cover = const Value.absent(),
+    Value<String?> artistName = const Value.absent(),
+  }) => AlbumWithArtistViewData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    artistId: artistId ?? this.artistId,
+    cover: cover.present ? cover.value : this.cover,
+    artistName: artistName.present ? artistName.value : this.artistName,
+  );
+  @override
+  String toString() {
+    return (StringBuffer('AlbumWithArtistViewData(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('artistId: $artistId, ')
+          ..write('cover: $cover, ')
+          ..write('artistName: $artistName')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    title,
+    artistId,
+    $driftBlobEquality.hash(cover),
+    artistName,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AlbumWithArtistViewData &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.artistId == this.artistId &&
+          $driftBlobEquality.equals(other.cover, this.cover) &&
+          other.artistName == this.artistName);
+}
+
+class $AlbumWithArtistViewView
+    extends ViewInfo<$AlbumWithArtistViewView, AlbumWithArtistViewData>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$SonoDatabase attachedDatabase;
+  $AlbumWithArtistViewView(this.attachedDatabase, [this._alias]);
+  $AlbumsTable get albums => attachedDatabase.albums.createAlias('t0');
+  $ArtistsTable get artists => attachedDatabase.artists.createAlias('t1');
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    artistId,
+    cover,
+    artistName,
+  ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'album_with_artist_view';
+  @override
+  Map<SqlDialect, String>? get createViewStatements => null;
+  @override
+  $AlbumWithArtistViewView get asDslTable => this;
+  @override
+  AlbumWithArtistViewData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AlbumWithArtistViewData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      artistId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}artist_id'],
+      )!,
+      cover: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}cover'],
+      ),
+      artistName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}artist_name'],
+      ),
+    );
+  }
+
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    generatedAs: GeneratedAs(albums.id, false),
+    type: DriftSqlType.int,
+  );
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    generatedAs: GeneratedAs(albums.title, false),
+    type: DriftSqlType.string,
+  );
+  late final GeneratedColumn<int> artistId = GeneratedColumn<int>(
+    'artist_id',
+    aliasedName,
+    false,
+    generatedAs: GeneratedAs(albums.artistId, false),
+    type: DriftSqlType.int,
+  );
+  late final GeneratedColumn<Uint8List> cover = GeneratedColumn<Uint8List>(
+    'cover',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(albums.cover, false),
+    type: DriftSqlType.blob,
+  );
+  late final GeneratedColumn<String> artistName = GeneratedColumn<String>(
+    'artist_name',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(artists.name, false),
+    type: DriftSqlType.string,
+  );
+  @override
+  $AlbumWithArtistViewView createAlias(String alias) {
+    return $AlbumWithArtistViewView(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query =>
+      (attachedDatabase.selectOnly(albums)..addColumns($columns)).join([
+        leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+      ]);
+  @override
+  Set<String> get readTables => const {'albums', 'artists'};
+}
+
 abstract class _$SonoDatabase extends GeneratedDatabase {
   _$SonoDatabase(QueryExecutor e) : super(e);
   $SonoDatabaseManager get managers => $SonoDatabaseManager(this);
   late final $ArtistsTable artists = $ArtistsTable(this);
   late final $AlbumsTable albums = $AlbumsTable(this);
   late final $SongsTable songs = $SongsTable(this);
+  late final $SongWithArtistViewView songWithArtistView =
+      $SongWithArtistViewView(this);
+  late final $AlbumWithArtistViewView albumWithArtistView =
+      $AlbumWithArtistViewView(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [artists, albums, songs];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    artists,
+    albums,
+    songs,
+    songWithArtistView,
+    albumWithArtistView,
+  ];
 }
 
 typedef $$ArtistsTableCreateCompanionBuilder =

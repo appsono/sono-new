@@ -7,7 +7,10 @@ import 'package:sono/db/tables.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [Artists, Albums, Songs])
+@DriftDatabase(
+  tables: [Artists, Albums, Songs],
+  views: [SongWithArtistView, AlbumWithArtistView],
+)
 class SonoDatabase extends _$SonoDatabase {
   SonoDatabase() : super(_openConnection());
 
@@ -92,17 +95,8 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<List<Album>> getAllAlbums() => select(albums).get();
 
-  Future<List<(Album, String?)>> getAllAlbumsWithArtists() async {
-    final query = select(
-      albums,
-    ).join([leftOuterJoin(artists, artists.id.equalsExp(albums.artistId))]);
-    final rows = await query.get();
-    return rows.map((row) {
-      final album = row.readTable(albums);
-      final artist = row.readTableOrNull(artists);
-      return (album, artist?.name);
-    }).toList();
-  }
+  Future<List<AlbumWithArtistViewData>> getAllAlbumsWithArtists() =>
+      select(albumWithArtistView).get();
 
   Future<List<Album>> getAlbumsByArtist(int artistId) =>
       (select(albums)..where((a) => a.artistId.equals(artistId))).get();
@@ -117,17 +111,8 @@ class SonoDatabase extends _$SonoDatabase {
     return rows.map((row) => row.read(songs.path)!).toSet();
   }
 
-  Future<List<(Song, String?)>> getAllSongsWithArtists() async {
-    final query = select(
-      songs,
-    ).join([leftOuterJoin(artists, artists.id.equalsExp(songs.artistId))]);
-    final rows = await query.get();
-    return rows.map((row) {
-      final song = row.readTable(songs);
-      final artist = row.readTableOrNull(artists);
-      return (song, artist?.name);
-    }).toList();
-  }
+  Future<List<SongWithArtistViewData>> getAllSongsWithArtists()  =>
+      select(songWithArtistView).get();
 
   Future<List<Song>> getSongsByAlbum(int albumId) =>
       (select(songs)..where((s) => s.albumId.equals(albumId))).get();
