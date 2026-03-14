@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/scan_service.dart';
+import 'package:sono/services/audio_service.dart';
+import 'package:sono/services/audio_effects_service.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 final db = SonoDatabase();
@@ -59,10 +61,16 @@ class _TestPageState extends State<TestPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_scanning ? 'scanning...' : 'sono_query test'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _scanning ? null : _scan,
-        child: const Icon(Icons.refresh),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.equalizer),
+            onPressed: () => _showEqSheet(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _scanning ? null : _scan,
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
@@ -73,14 +81,25 @@ class _TestPageState extends State<TestPage> {
           NavigationDestination(icon: Icon(Icons.album), label: 'Albums'),
         ],
       ),
-      body: _error != null
-          ? Center(child: Text('error: $_error'))
-          : _tab == 0
-          ? _buildSongsList()
-          : _tab == 1
-          ? _buildArtistsList()
-          : _buildAlbumsList(),
+      body: Column(
+        children: [
+          Expanded(
+            child: _error != null
+                ? Center(child: Text('error: $_error'))
+                : _tab == 0
+                ? _buildSongsList()
+                : _tab == 1
+                ? _buildArtistsList()
+                : _buildAlbumsList(),
+          ),
+          const _MiniPlayer(),
+        ],
+      ),
     );
+  }
+
+  void _showEqSheet(BuildContext context) {
+    showModalBottomSheet(context: context, builder: (_) => const _EqSheet());
   }
 
   Widget _buildSongsList() {
@@ -103,6 +122,10 @@ class _TestPageState extends State<TestPage> {
           leading: _CoverArt(path: song.path),
           title: Text(song.title),
           subtitle: Text(_buildSubtitle(song, artistName)),
+          onTap: () {
+            final allSongs = _songs!.map((s) => s.$1).toList();
+            AudioService.instance.play(allSongs, index);
+          },
         );
       },
     );
@@ -202,6 +225,229 @@ class _CoverArtState extends State<_CoverArt> {
       height: 48,
       fit: BoxFit.cover,
       errorBuilder: (_, _, _) => const Icon(Icons.music_note),
+    );
+  }
+}
+
+/// ===========================
+///        Mini Player
+/// ===========================
+
+class _MiniPlayer extends StatelessWidget {
+  const _MiniPlayer();
+
+  @override
+  Widget build(BuildContext context) {
+    final audio = AudioService.instance;
+    return StreamBuilder<Song?>(
+      stream: audio.currentSongStream,
+      builder: (context, snap) {
+        final song = snap.data;
+        if (song == null) return const SizedBox.shrink();
+        return Container(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      song.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    StreamBuilder<Duration>(
+                      stream: audio.positionStream,
+                      builder: (_, posSnap) {
+                        final pos = posSnap.data ?? Duration.zero;
+                        final dur = audio
+                            .duration; //no mathis, dont think of the dur dur emojis
+                        return Text(
+                          '${_fmtDuration(pos)} / ${_fmtDuration(dur)}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              StreamBuilder<bool>(
+                stream: audio.playingStream,
+                builder: (_, playSnap) {
+                  final playing = playSnap.data ?? false;
+                  return IconButton(
+                    icon: Icon(playing ? Icons.pause : Icons.play_arrow),
+                    onPressed: audio.playOrPause,
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.skip_next),
+                onPressed: audio.skipNext,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  static String _fmtDuration(Duration d) {
+    final min = d.inMinutes;
+    final sec = (d.inSeconds % 60).toString().padLeft(2, '0');
+    return '$min:$sec';
+  }
+}
+
+/// ===========================
+///      EQ Bottom Sheet
+/// ===========================
+
+class _EqSheet extends StatefulWidget {
+  const _EqSheet();
+
+  @override
+  State<_EqSheet> createState() => _EqSheetState();
+}
+
+class _EqSheetState extends State<_EqSheet> {
+  final fx = AudioEffectsService.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text(
+                'equalizer',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              Switch(
+                value: fx.eqEnabled,
+                onChanged: (v) {
+                  fx.setEnabled(v);
+                  setState(() {});
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.restart_alt),
+                color: Colors.orange,
+                onPressed: () {
+                  fx.resetEq();
+                  setState(() {});
+                },
+                tooltip: 'Reset EQ',
+              ),
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                color: Colors.red,
+                onPressed: () {
+                  fx.resetAll();
+                  setState(() {});
+                },
+                tooltip: 'Reset All',
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 200,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: List.generate(bandCount, (i) {
+                return Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: RotatedBox(
+                          quarterTurns: -1,
+                          child: Slider(
+                            value: fx.eqGains[i],
+                            min: -12.0,
+                            max: 12.0,
+                            onChanged: fx.eqEnabled
+                                ? (v) {
+                                    fx.setEqBand(i, v);
+                                    setState(() {});
+                                  }
+                                : null,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        eqBands[i].label,
+                        style: const TextStyle(fontSize: 8),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              const Text('Bass Boost'),
+              Expanded(
+                child: Slider(
+                  value: fx.bassBoost,
+                  min: 0.0,
+                  max: 20.0,
+                  onChanged: (v) {
+                    fx.setBassBoost(v);
+                    setState(() {});
+                  },
+                ),
+              ),
+              Text('${fx.bassBoost.toStringAsFixed(1)} dB'),
+            ],
+          ),
+          Row(
+            children: [
+              const Text('Speed'),
+              Expanded(
+                child: Slider(
+                  value: fx.speed,
+                  min: 0.25,
+                  max: 4.0,
+                  onChanged: (v) {
+                    fx.setSpeed(v);
+                    setState(() {});
+                  },
+                ),
+              ),
+              Text('${fx.speed.toStringAsFixed(2)}x'),
+            ],
+          ),
+          Row(
+            children: [
+              const Text('Pitch'),
+              Expanded(
+                child: Slider(
+                  value: fx.pitch,
+                  min: 0.25,
+                  max: 4.0,
+                  onChanged: (v) {
+                    fx.setPitch(v);
+                    setState(() {});
+                  },
+                ),
+              ),
+              Text('${fx.pitch.toStringAsFixed(2)}x'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
