@@ -1,18 +1,50 @@
-## How will metadata handling work this time?
+# Sono (From Scratch)
 
-This time I won't rely on `on_audio_query`. Instead I will build
-my own package.
+Welcome to this repository. It contains the full source code of the Sono app.  
+This version of the app is new and currently in a very early stage.
 
-For the base it will use [audio_metadata_reader](https://pub.dev/packages/audio_metadata_reader),
-then I will just build the required public API, models, etc. and connect it with the
-app.
+## What is Sono?
 
-This hopefully won't take that long.
-The package will then be made available on the [GitHub Orga](https://github.com/appsono/) under the name:<br>
-**`sono_query`**
+Sono is yet another local music player, but this one is cross platform.  
+It is built with Flutter and and has all the features you need, not yet, but soon :D
 
+## Contributing
 
-### Why audio_metadata_reader?
-It already supports a lot of platforms, which will make it easier for me to port the app
-to Linux, Windows, iOS you name it. The reason why is, because it's written in pure
-Dart so it has no native code, like `on_audio_query` did.
+Contributions are welcome.  
+Simply open a pull request with your changes.
+
+<br>
+
+See [TODO.md](TODO.md) to view the things currently being worked on.
+
+---
+
+## Why the restart?
+
+```
+
+Hello everyone,
+
+I have made a decision about the future of Sono. I started making Sono almost a year ago (April 2025). When I first created it, I could not have imagined how many people would be interested in it and how much work I would end up putting into it.
+
+However, there is an issue with Sono. Bugs are everywhere. Even if you do not notice them, I do. The reason these bugs exist is because I learned Dart and the Flutter framework while developing Sono. A lot of the code in Sono is held together with tape and hope.
+
+Before making Sono open source, I rewrote the entire player backend, which improved performance. However, doing this was extremely difficult because many parts of the app relied on the old implementation.
+
+Because of this, I have decided to drop the current Sono codebase and restart it from scratch.
+
+This time the project will be open source from the beginning. Do not worry, the UI will not change much.
+
+Another reason for this rewrite is the overload of unfinished features.
+
+With this rewrite I want to ensure that the app focuses on its core purpose: playing local music files.
+
+I hope you understand this decision, and I will keep you updated.
+
+Much love,
+mathis
+
+```
+
+Original announcement from the Discord server:  
+https://discord.sono.wtf
