@@ -22,6 +22,7 @@ dependencies:
   # audio stuff
   media_kit: ^1.2.6
   media_kit_libs_audio: ^1.0.7
+  audio_service: ^0.18.18
 
   # db stuff
   drift: ^2.32.0
