@@ -175,7 +175,7 @@ class _TestPageState extends State<TestPage> {
 
 String _buildSubtitle(Song song, String? artistName) {
   final parts = <String>[];
-  parts.add(artistName ?? 'Unkown artist');
+  parts.add(artistName ?? 'Unknown artist');
   if (song.genre != null) parts.add(song.genre!);
   if (song.duration != null) {
     final d = Duration(milliseconds: song.duration!);
