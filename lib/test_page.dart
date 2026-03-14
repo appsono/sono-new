@@ -16,9 +16,9 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  List<(Song, String?)>? _songs;
+  List<SongWithArtistViewData>? _songs;
   List<Artist>? _artists;
-  List<(Album, String?)>? _albums;
+  List<AlbumWithArtistViewData>? _albums;
   bool _scanning = false;
   String? _error;
   int _tab = 0;
@@ -92,7 +92,7 @@ class _TestPageState extends State<TestPage> {
                 ? _buildArtistsList()
                 : _buildAlbumsList(),
           ),
-          const _MiniPlayer(),
+          _MiniPlayer(songs: _songs),
         ],
       ),
     );
@@ -117,13 +117,28 @@ class _TestPageState extends State<TestPage> {
     return ListView.builder(
       itemCount: _songs!.length,
       itemBuilder: (context, index) {
-        final (song, artistName) = _songs![index];
+        final data = _songs![index];
+
         return ListTile(
-          leading: _CoverArt(path: song.path),
-          title: Text(song.title),
-          subtitle: Text(_buildSubtitle(song, artistName)),
+          leading: _CoverArt(path: data.path),
+          title: Text(data.title),
+          subtitle: Text(_buildSubtitle(data)),
           onTap: () {
-            final allSongs = _songs!.map((s) => s.$1).toList();
+            //mapping back to song objects for audio service
+            final allSongs = _songs!
+                .map(
+                  (s) => Song(
+                    id: s.id,
+                    path: s.path,
+                    title: s.title,
+                    duration: s.duration,
+                    genre: s.genre,
+                    releaseDate: s.releaseDate,
+                    albumId: s.albumId,
+                    artistId: s.artistId,
+                  ),
+                )
+                .toList();
             AudioService.instance.play(allSongs, index);
           },
         );
@@ -154,31 +169,32 @@ class _TestPageState extends State<TestPage> {
     return ListView.builder(
       itemCount: _albums!.length,
       itemBuilder: (context, index) {
-        final (album, artistName) = _albums![index];
+        final data = _albums![index];
+
         return ListTile(
-          leading: album.cover != null
+          leading: data.cover != null
               ? Image.memory(
-                  Uint8List.fromList(album.cover!),
+                  data.cover!,
                   width: 48,
                   height: 48,
                   fit: BoxFit.cover,
                   errorBuilder: (_, _, _) => const Icon(Icons.album),
                 )
               : const Icon(Icons.album),
-          title: Text(album.title),
-          subtitle: Text(artistName ?? 'Unkown artist'),
+          title: Text(data.title),
+          subtitle: Text(data.artistName ?? 'Unknown artist'),
         );
       },
     );
   }
 }
 
-String _buildSubtitle(Song song, String? artistName) {
+String _buildSubtitle(SongWithArtistViewData data) {
   final parts = <String>[];
-  parts.add(artistName ?? 'Unknown artist');
-  if (song.genre != null) parts.add(song.genre!);
-  if (song.duration != null) {
-    final d = Duration(milliseconds: song.duration!);
+  parts.add(data.artistName ?? 'Unknown artist');
+  if (data.genre != null) parts.add(data.genre!);
+  if (data.duration != null) {
+    final d = Duration(milliseconds: data.duration!);
     final min = d.inMinutes;
     final sec = (d.inSeconds % 60).toString().padLeft(2, '0');
     parts.add('$min:$sec');
@@ -188,7 +204,7 @@ String _buildSubtitle(Song song, String? artistName) {
 
 class _CoverArt extends StatefulWidget {
   final String path;
-  const _CoverArt({required this.path});
+  const _CoverArt({required this.path, super.key});
 
   @override
   State<_CoverArt> createState() => _CoverArtState();
@@ -234,7 +250,9 @@ class _CoverArtState extends State<_CoverArt> {
 /// ===========================
 
 class _MiniPlayer extends StatelessWidget {
-  const _MiniPlayer();
+  final List<SongWithArtistViewData>? songs;
+
+  const _MiniPlayer({required this.songs});
 
   @override
   Widget build(BuildContext context) {
@@ -244,11 +262,26 @@ class _MiniPlayer extends StatelessWidget {
       builder: (context, snap) {
         final song = snap.data;
         if (song == null) return const SizedBox.shrink();
+
+        final songData = songs?.firstWhere(
+          (s) => s.path == song.path,
+          orElse: () => SongWithArtistViewData(
+            id: 0,
+            path: '',
+            title: '',
+            artistName: 'Unknown Artist',
+          ),
+        );
+
+        final artistName = songData?.artistName ?? 'Unknown Artist';
+
         return Container(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             children: [
+              _CoverArt(path: song.path, key: ValueKey(song.path)),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -259,6 +292,15 @@ class _MiniPlayer extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      artistName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 75, 75, 75),
+                      ),
                     ),
                     StreamBuilder<Duration>(
                       stream: audio.positionStream,
