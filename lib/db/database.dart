@@ -39,6 +39,10 @@ class SonoDatabase extends _$SonoDatabase {
     return {for (final a in rows) a.name: a.id};
   }
 
+  Future<Artist?> getArtistById(int id) {
+    return (select(artists)..where((a) => a.id.equals(id))).getSingleOrNull();
+  }
+
   Future<List<Artist>> getAllArtists() => select(artists).get();
 
   /// ==== Albums ====
@@ -68,11 +72,13 @@ class SonoDatabase extends _$SonoDatabase {
       b.insertAll(
         albums,
         albumKeys
-            .map((k) => AlbumsCompanion.insert(
-                  title: k.$1,
-                  artistId: k.$2,
-                  cover: const Value(null),
-                ))
+            .map(
+              (k) => AlbumsCompanion.insert(
+                title: k.$1,
+                artistId: k.$2,
+                cover: const Value(null),
+              ),
+            )
             .toList(),
         mode: InsertMode.insertOrIgnore,
       );
