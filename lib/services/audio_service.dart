@@ -229,8 +229,8 @@ class AudioService {
   /// ===========================
   Future<void> setShuffle(bool value) async {
     if (value) {
-      _shuffle = true;
       _rebuildShuffleOrder();
+      _shuffle = true;
       _currentIndex = 0;
     } else {
       final actualIndex = _effectiveIndex;
