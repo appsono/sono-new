@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:sono_query/sono_query.dart' as query;
@@ -26,7 +27,9 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       }
       _broadcastState();
     });
-    _audio.positionStream.listen((_) => _broadcastState());
+    _audio.positionStream
+        .throttleTime(const Duration(seconds: 1))
+        .listen((_) => _broadcastState());
     _audio.durationStream.listen((_) => _broadcastState());
 
     //bridge current song > audio_service mediaItem

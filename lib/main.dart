@@ -23,7 +23,7 @@ void main() async {
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'wtf.sono.audio',
       androidNotificationChannelName: 'Now Playing',
-      androidNotificationOngoing: true,
+      androidStopForegroundOnPause: false,
       androidShowNotificationBadge: true,
       androidNotificationClickStartsActivity: true,
       androidResumeOnClick: true,

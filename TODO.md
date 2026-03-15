@@ -7,7 +7,7 @@
 - ~~`audio_service.dart` `_onTrackCompleted` + `skipNext()` can double-wrap on repeat all~~ **FIXED**
 
 ## Before UI
-- Reduce memory usage of player
+- ~~Reduce memory usage of player~~ **FIXED**
 - ~~Fix player going silent when app stays in background for some time~~ **FIXED**
 - ~~Use `getSongsStream()` in scan_service to reduce peak memory~~ **FIXED**
 - ~~Pass `onError` to scan so failed files dont just vanish~~ **FIXED**

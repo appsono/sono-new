@@ -30,6 +30,7 @@ dependencies:
   path_provider: ^2.1.5
   path: ^1.9.1
   audio_session: ^0.2.2
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:
