@@ -13,7 +13,7 @@ late AudioHandler audioHandler;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
-  sono.AudioService.instance.init();
+  await sono.AudioService.instance.init();
   audioHandler = await AudioService.init(
     builder: () => SonoAudioHandler(db),
     config: const AudioServiceConfig(

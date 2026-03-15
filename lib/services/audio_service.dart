@@ -21,38 +21,83 @@ class AudioService {
   RepeatMode _repeat = RepeatMode.off;
 
   //brodcast controllers
-  final StreamController<Song?> _currentSongController = StreamController<Song?>.broadcast();
+  final StreamController<Song?> _currentSongController =
+      StreamController<Song?>.broadcast();
   final _queueController = StreamController<List<Song>>.broadcast();
   final _shuffleController = StreamController<bool>.broadcast();
   final _repeatController = StreamController<RepeatMode>.broadcast();
+
+  void _ensureInitialized() {
+    assert(_initialized, 'AudioService.init() must be awaited before use');
+  }
 
   /// ===========================
   ///       public streams
   /// ===========================
   Stream<Song?> get currentSongStream => _currentSongController.stream;
   Stream<List<Song>> get queueStream => _queueController.stream;
-  Stream<bool> get playingStream => _player.stream.playing;
-  Stream<Duration> get positionStream => _player.stream.position;
-  Stream<Duration> get durationStream => _player.stream.duration;
-  Stream<double> get volumeStream => _player.stream.volume;
-  Stream<bool> get bufferingStream => _player.stream.buffering;
+  Stream<bool> get playingStream {
+    _ensureInitialized();
+    return _player.stream.playing;
+  }
+
+  Stream<Duration> get positionStream {
+    _ensureInitialized();
+    return _player.stream.position;
+  }
+
+  Stream<Duration> get durationStream {
+    _ensureInitialized();
+    return _player.stream.duration;
+  }
+
+  Stream<double> get volumeStream {
+    _ensureInitialized();
+    return _player.stream.volume;
+  }
+
+  Stream<bool> get bufferingStream {
+    _ensureInitialized();
+    return _player.stream.buffering;
+  }
+
   Stream<bool> get shuffleStream => _shuffleController.stream;
   Stream<RepeatMode> get repeatMode => _repeatController.stream;
 
   /// ===========================
   ///       current state
   /// ===========================
-  Player get player => _player;
+  Player get player {
+    _ensureInitialized();
+    return _player;
+  }
+
   Song? get currentSong {
     if (_currentIndex < 0 || _queue.isEmpty) return null;
     return _queue[_effectiveIndex];
   }
 
   List<Song> get queue => List.unmodifiable(_queue);
-  bool get isPlaying => _player.state.playing;
-  Duration get position => _player.state.position;
-  Duration get duration => _player.state.duration;
-  double get volume => _player.state.volume;
+  bool get isPlaying {
+    _ensureInitialized();
+    return _player.state.playing;
+  }
+
+  Duration get position {
+    _ensureInitialized();
+    return _player.state.position;
+  }
+
+  Duration get duration {
+    _ensureInitialized();
+    return _player.state.duration;
+  }
+
+  double get volume {
+    _ensureInitialized();
+    return _player.state.volume;
+  }
+
   bool get shuffle => _shuffle;
   RepeatMode get repeat => _repeat;
 
@@ -66,7 +111,7 @@ class AudioService {
   /// ===========================
   ///            init
   /// ===========================
-  void init() {
+  Future<void> init() async {
     if (_initialized) return;
     _initialized = true;
 
@@ -80,7 +125,7 @@ class AudioService {
     //attach effects
     AudioEffectsService.instance.attach(_player);
 
-    //auto-advance ont song completion
+    //auto-advance on song completion
     _player.stream.completed.listen((completed) {
       if (!completed) return;
       _onTrackCompleted();
