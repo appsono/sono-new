@@ -14,7 +14,7 @@ This version of the app is new and currently in a very early stage.
 
 
 Sono is yet another local music player, but this one is cross platform.  
-It is built with Flutter and and has all the features you need, not yet, but soon :D
+It is built with Flutter and and has all the features you need. Not yet, but soon :D
 
 ## Contributing
 
@@ -61,3 +61,8 @@ mathis
 
 Original announcement from the Discord server:  
 https://discord.sono.wtf
+
+
+## LICENSE
+
+GNU
