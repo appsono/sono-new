@@ -322,7 +322,7 @@ class AudioService {
           ? _shuffleOrder[_currentIndex]
           : _currentIndex;
       _shuffleOrder.remove(currentActual);
-      _shuffleOrder.insert(_currentIndex, currentActual);
+      _shuffleOrder.insert(0, currentActual);
     }
   }
 
