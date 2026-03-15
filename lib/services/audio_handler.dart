@@ -10,6 +10,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   final sono.AudioService _audio = sono.AudioService.instance;
   final SonoDatabase _db;
 
+  File? _previousCoverFile;
+
   SonoAudioHandler(this._db) {
     //bridge media_kit playing state > audio_service playback state
     _audio.playingStream.listen((playing) => _broadcastState());
@@ -25,6 +27,13 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   Future<void> _updateMediaItem(Song song) async {
     Uri? finalArtUri;
     try {
+      //clean up previous cover
+      if (_previousCoverFile != null) {
+        try {
+          await _previousCoverFile!.delete();
+        } catch (_) {}
+        _previousCoverFile = null;
+      }
       final Uint8List? imageBytes = await query.SonoQuery.getCover(song.path);
 
       if (imageBytes != null && imageBytes.isNotEmpty) {
@@ -33,6 +42,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
         final file = File('${tempDir.path}/cover_cache_${song.id}.jpg');
         await file.writeAsBytes(imageBytes);
 
+        _previousCoverFile = file;
         finalArtUri = Uri.file(file.path);
       }
     } catch (e) {
