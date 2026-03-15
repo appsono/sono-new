@@ -12,6 +12,7 @@ class AudioService {
 
   late final Player _player;
   bool _initialized = false;
+  bool _isAdvancing = false;
 
   //queue state
   List<Song> _queue = [];
@@ -170,29 +171,39 @@ class AudioService {
   ///           skip
   /// ===========================
   Future<void> skipNext() async {
-    if (queue.isEmpty) return;
-    if (_currentIndex < _queue.length - 1) {
-      _currentIndex++;
-      await _openCurrent();
-    } else if (_repeat == RepeatMode.all) {
-      _currentIndex = 0;
-      await _openCurrent();
+    if (_isAdvancing || queue.isEmpty) return;
+    _isAdvancing = true;
+    try {
+      if (_currentIndex < _queue.length - 1) {
+        _currentIndex++;
+        await _openCurrent();
+      } else if (_repeat == RepeatMode.all) {
+        _currentIndex = 0;
+        await _openCurrent();
+      }
+    } finally {
+      _isAdvancing = false;
     }
   }
 
   Future<void> skipPrevious() async {
-    if (_queue.isEmpty) return;
-    //if past 3 secs: restart current track
-    if (_player.state.position.inSeconds > 3) {
-      await _player.seek(Duration.zero);
-      return;
-    }
-    if (_currentIndex > 0) {
-      _currentIndex--;
-      await _openCurrent();
-    } else if (_repeat == RepeatMode.all) {
-      _currentIndex = _queue.length - 1;
-      await _openCurrent();
+    if (_isAdvancing || _queue.isEmpty) return;
+    _isAdvancing = true;
+    try {
+      //if past 3 secs: restart current track
+      if (_player.state.position.inSeconds > 3) {
+        await _player.seek(Duration.zero);
+        return;
+      }
+      if (_currentIndex > 0) {
+        _currentIndex--;
+        await _openCurrent();
+      } else if (_repeat == RepeatMode.all) {
+        _currentIndex = _queue.length - 1;
+        await _openCurrent();
+      }
+    } finally {
+      _isAdvancing = false;
     }
   }
 
@@ -258,19 +269,19 @@ class AudioService {
     await _player.open(Media(uri), play: true);
   }
 
-  void _onTrackCompleted() {
+  void _onTrackCompleted() async {
+    if (_isAdvancing) return;
     if (_repeat == RepeatMode.one) {
-      _player.seek(Duration.zero);
-      _player.play();
+      _isAdvancing = true;
+      try {
+        await _player.seek(Duration.zero);
+        await _player.play();
+      } finally {
+        _isAdvancing = false;
+      }
       return;
     }
-    final hasNext = _currentIndex < _queue.length - 1;
-    if (hasNext) {
-      skipNext();
-    } else if (_repeat == RepeatMode.all && _queue.isNotEmpty) {
-      _currentIndex = 0;
-      _openCurrent();
-    }
+    await skipNext();
   }
 
   void _rebuildShuffleOrder() {

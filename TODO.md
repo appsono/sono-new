@@ -4,7 +4,7 @@
 - ~~`main.dart` uses `db` from `test_page.dart` as a global, inject it properly~~ **FIXED**
 - ~~`main.dart` has a race condition between `sono.AudioService.instance.init()` and `AudioService.init()`~~ **FIXED**
 - `audio_handler.dart` never cleans up cover temp files, new one every song change
-- `audio_service.dart` `_onTrackCompleted` + `skipNext()` can double-wrap on repeat all
+- ~~`audio_service.dart` `_onTrackCompleted` + `skipNext()` can double-wrap on repeat all~~ **FIXED**
 
 ## Before UI
 - Reduce memory usage of player
