@@ -24,7 +24,6 @@ void main() async {
       androidNotificationChannelId: 'wtf.sono.audio',
       androidNotificationChannelName: 'Now Playing',
       androidNotificationOngoing: true,
-      androidStopForegroundOnPause: true,
       androidShowNotificationBadge: true,
       androidNotificationClickStartsActivity: true,
       androidResumeOnClick: true,

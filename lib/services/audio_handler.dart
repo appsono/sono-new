@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:sono_query/sono_query.dart' as query;
+
 import 'package:sono/services/audio_service.dart' as sono;
 import 'package:sono/db/database.dart';
 
@@ -11,16 +13,50 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   final SonoDatabase _db;
 
   File? _previousCoverFile;
+  bool _wasPlayingBeforeInterruption = false;
 
   SonoAudioHandler(this._db) {
+    _initSession();
+
     //bridge media_kit playing state > audio_service playback state
-    _audio.playingStream.listen((playing) => _broadcastState());
+    _audio.playingStream.listen((playing) async {
+      if (playing) {
+        final session = await AudioSession.instance;
+        await session.setActive(true);
+      }
+      _broadcastState();
+    });
     _audio.positionStream.listen((_) => _broadcastState());
     _audio.durationStream.listen((_) => _broadcastState());
 
     //bridge current song > audio_service mediaItem
     _audio.currentSongStream.listen((song) {
       if (song != null) _updateMediaItem(song);
+    });
+  }
+
+  Future<void> _initSession() async {
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration.music());
+
+    //handle interruptions (phone calls, other apps, etc.)
+    session.interruptionEventStream.listen((event) {
+      if (event.begin) {
+        if (_audio.isPlaying) {
+          _audio.pause();
+          _wasPlayingBeforeInterruption = true;
+        }
+      } else {
+        if (_wasPlayingBeforeInterruption) {
+          _audio.resume();
+          _wasPlayingBeforeInterruption = false;
+        }
+      }
+    });
+
+    // handle audio becoming noisy (headphones unplugged)
+    session.becomingNoisyEventStream.listen((_) {
+      if (_audio.isPlaying) _audio.pause();
     });
   }
 
@@ -93,10 +129,18 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   }
 
   @override
-  Future<void> play() => _audio.resume();
+  Future<void> play() async {
+    final session = await AudioSession.instance;
+    await session.setActive(true);
+    _audio.resume();
+  }
 
   @override
-  Future<void> pause() => _audio.pause();
+  Future<void> pause() async {
+    _audio.pause();
+    final session = await AudioSession.instance;
+    await session.setActive(false);
+  }
 
   @override
   Future<void> seek(Duration position) => _audio.seek(position);
@@ -110,6 +154,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   @override
   Future<void> stop() async {
     await _audio.stop();
+    final session = await AudioSession.instance;
+    await session.setActive(false);
     await super.stop();
   }
 }
