@@ -50,7 +50,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     final item = MediaItem(
       id: song.path,
       title: song.title,
-      artist: artistName ?? 'Unkown artist',
+      artist: artistName ?? 'Unknown artist',
       artUri: finalArtUri,
       duration: song.duration != null
           ? Duration(milliseconds: song.duration!)
