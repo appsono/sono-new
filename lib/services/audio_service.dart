@@ -85,6 +85,14 @@ class AudioService {
     return _player.state.playing;
   }
 
+  /// Queue in effective order (respects shuffle)
+  List<Song> get effectiveQueue {
+    if (_shuffle && _shuffleOrder.isNotEmpty) {
+      return [for (final i in _shuffleOrder) _queue[i]];
+    }
+    return List.unmodifiable(_queue);
+  }
+
   Duration get position {
     _ensureInitialized();
     return _player.state.position;
@@ -219,9 +227,18 @@ class AudioService {
   ///     shuffle & repeat
   /// ===========================
   Future<void> setShuffle(bool value) async {
-    _shuffle = value;
-    _rebuildShuffleOrder();
+    if (value) {
+      _shuffle = true;
+      _rebuildShuffleOrder();
+      _currentIndex = 0;
+    } else {
+      final actualIndex = _effectiveIndex;
+      _shuffle = false;
+      _currentIndex = actualIndex;
+      _shuffleOrder = [];
+    }
     _shuffleController.add(_shuffle);
+    _queueController.add(effectiveQueue);
   }
 
   void cycleRepeat() {
@@ -299,8 +316,8 @@ class AudioService {
     }
     _shuffleOrder = List.generate(_queue.length, (i) => i);
     _shuffleOrder.shuffle(Random());
-    //make sure current song stays at current index position
-    if (_currentIndex >= 0 && _currentIndex < _shuffleOrder.length) {
+    //put current song at front of shuffle order
+    if (_currentIndex >= 0 && _currentIndex < _queue.length) {
       final currentActual = _shuffle
           ? _shuffleOrder[_currentIndex]
           : _currentIndex;
