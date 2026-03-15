@@ -6,10 +6,9 @@ import 'package:sono/services/audio_service.dart';
 import 'package:sono/services/audio_effects_service.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
-final db = SonoDatabase();
-
 class TestPage extends StatefulWidget {
-  const TestPage({super.key});
+  final SonoDatabase db;
+  const TestPage({required this.db, super.key});
 
   @override
   State<TestPage> createState() => _TestPageState();
@@ -30,9 +29,9 @@ class _TestPageState extends State<TestPage> {
   }
 
   Future<void> _loadFromDb() async {
-    final songs = await db.getAllSongsWithArtists();
-    final artists = await db.getAllArtists();
-    final albums = await db.getAllAlbumsWithArtists();
+    final songs = await widget.db.getAllSongsWithArtists();
+    final artists = await widget.db.getAllArtists();
+    final albums = await widget.db.getAllAlbumsWithArtists();
     setState(() {
       _songs = songs;
       _artists = artists;
@@ -47,7 +46,7 @@ class _TestPageState extends State<TestPage> {
     });
 
     try {
-      await ScanService(db).scan();
+      await ScanService(widget.db).scan();
       await _loadFromDb();
     } catch (e) {
       setState(() => _error = e.toString());
