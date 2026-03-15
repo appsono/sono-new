@@ -1,5 +1,7 @@
-import 'package:sono_query/sono_query.dart' as sq;
+import 'dart:developer' as dev;
 import 'package:drift/drift.dart';
+import 'package:sono_query/sono_query.dart' as sq;
+
 import 'package:sono/db/database.dart';
 import 'package:sono/helper/artist_utils.dart';
 
@@ -8,14 +10,26 @@ class ScanService {
 
   ScanService(this.db);
 
-  Future<void> scan() async {
-    final songs = await sq.SonoQuery.getSongs();
+  /// Scans for songs on device and sync with the database
+  ///
+  /// [onError] is called for each file that fails metadata reading.
+  /// The file is skipped and scanning continues.
+  Future<void> scan({sq.ScanErrorCallback? onError}) async {
     final existingPaths = await db.getAllSongPaths();
+    final allPaths = <String>{};
+    final newSongs = <sq.Song>[];
 
-    //filter to only new songs
-    final newSongs = songs.where((s) => !existingPaths.contains(s.path)).toList();
+    await for (final song in sq.SonoQuery.getSongsStream(
+      onError: onError ?? _defaultOnError,
+    )) {
+      allPaths.add(song.path);
+      if (!existingPaths.contains(song.path)) {
+        newSongs.add(song);
+      }
+    }
+
     if (newSongs.isEmpty) {
-      await db.removeDeletedSongs(songs.map((s) => s.path).toSet());
+      await db.removeDeletedSongs(allPaths);
       return;
     }
 
@@ -77,6 +91,10 @@ class ScanService {
       batch.insertAll(db.songs, toInsert);
     });
 
-    await db.removeDeletedSongs(songs.map((s) => s.path).toSet());
+    await db.removeDeletedSongs(allPaths);
+  }
+
+  static void _defaultOnError(String path, Object error) {
+    dev.log('scan failed for $path: $error', name: 'sono.scan');
   }
 }
