@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RepeatMode;
 import 'package:sono/db/database.dart';
 import 'package:sono/services/scan_service.dart';
 import 'package:sono/services/audio_service.dart';
@@ -78,6 +78,7 @@ class _TestPageState extends State<TestPage> {
           NavigationDestination(icon: Icon(Icons.music_note), label: 'Songs'),
           NavigationDestination(icon: Icon(Icons.person), label: 'Artists'),
           NavigationDestination(icon: Icon(Icons.album), label: 'Albums'),
+          NavigationDestination(icon: Icon(Icons.queue_music), label: 'Queue'),
         ],
       ),
       body: Column(
@@ -89,7 +90,9 @@ class _TestPageState extends State<TestPage> {
                 ? _buildSongsList()
                 : _tab == 1
                 ? _buildArtistsList()
-                : _buildAlbumsList(),
+                : _tab == 2
+                ? _buildAlbumsList()
+                : _buildQueueList(),
           ),
           _MiniPlayer(songs: _songs),
         ],
@@ -113,32 +116,51 @@ class _TestPageState extends State<TestPage> {
         ),
       );
     }
-    return ListView.builder(
-      itemCount: _songs!.length,
-      itemBuilder: (context, index) {
-        final data = _songs![index];
+    final audio = AudioService.instance;
+    return StreamBuilder<Song?>(
+      stream: audio.currentSongStream,
+      builder: (context, snap) {
+        final currentPath = snap.data?.path;
+        return ListView.builder(
+          itemCount: _songs!.length,
+          itemBuilder: (context, index) {
+            final data = _songs![index];
+            final isPlaying = data.path == currentPath;
 
-        return ListTile(
-          leading: _CoverArt(path: data.path),
-          title: Text(data.title),
-          subtitle: Text(_buildSubtitle(data)),
-          onTap: () {
-            //mapping back to song objects for audio service
-            final allSongs = _songs!
-                .map(
-                  (s) => Song(
-                    id: s.id,
-                    path: s.path,
-                    title: s.title,
-                    duration: s.duration,
-                    genre: s.genre,
-                    releaseDate: s.releaseDate,
-                    albumId: s.albumId,
-                    artistId: s.artistId,
-                  ),
-                )
-                .toList();
-            AudioService.instance.play(allSongs, index);
+            return ListTile(
+              leading: _CoverArt(path: data.path),
+              title: Text(
+                data.title,
+                style: isPlaying
+                    ? TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      )
+                    : null,
+              ),
+              subtitle: Text(_buildSubtitle(data)),
+              trailing: IconButton(
+                icon: const Icon(Icons.info_outline, size: 20),
+                onPressed: () => _showMetadataSheet(context, data),
+              ),
+              onTap: () {
+                final allSongs = _songs!
+                    .map(
+                      (s) => Song(
+                        id: s.id,
+                        path: s.path,
+                        title: s.title,
+                        duration: s.duration,
+                        genre: s.genre,
+                        releaseDate: s.releaseDate,
+                        albumId: s.albumId,
+                        artistId: s.artistId,
+                      ),
+                    )
+                    .toList();
+                audio.play(allSongs, index);
+              },
+            );
           },
         );
       },
@@ -186,6 +208,66 @@ class _TestPageState extends State<TestPage> {
       },
     );
   }
+
+  Widget _buildQueueList() {
+    final audio = AudioService.instance;
+    return StreamBuilder<Song?>(
+      stream: audio.currentSongStream,
+      builder: (context, snap) {
+        final queue = audio.effectiveQueue;
+        if (queue.isEmpty) {
+          return const Center(child: Text('Nothing in here >-<'));
+        }
+        final currentIndex = audio.currentQueueIndex;
+        return ListView.builder(
+          itemCount: queue.length,
+          itemBuilder: (context, index) {
+            final song = queue[index];
+            final isCurrent = index == currentIndex;
+            return ListTile(
+              leading: isCurrent
+                  ? Icon(
+                      Icons.play_arrow,
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  : Text(
+                      '$index',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+              title: Text(
+                song.title,
+                style: isCurrent
+                    ? TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      )
+                    : null,
+              ),
+              subtitle: song.duration != null
+                  ? Text(_fmtDuration(Duration(milliseconds: song.duration!)))
+                  : null,
+              onTap: () => audio.playAt(index),
+              trailing: IconButton(
+                icon: const Icon(Icons.remove_circle_outline, size: 20),
+                onPressed: () {
+                  audio.removeFromQueue(index);
+                  setState(() {});
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showMetadataSheet(BuildContext context, SongWithArtistViewData data) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => _MetadataSheet(data: data, db: widget.db),
+    );
+  }
 }
 
 String _buildSubtitle(SongWithArtistViewData data) {
@@ -200,6 +282,16 @@ String _buildSubtitle(SongWithArtistViewData data) {
   }
   return parts.isEmpty ? 'Unknown' : parts.join(' • ');
 }
+
+String _fmtDuration(Duration d) {
+  final min = d.inMinutes;
+  final sec = (d.inSeconds % 60).toString().padLeft(2, '0');
+  return '$min:$sec';
+}
+
+/// ===========================
+///         Cover Art
+/// ===========================
 
 class _CoverArt extends StatefulWidget {
   final String path;
@@ -277,58 +369,150 @@ class _MiniPlayer extends StatelessWidget {
         return Container(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _CoverArt(path: song.path, key: ValueKey(song.path)),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      song.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _CoverArt(path: song.path, key: ValueKey(song.path)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          song.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          artistName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 75, 75, 75),
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      artistName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Color.fromARGB(255, 75, 75, 75),
-                      ),
-                    ),
-                    StreamBuilder<Duration>(
-                      stream: audio.positionStream,
-                      builder: (_, posSnap) {
-                        final pos = posSnap.data ?? Duration.zero;
-                        final dur = audio
-                            .duration; //no mathis, dont think of the dur dur emojis
-                        return Text(
-                          '${_fmtDuration(pos)} / ${_fmtDuration(dur)}',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                  //shuffle
+                  StreamBuilder(
+                    stream: audio.shuffleStream,
+                    builder: (_, shuffleSnap) {
+                      final isShuffled = shuffleSnap.data ?? audio.shuffle;
+                      return IconButton(
+                        icon: Icon(
+                          Icons.shuffle,
+                          size: 20,
+                          color: isShuffled
+                              ? Theme.of(context).colorScheme.primary
+                              : null,
+                        ),
+                        onPressed: () => audio.setShuffle(!isShuffled),
+                      );
+                    },
+                  ),
+                  //skip previous
+                  IconButton(
+                    icon: const Icon(Icons.skip_previous),
+                    onPressed: audio.skipPrevious,
+                  ),
+                  //play/pause
+                  StreamBuilder<bool>(
+                    stream: audio.playingStream,
+                    builder: (_, playSnap) {
+                      final playing = playSnap.data ?? false;
+                      return IconButton(
+                        icon: Icon(playing ? Icons.pause : Icons.play_arrow),
+                        onPressed: audio.playOrPause,
+                      );
+                    },
+                  ),
+                  //skip next
+                  IconButton(
+                    icon: const Icon(Icons.skip_next),
+                    onPressed: audio.skipNext,
+                  ),
+                  //repeat
+                  StreamBuilder<RepeatMode>(
+                    stream: audio.repeatMode,
+                    builder: (_, repeatSnap) {
+                      final mode = repeatSnap.data ?? audio.repeat;
+                      return IconButton(
+                        icon: Icon(
+                          mode == RepeatMode.one
+                              ? Icons.repeat_one
+                              : Icons.repeat,
+                          size: 20,
+                          color: mode != RepeatMode.off
+                              ? Theme.of(context).colorScheme.primary
+                              : null,
+                        ),
+                        onPressed: audio.cycleRepeat,
+                      );
+                    },
+                  ),
+                ],
               ),
-              StreamBuilder<bool>(
-                stream: audio.playingStream,
-                builder: (_, playSnap) {
-                  final playing = playSnap.data ?? false;
-                  return IconButton(
-                    icon: Icon(playing ? Icons.pause : Icons.play_arrow),
-                    onPressed: audio.playOrPause,
+              //seekbar
+              StreamBuilder<Duration>(
+                stream: audio.positionStream,
+                builder: (_, posSnap) {
+                  final pos = posSnap.data ?? Duration.zero;
+                  final dur = audio.duration;
+                  final maxMs = dur.inMilliseconds.toDouble();
+                  final posMs = pos.inMilliseconds.toDouble().clamp(
+                    0.0,
+                    maxMs > 0 ? maxMs : 1.0,
+                  );
+
+                  return Column(
+                    children: [
+                      SliderTheme(
+                        data: SliderThemeData(
+                          trackHeight: 2,
+                          thumbShape: RoundSliderThumbShape(
+                            enabledThumbRadius: 6,
+                          ),
+                          inactiveTrackColor:
+                            Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                        ),
+                        child: Slider(
+                          value: posMs,
+                          min: 0,
+                          max: maxMs > 0 ? maxMs : 1.0,
+                          onChanged: (v) {
+                            audio.seek(Duration(milliseconds: v.toInt()));
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Text(
+                              _fmtDuration(pos),
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              ' : ',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            Text(
+                              _fmtDuration(dur),
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   );
                 },
-              ),
-              IconButton(
-                icon: const Icon(Icons.skip_next),
-                onPressed: audio.skipNext,
               ),
             ],
           ),
@@ -336,11 +520,120 @@ class _MiniPlayer extends StatelessWidget {
       },
     );
   }
+}
 
-  static String _fmtDuration(Duration d) {
-    final min = d.inMinutes;
-    final sec = (d.inSeconds % 60).toString().padLeft(2, '0');
-    return '$min:$sec';
+/// ===========================
+///       Metadata Sheet
+/// ===========================
+
+class _MetadataSheet extends StatelessWidget {
+  final SongWithArtistViewData data;
+  final SonoDatabase db;
+
+  const _MetadataSheet({required this.data, required this.db});
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.6,
+      maxChildSize: 0.9,
+      minChildSize: 0.3,
+      expand: false,
+      builder: (context, scrollController) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: ListView(
+            controller: scrollController,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Text(
+                data.title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: _CoverArt(path: data.path, key: ValueKey(data.path)),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Divider(),
+              _metaRow('Path', data.path),
+              _metaRow('Title', data.title),
+              _metaRow('Artist', data.artistName),
+              _metaRow('Artist ID', data.artistId?.toString()),
+              _metaRow('Artist ID', data.albumId?.toString()),
+              _metaRow('Artist', data.artistName),
+              _albumRow(context),
+              _metaRow('Genre', data.genre),
+              _metaRow(
+                'Duration',
+                data.duration != null
+                    ? _fmtDuration(Duration(milliseconds: data.duration!))
+                    : null,
+              ),
+              _metaRow('Duration (ms)', data.duration?.toString()),
+              _metaRow('Release Date', data.releaseDate?.toIso8601String()),
+              _metaRow('Song ID (db)', data.id.toString()),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _metaRow(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value ?? 'null',
+              style: TextStyle(
+                color: value == null ? Colors.red[300] : null,
+                fontStyle: value == null ? FontStyle.italic : null,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _albumRow(BuildContext context) {
+    if (data.albumId == null) return _metaRow('Album', null);
+
+    return FutureBuilder<List<Album>>(
+      future: db.getAllAlbums(),
+      builder: (_, snap) {
+        if (!snap.hasData) return _metaRow('Album', '...');
+        final album = snap.data!.where((a) => a.id == data.albumId).firstOrNull;
+        return _metaRow('Album', album?.title);
+      },
+    );
   }
 }
 
