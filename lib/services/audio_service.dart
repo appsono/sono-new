@@ -80,6 +80,7 @@ class AudioService {
 
   List<Song> get queue => List.unmodifiable(_queue);
   int get currentIndex => _effectiveIndex;
+  int get currentQueueIndex => _currentIndex;
   bool get isPlaying {
     _ensureInitialized();
     return _player.state.playing;
