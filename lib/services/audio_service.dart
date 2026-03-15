@@ -79,6 +79,7 @@ class AudioService {
   }
 
   List<Song> get queue => List.unmodifiable(_queue);
+  int get currentIndex => _effectiveIndex;
   bool get isPlaying {
     _ensureInitialized();
     return _player.state.playing;
@@ -143,6 +144,13 @@ class AudioService {
     _currentIndex = index;
     _rebuildShuffleOrder();
     _queueController.add(queue);
+    await _openCurrent();
+  }
+
+  /// Jump to [index] in the current queue
+  Future<void> playAt(int index) async {
+    if (index < 0 || index >= _queue.length) return;
+    _currentIndex = index;
     await _openCurrent();
   }
 
@@ -269,7 +277,7 @@ class AudioService {
     await _player.open(Media(uri), play: true);
   }
 
-  void _onTrackCompleted() async {
+  Future<void> _onTrackCompleted() async {
     if (_isAdvancing) return;
     if (_repeat == RepeatMode.one) {
       _isAdvancing = true;
