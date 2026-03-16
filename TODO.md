@@ -14,7 +14,7 @@
 - ~~Pass `onError` to scan so failed files dont just vanish~~ **FIXED**
 - ~~Filter chain reapply causes audible glitch (the seek hack in audio_effects_service)~~ **FIXED**
 - Save/restore last playing queue and position on app restart
-- Save/restore shuffle and repeat mode
+- ~~Save/restore shuffle and repeat mode~~ **FIXED**
 - ~~Clean up orphaned artists/albums after song deletion~~ **FIXED**
 - Add sorting options for songs list (title, artist, date added)
 - ~~Proper database migrations (version tracking, rollback strategy)~~ **FIXED**
