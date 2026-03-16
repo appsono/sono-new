@@ -1,5 +1,3 @@
--keep class com.lucasjosino.on_audio_query.** { *; }
--dontwarn com.lucasjosino.on_audio_query.**
 -keepattributes Signature, InnerClasses
 
 -keep class com.google.android.exoplayer2.** { *; }
