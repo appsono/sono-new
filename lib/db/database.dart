@@ -24,6 +24,8 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 2) {
         await m.createTable(settings);
       }
+      //future migrations go here:
+      // if (from < 3) { .. }
     },
   );
 

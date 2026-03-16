@@ -17,7 +17,7 @@
 - Save/restore shuffle and repeat mode
 - Clean up orphaned artists/albums after song deletion
 - Add sorting options for songs list (title, artist, date added)
-- Proper database migrations (version tracking, rollback strategy)
+- ~~Proper database migrations (version tracking, rollback strategy)~~ **DONE**
 
 ## UI
 
