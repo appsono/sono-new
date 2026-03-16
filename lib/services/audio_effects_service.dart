@@ -37,6 +37,7 @@ class AudioEffectsService {
   double _speed = 1.0;
   double _pitch = 1.0;
   Timer? _applyDebounce;
+  Completer<void>? _applyCompleter;
 
   /// ===========================
   ///           getters
@@ -102,9 +103,12 @@ class AudioEffectsService {
 
     await db.setSetting('fx.eq_enabled', _eqEnabled.toString());
     await db.setSetting('fx.eq_gains', jsonEncode(_eqGains));
-    await db.setSetting('fx.bass_bost', _bassBoost.toString());
+    await db.setSetting('fx.bass_boost', _bassBoost.toString());
     await db.setSetting('fx.speed', _speed.toString());
     await db.setSetting('fx.pitch', _pitch.toString());
+
+    //TEMP: clean up old typo key if it exists
+    await db.removeSetting('fx.bassbost');
   }
 
   /// ===========================
@@ -179,11 +183,17 @@ class AudioEffectsService {
 
   Future<void> _applyFilterChain() async {
     _applyDebounce?.cancel();
-    final completer = Completer<void>();
+
+    //reuse or create a completer
+    final completer = _applyCompleter ?? Completer<void>();
+    _applyCompleter = completer;
+
     _applyDebounce = Timer(const Duration(milliseconds: 80), () async {
       await _applyFilterChainNow();
-      completer.complete();
+      _applyCompleter = null;
+      if (!completer.isCompleted) completer.complete();
     });
+
     return completer.future;
   }
 
@@ -211,23 +221,22 @@ class AudioEffectsService {
 
   /// Build full af string
   String _buildAfString() {
-    final graphParts = <String>[];
-
+    final buf = StringBuffer('lavfi=[');
     for (int i = 0; i < bandCount; i++) {
+      if (i > 0) buf.write(',');
       final band = eqBands[i];
       final gain = _eqEnabled ? _eqGains[i] : 0.0;
-      graphParts.add(
+      buf.write(
         'equalizer@eq$i=f=${band.freq}:width_type=o:w=${band.width}:g=${gain.toStringAsFixed(1)}',
       );
     }
 
     final bassGain = _bassBoost.abs() > 0.1 ? _bassBoost : 0.0;
-    graphParts.add(
+    buf.write(
       'equalizer@bass=f=80:width_type=o:w=2.0:g=${bassGain.toStringAsFixed(1)}',
     );
-
-    if (graphParts.isEmpty) return '';
-    return 'lavfi=[${graphParts.join(',')}]';
+    buf.write(']');
+    return buf.toString();
   }
 
   /// Resets all effects to default
