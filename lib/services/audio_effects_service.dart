@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer' as dev;
 import 'package:media_kit/media_kit.dart';
+import 'package:sono/db/database.dart';
 
 /// 10-band superequalizer center frequencies and octave widths
 /// > uses ffmpegs parametric equalizer
@@ -24,6 +26,8 @@ class AudioEffectsService {
   static final AudioEffectsService instance = AudioEffectsService._();
 
   Player? _player;
+  SonoDatabase? _db;
+  Timer? _saveDebounce;
 
   /// EQ gains per band in dB. Range: -12.0 to +12.0, 0.0 = flat
   final List<double> _eqGains = List.filled(bandCount, 0.0);
@@ -32,7 +36,7 @@ class AudioEffectsService {
   double _bassBoost = 0.0; //dB
   double _speed = 1.0;
   double _pitch = 1.0;
-  Timer? _applayDebounce;
+  Timer? _applyDebounce;
 
   /// ===========================
   ///           getters
@@ -49,6 +53,60 @@ class AudioEffectsService {
     _player = player;
   }
 
+  /// Bind database
+  void attachDb(SonoDatabase db) {
+    _db = db;
+  }
+
+  /// Load saved settings from database
+  Future<void> loadSettings() async {
+    final db = _db;
+    if (db == null) return;
+
+    final all = await db.getAllSettings();
+
+    _eqEnabled = all['fx.eq_enabled'] == 'true';
+    _bassBoost = double.tryParse(all['fx.bass_boost'] ?? '') ?? 0.0;
+    _speed = double.tryParse(all['fx.speed'] ?? '') ?? 1.0;
+    _pitch = double.tryParse(all['fx.pitch'] ?? '') ?? 1.0;
+
+    final gainsJson = all['fx.eq_gains'];
+    if (gainsJson != null) {
+      try {
+        final decoded = jsonDecode(gainsJson) as List;
+        for (int i = 0; i < bandCount && i < decoded.length; i++) {
+          _eqGains[i] = (decoded[i] as num).toDouble().clamp(-12.0, 12.0);
+        }
+      } catch (_) {}
+    }
+
+    //apply loaded speed/pitch
+    await _player?.setRate(_speed);
+    await _player?.setPitch(_pitch);
+    if (_eqEnabled || _bassBoost.abs() > 0.1) {
+      await _applyFilterChain();
+    }
+  }
+
+  /// Persist current settings to database
+  void _saveSettings() {
+    _saveDebounce?.cancel();
+    _saveDebounce = Timer(const Duration(milliseconds: 300), () {
+      _saveSettingsNow();
+    });
+  }
+
+  Future<void> _saveSettingsNow() async {
+    final db = _db;
+    if (db == null) return;
+
+    await db.setSetting('fx.eq_enabled', _eqEnabled.toString());
+    await db.setSetting('fx.eq_gains', jsonEncode(_eqGains));
+    await db.setSetting('fx.bass_bost', _bassBoost.toString());
+    await db.setSetting('fx.speed', _speed.toString());
+    await db.setSetting('fx.pitch', _pitch.toString());
+  }
+
   /// ===========================
   ///         equalizer
   /// ===========================
@@ -59,6 +117,7 @@ class AudioEffectsService {
     if (band < 0 || band >= bandCount) return;
     _eqGains[band] = gain.clamp(-12.0, 12.0);
     if (_eqEnabled) await _applyFilterChain();
+    _saveSettings();
   }
 
   /// Set all bands at once
@@ -67,6 +126,7 @@ class AudioEffectsService {
       _eqGains[i] = gains[i].clamp(-12.0, 12.0);
     }
     if (_eqEnabled) await _applyFilterChain();
+    _saveSettings();
   }
 
   /// Reset all EQ bands to unity (aka 1.0)
@@ -75,12 +135,14 @@ class AudioEffectsService {
       _eqGains[i] = 0.0;
     }
     if (_eqEnabled) await _applyFilterChain();
+    _saveSettings();
   }
 
   // Toogle EQ on/off
   Future<void> setEnabled(bool enabled) async {
     _eqEnabled = enabled;
     await _applyFilterChain();
+    _saveSettings();
   }
 
   /// ===========================
@@ -92,6 +154,7 @@ class AudioEffectsService {
   Future<void> setBassBoost(double db) async {
     _bassBoost = db.clamp(0.0, 20.0);
     await _applyFilterChain();
+    _saveSettings();
   }
 
   /// ===========================
@@ -101,11 +164,13 @@ class AudioEffectsService {
   Future<void> setSpeed(double rate) async {
     _speed = rate.clamp(0.25, 4.0);
     await _player?.setRate(_speed);
+    _saveSettings();
   }
 
   Future<void> setPitch(double pitch) async {
     _pitch = pitch.clamp(0.25, 4.0);
     await _player?.setPitch(_pitch);
+    _saveSettings();
   }
 
   /// ===========================
@@ -113,9 +178,9 @@ class AudioEffectsService {
   /// ===========================
 
   Future<void> _applyFilterChain() async {
-    _applayDebounce?.cancel();
+    _applyDebounce?.cancel();
     final completer = Completer<void>();
-    _applayDebounce = Timer(const Duration(milliseconds: 80), () async {
+    _applyDebounce = Timer(const Duration(milliseconds: 80), () async {
       await _applyFilterChainNow();
       completer.complete();
     });
@@ -177,5 +242,6 @@ class AudioEffectsService {
     await _player?.setRate(1.0);
     await _player?.setPitch(1.0);
     await _applyFilterChain();
+    _saveSettings();
   }
 }

@@ -12,6 +12,11 @@
 - ~~Use `getSongsStream()` in scan_service to reduce peak memory~~ **FIXED**
 - ~~Pass `onError` to scan so failed files dont just vanish~~ **FIXED**
 - ~~Filter chain reapply causes audible glitch (the seek hack in audio_effects_service)~~ **FIXED**
+- Save/restore last playing queue and position on app restart
+- Save/restore shuffle and repeat mode
+- Clean up orphaned artists/albums after song deletion
+- Add sorting options for songs list (title, artist, date added)
+- Proper database migrations (version tracking, rollback strategy)
 
 ## UI
 

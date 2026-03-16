@@ -28,6 +28,15 @@ class Songs extends Table {
   IntColumn get artistId => integer().nullable().references(Artists, #id)();
 }
 
+/// Key-value store for app settings (EQ, playback state, prefernces, etc.)
+class Settings extends Table {
+  TextColumn get settingKey => text()();
+  TextColumn get value => text()();
+
+  @override
+  Set<Column> get primaryKey => {settingKey};
+}
+
 abstract class SongWithArtistView extends View {
   Songs get songs;
   Artists get artists;

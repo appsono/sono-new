@@ -8,14 +8,24 @@ import 'package:sono/db/tables.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [Artists, Albums, Songs],
+  tables: [Artists, Albums, Songs, Settings],
   views: [SongWithArtistView, AlbumWithArtistView],
 )
 class SonoDatabase extends _$SonoDatabase {
   SonoDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.createTable(settings);
+      }
+    },
+  );
 
   /// ==== Artists ====
   Future<int> getOrCreateArtist(String name) async {
@@ -111,7 +121,7 @@ class SonoDatabase extends _$SonoDatabase {
     return rows.map((row) => row.read(songs.path)!).toSet();
   }
 
-  Future<List<SongWithArtistViewData>> getAllSongsWithArtists()  =>
+  Future<List<SongWithArtistViewData>> getAllSongsWithArtists() =>
       select(songWithArtistView).get();
 
   Future<List<Song>> getSongsByAlbum(int albumId) =>
@@ -130,6 +140,30 @@ class SonoDatabase extends _$SonoDatabase {
   Future<void> removeDeletedSongs(Set<String> currentPaths) async {
     await (delete(songs)..where((s) => s.path.isNotIn(currentPaths))).go();
   }
+
+  /// ==== Settings ====
+  Future<String?> getSetting(String key) async {
+    final row = await (select(
+      settings,
+    )..where((s) => s.settingKey.equals(key))).getSingleOrNull();
+    return row?.value;
+  }
+
+  Future<void> setSetting(String key, String val) async {
+    await into(settings).insertOnConflictUpdate(
+      SettingsCompanion.insert(settingKey: key, value: val),
+    );
+  }
+
+  Future<void> removeSetting(String key) async {
+    await (delete(settings)..where((s) => s.settingKey.equals(key))).go();
+  }
+
+  Future<Map<String, String>> getAllSettings() async {
+    final rows = await select(settings).get();
+    return {for (final s in rows) s.settingKey: s.value};
+  }
+
 }
 
 LazyDatabase _openConnection() {

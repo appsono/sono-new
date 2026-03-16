@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio_handler.dart';
 import 'package:sono/services/audio_service.dart' as sono;
+import 'package:sono/services/audio_effects_service.dart';
 import 'test_page.dart';
 
 late AudioHandler audioHandler;
@@ -30,6 +31,8 @@ void main() async {
       androidNotificationIcon: 'drawable/ic_notification',
     ),
   );
+  AudioEffectsService.instance.attachDb(db);
+  await AudioEffectsService.instance.loadSettings();
   await requestPermission();
   runApp(MaterialApp(home: TestPage(db: db)));
 }
