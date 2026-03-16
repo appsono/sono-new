@@ -114,8 +114,37 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<List<Album>> getAllAlbums() => select(albums).get();
 
-  Future<List<AlbumWithArtistViewData>> getAllAlbumsWithArtists() =>
-      select(albumWithArtistView).get();
+  Future<List<AlbumWithArtistViewData>> getAllAlbumsWithArtists() async {
+    final query = selectOnly(albumWithArtistView)
+      ..addColumns([
+        albumWithArtistView.id,
+        albumWithArtistView.title,
+        albumWithArtistView.artistId,
+        albumWithArtistView.artistName,
+      ]);
+    final rows = await query.get();
+    return rows
+        .map(
+          (row) => AlbumWithArtistViewData(
+            id: row.read(albumWithArtistView.id)!,
+            title: row.read(albumWithArtistView.title)!,
+            artistId: row.read(albumWithArtistView.artistId)!,
+            cover: null, //loaded on demand
+            artistName: row.read(albumWithArtistView.artistName),
+          ),
+        )
+        .toList();
+  }
+
+  /// Fetch as single albums cover on demand
+  Future<Uint8List?> getAlbumCover(int albumId) async {
+    final row =
+        await (selectOnly(albums)
+              ..addColumns([albums.cover])
+              ..where(albums.id.equals(albumId)))
+            .getSingleOrNull();
+    return row?.read(albums.cover);
+  }
 
   Future<List<Album>> getAlbumsByArtist(int artistId) =>
       (select(albums)..where((a) => a.artistId.equals(artistId))).get();
