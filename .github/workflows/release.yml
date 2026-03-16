@@ -2,21 +2,21 @@ name: Release
 
 on:
   push:
-    tags: ['v*']
     branches: [main]
 
 permissions:
   contents: write
 
 jobs:
-  tag:
-    if: github.ref == 'refs/heads/main'
+  check-version:
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.version.outputs.changed }}
+      tag: ${{ steps.version.outputs.tag }}
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 2
-          token: ${{ secrets.PAT }}
 
       - name: Check for version change
         id: version
@@ -30,20 +30,14 @@ jobs:
 
           if [ "$CURRENT" != "$OLD" ] && [ -n "$CURRENT" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "version=$CURRENT" >> "$GITHUB_OUTPUT"
+            echo "tag=v$CURRENT" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Create and push tag
-        if: steps.version.outputs.changed == 'true'
-        run: |
-          TAG="v${{ steps.version.outputs.version }}"
-          git tag "$TAG"
-          git push origin "$TAG"
-
-  build-signed-apk:
-    if: startsWith(github.ref, 'refs/tags/v')
+  build-and-release:
+    needs: check-version
+    if: needs.check-version.outputs.changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -77,9 +71,15 @@ jobs:
       - name: Build signed App Bundle
         run: flutter build appbundle --release
 
+      - name: Create tag
+        run: |
+          git tag "${{ needs.check-version.outputs.tag }}"
+          git push origin "${{ needs.check-version.outputs.tag }}"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.check-version.outputs.tag }}
           files: |
             build/app/outputs/flutter-apk/app-*-release.apk
             build/app/outputs/bundle/release/app-release.aab
