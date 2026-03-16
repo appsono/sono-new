@@ -136,7 +136,8 @@ class AudioService {
     //cap mpv memory usage for local playback
     final platform = _player.platform;
     if (platform is NativePlayer) {
-      await platform.setProperty('cache', 'no');
+      await platform.setProperty('cache', 'yes');
+      await platform.setProperty('cache-secs', '10');
       await platform.setProperty('demuxer-max-bytes', '32MiB');
       await platform.setProperty('demuxer-max-back-bytes', '16MiB');
       await platform.setProperty('demuxer-readhead-secs', '5');
