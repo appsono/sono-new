@@ -17,6 +17,9 @@ class AudioService {
 
   //queue state
   List<Song> _queue = [];
+  List<Song>? _cachedUnmodifiableQueue;
+  List<Song>? _cachedEffectiveQueue;
+
   List<int> _shuffleOrder = [];
   int _currentIndex = -1;
   bool _shuffle = false;
@@ -31,6 +34,12 @@ class AudioService {
 
   void _ensureInitialized() {
     assert(_initialized, 'AudioService.init() must be awaited before use');
+  }
+
+  /// Invalidates cached queue views
+  void _invalidateQueueCache() {
+    _cachedUnmodifiableQueue = null;
+    _cachedEffectiveQueue = null;
   }
 
   /// ===========================
@@ -79,7 +88,11 @@ class AudioService {
     return _queue[_effectiveIndex];
   }
 
-  List<Song> get queue => List.unmodifiable(_queue);
+  List<Song> get queue {
+    _cachedUnmodifiableQueue ??= List.unmodifiable(_queue);
+    return _cachedUnmodifiableQueue!;
+  }
+
   int get currentIndex => _effectiveIndex;
   int get currentQueueIndex => _currentIndex;
   bool get isPlaying {
@@ -89,10 +102,15 @@ class AudioService {
 
   /// Queue in effective order (respects shuffle)
   List<Song> get effectiveQueue {
+    if (_cachedEffectiveQueue != null) return _cachedEffectiveQueue!;
     if (_shuffle && _shuffleOrder.isNotEmpty) {
-      return [for (final i in _shuffleOrder) _queue[i]];
+      _cachedEffectiveQueue = List.unmodifiable([
+        for (final i in _shuffleOrder) _queue[i],
+      ]);
+    } else {
+      _cachedEffectiveQueue = queue; //reuse same unmodifiable view
     }
-    return List.unmodifiable(_queue);
+    return _cachedEffectiveQueue!;
   }
 
   Duration get position {
@@ -169,11 +187,9 @@ class AudioService {
     final db = _db;
     if (db == null) return;
 
-    final shuffleVal = await db.getSetting('playback.shuffle');
-    final repeatVal = await db.getSetting('playback.repeat');
-
-    _shuffle = shuffleVal == 'true';
-    _repeat = switch (repeatVal) {
+    final all = await db.getAllSettings();
+    _shuffle = all['playback.shuffle'] == 'true';
+    _repeat = switch (all['playback.repeat']) {
       'all' => RepeatMode.all,
       'one' => RepeatMode.one,
       _ => RepeatMode.off,
@@ -187,7 +203,7 @@ class AudioService {
     final db = _db;
     if (db == null) return;
     db.setSetting('playback.shuffle', _shuffle.toString());
-    db.setSetting('playback.repeat', _repeat.name);
+    db.setSetting('playback.repeat', _repeat.toString());
   }
 
   /// ===========================
@@ -199,6 +215,7 @@ class AudioService {
     _queue = List.of(songs);
     _currentIndex = index;
     _rebuildShuffleOrder();
+    _invalidateQueueCache();
     _queueController.add(queue);
     await _openCurrent();
   }
@@ -227,6 +244,7 @@ class AudioService {
     _queue = [];
     _currentIndex = -1;
     _shuffleOrder = [];
+    _invalidateQueueCache();
     _currentSongController.add(null);
     _queueController.add(queue);
   }
@@ -285,6 +303,7 @@ class AudioService {
       _currentIndex = actualIndex;
       _shuffleOrder = [];
     }
+    _invalidateQueueCache();
     _shuffleController.add(_shuffle);
     _queueController.add(effectiveQueue);
     _savePlaybackState();
@@ -311,6 +330,7 @@ class AudioService {
   void addToQueue(Song song) {
     _queue.add(song);
     _rebuildShuffleOrder();
+    _invalidateQueueCache();
     _queueController.add(queue);
   }
 
@@ -319,6 +339,7 @@ class AudioService {
     final insertAt = (_currentIndex >= 0 ? _effectiveIndex : -1) + 1;
     _queue.insert(insertAt.clamp(0, _queue.length), song);
     _rebuildShuffleOrder();
+    _invalidateQueueCache();
     _queueController.add(queue);
   }
 
@@ -329,6 +350,7 @@ class AudioService {
     if (index < _currentIndex) _currentIndex--;
     if (_currentIndex >= _queue.length) _currentIndex = _queue.length - 1;
     _rebuildShuffleOrder();
+    _invalidateQueueCache();
     _queueController.add(queue);
   }
 
@@ -364,7 +386,14 @@ class AudioService {
       _shuffleOrder = [];
       return;
     }
-    _shuffleOrder = List.generate(_queue.length, (i) => i);
+    //reuse existing list if capacity is sufficient
+    if (_shuffleOrder.length == _queue.length) {
+      for (int i = 0; i < _queue.length; i++) {
+        _shuffleOrder[i] = i;
+      }
+    } else {
+      _shuffleOrder = List.generate(_queue.length, (i) => i);
+    }
     _shuffleOrder.shuffle(Random());
     //put current song at front of shuffle order
     if (_currentIndex >= 0 && _currentIndex < _queue.length) {
