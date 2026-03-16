@@ -23,7 +23,7 @@ Simply open a pull request with your changes.
 
 <br>
 
-See [TODO](TODO.md) to view the things currently being worked on.
+See [TODO](TODO.md) for current progress and planned work.
 
 ---
 
