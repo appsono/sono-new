@@ -16,6 +16,9 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   File? _previousCoverFile;
   bool _wasPlayingBeforeInterruption = false;
 
+  String? _tempDirPath;
+  static const _coveFileName = 'sono_now_playing_cover.jpg';
+
   SonoAudioHandler(this._db) {
     _initSession();
 
@@ -66,27 +69,30 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   Future<void> _updateMediaItem(Song song) async {
     Uri? finalArtUri;
     try {
-      //clean up previous cover
-      if (_previousCoverFile != null) {
-        try {
-          await _previousCoverFile!.delete();
-        } catch (_) {}
-        _previousCoverFile = null;
-      }
+      //lazy-init temp dir path
+      _tempDirPath ??= (await getTemporaryDirectory()).path;
+
       final Uint8List? imageBytes = await query.SonoQuery.getCover(song.path);
 
       if (imageBytes != null && imageBytes.isNotEmpty) {
-        final tempDir = await getTemporaryDirectory();
-
-        final file = File('${tempDir.path}/cover_cache_${song.id}.jpg');
-        await file.writeAsBytes(imageBytes);
-
+        //always overwrite same file == no orphan accumulation
+        final file = File('$_tempDirPath/$_coveFileName');
+        await file.writeAsBytes(imageBytes, flush: false);
         _previousCoverFile = file;
         finalArtUri = Uri.file(file.path);
+      } else {
+        //no cover: delete old file so notification doesnt show stale art
+        if (_previousCoverFile != null) {
+          try {
+            await _previousCoverFile!.delete();
+          } catch (_) {
+            _previousCoverFile = null;
+          }
+        }
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to cache artwork: $e');
+        print('Failed to cahce artwork: $e');
       }
     }
 
@@ -156,6 +162,13 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   @override
   Future<void> stop() async {
+    //clean up cover file on stop
+    if (_previousCoverFile != null) {
+      try {
+        await _previousCoverFile!.delete();
+      } catch (_) {}
+      _previousCoverFile = null;
+    }
     await _audio.stop();
     final session = await AudioSession.instance;
     await session.setActive(false);
