@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' as dev;
 import 'package:media_kit/media_kit.dart';
 
@@ -31,6 +32,7 @@ class AudioEffectsService {
   double _bassBoost = 0.0; //dB
   double _speed = 1.0;
   double _pitch = 1.0;
+  Timer? _applayDebounce;
 
   /// ===========================
   ///           getters
@@ -111,56 +113,56 @@ class AudioEffectsService {
   /// ===========================
 
   Future<void> _applyFilterChain() async {
+    _applayDebounce?.cancel();
+    final completer = Completer<void>();
+    _applayDebounce = Timer(const Duration(milliseconds: 80), () async {
+      await _applyFilterChainNow();
+      completer.complete();
+    });
+    return completer.future;
+  }
+
+  /// Applies current EQ + bass boost filter chain
+  Future<void> _applyFilterChainNow() async {
     final player = _player;
     if (player == null) return;
 
-    final graphParts = <String>[];
-
-    //eq bands
-    if (_eqEnabled) {
-      for (int i = 0; i < bandCount; i++) {
-        if (_eqGains[i].abs() > 0.05) {
-          final band = eqBands[i];
-          graphParts.add(
-            'equalizer=f=${band.freq}:width_type=o:w=${band.width}:g=${_eqGains[i].toStringAsFixed(1)}',
-          );
-        }
-      }
+    final platform = player.platform;
+    if (platform is! NativePlayer) {
+      dev.log('AudioEffects: not NativePlayer, skipping', name: 'sono.fx');
+      return;
     }
 
-    //bass boost: parametic equalizer (at 80Hz)
-    if (_bassBoost.abs() > 0.1) {
-      graphParts.add(
-        'equalizer=f=80:width_type=o:w=2.0:g=${_bassBoost.toStringAsFixed(1)}',
-      );
-    }
-
-    //compose af property value
-    String afValue;
-    if (graphParts.isEmpty) {
-      afValue = '';
-    } else {
-      afValue = 'lavfi=[${graphParts.join(',')}]';
-    }
-
-    dev.log('AudioEffects: setting af="$afValue"', name: 'sono.fx');
+    final afValue = _buildAfString();
+    dev.log('AudioEffects: settings af="$afValue"', name: 'sono.fx');
 
     try {
-      final platform = player.platform;
-      if (platform is NativePlayer) {
-        await platform.setProperty('af', afValue);
-        //force mpv to rebuild filter chain
-        final pos = player.state.position;
-        if (player.state.playing && pos > Duration.zero) {
-          await player.seek(pos);
-        }
-        dev.log('AudioEffects: af applied', name: 'sono.fx');
-      } else {
-        dev.log('AudioEffects: not NativePlayer, skipping', name: 'sono.fx');
-      }
+      await platform.setProperty('af', afValue);
+      dev.log('AudioEffects: af applied', name: 'sono.fx');
     } catch (e) {
       dev.log('AudioEffects: failed to set af: $e', name: 'sono.fx');
     }
+  }
+
+  /// Build full af string
+  String _buildAfString() {
+    final graphParts = <String>[];
+
+    for (int i = 0; i < bandCount; i++) {
+      final band = eqBands[i];
+      final gain = _eqEnabled ? _eqGains[i] : 0.0;
+      graphParts.add(
+        'equalizer@eq$i=f=${band.freq}:width_type=o:w=${band.width}:g=${gain.toStringAsFixed(1)}',
+      );
+    }
+
+    final bassGain = _bassBoost.abs() > 0.1 ? _bassBoost : 0.0;
+    graphParts.add(
+      'equalizer@bass=f=80:width_type=o:w=2.0:g=${bassGain.toStringAsFixed(1)}',
+    );
+
+    if (graphParts.isEmpty) return '';
+    return 'lavfi=[${graphParts.join(',')}]';
   }
 
   /// Resets all effects to default

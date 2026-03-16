@@ -11,7 +11,7 @@
 - ~~Fix player going silent when app stays in background for some time~~ **FIXED**
 - ~~Use `getSongsStream()` in scan_service to reduce peak memory~~ **FIXED**
 - ~~Pass `onError` to scan so failed files dont just vanish~~ **FIXED**
-- Filter chain reapply causes audible glitch (the seek hack in audio_effects_service)
+- ~~Filter chain reapply causes audible glitch (the seek hack in audio_effects_service)~~ **FIXED**
 
 ## UI
 
