@@ -15,9 +15,9 @@
 - ~~Filter chain reapply causes audible glitch (the seek hack in audio_effects_service)~~ **FIXED**
 - Save/restore last playing queue and position on app restart
 - Save/restore shuffle and repeat mode
-- Clean up orphaned artists/albums after song deletion
+- ~~Clean up orphaned artists/albums after song deletion~~ **FIXED**
 - Add sorting options for songs list (title, artist, date added)
-- ~~Proper database migrations (version tracking, rollback strategy)~~ **DONE**
+- ~~Proper database migrations (version tracking, rollback strategy)~~ **FIXED**
 
 ## UI
 

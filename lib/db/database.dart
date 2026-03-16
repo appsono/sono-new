@@ -60,6 +60,13 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<List<Artist>> getAllArtists() => select(artists).get();
 
+  /// Remove artists that have no songs referencing them
+  Future<void> removeOrphanedArtists() async {
+    await customStatement(
+      'DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artist_id FROM songs WHERE artist_id IS NOT NULL)',
+    );
+  }
+
   /// ==== Albums ====
   Future<int> getOrCreateAlbum(
     String title,
@@ -113,6 +120,13 @@ class SonoDatabase extends _$SonoDatabase {
   Future<List<Album>> getAlbumsByArtist(int artistId) =>
       (select(albums)..where((a) => a.artistId.equals(artistId))).get();
 
+  /// Remove albums that have no songs referencing them
+  Future<void> removeOrphanedAlbums() async {
+    await customStatement(
+      'DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT album_id FROM songs WHERE album_id IS NOT NULL)',
+    );
+  }
+
   /// ==== Songs ====
   Future<void> insertSong(SongsCompanion song) => into(songs).insert(song);
 
@@ -165,7 +179,6 @@ class SonoDatabase extends _$SonoDatabase {
     final rows = await select(settings).get();
     return {for (final s in rows) s.settingKey: s.value};
   }
-
 }
 
 LazyDatabase _openConnection() {

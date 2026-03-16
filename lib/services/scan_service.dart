@@ -92,6 +92,8 @@ class ScanService {
     });
 
     await db.removeDeletedSongs(allPaths);
+    await db.removeOrphanedAlbums();
+    await db.removeOrphanedArtists();
   }
 
   static void _defaultOnError(String path, Object error) {
