@@ -33,6 +33,10 @@ void main() async {
   );
   AudioEffectsService.instance.attachDb(db);
   await AudioEffectsService.instance.loadSettings();
+
+  sono.AudioService.instance.attachDb(db);
+  await sono.AudioService.instance.loadState();
+
   await requestPermission();
   runApp(MaterialApp(home: TestPage(db: db)));
 }

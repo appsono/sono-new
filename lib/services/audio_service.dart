@@ -13,6 +13,7 @@ class AudioService {
   late final Player _player;
   bool _initialized = false;
   bool _isAdvancing = false;
+  SonoDatabase? _db;
 
   //queue state
   List<Song> _queue = [];
@@ -153,6 +154,37 @@ class AudioService {
     });
   }
 
+  /// Bind database for persisting playback state
+  void attachDb(SonoDatabase db) {
+    _db = db;
+  }
+
+  /// Load saved shuffle/repeat state from database
+  Future<void> loadState() async {
+    final db = _db;
+    if (db == null) return;
+
+    final shuffleVal = await db.getSetting('playback.shuffle');
+    final repeatVal = await db.getSetting('playback.repeat');
+
+    _shuffle = shuffleVal == 'true';
+    _repeat = switch (repeatVal) {
+      'all' => RepeatMode.all,
+      'one' => RepeatMode.one,
+      _ => RepeatMode.off,
+    };
+
+    _shuffleController.add(_shuffle);
+    _repeatController.add(_repeat);
+  }
+
+  void _savePlaybackState() {
+    final db = _db;
+    if (db == null) return;
+    db.setSetting('playback.shuffle', _shuffle.toString());
+    db.setSetting('playback.repeat', _repeat.name);
+  }
+
   /// ===========================
   ///      playback controls
   /// ===========================
@@ -250,6 +282,7 @@ class AudioService {
     }
     _shuffleController.add(_shuffle);
     _queueController.add(effectiveQueue);
+    _savePlaybackState();
   }
 
   void cycleRepeat() {
@@ -262,6 +295,7 @@ class AudioService {
         _repeat = RepeatMode.off;
     }
     _repeatController.add(_repeat);
+    _savePlaybackState();
   }
 
   /// ===========================
