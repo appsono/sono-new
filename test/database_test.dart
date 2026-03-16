@@ -66,12 +66,14 @@ void main() {
       await db.ensureAlbumsExist({('Album', map['Used']!)});
       final albumMap = await db.getAlbumIdMap();
 
-      await db.insertSong(SongsCompanion.insert(
-        path: '/music/track.mp3',
-        title: 'Track',
-        artistId: Value(map['Used']!),
-        albumId: Value(albumMap[('Album', map['Used']!)]!),
-      ));
+      await db.insertSong(
+        SongsCompanion.insert(
+          path: '/music/track.mp3',
+          title: 'Track',
+          artistId: Value(map['Used']!),
+          albumId: Value(albumMap[('Album', map['Used']!)]!),
+        ),
+      );
 
       await db.removeOrphanedArtists();
       final remaining = await db.getAllArtists();
@@ -105,7 +107,10 @@ void main() {
     test('ensureAlbumsExist batch inserts', () async {
       await db.ensureArtistsExist({'A', 'B'});
       final map = await db.getArtistIdMap();
-      await db.ensureAlbumsExist({('Album1', map['A']!), ('Album2', map['B']!)});
+      await db.ensureAlbumsExist({
+        ('Album1', map['A']!),
+        ('Album2', map['B']!),
+      });
       final albums = await db.getAllAlbums();
       expect(albums.length, 2);
     });
@@ -116,11 +121,13 @@ void main() {
       await db.getOrCreateAlbum('Empty Album', artistId, null);
 
       final albumMap = await db.getAlbumIdMap();
-      await db.insertSong(SongsCompanion.insert(
-        path: '/music/track.mp3',
-        title: 'Track',
-        albumId: Value(albumMap[('Used Album', artistId)]!),
-      ));
+      await db.insertSong(
+        SongsCompanion.insert(
+          path: '/music/track.mp3',
+          title: 'Track',
+          albumId: Value(albumMap[('Used Album', artistId)]!),
+        ),
+      );
 
       await db.removeOrphanedAlbums();
       final remaining = await db.getAllAlbums();
@@ -131,10 +138,9 @@ void main() {
 
   group('Songs', () {
     test('insertSong and getAllSongs', () async {
-      await db.insertSong(SongsCompanion.insert(
-        path: '/music/track.mp3',
-        title: 'My Track',
-      ));
+      await db.insertSong(
+        SongsCompanion.insert(path: '/music/track.mp3', title: 'My Track'),
+      );
       final songs = await db.getAllSongs();
       expect(songs.length, 1);
       expect(songs.first.title, 'My Track');
@@ -156,8 +162,12 @@ void main() {
     });
 
     test('removeDeletedSongs removes songs not in current paths', () async {
-      await db.insertSong(SongsCompanion.insert(path: '/keep.mp3', title: 'Keep'));
-      await db.insertSong(SongsCompanion.insert(path: '/gone.mp3', title: 'Gone'));
+      await db.insertSong(
+        SongsCompanion.insert(path: '/keep.mp3', title: 'Keep'),
+      );
+      await db.insertSong(
+        SongsCompanion.insert(path: '/gone.mp3', title: 'Gone'),
+      );
       await db.removeDeletedSongs({'/keep.mp3'});
       final songs = await db.getAllSongs();
       expect(songs.length, 1);
@@ -167,12 +177,14 @@ void main() {
     test('getSongsByAlbum filters correctly', () async {
       final artistId = await db.getOrCreateArtist('Artist');
       final albumId = await db.getOrCreateAlbum('Album', artistId, null);
-      await db.insertSong(SongsCompanion.insert(
-        path: '/a.mp3', title: 'A', albumId: Value(albumId),
-      ));
-      await db.insertSong(SongsCompanion.insert(
-        path: '/b.mp3', title: 'B',
-      ));
+      await db.insertSong(
+        SongsCompanion.insert(
+          path: '/a.mp3',
+          title: 'A',
+          albumId: Value(albumId),
+        ),
+      );
+      await db.insertSong(SongsCompanion.insert(path: '/b.mp3', title: 'B'));
       final songs = await db.getSongsByAlbum(albumId);
       expect(songs.length, 1);
       expect(songs.first.title, 'A');
@@ -180,12 +192,14 @@ void main() {
 
     test('getSongsByArtist filters correctly', () async {
       final artistId = await db.getOrCreateArtist('Artist');
-      await db.insertSong(SongsCompanion.insert(
-        path: '/a.mp3', title: 'A', artistId: Value(artistId),
-      ));
-      await db.insertSong(SongsCompanion.insert(
-        path: '/b.mp3', title: 'B',
-      ));
+      await db.insertSong(
+        SongsCompanion.insert(
+          path: '/a.mp3',
+          title: 'A',
+          artistId: Value(artistId),
+        ),
+      );
+      await db.insertSong(SongsCompanion.insert(path: '/b.mp3', title: 'B'));
       final songs = await db.getSongsByArtist(artistId);
       expect(songs.length, 1);
       expect(songs.first.title, 'A');
@@ -196,15 +210,17 @@ void main() {
       final albumId = await db.getOrCreateAlbum('Album', artistId, null);
       final date = DateTime(2025, 6, 15);
 
-      await db.insertSong(SongsCompanion.insert(
-        path: '/full.flac',
-        title: 'Full Track',
-        duration: const Value(241000),
-        genre: const Value('Hip-Hop'),
-        releaseDate: Value(date),
-        albumId: Value(albumId),
-        artistId: Value(artistId),
-      ));
+      await db.insertSong(
+        SongsCompanion.insert(
+          path: '/full.flac',
+          title: 'Full Track',
+          duration: const Value(241000),
+          genre: const Value('Hip-Hop'),
+          releaseDate: Value(date),
+          albumId: Value(albumId),
+          artistId: Value(artistId),
+        ),
+      );
 
       final songs = await db.getAllSongs();
       final song = songs.first;
@@ -251,24 +267,28 @@ void main() {
   group('Views', () {
     test('getAllSongsWithArtists joins artist name', () async {
       final artistId = await db.getOrCreateArtist('Tyler');
-      await db.insertSong(SongsCompanion.insert(
-        path: '/t.mp3',
-        title: 'Track',
-        artistId: Value(artistId),
-      ));
+      await db.insertSong(
+        SongsCompanion.insert(
+          path: '/t.mp3',
+          title: 'Track',
+          artistId: Value(artistId),
+        ),
+      );
       final songs = await db.getAllSongsWithArtists();
       expect(songs.length, 1);
       expect(songs.first.artistName, 'Tyler');
     });
 
-    test('getAllSongsWithArtists shows null for songs without artist', () async {
-      await db.insertSong(SongsCompanion.insert(
-        path: '/no_artist.mp3',
-        title: 'No Artist',
-      ));
-      final songs = await db.getAllSongsWithArtists();
-      expect(songs.first.artistName, isNull);
-    });
+    test(
+      'getAllSongsWithArtists shows null for songs without artist',
+      () async {
+        await db.insertSong(
+          SongsCompanion.insert(path: '/no_artist.mp3', title: 'No Artist'),
+        );
+        final songs = await db.getAllSongsWithArtists();
+        expect(songs.first.artistName, isNull);
+      },
+    );
 
     test('getAllAlbumsWithArtists joins artist name', () async {
       final artistId = await db.getOrCreateArtist('Gorillaz');

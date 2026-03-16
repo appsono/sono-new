@@ -479,8 +479,9 @@ class _MiniPlayer extends StatelessWidget {
                           thumbShape: RoundSliderThumbShape(
                             enabledThumbRadius: 6,
                           ),
-                          inactiveTrackColor:
-                            Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                          inactiveTrackColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.3),
                         ),
                         child: Slider(
                           value: posMs,

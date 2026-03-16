@@ -57,7 +57,7 @@ class ScanService {
   Future<(Map<String, int>, Map<(String, int), int>)> _flushChunk(
     List<sq.Song> chunk,
     Map<String, int> artistCache,
-    Map<(String, int), int>albumCache,
+    Map<(String, int), int> albumCache,
   ) async {
     final artistNames = <String>{};
     for (final song in chunk) {
