@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Sono (debug)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "flutterMode": "debug"
+        },
+        {
+            "name": "Sono (profile)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Sono (release)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "flutterMode": "release"
+        }
+    ]
+}
