@@ -13,6 +13,7 @@ part 'database.g.dart';
 )
 class SonoDatabase extends _$SonoDatabase {
   SonoDatabase() : super(_openConnection());
+  SonoDatabase.forTesting(super.e);
 
   @override
   int get schemaVersion => 2;
