@@ -5,6 +5,8 @@ import 'package:sono_query/sono_query.dart' as sq;
 import 'package:sono/db/database.dart';
 import 'package:sono/helper/artist_utils.dart';
 
+const int _chunkSize = 200;
+
 class ScanService {
   final SonoDatabase db;
 
@@ -17,25 +19,48 @@ class ScanService {
   Future<void> scan({sq.ScanErrorCallback? onError}) async {
     final existingPaths = await db.getAllSongPaths();
     final allPaths = <String>{};
-    final newSongs = <sq.Song>[];
+    final newSongsChunk = <sq.Song>[];
+
+    Map<String, int> artistCache = await db.getArtistIdMap();
+    Map<(String, int), int> albumCache = await db.getAlbumIdMap();
 
     await for (final song in sq.SonoQuery.getSongsStream(
       onError: onError ?? _defaultOnError,
     )) {
       allPaths.add(song.path);
       if (!existingPaths.contains(song.path)) {
-        newSongs.add(song);
+        newSongsChunk.add(song);
+
+        if (newSongsChunk.length >= _chunkSize) {
+          final caches = await _flushChunk(
+            newSongsChunk,
+            artistCache,
+            albumCache,
+          );
+          artistCache = caches.$1;
+          albumCache = caches.$2;
+          newSongsChunk.clear();
+        }
       }
     }
 
-    if (newSongs.isEmpty) {
-      await db.removeDeletedSongs(allPaths);
-      return;
+    if (newSongsChunk.isNotEmpty) {
+      await _flushChunk(newSongsChunk, artistCache, albumCache);
+      newSongsChunk.clear();
     }
 
-    //collect all unique artist names needed
+    await db.removeDeletedSongs(allPaths);
+    await db.removeOrphanedAlbums();
+    await db.removeOrphanedArtists();
+  }
+
+  Future<(Map<String, int>, Map<(String, int), int>)> _flushChunk(
+    List<sq.Song> chunk,
+    Map<String, int> artistCache,
+    Map<(String, int), int>albumCache,
+  ) async {
     final artistNames = <String>{};
-    for (final song in newSongs) {
+    for (final song in chunk) {
       if (song.artist != null && song.artist!.isNotEmpty) {
         artistNames.add(song.artist!);
         final main = getMainArtist(song.artist);
@@ -43,13 +68,16 @@ class ScanService {
       }
     }
 
-    //batch create all artists > then load IDs in one go
-    await db.ensureArtistsExist(artistNames);
-    final artistCache = await db.getArtistIdMap();
+    final newArtists = artistNames
+        .where((n) => !artistCache.containsKey(n))
+        .toSet();
+    if (newArtists.isNotEmpty) {
+      await db.ensureArtistsExist(newArtists);
+      artistCache = await db.getArtistIdMap();
+    }
 
-    //batch create all albums
     final albumKeys = <(String, int)>{};
-    for (final song in newSongs) {
+    for (final song in chunk) {
       if (song.album != null && song.album!.isNotEmpty) {
         final artistName = getMainArtist(song.artist) ?? song.artist;
         if (artistName != null && artistCache.containsKey(artistName)) {
@@ -57,12 +85,17 @@ class ScanService {
         }
       }
     }
-    await db.ensureAlbumsExist(albumKeys);
-    final albumCache = await db.getAlbumIdMap();
 
-    //build all song companions
+    final newAlbums = albumKeys
+        .where((k) => !albumCache.containsKey(k))
+        .toSet();
+    if (newAlbums.isNotEmpty) {
+      await db.ensureAlbumsExist(newAlbums);
+      albumCache = await db.getAlbumIdMap();
+    }
+
     final toInsert = <SongsCompanion>[];
-    for (final song in newSongs) {
+    for (final song in chunk) {
       final artistId = song.artist != null ? artistCache[song.artist!] : null;
       final mainArtist = getMainArtist(song.artist) ?? song.artist;
       final mainArtistId = mainArtist != null ? artistCache[mainArtist] : null;
@@ -72,7 +105,6 @@ class ScanService {
         albumId = albumCache[(song.album!, mainArtistId)];
       }
 
-      //insert song
       toInsert.add(
         SongsCompanion.insert(
           path: song.path,
@@ -86,14 +118,11 @@ class ScanService {
       );
     }
 
-    //batch insert all songs at once
     await db.batch((batch) {
       batch.insertAll(db.songs, toInsert);
     });
 
-    await db.removeDeletedSongs(allPaths);
-    await db.removeOrphanedAlbums();
-    await db.removeOrphanedArtists();
+    return (artistCache, albumCache);
   }
 
   static void _defaultOnError(String path, Object error) {
