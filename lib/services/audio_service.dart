@@ -33,7 +33,9 @@ class AudioService {
   final _repeatController = StreamController<RepeatMode>.broadcast();
 
   void _ensureInitialized() {
-    assert(_initialized, 'AudioService.init() must be awaited before use');
+    if (!_initialized) {
+      throw StateError('AudioService.init() must be awaited before use');
+    }
   }
 
   /// Invalidates cached queue views
