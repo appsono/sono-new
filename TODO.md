@@ -22,8 +22,8 @@
 ## UI
 
 ### Phase 1
-- Create a design in Figma to create a clear direction
-- Present finished design to community for feedback
+- ~~Create a design in Figma to create a clear direction~~ **DONE**
+- ~~Present finished design to community for feedback~~ **DONE**
 
 ### Phase 2
 - Create required theme files
