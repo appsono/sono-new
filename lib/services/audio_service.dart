@@ -205,7 +205,7 @@ class AudioService {
     final db = _db;
     if (db == null) return;
     db.setSetting('playback.shuffle', _shuffle.toString());
-    db.setSetting('playback.repeat', _repeat.toString());
+    db.setSetting('playback.repeat', _repeat.name);
   }
 
   /// ===========================
