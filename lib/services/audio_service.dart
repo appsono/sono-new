@@ -214,12 +214,18 @@ class AudioService {
 
   /// Start playing [songs] at [index]
   Future<void> play(List<Song> songs, int index) async {
-    _queue = List.of(songs);
-    _currentIndex = index;
-    _rebuildShuffleOrder();
-    _invalidateQueueCache();
-    _queueController.add(queue);
-    await _openCurrent();
+    _isAdvancing = true;
+    try {
+      _queue = List.of(songs);
+      _rebuildShuffleOrder(anchorIndex: index);
+      //when shuffle is on, the anchor song is at position 0 of shuffle order
+      _currentIndex = _shuffle ? 0 : index;
+      _invalidateQueueCache();
+      _queueController.add(queue);
+      await _openCurrent();
+    } finally {
+      _isAdvancing = false;
+    }
   }
 
   /// Jump to [index] in the current queue
@@ -296,7 +302,8 @@ class AudioService {
   /// ===========================
   Future<void> setShuffle(bool value) async {
     if (value) {
-      _rebuildShuffleOrder();
+      final anchor = _effectiveIndex;
+      _rebuildShuffleOrder(anchorIndex: anchor >= 0 ? anchor : null);
       _shuffle = true;
       _currentIndex = 0;
     } else {
@@ -383,7 +390,7 @@ class AudioService {
     await skipNext();
   }
 
-  void _rebuildShuffleOrder() {
+  void _rebuildShuffleOrder({int? anchorIndex}) {
     if (_queue.isEmpty) {
       _shuffleOrder = [];
       return;
@@ -397,13 +404,11 @@ class AudioService {
       _shuffleOrder = List.generate(_queue.length, (i) => i);
     }
     _shuffleOrder.shuffle(Random());
-    //put current song at front of shuffle order
-    if (_currentIndex >= 0 && _currentIndex < _queue.length) {
-      final currentActual = _shuffle
-          ? _shuffleOrder[_currentIndex]
-          : _currentIndex;
-      _shuffleOrder.remove(currentActual);
-      _shuffleOrder.insert(0, currentActual);
+    //anchorIndex is always a raw queue index (not shuffle order pos)
+    final anchor = anchorIndex ?? (_shuffle ? _effectiveIndex : _currentIndex);
+    if (anchor >= 0 && anchor < _queue.length) {
+      _shuffleOrder.remove(anchor);
+      _shuffleOrder.insert(0, anchor);
     }
   }
 
