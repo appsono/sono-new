@@ -17,7 +17,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   bool _wasPlayingBeforeInterruption = false;
 
   String? _tempDirPath;
-  static const _coveFileName = 'sono_now_playing_cover.jpg';
+  int _coverCounter = 0;
 
   SonoAudioHandler(this._db) {
     _initSession();
@@ -75,9 +75,18 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       final Uint8List? imageBytes = await query.SonoQuery.getCover(song.path);
 
       if (imageBytes != null && imageBytes.isNotEmpty) {
-        //always overwrite same file == no orphan accumulation
-        final file = File('$_tempDirPath/$_coveFileName');
-        await file.writeAsBytes(imageBytes, flush: false);
+        //use alternative filenames so Android media session cache
+        //picks up the new cover (same URI = cached stale image)
+        _coverCounter++;
+        final file = File('$_tempDirPath/sono_cover_$_coverCounter.jpg');
+        await file.writeAsBytes(imageBytes, flush: true);
+
+        final old = _previousCoverFile;
+        if (old != null && old.path != file.path) {
+          try {
+            await old.delete();
+          } catch (_) {}
+        }
         _previousCoverFile = file;
         finalArtUri = Uri.file(file.path);
       } else {
