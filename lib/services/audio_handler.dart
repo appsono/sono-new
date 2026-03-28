@@ -19,6 +19,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   String? _tempDirPath;
   int _coverCounter = 0;
 
+  int _updateToken = 0;
+
   SonoAudioHandler(this._db) {
     _initSession();
 
@@ -67,12 +69,15 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   }
 
   Future<void> _updateMediaItem(Song song) async {
+    final token = ++_updateToken;
     Uri? finalArtUri;
     try {
       //lazy-init temp dir path
       _tempDirPath ??= (await getTemporaryDirectory()).path;
+      if (token != _updateToken) return;
 
       final Uint8List? imageBytes = await query.SonoQuery.getCover(song.path);
+      if (token != _updateToken) return;
 
       if (imageBytes != null && imageBytes.isNotEmpty) {
         //use alternative filenames so Android media session cache
@@ -80,6 +85,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
         _coverCounter++;
         final file = File('$_tempDirPath/sono_cover_$_coverCounter.jpg');
         await file.writeAsBytes(imageBytes, flush: true);
+        if (token != _updateToken) return;
 
         final old = _previousCoverFile;
         if (old != null && old.path != file.path) {
@@ -94,9 +100,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
         if (_previousCoverFile != null) {
           try {
             await _previousCoverFile!.delete();
-          } catch (_) {
-            _previousCoverFile = null;
-          }
+          } catch (_) {}
+          _previousCoverFile = null;
         }
       }
     } catch (e) {
@@ -105,9 +110,12 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       }
     }
 
+    if (token != _updateToken) return;
+
     String? artistName;
     if (song.artistId != null) {
       final artist = await _db.getArtistById(song.artistId!);
+      if (token != _updateToken) return;
       artistName = artist?.name;
     }
 
