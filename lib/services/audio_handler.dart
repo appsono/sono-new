@@ -101,7 +101,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to cahce artwork: $e');
+        print('Failed to cache artwork: $e');
       }
     }
 
