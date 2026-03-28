@@ -230,8 +230,13 @@ class AudioService {
 
   /// Jump to [index] in the current queue
   Future<void> playAt(int index) async {
-    if (index < 0 || index >= _queue.length) return;
-    _currentIndex = index;
+    if (_shuffle && _shuffleOrder.isNotEmpty) {
+      if (index < 0 || index >= _shuffleOrder.length) return;
+      _currentIndex = index;
+    } else {
+      if (index < 0 || index >= _queue.length) return;
+      _currentIndex = index;
+    }
     await _openCurrent();
   }
 
