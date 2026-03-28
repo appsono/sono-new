@@ -337,17 +337,35 @@ class AudioService {
 
   /// Add song to end of queue
   void addToQueue(Song song) {
+    final newIndex = _queue.length;
     _queue.add(song);
-    _rebuildShuffleOrder();
+    if (_shuffle && _shuffleOrder.isNotEmpty) {
+      //insert at random after current, preserving existing order
+      final insertAt =
+          _currentIndex +
+          1 +
+          Random().nextInt(_shuffleOrder.length - _currentIndex);
+      _shuffleOrder.insert(insertAt, newIndex);
+    }
     _invalidateQueueCache();
     _queueController.add(queue);
   }
 
   /// Insert song as next up
   void playNext(Song song) {
-    final insertAt = (_currentIndex >= 0 ? _effectiveIndex : -1) + 1;
-    _queue.insert(insertAt.clamp(0, _queue.length), song);
-    _rebuildShuffleOrder();
+    if (_shuffle && _shuffleOrder.isNotEmpty) {
+      //insert into raw queue at end, but put it in shuffle order
+      final newIndex = _queue.length;
+      _queue.add(song);
+      _shuffleOrder.insert(_currentIndex + 1, newIndex);
+    } else {
+      final insertAt = (_currentIndex + 1).clamp(0, _queue.length);
+      _queue.insert(insertAt, song);
+      //adjust shuffle indices for insertion
+      for (int i = 0; i < _shuffleOrder.length; i++) {
+        if (_shuffleOrder[i] >= insertAt) _shuffleOrder[i]++;
+      }
+    }
     _invalidateQueueCache();
     _queueController.add(queue);
   }
@@ -355,12 +373,35 @@ class AudioService {
   /// Remove song from queue by index
   void removeFromQueue(int index) {
     if (index < 0 || index >= _queue.length) return;
-    _queue.removeAt(index);
-    if (index < _currentIndex) _currentIndex--;
-    if (_currentIndex >= _queue.length) _currentIndex = _queue.length - 1;
-    _rebuildShuffleOrder();
+    final wasCurrentIndex = _currentIndex;
+
+    if (_shuffle && _shuffleOrder.isNotEmpty) {
+      //index is a position in the shuffle order > covert to raw queue index
+      final rawIndex = _shuffleOrder[index];
+      _queue.removeAt(rawIndex);
+      _shuffleOrder.removeAt(index);
+      //shift down indices that pointed above removed raw position
+      for (int i = 0; i < _shuffleOrder.length; i++) {
+        if (_shuffleOrder[i] > rawIndex) _shuffleOrder[i]--;
+      }
+      //adjust _currentIndex
+      if (index < _currentIndex) {
+        _currentIndex--;
+      } else if (_currentIndex >= _queue.length) {
+        _currentIndex = _shuffleOrder.length - 1;
+      }
+    } else {
+      _queue.removeAt(index);
+      if (index < _currentIndex) _currentIndex--;
+      if (_currentIndex >= _queue.length) _currentIndex = _queue.length - 1;
+    }
     _invalidateQueueCache();
     _queueController.add(queue);
+
+    //if the playing song gets removed, play whats now at that position
+    if (index == wasCurrentIndex && _queue.isNotEmpty) {
+      _openCurrent();
+    }
   }
 
   /// ===========================
