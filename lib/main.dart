@@ -42,10 +42,12 @@ void main() async {
   await sono.AudioService.instance.loadState();
 
   await requestPermission();
-  runApp(MaterialApp(
-    theme: buildSonoTheme(SonoColors.dark),
-    home: TestPage(db: db)
-  ));
+  runApp(
+    MaterialApp(
+      theme: buildSonoTheme(SonoColors.dark),
+      home: TestPage(db: db),
+    ),
+  );
 }
 
 Future<void> requestPermission() async {

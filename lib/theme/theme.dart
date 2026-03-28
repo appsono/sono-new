@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:sono/theme/tokens.dart';
 
@@ -58,10 +57,7 @@ ThemeData buildSonoTheme(SonoColors colors) {
         borderRadius: BorderRadius.circular(SonoSizes.borderRadius),
       ),
     ),
-    dividerTheme: DividerThemeData(
-      color: colors.borderLight10,
-      thickness: 1,
-    ),
+    dividerTheme: DividerThemeData(color: colors.borderLight10, thickness: 1),
     sliderTheme: SliderThemeData(
       activeTrackColor: colors.textPrimary,
       inactiveTrackColor: colors.borderLight20,

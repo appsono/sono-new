@@ -81,7 +81,7 @@ class SonoColors {
     required this.scrollbarThumbHover,
   });
 
-    static const dark = SonoColors(
+  static const dark = SonoColors(
     bgPrimary: Color(0xFF1A1A1A),
     bgContainer: Color(0xFF2D2D2D),
     bgContainerTranslucent: Color(0x992D2D2D),
@@ -121,11 +121,11 @@ class SonoColors {
   // static const light = SonoColors(
   // );
 }
- 
+
 /// ===========================
 ///        gradient
 /// ===========================
- 
+
 abstract final class SonoGradients {
   static const accent = LinearGradient(
     begin: Alignment.topCenter,
@@ -133,45 +133,68 @@ abstract final class SonoGradients {
     colors: [Color(0xFFFF4893), Color(0xFFFF72AC)],
   );
 }
- 
+
 /// ===========================
 ///          sizes
 /// ===========================
- 
+
 abstract final class SonoSizes {
   static const double headerHeight = 64;
   static const double playerHeight = 90;
   static const double sidebarWidth = 240;
- 
+
   static const double borderRadius = 12;
   static const double borderRadiusLg = 16;
   static const double borderRadiusSm = 8;
 }
- 
+
 /// ===========================
 ///        typography
 /// ===========================
- 
+
 abstract final class SonoFonts {
   static const String primary = 'Inter';
   static const String heading = 'VarelaRound';
 }
- 
+
 /// ===========================
 ///         shadows
 /// ===========================
- 
+
 abstract final class SonoShadows {
-  static const sm = [BoxShadow(offset: Offset(0, 1), blurRadius: 2, color: Color(0x66000000))];
-  static const md = [BoxShadow(offset: Offset(0, 4), blurRadius: 6, spreadRadius: -1, color: Color(0x66000000))];
-  static const lg = [BoxShadow(offset: Offset(0, 10), blurRadius: 15, spreadRadius: -3, color: Color(0x66000000))];
-  static const xl = [BoxShadow(offset: Offset(0, 20), blurRadius: 25, spreadRadius: -5, color: Color(0x66000000))];
+  static const sm = [
+    BoxShadow(offset: Offset(0, 1), blurRadius: 2, color: Color(0x66000000)),
+  ];
+  static const md = [
+    BoxShadow(
+      offset: Offset(0, 4),
+      blurRadius: 6,
+      spreadRadius: -1,
+      color: Color(0x66000000),
+    ),
+  ];
+  static const lg = [
+    BoxShadow(
+      offset: Offset(0, 10),
+      blurRadius: 15,
+      spreadRadius: -3,
+      color: Color(0x66000000),
+    ),
+  ];
+  static const xl = [
+    BoxShadow(
+      offset: Offset(0, 20),
+      blurRadius: 25,
+      spreadRadius: -5,
+      color: Color(0x66000000),
+    ),
+  ];
 }
- 
+
 /// ===========================
 ///        durations
 /// ===========================
- 
+
 abstract final class SonoDurations {
   static const fast = Duration(milliseconds: 150);
   static const normal = Duration(milliseconds: 250);
