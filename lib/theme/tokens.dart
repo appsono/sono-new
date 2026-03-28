@@ -1,0 +1,179 @@
+import 'package:flutter/material.dart';
+
+/// ===========================
+///           colors
+/// ===========================
+
+class SonoColors {
+  final Color bgPrimary;
+  final Color bgContainer;
+  final Color bgContainerTranslucent;
+  final Color bgSurface;
+  final Color bgSurfaceHover;
+
+  final Color textPrimary;
+  final Color textSecondary;
+  final Color textTertiary;
+  final Color textPlaceholder;
+  final Color textLight;
+  final Color textDark;
+
+  final Color borderDark;
+  final Color borderLight10;
+  final Color borderLight20;
+  final Color borderLight30;
+
+  final Color shadowStrong;
+  final Color shadowMedium;
+
+  final Color successBg;
+  final Color successText;
+  final Color successBorder;
+
+  final Color errorBg;
+  final Color errorText;
+  final Color errorBorder;
+
+  final Color warningBg;
+  final Color warningText;
+  final Color warningBorder;
+
+  final Color infoBg;
+  final Color infoText;
+  final Color infoBorder;
+
+  final Color scrollbarTrack;
+  final Color scrollbarThumb;
+  final Color scrollbarThumbHover;
+
+  const SonoColors({
+    required this.bgPrimary,
+    required this.bgContainer,
+    required this.bgContainerTranslucent,
+    required this.bgSurface,
+    required this.bgSurfaceHover,
+    required this.textPrimary,
+    required this.textSecondary,
+    required this.textTertiary,
+    required this.textPlaceholder,
+    required this.textLight,
+    required this.textDark,
+    required this.borderDark,
+    required this.borderLight10,
+    required this.borderLight20,
+    required this.borderLight30,
+    required this.shadowStrong,
+    required this.shadowMedium,
+    required this.successBg,
+    required this.successText,
+    required this.successBorder,
+    required this.errorBg,
+    required this.errorText,
+    required this.errorBorder,
+    required this.warningBg,
+    required this.warningText,
+    required this.warningBorder,
+    required this.infoBg,
+    required this.infoText,
+    required this.infoBorder,
+    required this.scrollbarTrack,
+    required this.scrollbarThumb,
+    required this.scrollbarThumbHover,
+  });
+
+    static const dark = SonoColors(
+    bgPrimary: Color(0xFF1A1A1A),
+    bgContainer: Color(0xFF2D2D2D),
+    bgContainerTranslucent: Color(0x992D2D2D),
+    bgSurface: Color(0x0DFFFFFF),
+    bgSurfaceHover: Color(0x14FFFFFF),
+    textPrimary: Color(0xFFE0E0E0),
+    textSecondary: Color(0xFFACACAC),
+    textTertiary: Color(0xFFA0A0A0),
+    textPlaceholder: Color(0xFF666666),
+    textLight: Color(0xFFFFFFFF),
+    textDark: Color(0xFF000000),
+    borderDark: Color(0xCC282828),
+    borderLight10: Color(0x1AFFFFFF),
+    borderLight20: Color(0x33FFFFFF),
+    borderLight30: Color(0x4DFFFFFF),
+    shadowStrong: Color(0x66000000),
+    shadowMedium: Color(0x33000000),
+    successBg: Color(0x1A28A745),
+    successText: Color(0xFF64AA52),
+    successBorder: Color(0xFF98EA83),
+    errorBg: Color(0x1ADC3545),
+    errorText: Color(0xFF9F3D3D),
+    errorBorder: Color(0xFFCC5F5F),
+    warningBg: Color(0x1AFFC107),
+    warningText: Color(0xFFFFC107),
+    warningBorder: Color(0xFFFFD454),
+    infoBg: Color(0x1A0D6EFD),
+    infoText: Color(0xFF4D9FF0),
+    infoBorder: Color(0xFF7DB8F5),
+    scrollbarTrack: Color(0x33000000),
+    scrollbarThumb: Color(0xFF444444),
+    scrollbarThumbHover: Color(0xFF555555),
+  );
+
+  //TODO: fill later for light mode
+
+  // static const light = SonoColors(
+  // );
+}
+ 
+/// ===========================
+///        gradient
+/// ===========================
+ 
+abstract final class SonoGradients {
+  static const accent = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Color(0xFFFF4893), Color(0xFFFF72AC)],
+  );
+}
+ 
+/// ===========================
+///          sizes
+/// ===========================
+ 
+abstract final class SonoSizes {
+  static const double headerHeight = 64;
+  static const double playerHeight = 90;
+  static const double sidebarWidth = 240;
+ 
+  static const double borderRadius = 12;
+  static const double borderRadiusLg = 16;
+  static const double borderRadiusSm = 8;
+}
+ 
+/// ===========================
+///        typography
+/// ===========================
+ 
+abstract final class SonoFonts {
+  static const String primary = 'Inter';
+  static const String heading = 'VarelaRound';
+}
+ 
+/// ===========================
+///         shadows
+/// ===========================
+ 
+abstract final class SonoShadows {
+  static const sm = [BoxShadow(offset: Offset(0, 1), blurRadius: 2, color: Color(0x66000000))];
+  static const md = [BoxShadow(offset: Offset(0, 4), blurRadius: 6, spreadRadius: -1, color: Color(0x66000000))];
+  static const lg = [BoxShadow(offset: Offset(0, 10), blurRadius: 15, spreadRadius: -3, color: Color(0x66000000))];
+  static const xl = [BoxShadow(offset: Offset(0, 20), blurRadius: 25, spreadRadius: -5, color: Color(0x66000000))];
+}
+ 
+/// ===========================
+///        durations
+/// ===========================
+ 
+abstract final class SonoDurations {
+  static const fast = Duration(milliseconds: 150);
+  static const normal = Duration(milliseconds: 250);
+  static const slow = Duration(milliseconds: 350);
+}
