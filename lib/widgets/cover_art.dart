@@ -111,7 +111,10 @@ class _SonoCoverArtState extends State<SonoCoverArt>
           shape: BoxShape.circle,
           color: context.sono.primary,
           image: (_loaded && _cover != null)
-              ? DecorationImage(image: MemoryImage(_cover!), fit: BoxFit.contain)
+              ? DecorationImage(
+                  image: MemoryImage(_cover!),
+                  fit: BoxFit.contain,
+                )
               : null,
         ),
         child: _loaded && _cover != null
