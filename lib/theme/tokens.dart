@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 /// ===========================
 
 class SonoColors {
+  final Color primary;
+
   final Color bgPrimary;
   final Color bgContainer;
   final Color bgContainerTranslucent;
@@ -47,6 +49,7 @@ class SonoColors {
   final Color scrollbarThumbHover;
 
   const SonoColors({
+    required this.primary,
     required this.bgPrimary,
     required this.bgContainer,
     required this.bgContainerTranslucent,
@@ -82,6 +85,7 @@ class SonoColors {
   });
 
   static const dark = SonoColors(
+    primary: Color(0xFFFF4893),
     bgPrimary: Color(0xFF1A1A1A),
     bgContainer: Color(0xFF2D2D2D),
     bgContainerTranslucent: Color(0x992D2D2D),
@@ -153,7 +157,7 @@ abstract final class SonoSizes {
 /// ===========================
 
 abstract final class SonoFonts {
-  static const String primary = 'Inter';
+  static const String primary = 'Poppins';
   static const String heading = 'VarelaRound';
 }
 
