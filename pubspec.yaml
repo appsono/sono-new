@@ -54,11 +54,11 @@ flutter:
         - asset: assets/app/fonts/VarelaRound/VarelaRound-Regular.ttf
     - family: Poppins
       fonts:
-        - asset: assets/app/fonts/fonts/Poppins/Poppins-Regular.ttf
+        - asset: assets/app/fonts/Poppins/Poppins-Regular.ttf
           weight: 400
-        - asset: assets/app/fonts/fonts/Poppins/Poppins-Medium.ttf
+        - asset: assets/app/fonts/Poppins/Poppins-Medium.ttf
           weight: 500
-        - asset: assets/app/fonts/fonts/Poppins/Poppins-SemiBold.ttf
+        - asset: assets/app/fonts/Poppins/Poppins-SemiBold.ttf
           weight: 600
-        - asset: assets/app/fonts/fonts/Poppins/Poppins-Bold.ttf
+        - asset: assets/app/fonts/Poppins/Poppins-Bold.ttf
           weight: 700
