@@ -12,7 +12,8 @@ import 'package:sono/services/audio_effects_service.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 
-import 'pages/test/test_page.dart';
+//import 'pages/test/test_page.dart';
+import 'package:sono/pages/test/widget_test_page.dart';
 
 late AudioHandler audioHandler;
 
@@ -42,16 +43,24 @@ void main() async {
   await sono.AudioService.instance.loadState();
 
   await requestPermission();
-  runApp(
-    MaterialApp(
-      theme: buildSonoTheme(SonoColors.dark),
-      home: TestPage(db: db),
-    ),
-  );
+  runApp(SonoApp(db: db));
 }
 
 Future<void> requestPermission() async {
   if (Platform.isAndroid || Platform.isIOS) {
     await Permission.audio.request();
+  }
+}
+
+class SonoApp extends StatelessWidget {
+  final SonoDatabase db;
+  const SonoApp({required this.db, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: buildSonoTheme(SonoColors.dark),
+      home: WidgetTestPage(db: db),
+    );
   }
 }
