@@ -12,7 +12,7 @@ import 'package:sono/services/audio_effects_service.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 
-import 'test_page.dart';
+import 'pages/test/test_page.dart';
 
 late AudioHandler audioHandler;
 
