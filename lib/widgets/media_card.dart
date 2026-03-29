@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/widgets/cover_art.dart';
 
-class SonoMediaCard extends StatelessWidget {
+class SonoMediaCard extends StatefulWidget {
   final String path;
   final String title;
   final String? subtitle;
@@ -24,28 +24,54 @@ class SonoMediaCard extends StatelessWidget {
   });
 
   @override
+  State<SonoMediaCard> createState() => _SonoMediaCardState();
+}
+
+class _SonoMediaCardState extends State<SonoMediaCard> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) async {
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (mounted) setState(() => false);
+      },
+      onTapCancel: () => setState(() => _pressed = false),
       child: SizedBox(
-        width: size,
+        width: widget.size,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SonoCoverArt(path: path, size: size, shape: shape),
+            AnimatedScale(
+              scale: _pressed ? 0.92 : 1.0,
+              duration: _pressed
+                  ? const Duration(milliseconds: 100)
+                  : const Duration(milliseconds: 500),
+              curve: _pressed ? Curves.easeIn : Curves.elasticOut,
+              child: SonoCoverArt(
+                path: widget.path,
+                size: widget.size,
+                shape: widget.shape,
+              ),
+            ),
             const SizedBox(height: 6),
             Text(
-              title,
+              widget.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: titleStyle ?? Theme.of(context).textTheme.bodySmall,
+              style: widget.titleStyle ?? Theme.of(context).textTheme.bodySmall,
             ),
-            if (subtitle != null)
+            if (widget.subtitle != null)
               Text(
-                subtitle!,
+                widget.subtitle!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: subtitleStyle ?? Theme.of(context).textTheme.labelSmall,
+                style:
+                    widget.subtitleStyle ??
+                    Theme.of(context).textTheme.labelSmall,
               ),
           ],
         ),
