@@ -67,6 +67,12 @@ ThemeData buildSonoTheme(SonoColors colors) {
     ),
     iconTheme: IconThemeData(color: colors.textSecondary),
     textTheme: TextTheme(
+      //titles
+      titleLarge: TextStyle(
+        fontFamily: SonoFonts.heading,
+        fontSize: 25,
+        color: colors.textPrimary,
+      ),
       //headings
       headlineLarge: TextStyle(
         fontFamily: SonoFonts.heading,
