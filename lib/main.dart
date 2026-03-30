@@ -11,7 +11,6 @@ import 'package:sono/services/audio_effects_service.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 
-
 late AudioHandler audioHandler;
 
 void main() async {
