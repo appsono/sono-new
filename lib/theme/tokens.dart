@@ -10,6 +10,7 @@ class SonoColors {
   final Color bgPrimary;
   final Color bgContainer;
   final Color bgContainerTranslucent;
+  final Color bgNav;
   final Color bgSurface;
   final Color bgSurfaceHover;
 
@@ -53,6 +54,7 @@ class SonoColors {
     required this.bgPrimary,
     required this.bgContainer,
     required this.bgContainerTranslucent,
+    required this.bgNav,
     required this.bgSurface,
     required this.bgSurfaceHover,
     required this.textPrimary,
@@ -86,9 +88,10 @@ class SonoColors {
 
   static const dark = SonoColors(
     primary: Color(0xFFFF4893),
-    bgPrimary: Color(0xFF1A1A1A),
+    bgPrimary: Color(0xFF212121),
     bgContainer: Color(0xFF2D2D2D),
     bgContainerTranslucent: Color(0x992D2D2D),
+    bgNav: Color(0xFF1A1A1A),
     bgSurface: Color(0x0DFFFFFF),
     bgSurfaceHover: Color(0x14FFFFFF),
     textPrimary: Color(0xFFE0E0E0),
@@ -150,6 +153,8 @@ abstract final class SonoSizes {
   static const double borderRadius = 12;
   static const double borderRadiusLg = 16;
   static const double borderRadiusSm = 8;
+
+  static const double navBarRadius = 30;
 }
 
 /// ===========================
@@ -191,6 +196,14 @@ abstract final class SonoShadows {
       blurRadius: 25,
       spreadRadius: -5,
       color: Color(0x66000000),
+    ),
+  ];
+  static const navBar = [
+    BoxShadow(
+      offset: Offset(0, 10),
+      blurRadius: 12.5,
+      spreadRadius: -5,
+      color: Color(0x33000000),
     ),
   ];
 }
