@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/scan_service.dart';
+import 'package:sono/widgets/bottom_nav.dart';
 
 class AppShell extends StatefulWidget {
   final SonoDatabase db;
@@ -32,6 +33,9 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: derive from audio service stream
+    const miniPlayerVisible = false;
+
     return Scaffold(
       body: IndexedStack(
         index: _tab,
@@ -48,24 +52,13 @@ class _AppShellState extends State<AppShell> {
           //TODO: SonoMiniPlayer()
           const Placeholder(fallbackHeight: 64),
 
-          //TODO: SonoBottomNav
-          NavigationBar(
-            selectedIndex: _tab,
-            onDestinationSelected: (i) => setState(() => _tab = i),
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.home_rounded),
-                label: 'Home',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.search_rounded),
-                label: 'Search',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.library_music_rounded),
-                label: 'Library',
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: 12, right: 12, bottom: 22),
+            child: SonoNavBar(
+              selectedIndex: _tab,
+              onDestinationSelected: (i) => setState(() => _tab = i),
+              miniPlayerVisible: miniPlayerVisible,
+            ),
           ),
         ],
       ),
