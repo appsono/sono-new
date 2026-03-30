@@ -31,6 +31,9 @@ class AudioService {
   final _queueController = StreamController<List<Song>>.broadcast();
   final _shuffleController = StreamController<bool>.broadcast();
   final _repeatController = StreamController<RepeatMode>.broadcast();
+  final _artistNameController = StreamController<String?>.broadcast();
+
+  String? _currentArtistName;
 
   void _ensureInitialized() {
     if (!_initialized) {
@@ -53,6 +56,9 @@ class AudioService {
     _ensureInitialized();
     return _player.stream.playing;
   }
+
+  Stream<String?> get artistNameStream => _artistNameController.stream;
+  String? get currentArtistName => _currentArtistName;
 
   Stream<Duration> get positionStream {
     _ensureInitialized();
@@ -416,6 +422,16 @@ class AudioService {
     final song = currentSong;
     if (song == null) return;
     _currentSongController.add(song);
+
+    //resolve artist name from db
+    _currentArtistName = null;
+    _artistNameController.add(null);
+    if (_db != null && song.artistId != null) {
+      final artist = await _db!.getArtistById(song.artistId!);
+      _currentArtistName = artist?.name;
+      _artistNameController.add(_currentArtistName);
+    }
+
     //media_kit(ty /j) expects URI not raw path
     final uri = song.path.startsWith('/') ? 'file://${song.path}' : song.path;
     await _player.open(Media(uri), play: true);
@@ -464,5 +480,6 @@ class AudioService {
     _queueController.close();
     _shuffleController.close();
     _repeatController.close();
+    _artistNameController.close();
   }
 }
