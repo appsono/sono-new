@@ -37,7 +37,7 @@ class _SonoMediaCardState extends State<SonoMediaCard> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) async {
         await Future.delayed(const Duration(milliseconds: 100));
-        if (mounted) setState(() => false);
+        if (mounted) setState(() => _pressed = false);
       },
       onTapCancel: () => setState(() => _pressed = false),
       child: SizedBox(
