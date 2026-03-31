@@ -41,15 +41,34 @@ void main() async {
   runApp(SonoApp(db: db));
 }
 
-class SonoApp extends StatelessWidget {
+class SonoApp extends StatefulWidget {
   final SonoDatabase db;
   const SonoApp({required this.db, super.key});
 
+  /// Global toggle
+  static final themeNotifier = ValueNotifier<SonoColors>(SonoColors.dark);
+
+  static void toggleTheme() {
+    themeNotifier.value = themeNotifier.value == SonoColors.dark
+        ? SonoColors.light
+        : SonoColors.dark;
+  }
+
+  @override
+  State<SonoApp> createState() => _SonoAppState();
+}
+
+class _SonoAppState extends State<SonoApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: buildSonoTheme(SonoColors.dark),
-      home: AppShell(db: db),
+    return ValueListenableBuilder(
+      valueListenable: SonoApp.themeNotifier,
+      builder: (_, colors, _) {
+        return MaterialApp(
+          theme: buildSonoTheme(colors),
+          home: AppShell(db: widget.db),
+        );
+      },
     );
   }
 }

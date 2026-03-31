@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sono/db/database.dart';
+import 'package:sono/main.dart';
+import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/media_card.dart';
 import 'package:sono/widgets/section.dart';
@@ -65,6 +67,19 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
       body: SafeArea(
         child: ListView(
           children: [
+            ValueListenableBuilder<SonoColors>(
+              valueListenable: SonoApp.themeNotifier,
+              builder: (_, colors, _) {
+                return IconButton(
+                  icon: Icon(
+                    SonoApp.themeNotifier.value == SonoColors.dark
+                        ? Icons.light_mode_rounded
+                        : Icons.dark_mode_rounded,
+                  ),
+                  onPressed: SonoApp.toggleTheme,
+                );
+              },
+            ),
             SonoSection(
               title: 'Songs',
               onSeeAll: () {},
@@ -121,7 +136,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
             ),
             const SizedBox(height: 24),
 
-            //test  cover art shapes
+            //test cover art shapes
             Row(
               spacing: 12,
               children: [

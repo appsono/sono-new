@@ -123,10 +123,42 @@ class SonoColors {
     scrollbarThumbHover: Color(0xFF555555),
   );
 
-  //TODO: fill later for light mode
-
-  // static const light = SonoColors(
-  // );
+  static const light = SonoColors(
+    primary: Color(0xFFE5306F),
+    bgPrimary: Color(0xFFF5F5F5),
+    bgContainer: Color(0xFFFFFFFF),
+    bgContainerTranslucent: Color(0x99FFFFFF),
+    bgNav: Color(0xFFEBEBEB),
+    bgSurface: Color(0x0D000000),
+    bgSurfaceHover: Color(0x14000000),
+    textPrimary: Color(0xFF1A1A1A),
+    textSecondary: Color(0xFF5C5C5C),
+    textTertiary: Color(0xFF787878),
+    textPlaceholder: Color(0xFFA0A0A0),
+    textLight: Color(0xFFFFFFFF),
+    textDark: Color(0xFF000000),
+    borderDark: Color(0xCCE0E0E0),
+    borderLight10: Color(0x1A000000),
+    borderLight20: Color(0x33000000),
+    borderLight30: Color(0x4D000000),
+    shadowStrong: Color(0x29000000),
+    shadowMedium: Color(0x14000000),
+    successBg: Color(0x1A28A745),
+    successText: Color(0xFF1E7A32),
+    successBorder: Color(0xFF4CAF50),
+    errorBg: Color(0x1ADC3545),
+    errorText: Color(0xFFC62828),
+    errorBorder: Color(0xFFE57373),
+    warningBg: Color(0x1AFFC107),
+    warningText: Color(0xFFA67C00),
+    warningBorder: Color(0xFFFFB300),
+    infoBg: Color(0x1A0D6EFD),
+    infoText: Color(0xFF1565C0),
+    infoBorder: Color(0xFF42A5F5),
+    scrollbarTrack: Color(0x14000000),
+    scrollbarThumb: Color(0xFFBBBBBB),
+    scrollbarThumbHover: Color(0xFFA0A0A0),
+  );
 }
 
 /// ===========================

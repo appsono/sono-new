@@ -23,11 +23,12 @@ class SonoThemeData extends ThemeExtension<SonoThemeData> {
 }
 
 ThemeData buildSonoTheme(SonoColors colors) {
+  final isLight = colors.bgPrimary.computeLuminance() > 0.5;
   return ThemeData(
-    brightness: Brightness.dark,
+    brightness: isLight ? Brightness.light : Brightness.dark,
     fontFamily: SonoFonts.primary,
     scaffoldBackgroundColor: colors.bgPrimary,
-    colorScheme: ColorScheme.dark(
+    colorScheme: (isLight ? const ColorScheme.light() : const ColorScheme.dark()).copyWith(
       surface: colors.bgSurface,
       primary: colors.textPrimary,
       secondary: colors.textSecondary,
