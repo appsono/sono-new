@@ -26,8 +26,8 @@
 - ~~Present finished design to community for feedback~~ **DONE**
 
 ### Phase 2
-- Create required theme files
-- Create required widgets
+- ~~Create required theme files~~ **DONE**
+- Create required widgets **IN PROGRESS**
 
 ### Phase 3
 - Create Home page
