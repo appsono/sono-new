@@ -148,7 +148,8 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
                             child: StreamBuilder<String?>(
                               stream: audio.artistNameStream,
                               builder: (_, artistSnap) {
-                                final artistName = artistSnap.data ??
+                                final artistName =
+                                    artistSnap.data ??
                                     audio.currentArtistName ??
                                     'Unknown Artist';
                                 return _MarqueeGroup(
@@ -430,8 +431,9 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
     _titleWidth = _measureText(widget.title, widget.titleStyle);
     _subtitleWidth = _measureText(widget.subtitle, widget.subtitleStyle);
 
-    final longestWidth =
-        _titleWidth > _subtitleWidth ? _titleWidth : _subtitleWidth;
+    final longestWidth = _titleWidth > _subtitleWidth
+        ? _titleWidth
+        : _subtitleWidth;
 
     _needsScroll = longestWidth > width;
 
@@ -514,13 +516,19 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
     if (!overflows || _anim == null) {
       return SizedBox(
         height: height,
-        child: Text(text, style: style, maxLines: 1,
-            overflow: TextOverflow.ellipsis),
+        child: Text(
+          text,
+          style: style,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       );
     }
 
-    final effectiveGap =
-        (_scrollDistance - textWidth).clamp(widget.gap, double.infinity);
+    final effectiveGap = (_scrollDistance - textWidth).clamp(
+      widget.gap,
+      double.infinity,
+    );
 
     return SizedBox(
       height: height,
