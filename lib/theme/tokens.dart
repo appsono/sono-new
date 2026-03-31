@@ -206,6 +206,14 @@ abstract final class SonoShadows {
       color: Color(0x33000000),
     ),
   ];
+  static const miniPlayer = [
+    BoxShadow(
+      offset: Offset(0, -10),
+      blurRadius: 12.5,
+      spreadRadius: -5,
+      color: Color(0x33000000),
+    ),
+  ];
 }
 
 /// ===========================

@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/pages/test/widget_test_page.dart';
+import 'package:sono/services/audio_service.dart';
 import 'package:sono/services/scan_service.dart';
+import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/bottom_nav.dart';
 
 class AppShell extends StatefulWidget {
@@ -33,34 +36,37 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: derive from audio service stream
-    const miniPlayerVisible = false;
-
     return Scaffold(
       body: IndexedStack(
         index: _tab,
         children: [
-          //TODO: HomePage(db: widget.db),
-          Center(child: Text('Home')),
+          WidgetTestPage(db: widget.db),
           Center(child: Text('Search')),
           Center(child: Text('Library')),
         ],
       ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          //TODO: SonoMiniPlayer()
-          const Placeholder(fallbackHeight: 64),
+      bottomNavigationBar: StreamBuilder<Song?>(
+        stream: AudioService.instance.currentSongStream,
+        builder: (context, snap) {
+          final hasSong =
+              snap.data != null || AudioService.instance.currentSong != null;
 
-          Padding(
+          return Padding(
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 22),
-            child: SonoNavBar(
-              selectedIndex: _tab,
-              onDestinationSelected: (i) => setState(() => _tab = i),
-              miniPlayerVisible: miniPlayerVisible,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SonoMiniPlayer(navBarVisible: true),
+                const SizedBox(height: 6),
+                SonoNavBar(
+                  selectedIndex: _tab,
+                  onDestinationSelected: (i) => setState(() => _tab = i),
+                  miniPlayerVisible: hasSong,
+                ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

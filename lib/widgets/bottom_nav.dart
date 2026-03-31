@@ -9,6 +9,7 @@ class SonoNavBar extends StatelessWidget {
   final ValueChanged<int> onDestinationSelected;
   final bool miniPlayerVisible;
   final double borderRadius;
+  final innerRadius = SonoSizes.borderRadiusSm;
 
   const SonoNavBar({
     required this.selectedIndex,
@@ -42,6 +43,8 @@ class SonoNavBar extends StatelessWidget {
 
     final radius = miniPlayerVisible
         ? BorderRadius.only(
+            topLeft: Radius.circular(innerRadius),
+            topRight: Radius.circular(innerRadius),
             bottomLeft: Radius.circular(borderRadius),
             bottomRight: Radius.circular(borderRadius),
           )
