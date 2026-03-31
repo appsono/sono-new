@@ -28,12 +28,14 @@ ThemeData buildSonoTheme(SonoColors colors) {
     brightness: isLight ? Brightness.light : Brightness.dark,
     fontFamily: SonoFonts.primary,
     scaffoldBackgroundColor: colors.bgPrimary,
-    colorScheme: (isLight ? const ColorScheme.light() : const ColorScheme.dark()).copyWith(
-      surface: colors.bgSurface,
-      primary: colors.textPrimary,
-      secondary: colors.textSecondary,
-      error: colors.errorText,
-    ),
+    colorScheme:
+        (isLight ? const ColorScheme.light() : const ColorScheme.dark())
+            .copyWith(
+              surface: colors.bgSurface,
+              primary: colors.textPrimary,
+              secondary: colors.textSecondary,
+              error: colors.errorText,
+            ),
     appBarTheme: AppBarTheme(
       backgroundColor: colors.bgContainer,
       foregroundColor: colors.textPrimary,
