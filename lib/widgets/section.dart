@@ -41,12 +41,16 @@ class SonoSection extends StatelessWidget {
                     height: 45,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: colors.textLight,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? colors.textLight
+                          : colors.textDark,
                     ),
                     child: Icon(
                       Icons.arrow_forward_ios_rounded,
                       size: 18,
-                      color: colors.textDark,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? colors.textDark
+                          : colors.textLight,
                     ),
                   ),
                 ),
