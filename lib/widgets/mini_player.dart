@@ -158,13 +158,17 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
                                     fontFamily: SonoFonts.heading,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                    color: colors.textPrimary,
+                                    color: (_coverLoaded && _coverBytes != null)
+                                        ? Colors.white
+                                        : colors.textPrimary,
                                   ),
                                   subtitle: artistName,
                                   subtitleStyle: TextStyle(
                                     fontFamily: SonoFonts.primary,
                                     fontSize: 12,
-                                    color: colors.textSecondary,
+                                    color: (_coverLoaded && _coverBytes != null)
+                                        ? Colors.white.withValues(alpha: 0.6)
+                                        : colors.textSecondary,
                                   ),
                                 );
                               },
