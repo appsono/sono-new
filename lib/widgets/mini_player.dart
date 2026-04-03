@@ -420,6 +420,9 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
   bool _needsScroll = false;
   bool _measured = false;
 
+  final _titleKey = GlobalKey();
+  final _subtitleKey = GlobalKey();
+
   @override
   void didUpdateWidget(_MarqueeGroup old) {
     super.didUpdateWidget(old);
@@ -432,22 +435,27 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
     }
   }
 
-  double _measureText(String text, TextStyle style) {
+  double _measureText(String text, TextStyle style, BuildContext context) {
     final tp = TextPainter(
       text: TextSpan(text: text, style: style),
       maxLines: 1,
       textDirection: TextDirection.ltr,
+      textScaler: MediaQuery.textScalerOf(context),
     )..layout();
     return tp.width;
   }
 
-  void _onLayout(double width) {
+  void _onLayout(double width, BuildContext context) {
     if (_measured && _containerWidth == width) return;
     _containerWidth = width;
     _measured = true;
 
-    _titleWidth = _measureText(widget.title, widget.titleStyle);
-    _subtitleWidth = _measureText(widget.subtitle, widget.subtitleStyle);
+    _titleWidth = _measureText(widget.title, widget.titleStyle, context);
+    _subtitleWidth = _measureText(
+      widget.subtitle,
+      widget.subtitleStyle,
+      context,
+    );
 
     final longestWidth = _titleWidth > _subtitleWidth
         ? _titleWidth
@@ -459,7 +467,7 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
     _anim = null;
 
     if (_needsScroll) {
-      _scrollDistance = longestWidth + widget.gap;
+      _scrollDistance = longestWidth + widget.gap + 2;
       final scrollMs = (_scrollDistance / 40 * 1000).round();
 
       _anim = AnimationController(
@@ -471,8 +479,42 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) setState(() {});
+      if (!mounted) return;
+      _remeasureActual();
+      setState(() {});
     });
+  }
+
+  void _remeasureActual() {
+    bool changed = false;
+
+    final titleBox =
+        _titleKey.currentContext?.findRenderObject() as RenderBox?;
+    if (titleBox != null && titleBox.hasSize) {
+      final w = titleBox.size.width;
+      if ((w - _titleWidth).abs() > 0.1) {
+        _titleWidth = w;
+        changed = true;
+      }
+    }
+
+    final subtitleBox =
+        _subtitleKey.currentContext?.findRenderObject() as RenderBox?;
+    if (subtitleBox != null && subtitleBox.hasSize) {
+      final w = subtitleBox.size.width;
+      if ((w - _subtitleWidth).abs() > 0.1) {
+        _subtitleWidth = w;
+        changed = true;
+      }
+    }
+
+    if (!changed || !_needsScroll) return;
+
+    final longest =
+        _titleWidth > _subtitleWidth ? _titleWidth : _subtitleWidth;
+    _scrollDistance = longest + widget.gap + 2;
+    final scrollMs = (_scrollDistance / 40 * 1000).round();
+    _anim?.duration = Duration(milliseconds: scrollMs);
   }
 
   Future<void> _runLoop(AnimationController controller) async {
@@ -484,8 +526,9 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
         return;
       }
       if (!mounted || _anim != controller) return;
-      controller.value = 0.0;
       await Future.delayed(const Duration(milliseconds: 1500));
+      if (!mounted || _anim != controller) return;
+      controller.value = 0.0;
     }
   }
 
@@ -498,7 +541,7 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
       height: titleHeight + subtitleHeight,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          _onLayout(constraints.maxWidth);
+          _onLayout(constraints.maxWidth, context);
 
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -509,12 +552,14 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
                 style: widget.titleStyle,
                 height: titleHeight,
                 textWidth: _titleWidth,
+                scrollKey: _titleKey,
               ),
               _buildLine(
                 text: widget.subtitle,
                 style: widget.subtitleStyle,
                 height: subtitleHeight,
                 textWidth: _subtitleWidth,
+                scrollKey: _subtitleKey,
               ),
             ],
           );
@@ -528,6 +573,7 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
     required TextStyle style,
     required double height,
     required double textWidth,
+    GlobalKey? scrollKey,
   }) {
     final overflows = textWidth > _containerWidth;
 
@@ -549,12 +595,13 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
     );
 
     return SizedBox(
+      width: _containerWidth,
       height: height,
       child: ShaderMask(
         shaderCallback: (bounds) {
           return const LinearGradient(
             colors: [Colors.white, Colors.white, Colors.transparent],
-            stops: [0.03, 0.92, 1.0],
+            stops: [0.08, 0.75, 1.0],
           ).createShader(bounds);
         },
         blendMode: BlendMode.dstIn,
@@ -564,13 +611,14 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
             final offset = _anim!.value * _scrollDistance;
 
             return Stack(
+              fit: StackFit.expand,
               children: [
                 Positioned(
                   left: -offset,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(text, style: style, maxLines: 1, softWrap: false),
+                      Text(text, key: scrollKey, style: style, maxLines: 1, softWrap: false),
                       SizedBox(width: effectiveGap),
                       Text(text, style: style, maxLines: 1, softWrap: false),
                     ],
