@@ -146,9 +146,6 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
                             size: 54,
                             shape: CoverShape.circle,
                             spinning: playing,
-                            songDuration: widget.song.duration != null
-                                ? Duration(milliseconds: widget.song.duration!)
-                                : null,
                           ),
                           const SizedBox(width: 10),
 

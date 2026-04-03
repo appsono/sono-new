@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:sono/theme/theme.dart';
+import 'package:sono/services/audio_service.dart';
 import 'package:sono_query/sono_query.dart';
 import 'package:sono/theme/tokens.dart';
 
@@ -34,13 +36,16 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     with TickerProviderStateMixin {
   Uint8List? _cover;
   bool _loaded = false;
-  AnimationController? _spinController;
+  late final AnimationController _spinController;
+  StreamSubscription<Duration>? _positionSub;
+  static const _turnPeriod = Duration(seconds: 20);
 
   @override
   void initState() {
     super.initState();
     _loadCover();
-    _setupSpin();
+    _spinController = AnimationController(vsync: this, duration: _turnPeriod);
+    if (widget.spinning) _startSpin();
   }
 
   @override
@@ -51,11 +56,14 @@ class _SonoCoverArtState extends State<SonoCoverArt>
       _cover = null;
       _loadCover();
     }
-    if (oldWidget.spinning != widget.spinning ||
-        oldWidget.songDuration != widget.songDuration) {
-      _spinController?.dispose();
-      _spinController = null;
-      _setupSpin();
+    if (oldWidget.spinning != widget.spinning) {
+      if (widget.spinning) {
+        _startSpin();
+      } else {
+        _positionSub?.cancel();
+        _positionSub = null;
+        _spinController.stop();
+      }
     }
   }
 
@@ -69,18 +77,22 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     }
   }
 
-  Duration _rotationDuration(int? songDurationMs) {
-    if (songDurationMs == null || songDurationMs <= 3000) return Duration.zero;
-    if (songDurationMs >= 600000) return const Duration(seconds: 600);
-    return Duration(milliseconds: songDurationMs);
+  void _startSpin() {
+    _syncToPosition(AudioService.instance.position);
+    _spinController.repeat();
+    _positionSub?.cancel();
+    _positionSub = AudioService.instance.positionStream.listen(_syncToPosition);
   }
 
-  void _setupSpin() {
-    if (!widget.spinning) return;
-    final dur = _rotationDuration(widget.songDuration?.inMilliseconds);
-    if (dur == Duration.zero) return;
-    _spinController = AnimationController(vsync: this, duration: dur)
-      ..forward();
+  void _syncToPosition(Duration pos) {
+    if (!_spinController.isAnimating) return;
+    final target =
+        (pos.inMilliseconds % _turnPeriod.inMilliseconds) /
+        _turnPeriod.inMilliseconds;
+    if ((target - _spinController.value).abs() > 0.05) {
+      _spinController.value = target;
+      _spinController.repeat();
+    }
   }
 
   @override
@@ -88,16 +100,14 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     Widget child = _buildContent(context);
 
     //spin anim
-    if (_spinController != null) {
-      child = AnimatedBuilder(
-        animation: _spinController!,
-        child: child,
-        builder: (_, c) => Transform.rotate(
-          angle: _spinController!.value * 2 * 3.14159265,
-          child: c,
-        ),
-      );
-    }
+    child = AnimatedBuilder(
+      animation: _spinController,
+      child: child,
+      builder: (_, c) => Transform.rotate(
+        angle: _spinController.value * 2 * 3.14159265,
+        child: c,
+      ),
+    );
 
     return SizedBox.square(dimension: widget.size, child: child);
   }
@@ -153,7 +163,8 @@ class _SonoCoverArtState extends State<SonoCoverArt>
 
   @override
   void dispose() {
-    _spinController?.dispose();
+    _positionSub?.cancel();
+    _spinController.dispose();
     super.dispose();
   }
 }
