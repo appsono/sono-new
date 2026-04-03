@@ -99,6 +99,15 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
           )
         : BorderRadius.circular(widget.borderRadius);
 
+    final innerRadius = widget.navBarVisible
+        ? BorderRadius.only(
+            topLeft: Radius.circular(widget.borderRadius - 2),
+            topRight: Radius.circular(widget.borderRadius - 2),
+            bottomLeft: Radius.circular(widget.innerRadius - 2),
+            bottomRight: Radius.circular(widget.innerRadius - 2), 
+          )
+        : BorderRadius.circular(widget.borderRadius - 2);
+
     return Container(
       height: 72,
       decoration: BoxDecoration(
@@ -108,7 +117,7 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
         boxShadow: SonoShadows.miniPlayer(Theme.of(context).brightness),
       ),
       child: ClipRRect(
-        borderRadius: radius,
+        borderRadius: innerRadius,
         child: Container(
           height: 72,
           color: colors.bgNav,
