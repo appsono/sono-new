@@ -104,7 +104,7 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
             topLeft: Radius.circular(widget.borderRadius - 2),
             topRight: Radius.circular(widget.borderRadius - 2),
             bottomLeft: Radius.circular(widget.innerRadius - 2),
-            bottomRight: Radius.circular(widget.innerRadius - 2), 
+            bottomRight: Radius.circular(widget.innerRadius - 2),
           )
         : BorderRadius.circular(widget.borderRadius - 2);
 
@@ -488,8 +488,7 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
   void _remeasureActual() {
     bool changed = false;
 
-    final titleBox =
-        _titleKey.currentContext?.findRenderObject() as RenderBox?;
+    final titleBox = _titleKey.currentContext?.findRenderObject() as RenderBox?;
     if (titleBox != null && titleBox.hasSize) {
       final w = titleBox.size.width;
       if ((w - _titleWidth).abs() > 0.1) {
@@ -510,8 +509,7 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
 
     if (!changed || !_needsScroll) return;
 
-    final longest =
-        _titleWidth > _subtitleWidth ? _titleWidth : _subtitleWidth;
+    final longest = _titleWidth > _subtitleWidth ? _titleWidth : _subtitleWidth;
     _scrollDistance = longest + widget.gap + 2;
     final scrollMs = (_scrollDistance / 40 * 1000).round();
     _anim?.duration = Duration(milliseconds: scrollMs);
@@ -618,7 +616,13 @@ class _MarqueeGroupState extends State<_MarqueeGroup>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(text, key: scrollKey, style: style, maxLines: 1, softWrap: false),
+                      Text(
+                        text,
+                        key: scrollKey,
+                        style: style,
+                        maxLines: 1,
+                        softWrap: false,
+                      ),
                       SizedBox(width: effectiveGap),
                       Text(text, style: style, maxLines: 1, softWrap: false),
                     ],
