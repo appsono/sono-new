@@ -55,7 +55,7 @@ class SonoNavBar extends StatelessWidget {
         color: colors.bgNav,
         borderRadius: radius,
         border: Border.all(color: colors.borderLight10, width: 2),
-        boxShadow: SonoShadows.navBar,
+        boxShadow: SonoShadows.navBar(Theme.of(context).brightness),
       ),
       padding: const EdgeInsets.only(top: 12, bottom: 12),
       child: Row(

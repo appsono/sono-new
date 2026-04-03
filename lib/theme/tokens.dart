@@ -230,20 +230,24 @@ abstract final class SonoShadows {
       color: Color(0x66000000),
     ),
   ];
-  static const navBar = [
+  static List<BoxShadow> navBar(Brightness brightness) => [
     BoxShadow(
       offset: Offset(0, 10),
       blurRadius: 12.5,
       spreadRadius: -5,
-      color: Color(0x33000000),
+      color: brightness == Brightness.dark
+          ? const Color(0x33000000)
+          : const Color(0x14000000),
     ),
   ];
-  static const miniPlayer = [
+  static List<BoxShadow> miniPlayer(Brightness brightness) => [
     BoxShadow(
       offset: Offset(0, -10),
       blurRadius: 12.5,
       spreadRadius: -5,
-      color: Color(0x33000000),
+      color: brightness == Brightness.dark
+          ? const Color(0x33000000)
+          : const Color(0x14000000),
     ),
   ];
 }

@@ -105,7 +105,7 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
         color: colors.bgNav,
         borderRadius: radius,
         border: Border.all(color: colors.borderLight10, width: 2),
-        boxShadow: SonoShadows.miniPlayer,
+        boxShadow: SonoShadows.miniPlayer(Theme.of(context).brightness),
       ),
       child: ClipRRect(
         borderRadius: radius,
