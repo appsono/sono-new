@@ -278,11 +278,16 @@ class _AdaptiveOverlayState extends State<_AdaptiveOverlay> {
       final brightness = totalBrightness / sampleCount; //0.0–1.0
 
       //dark cover > lighten, light cover > darken, middle > minimal
+      final isDark = Theme.of(context).brightness == Brightness.dark;
       Color overlay;
       if (brightness > 0.8) {
-        overlay = const Color(0x73000000); //darken
+        overlay = isDark
+            ? const Color(0x73000000)
+            : const Color(0x40000000); //darken
       } else {
-        overlay = const Color(0x33000000); //subtle darken
+        overlay = isDark
+            ? const Color(0x33000000)
+            : const Color(0x1A000000); //subtle darken
       }
 
       if (mounted) setState(() => _overlay = overlay);
