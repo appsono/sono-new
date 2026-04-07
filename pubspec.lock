@@ -841,11 +841,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.3.2"
-      resolved-ref: c67fca823d77bfae26be6466445ebaf7ea448e8e
+      ref: "v0.3.3"
+      resolved-ref: "2e2194e743f37ca46028fee79aea5065675043a2"
       url: "https://github.com/appsono/sono_query.git"
     source: git
-    version: "0.3.2"
+    version: "0.3.3"
   source_gen:
     dependency: transitive
     description:
