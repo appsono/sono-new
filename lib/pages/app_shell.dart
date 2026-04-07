@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/pages/settings/settings_page.dart';
 import 'package:sono/pages/test/widget_test_page.dart';
 import 'package:sono/services/audio_service.dart';
 import 'package:sono/services/scan_service.dart';
@@ -60,7 +61,7 @@ class _AppShellState extends State<AppShell> {
               index: _tab,
               children: [
                 WidgetTestPage(db: widget.db),
-                Center(child: Text('Search')),
+                SettingsPage(db: widget.db),
                 Center(child: Text('Library')),
               ],
             ),
