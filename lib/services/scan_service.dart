@@ -14,9 +14,15 @@ class ScanService {
 
   /// Scans for songs on device and sync with the database
   ///
+  /// [config] controls filtering and artist parsing.
+  /// [onProgress] is called with live scan progres snapshots.
   /// [onError] is called for each file that fails metadata reading.
   /// The file is skipped and scanning continues.
-  Future<void> scan({sq.ScanErrorCallback? onError}) async {
+  Future<void> scan({
+    sq.ScanConfig config = sq.ScanConfig.none,
+    sq.ScanProgressCallback? onProgress,
+    sq.ScanErrorCallback? onError,
+  }) async {
     final existingPaths = await db.getAllSongPaths();
     final allPaths = <String>{};
     final newSongsChunk = <sq.Song>[];
@@ -25,6 +31,8 @@ class ScanService {
     Map<(String, int), int> albumCache = await db.getAlbumIdMap();
 
     await for (final song in sq.SonoQuery.getSongsStream(
+      config: config,
+      onProgress: onProgress,
       onError: onError ?? _defaultOnError,
     )) {
       allPaths.add(song.path);
@@ -61,9 +69,13 @@ class ScanService {
   ) async {
     final artistNames = <String>{};
     for (final song in chunk) {
+      //register all parsed artists (if available) + raw artist + main artist
+      for (final name in song.artists) {
+        if (name.isNotEmpty) artistNames.add(name);
+      }
       if (song.artist != null && song.artist!.isNotEmpty) {
         artistNames.add(song.artist!);
-        final main = getMainArtist(song.artist);
+        final main = getMainArtistFromSong(song);
         if (main != null) artistNames.add(main);
       }
     }
@@ -79,7 +91,7 @@ class ScanService {
     final albumKeys = <(String, int)>{};
     for (final song in chunk) {
       if (song.album != null && song.album!.isNotEmpty) {
-        final artistName = getMainArtist(song.artist) ?? song.artist;
+        final artistName = getMainArtistFromSong(song) ?? song.artist;
         if (artistName != null && artistCache.containsKey(artistName)) {
           albumKeys.add((song.album!, artistCache[artistName]!));
         }
@@ -97,7 +109,7 @@ class ScanService {
     final toInsert = <SongsCompanion>[];
     for (final song in chunk) {
       final artistId = song.artist != null ? artistCache[song.artist!] : null;
-      final mainArtist = getMainArtist(song.artist) ?? song.artist;
+      final mainArtist = getMainArtistFromSong(song) ?? song.artist;
       final mainArtistId = mainArtist != null ? artistCache[mainArtist] : null;
 
       int? albumId;
