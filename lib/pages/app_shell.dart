@@ -61,7 +61,7 @@ class _AppShellState extends State<AppShell> {
               index: _tab,
               children: [
                 WidgetTestPage(db: widget.db),
-                SettingsPage(db: widget.db),
+                SettingsPage(db: widget.db, onRescan: _checkPermissionAndScan),
                 Center(child: Text('Library')),
               ],
             ),

@@ -5,7 +5,8 @@ import 'package:sono_query/sono_query.dart' hide Song;
 
 class SettingsPage extends StatefulWidget {
   final SonoDatabase db;
-  const SettingsPage({required this.db, super.key});
+  final VoidCallback? onRescan;
+  const SettingsPage({required this.db, this.onRescan, super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -16,6 +17,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final _excludedPathCtrl = TextEditingController();
   final _additionalPathCtrl = TextEditingController();
   final _artistCtrl = TextEditingController();
+  final _delimiterCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -28,6 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _excludedPathCtrl.dispose();
     _additionalPathCtrl.dispose();
     _artistCtrl.dispose();
+    _delimiterCtrl.dispose();
     super.dispose();
   }
 
@@ -39,6 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _save(ScanConfig c) async {
     await ScanSettings(widget.db).save(c);
     setState(() => _config = c);
+    widget.onRescan?.call();
   }
 
   @override
@@ -49,8 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        Text('Settings', style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 20),
+        const SizedBox(height: 60),
 
         //min dur
         Row(
@@ -153,6 +156,38 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
 
         if (c.artistParser != null) ...[
+          //delimiters
+          _chipList(
+            'delimiters',
+            c.artistParser!.delimiters,
+            _delimiterCtrl,
+            'e.g. " / " or ";"',
+            onAdd: (val) => _save(
+              ScanConfig(
+                excludedPaths: c.excludedPaths,
+                additionalPaths: c.additionalPaths,
+                minDuration: c.minDuration,
+                artistParser: ArtistParserConfig(
+                  delimiters: [...c.artistParser!.delimiters, val],
+                  excludedArtists: c.artistParser!.excludedArtists,
+                ),
+              ),
+            ),
+            onRemove: (i) => _save(
+              ScanConfig(
+                excludedPaths: c.excludedPaths,
+                additionalPaths: c.additionalPaths,
+                minDuration: c.minDuration,
+                artistParser: ArtistParserConfig(
+                  delimiters: [...c.artistParser!.delimiters]..removeAt(i),
+                  excludedArtists: c.artistParser!.excludedArtists,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          //protected artists
           _chipList(
             'protected artists',
             c.artistParser!.excludedArtists,
