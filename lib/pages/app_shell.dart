@@ -30,7 +30,7 @@ class _AppShellState extends State<AppShell> {
     _checkPermissionAndScan();
   }
 
-  Future<void> _checkPermissionAndScan() async {
+  Future<void> _checkPermissionAndScan({bool force = false}) async {
     if (Platform.isAndroid || Platform.isIOS) {
       final status = await Permission.audio.request();
       if (!status.isGranted) return;
@@ -38,6 +38,7 @@ class _AppShellState extends State<AppShell> {
     final config = await ScanSettings(widget.db).load();
     await ScanService(widget.db).scan(
       config: config,
+      force: force,
       onProgress: (progress) {
         setState(() => _scanProgress = progress);
       },
@@ -61,7 +62,10 @@ class _AppShellState extends State<AppShell> {
               index: _tab,
               children: [
                 WidgetTestPage(db: widget.db),
-                SettingsPage(db: widget.db, onRescan: _checkPermissionAndScan),
+                SettingsPage(
+                  db: widget.db,
+                  onRescan: () => _checkPermissionAndScan(force: true),
+                ),
                 Center(child: Text('Library')),
               ],
             ),

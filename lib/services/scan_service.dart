@@ -15,14 +15,22 @@ class ScanService {
   /// Scans for songs on device and sync with the database
   ///
   /// [config] controls filtering and artist parsing.
+  /// [force] clears all songs before scanning (use after settings change).
   /// [onProgress] is called with live scan progres snapshots.
   /// [onError] is called for each file that fails metadata reading.
   /// The file is skipped and scanning continues.
   Future<void> scan({
     sq.ScanConfig config = sq.ScanConfig.none,
+    bool force = false,
     sq.ScanProgressCallback? onProgress,
     sq.ScanErrorCallback? onError,
   }) async {
+    if (force) {
+      await db.removeDeletedSongs({});
+      await db.removeOrphanedAlbums();
+      await db.removeOrphanedArtists();
+    }
+
     final existingPaths = await db.getAllSongPaths();
     final allPaths = <String>{};
     final newSongsChunk = <sq.Song>[];
@@ -69,13 +77,13 @@ class ScanService {
   ) async {
     final artistNames = <String>{};
     for (final song in chunk) {
-      //register all parsed artists (if available) + raw artist + main artist
-      for (final name in song.artists) {
-        if (name.isNotEmpty) artistNames.add(name);
-      }
-      if (song.artist != null && song.artist!.isNotEmpty) {
+      if (song.artists.isNotEmpty) {
+        for (final name in song.artists) {
+          if (name.isNotEmpty) artistNames.add(name);
+        }
+      } else if (song.artist != null && song.artist!.isNotEmpty) {
         artistNames.add(song.artist!);
-        final main = getMainArtistFromSong(song);
+        final main = getMainArtist(song.artist);
         if (main != null) artistNames.add(main);
       }
     }
@@ -108,7 +116,6 @@ class ScanService {
 
     final toInsert = <SongsCompanion>[];
     for (final song in chunk) {
-      final artistId = song.artist != null ? artistCache[song.artist!] : null;
       final mainArtist = getMainArtistFromSong(song) ?? song.artist;
       final mainArtistId = mainArtist != null ? artistCache[mainArtist] : null;
 
@@ -125,7 +132,7 @@ class ScanService {
           genre: Value(song.genre),
           releaseDate: Value(song.releaseDate),
           albumId: Value(albumId),
-          artistId: Value(artistId),
+          artistId: Value(mainArtistId),
         ),
       );
     }
