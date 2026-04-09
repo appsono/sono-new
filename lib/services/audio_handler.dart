@@ -33,9 +33,13 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       _broadcastState();
     });
     _audio.positionStream
-        .throttleTime(const Duration(seconds: 1))
+        .throttleTime(const Duration(seconds: 5))
         .listen((_) => _broadcastState());
     _audio.durationStream.listen((_) => _broadcastState());
+
+    //update notification when shuffle/repeat changes
+    _audio.shuffleStream.listen((_) => _broadcastState());
+    _audio.repeatMode.listen((_) => _broadcastState());
 
     //bridge current song > audio_service mediaItem
     _audio.currentSongStream.listen((song) {
@@ -135,9 +139,25 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     playbackState.add(
       PlaybackState(
         controls: [
+          MediaControl.custom(
+            androidIcon: _audio.shuffle
+                ? 'drawable/ic_shuffle_on'
+                : 'drawable/ic_shuffle_off',
+            label: 'Shuffle',
+            name: 'Shuffle',
+          ),
           MediaControl.skipToPrevious,
           _audio.isPlaying ? MediaControl.pause : MediaControl.play,
           MediaControl.skipToNext,
+          MediaControl.custom(
+            androidIcon: _audio.repeat == sono.RepeatMode.off
+                ? 'drawable/ic_repeat_off'
+                : _audio.repeat == sono.RepeatMode.one
+                ? 'drawable/ic_repeat_one'
+                : 'drawable/ic_repeat_all',
+            label: 'Repeat',
+            name: 'Repeat',
+          ),
         ],
         systemActions: const {
           MediaAction.seek,
@@ -145,11 +165,21 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           MediaAction.seekBackward,
           MediaAction.play,
           MediaAction.pause,
+          MediaAction.setShuffleMode,
+          MediaAction.setRepeatMode,
         },
-        androidCompactActionIndices: const [0, 1, 2],
+        androidCompactActionIndices: const [1, 2, 3],
         processingState: AudioProcessingState.ready,
         playing: _audio.isPlaying,
         updatePosition: _audio.position,
+        shuffleMode: _audio.shuffle
+            ? AudioServiceShuffleMode.all
+            : AudioServiceShuffleMode.none,
+        repeatMode: switch (_audio.repeat) {
+          sono.RepeatMode.off => AudioServiceRepeatMode.none,
+          sono.RepeatMode.all => AudioServiceRepeatMode.all,
+          sono.RepeatMode.one => AudioServiceRepeatMode.one,
+        },
       ),
     );
   }
@@ -176,6 +206,15 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   @override
   Future<void> skipToPrevious() => _audio.skipPrevious();
+
+  @override
+  Future<void> customAction(String name, [Map<String, dynamic>? extras]) async {
+    if (name == 'Shuffle') {
+      await _audio.setShuffle(!_audio.shuffle);
+    } else if (name == 'Repeat') {
+      _audio.cycleRepeat();
+    }
+  }
 
   @override
   Future<void> stop() async {
