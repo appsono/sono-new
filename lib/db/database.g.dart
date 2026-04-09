@@ -590,6 +590,17 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
       'REFERENCES artists (id)',
     ),
   );
+  static const VerificationMeta _displayArtistMeta = const VerificationMeta(
+    'displayArtist',
+  );
+  @override
+  late final GeneratedColumn<String> displayArtist = GeneratedColumn<String>(
+    'display_artist',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -600,6 +611,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     releaseDate,
     albumId,
     artistId,
+    displayArtist,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -665,6 +677,15 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         artistId.isAcceptableOrUnknown(data['artist_id']!, _artistIdMeta),
       );
     }
+    if (data.containsKey('display_artist')) {
+      context.handle(
+        _displayArtistMeta,
+        displayArtist.isAcceptableOrUnknown(
+          data['display_artist']!,
+          _displayArtistMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -706,6 +727,10 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         DriftSqlType.int,
         data['${effectivePrefix}artist_id'],
       ),
+      displayArtist: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}display_artist'],
+      ),
     );
   }
 
@@ -724,6 +749,7 @@ class Song extends DataClass implements Insertable<Song> {
   final DateTime? releaseDate;
   final int? albumId;
   final int? artistId;
+  final String? displayArtist;
   const Song({
     required this.id,
     required this.path,
@@ -733,6 +759,7 @@ class Song extends DataClass implements Insertable<Song> {
     this.releaseDate,
     this.albumId,
     this.artistId,
+    this.displayArtist,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -754,6 +781,9 @@ class Song extends DataClass implements Insertable<Song> {
     }
     if (!nullToAbsent || artistId != null) {
       map['artist_id'] = Variable<int>(artistId);
+    }
+    if (!nullToAbsent || displayArtist != null) {
+      map['display_artist'] = Variable<String>(displayArtist);
     }
     return map;
   }
@@ -778,6 +808,9 @@ class Song extends DataClass implements Insertable<Song> {
       artistId: artistId == null && nullToAbsent
           ? const Value.absent()
           : Value(artistId),
+      displayArtist: displayArtist == null && nullToAbsent
+          ? const Value.absent()
+          : Value(displayArtist),
     );
   }
 
@@ -795,6 +828,7 @@ class Song extends DataClass implements Insertable<Song> {
       releaseDate: serializer.fromJson<DateTime?>(json['releaseDate']),
       albumId: serializer.fromJson<int?>(json['albumId']),
       artistId: serializer.fromJson<int?>(json['artistId']),
+      displayArtist: serializer.fromJson<String?>(json['displayArtist']),
     );
   }
   @override
@@ -809,6 +843,7 @@ class Song extends DataClass implements Insertable<Song> {
       'releaseDate': serializer.toJson<DateTime?>(releaseDate),
       'albumId': serializer.toJson<int?>(albumId),
       'artistId': serializer.toJson<int?>(artistId),
+      'displayArtist': serializer.toJson<String?>(displayArtist),
     };
   }
 
@@ -821,6 +856,7 @@ class Song extends DataClass implements Insertable<Song> {
     Value<DateTime?> releaseDate = const Value.absent(),
     Value<int?> albumId = const Value.absent(),
     Value<int?> artistId = const Value.absent(),
+    Value<String?> displayArtist = const Value.absent(),
   }) => Song(
     id: id ?? this.id,
     path: path ?? this.path,
@@ -830,6 +866,9 @@ class Song extends DataClass implements Insertable<Song> {
     releaseDate: releaseDate.present ? releaseDate.value : this.releaseDate,
     albumId: albumId.present ? albumId.value : this.albumId,
     artistId: artistId.present ? artistId.value : this.artistId,
+    displayArtist: displayArtist.present
+        ? displayArtist.value
+        : this.displayArtist,
   );
   Song copyWithCompanion(SongsCompanion data) {
     return Song(
@@ -843,6 +882,9 @@ class Song extends DataClass implements Insertable<Song> {
           : this.releaseDate,
       albumId: data.albumId.present ? data.albumId.value : this.albumId,
       artistId: data.artistId.present ? data.artistId.value : this.artistId,
+      displayArtist: data.displayArtist.present
+          ? data.displayArtist.value
+          : this.displayArtist,
     );
   }
 
@@ -856,7 +898,8 @@ class Song extends DataClass implements Insertable<Song> {
           ..write('genre: $genre, ')
           ..write('releaseDate: $releaseDate, ')
           ..write('albumId: $albumId, ')
-          ..write('artistId: $artistId')
+          ..write('artistId: $artistId, ')
+          ..write('displayArtist: $displayArtist')
           ..write(')'))
         .toString();
   }
@@ -871,6 +914,7 @@ class Song extends DataClass implements Insertable<Song> {
     releaseDate,
     albumId,
     artistId,
+    displayArtist,
   );
   @override
   bool operator ==(Object other) =>
@@ -883,7 +927,8 @@ class Song extends DataClass implements Insertable<Song> {
           other.genre == this.genre &&
           other.releaseDate == this.releaseDate &&
           other.albumId == this.albumId &&
-          other.artistId == this.artistId);
+          other.artistId == this.artistId &&
+          other.displayArtist == this.displayArtist);
 }
 
 class SongsCompanion extends UpdateCompanion<Song> {
@@ -895,6 +940,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
   final Value<DateTime?> releaseDate;
   final Value<int?> albumId;
   final Value<int?> artistId;
+  final Value<String?> displayArtist;
   const SongsCompanion({
     this.id = const Value.absent(),
     this.path = const Value.absent(),
@@ -904,6 +950,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.releaseDate = const Value.absent(),
     this.albumId = const Value.absent(),
     this.artistId = const Value.absent(),
+    this.displayArtist = const Value.absent(),
   });
   SongsCompanion.insert({
     this.id = const Value.absent(),
@@ -914,6 +961,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.releaseDate = const Value.absent(),
     this.albumId = const Value.absent(),
     this.artistId = const Value.absent(),
+    this.displayArtist = const Value.absent(),
   }) : path = Value(path),
        title = Value(title);
   static Insertable<Song> custom({
@@ -925,6 +973,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Expression<DateTime>? releaseDate,
     Expression<int>? albumId,
     Expression<int>? artistId,
+    Expression<String>? displayArtist,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -935,6 +984,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       if (releaseDate != null) 'release_date': releaseDate,
       if (albumId != null) 'album_id': albumId,
       if (artistId != null) 'artist_id': artistId,
+      if (displayArtist != null) 'display_artist': displayArtist,
     });
   }
 
@@ -947,6 +997,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Value<DateTime?>? releaseDate,
     Value<int?>? albumId,
     Value<int?>? artistId,
+    Value<String?>? displayArtist,
   }) {
     return SongsCompanion(
       id: id ?? this.id,
@@ -957,6 +1008,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       releaseDate: releaseDate ?? this.releaseDate,
       albumId: albumId ?? this.albumId,
       artistId: artistId ?? this.artistId,
+      displayArtist: displayArtist ?? this.displayArtist,
     );
   }
 
@@ -987,6 +1039,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
     if (artistId.present) {
       map['artist_id'] = Variable<int>(artistId.value);
     }
+    if (displayArtist.present) {
+      map['display_artist'] = Variable<String>(displayArtist.value);
+    }
     return map;
   }
 
@@ -1000,7 +1055,8 @@ class SongsCompanion extends UpdateCompanion<Song> {
           ..write('genre: $genre, ')
           ..write('releaseDate: $releaseDate, ')
           ..write('albumId: $albumId, ')
-          ..write('artistId: $artistId')
+          ..write('artistId: $artistId, ')
+          ..write('displayArtist: $displayArtist')
           ..write(')'))
         .toString();
   }
@@ -1231,6 +1287,7 @@ class SongWithArtistViewData extends DataClass {
   final DateTime? releaseDate;
   final int? albumId;
   final int? artistId;
+  final String? displayArtist;
   final String? artistName;
   const SongWithArtistViewData({
     required this.id,
@@ -1241,6 +1298,7 @@ class SongWithArtistViewData extends DataClass {
     this.releaseDate,
     this.albumId,
     this.artistId,
+    this.displayArtist,
     this.artistName,
   });
   factory SongWithArtistViewData.fromJson(
@@ -1257,6 +1315,7 @@ class SongWithArtistViewData extends DataClass {
       releaseDate: serializer.fromJson<DateTime?>(json['releaseDate']),
       albumId: serializer.fromJson<int?>(json['albumId']),
       artistId: serializer.fromJson<int?>(json['artistId']),
+      displayArtist: serializer.fromJson<String?>(json['displayArtist']),
       artistName: serializer.fromJson<String?>(json['artistName']),
     );
   }
@@ -1272,6 +1331,7 @@ class SongWithArtistViewData extends DataClass {
       'releaseDate': serializer.toJson<DateTime?>(releaseDate),
       'albumId': serializer.toJson<int?>(albumId),
       'artistId': serializer.toJson<int?>(artistId),
+      'displayArtist': serializer.toJson<String?>(displayArtist),
       'artistName': serializer.toJson<String?>(artistName),
     };
   }
@@ -1285,6 +1345,7 @@ class SongWithArtistViewData extends DataClass {
     Value<DateTime?> releaseDate = const Value.absent(),
     Value<int?> albumId = const Value.absent(),
     Value<int?> artistId = const Value.absent(),
+    Value<String?> displayArtist = const Value.absent(),
     Value<String?> artistName = const Value.absent(),
   }) => SongWithArtistViewData(
     id: id ?? this.id,
@@ -1295,6 +1356,9 @@ class SongWithArtistViewData extends DataClass {
     releaseDate: releaseDate.present ? releaseDate.value : this.releaseDate,
     albumId: albumId.present ? albumId.value : this.albumId,
     artistId: artistId.present ? artistId.value : this.artistId,
+    displayArtist: displayArtist.present
+        ? displayArtist.value
+        : this.displayArtist,
     artistName: artistName.present ? artistName.value : this.artistName,
   );
   @override
@@ -1308,6 +1372,7 @@ class SongWithArtistViewData extends DataClass {
           ..write('releaseDate: $releaseDate, ')
           ..write('albumId: $albumId, ')
           ..write('artistId: $artistId, ')
+          ..write('displayArtist: $displayArtist, ')
           ..write('artistName: $artistName')
           ..write(')'))
         .toString();
@@ -1323,6 +1388,7 @@ class SongWithArtistViewData extends DataClass {
     releaseDate,
     albumId,
     artistId,
+    displayArtist,
     artistName,
   );
   @override
@@ -1337,6 +1403,7 @@ class SongWithArtistViewData extends DataClass {
           other.releaseDate == this.releaseDate &&
           other.albumId == this.albumId &&
           other.artistId == this.artistId &&
+          other.displayArtist == this.displayArtist &&
           other.artistName == this.artistName);
 }
 
@@ -1359,6 +1426,7 @@ class $SongWithArtistViewView
     releaseDate,
     albumId,
     artistId,
+    displayArtist,
     artistName,
   ];
   @override
@@ -1404,6 +1472,10 @@ class $SongWithArtistViewView
       artistId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}artist_id'],
+      ),
+      displayArtist: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}display_artist'],
       ),
       artistName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -1467,6 +1539,13 @@ class $SongWithArtistViewView
     true,
     generatedAs: GeneratedAs(songs.artistId, false),
     type: DriftSqlType.int,
+  );
+  late final GeneratedColumn<String> displayArtist = GeneratedColumn<String>(
+    'display_artist',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(songs.displayArtist, false),
+    type: DriftSqlType.string,
   );
   late final GeneratedColumn<String> artistName = GeneratedColumn<String>(
     'artist_name',
@@ -2381,6 +2460,7 @@ typedef $$SongsTableCreateCompanionBuilder =
       Value<DateTime?> releaseDate,
       Value<int?> albumId,
       Value<int?> artistId,
+      Value<String?> displayArtist,
     });
 typedef $$SongsTableUpdateCompanionBuilder =
     SongsCompanion Function({
@@ -2392,6 +2472,7 @@ typedef $$SongsTableUpdateCompanionBuilder =
       Value<DateTime?> releaseDate,
       Value<int?> albumId,
       Value<int?> artistId,
+      Value<String?> displayArtist,
     });
 
 final class $$SongsTableReferences
@@ -2469,6 +2550,11 @@ class $$SongsTableFilterComposer extends Composer<_$SonoDatabase, $SongsTable> {
 
   ColumnFilters<DateTime> get releaseDate => $composableBuilder(
     column: $table.releaseDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get displayArtist => $composableBuilder(
+    column: $table.displayArtist,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2558,6 +2644,11 @@ class $$SongsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get displayArtist => $composableBuilder(
+    column: $table.displayArtist,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AlbumsTableOrderingComposer get albumId {
     final $$AlbumsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -2631,6 +2722,11 @@ class $$SongsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get releaseDate => $composableBuilder(
     column: $table.releaseDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get displayArtist => $composableBuilder(
+    column: $table.displayArtist,
     builder: (column) => column,
   );
 
@@ -2717,6 +2813,7 @@ class $$SongsTableTableManager
                 Value<DateTime?> releaseDate = const Value.absent(),
                 Value<int?> albumId = const Value.absent(),
                 Value<int?> artistId = const Value.absent(),
+                Value<String?> displayArtist = const Value.absent(),
               }) => SongsCompanion(
                 id: id,
                 path: path,
@@ -2726,6 +2823,7 @@ class $$SongsTableTableManager
                 releaseDate: releaseDate,
                 albumId: albumId,
                 artistId: artistId,
+                displayArtist: displayArtist,
               ),
           createCompanionCallback:
               ({
@@ -2737,6 +2835,7 @@ class $$SongsTableTableManager
                 Value<DateTime?> releaseDate = const Value.absent(),
                 Value<int?> albumId = const Value.absent(),
                 Value<int?> artistId = const Value.absent(),
+                Value<String?> displayArtist = const Value.absent(),
               }) => SongsCompanion.insert(
                 id: id,
                 path: path,
@@ -2746,6 +2845,7 @@ class $$SongsTableTableManager
                 releaseDate: releaseDate,
                 albumId: albumId,
                 artistId: artistId,
+                displayArtist: displayArtist,
               ),
           withReferenceMapper: (p0) => p0
               .map(

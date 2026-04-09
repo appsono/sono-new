@@ -16,7 +16,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -25,8 +25,11 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 2) {
         await m.createTable(settings);
       }
+      if (from < 3) {
+        await m.addColumn(songs, songs.displayArtist);
+      }
       //future migrations go here:
-      // if (from < 3) { .. }
+      // if (from < 4) { .. }
     },
   );
 

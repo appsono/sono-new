@@ -90,7 +90,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
                 return SonoMediaCard(
                   path: s.path,
                   title: s.title,
-                  subtitle: s.artistName ?? 'Unknown',
+                  subtitle: s.displayArtist ?? s.artistName ?? 'Unknown',
                   titleStyle: Theme.of(
                     context,
                   ).textTheme.headlineSmall?.copyWith(fontSize: 13),
@@ -106,6 +106,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
                             releaseDate: s.releaseDate,
                             albumId: s.albumId,
                             artistId: s.artistId,
+                            displayArtist: s.displayArtist,
                           ),
                         )
                         .toList();

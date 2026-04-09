@@ -26,6 +26,7 @@ class Songs extends Table {
   DateTimeColumn get releaseDate => dateTime().nullable()();
   IntColumn get albumId => integer().nullable().references(Albums, #id)();
   IntColumn get artistId => integer().nullable().references(Artists, #id)();
+  TextColumn get displayArtist => text().nullable()();
 }
 
 /// Key-value store for app settings (EQ, playback state, prefernces, etc.)
@@ -54,6 +55,7 @@ abstract class SongWithArtistView extends View {
         songs.releaseDate,
         songs.albumId,
         songs.artistId,
+        songs.displayArtist,
         artistName,
       ]).from(songs).join([
         leftOuterJoin(artists, artists.id.equalsExp(songs.artistId)),

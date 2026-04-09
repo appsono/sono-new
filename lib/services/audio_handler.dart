@@ -116,8 +116,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
     if (token != _updateToken) return;
 
-    String? artistName;
-    if (song.artistId != null) {
+    String? artistName = song.displayArtist;
+    if (artistName == null && song.artistId != null) {
       final artist = await _db.getArtistById(song.artistId!);
       if (token != _updateToken) return;
       artistName = artist?.name;

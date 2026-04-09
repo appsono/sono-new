@@ -423,10 +423,10 @@ class AudioService {
     if (song == null) return;
     _currentSongController.add(song);
 
-    //resolve artist name from db
-    _currentArtistName = null;
-    _artistNameController.add(null);
-    if (_db != null && song.artistId != null) {
+    //resolve artist name: prefer displayArtist (includes features), fall back to db lookup
+    _currentArtistName = song.displayArtist;
+    _artistNameController.add(_currentArtistName);
+    if (_currentArtistName == null && _db != null && song.artistId != null) {
       final artist = await _db!.getArtistById(song.artistId!);
       _currentArtistName = artist?.name;
       _artistNameController.add(_currentArtistName);

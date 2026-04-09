@@ -155,6 +155,7 @@ class _TestPageState extends State<TestPage> {
                         releaseDate: s.releaseDate,
                         albumId: s.albumId,
                         artistId: s.artistId,
+                        displayArtist: s.displayArtist,
                       ),
                     )
                     .toList();
@@ -272,7 +273,7 @@ class _TestPageState extends State<TestPage> {
 
 String _buildSubtitle(SongWithArtistViewData data) {
   final parts = <String>[];
-  parts.add(data.artistName ?? 'Unknown artist');
+  parts.add(data.displayArtist ?? data.artistName ?? 'Unknown artist');
   if (data.genre != null) parts.add(data.genre!);
   if (data.duration != null) {
     final d = Duration(milliseconds: data.duration!);
@@ -364,7 +365,7 @@ class _MiniPlayer extends StatelessWidget {
           ),
         );
 
-        final artistName = songData?.artistName ?? 'Unknown Artist';
+        final artistName = songData?.displayArtist ?? songData?.artistName ?? 'Unknown Artist';
 
         return Container(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,

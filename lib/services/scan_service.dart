@@ -133,6 +133,9 @@ class ScanService {
           releaseDate: Value(song.releaseDate),
           albumId: Value(albumId),
           artistId: Value(mainArtistId),
+          displayArtist: Value(
+            song.artists.isNotEmpty ? song.artists.join(', ') : song.artist,
+          ),
         ),
       );
     }
