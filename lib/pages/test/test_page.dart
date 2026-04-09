@@ -365,7 +365,8 @@ class _MiniPlayer extends StatelessWidget {
           ),
         );
 
-        final artistName = songData?.displayArtist ?? songData?.artistName ?? 'Unknown Artist';
+        final artistName =
+            songData?.displayArtist ?? songData?.artistName ?? 'Unknown Artist';
 
         return Container(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
