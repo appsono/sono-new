@@ -9,7 +9,8 @@ import 'package:sono/services/audio_service.dart';
 
 class WidgetTestPage extends StatefulWidget {
   final SonoDatabase db;
-  const WidgetTestPage({required this.db, super.key});
+  final ValueNotifier<int>? scanVersion;
+  const WidgetTestPage({required this.db, this.scanVersion, super.key});
 
   @override
   State<WidgetTestPage> createState() => _WidgetTestPageState();
@@ -25,6 +26,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
   void initState() {
     super.initState();
     _load();
+    widget.scanVersion?.addListener(_load);
   }
 
   Future<void> _load() async {
@@ -83,7 +85,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
             SonoSection(
               title: 'Songs',
               onSeeAll: () {},
-              itemExtent: 160,
+              itemExtent: 168,
               children: songs.asMap().entries.map((e) {
                 final index = e.key;
                 final s = e.value;
@@ -120,7 +122,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
             SonoSection(
               title: 'Artists',
               onSeeAll: () {},
-              itemExtent: 160,
+              itemExtent: 168,
 
               children: _artists!.map((a) {
                 final count = _artistSongCounts?[a.name] ?? 0;

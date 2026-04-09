@@ -23,6 +23,7 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   int _tab = 0;
   ScanProgress? _scanProgress;
+  final _scanVersion = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -44,32 +45,36 @@ class _AppShellState extends State<AppShell> {
       },
     );
     setState(() => _scanProgress = null);
+    _scanVersion.value++;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          if (_scanProgress != null)
-            LinearProgressIndicator(
-              value: _scanProgress!.progress > 0
-                  ? _scanProgress!.progress
-                  : null,
-            ),
-          Expanded(
-            child: IndexedStack(
-              index: _tab,
-              children: [
-                WidgetTestPage(db: widget.db),
-                SettingsPage(
-                  db: widget.db,
-                  onRescan: () => _checkPermissionAndScan(force: true),
-                ),
-                Center(child: Text('Library')),
-              ],
-            ),
+          IndexedStack(
+            index: _tab,
+            children: [
+              WidgetTestPage(db: widget.db, scanVersion: _scanVersion),
+              SettingsPage(
+                db: widget.db,
+                onRescan: () => _checkPermissionAndScan(force: true),
+              ),
+              Center(child: Text('Library')),
+            ],
           ),
+          if (_scanProgress != null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: LinearProgressIndicator(
+                value: _scanProgress!.progress > 0
+                    ? _scanProgress!.progress
+                    : null,
+              ),
+            ),
         ],
       ),
       bottomNavigationBar: StreamBuilder<Song?>(
