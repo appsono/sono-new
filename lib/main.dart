@@ -7,6 +7,7 @@ import 'package:sono/pages/app_shell.dart';
 import 'package:sono/services/audio_handler.dart';
 import 'package:sono/services/audio_service.dart' as sono;
 import 'package:sono/services/audio_effects_service.dart';
+import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
@@ -37,6 +38,9 @@ void main() async {
 
   sono.AudioService.instance.attachDb(db);
   await sono.AudioService.instance.loadState();
+
+  DiscordRpcService.instance.attachDb(db);
+  await DiscordRpcService.instance.loadState();
 
   runApp(SonoApp(db: db));
 }

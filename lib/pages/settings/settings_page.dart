@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sono/db/database.dart';
+import 'package:sono/pages/auth/discord_login_page.dart';
 import 'package:sono/services/scan_settings.dart';
+import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 class SettingsPage extends StatefulWidget {
@@ -19,10 +21,16 @@ class _SettingsPageState extends State<SettingsPage> {
   final _artistCtrl = TextEditingController();
   final _delimiterCtrl = TextEditingController();
 
+  //discord RPC state
+  bool _discordEnabled = false;
+  String? _discordUsername;
+  bool _discordLoading = false;
+
   @override
   void initState() {
     super.initState();
     _load();
+    _loadDiscord();
   }
 
   @override
@@ -43,6 +51,61 @@ class _SettingsPageState extends State<SettingsPage> {
     await ScanSettings(widget.db).save(c);
     setState(() => _config = c);
     widget.onRescan?.call();
+  }
+
+  Future<void> _loadDiscord() async {
+    final rpc = DiscordRpcService.instance;
+    final enabled = rpc.isEnabled;
+    String? username;
+    if (enabled) {
+      final stored = await widget.db.getSetting('discord.username');
+      username = stored;
+    }
+    if (mounted) {
+      setState(() {
+        _discordEnabled = enabled;
+        _discordUsername = username;
+      });
+    }
+  }
+
+  Future<void> _discordLogin() async {
+    final token = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (_) => const DiscordLoginPage()),
+    );
+    if (token == null || !mounted) return;
+
+    setState(() => _discordLoading = true);
+    try {
+      final user = await DiscordRpcService.instance.login(token);
+      await widget.db.setSetting('discord.username', '@${user.username}');
+      if (mounted) {
+        setState(() {
+          _discordEnabled = true;
+          _discordUsername = '@${user.username}';
+          _discordLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _discordLoading = false);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Discord login failed: $e')));
+      }
+    }
+  }
+
+  Future<void> _discordLogout() async {
+    await DiscordRpcService.instance.logout();
+    await widget.db.removeSetting('discord.username');
+    if (mounted) {
+      setState(() {
+        _discordEnabled = false;
+        _discordUsername = null;
+      });
+    }
   }
 
   @override
@@ -218,6 +281,43 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ],
+
+        const SizedBox(height: 32),
+        const Divider(),
+        const SizedBox(height: 12),
+        if (_discordLoading)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Center(child: CircularProgressIndicator()),
+          )
+        else if (_discordEnabled) ...[
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(_discordUsername ?? 'Connected'),
+            trailing: TextButton(
+              onPressed: _discordLogout,
+              child: const Text('Disconnect'),
+            ),
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Enabled'),
+            value: _discordEnabled,
+            onChanged: (val) async {
+              await DiscordRpcService.instance.setEnabled(val);
+              setState(() => _discordEnabled = val);
+            },
+          ),
+        ] else
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Connect Discord'),
+            subtitle: const Text('to show current song on discord.'),
+            trailing: FilledButton(
+              onPressed: _discordLogin,
+              child: const Text('Sign in'),
+            ),
+          ),
       ],
     );
   }
