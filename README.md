@@ -1,9 +1,9 @@
-<img src="assets/github/logo_rounded.png" alt="Sono logo" title="navidrome" align="right" height="60px" />
+<img src="assets/github/logo_rounded.png" alt="Sono logo" title="dono" align="right" height="60px" />
 
-# Sono (From Scratch)
+# Sono
 
 <p align="center">
-Welcome to this repository. It contains the full source code of the Sono app.<br>
+Welcome to this repository. It contains the full source code of the app.<br>
 This version of the app is new and currently in a very early stage.
 </p>
 
@@ -14,14 +14,15 @@ This version of the app is new and currently in a very early stage.
 
 ## What is Sono?
 
-
 Sono is yet another local music player, it's cross platform and NOT material you.  
 It is built with Flutter and and has all the features you need. Not yet, but soon :D
 
 ## Contributing
 
 Contributions are welcome.  
-Simply open a pull request with your changes.
+Simply open a pull request with your changes or an issue if you find any bugs that weren't already reported.
+
+If you're unsure about a change, open an issue first to discuss it.
 
 <br>
 
@@ -61,10 +62,9 @@ mathis
 
 ```
 
-Original announcement from the Discord server:  
-https://discord.sono.wtf
+Originally announced on the [Discord server](https://discord.sono.wtf).
 
 
 ## LICENSE
 
-GNU
+[GPLv3](LICENSE)
