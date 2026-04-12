@@ -1,4 +1,6 @@
-<h1 align="center">Sono (From Scratch)</h1>
+<img src="assets/github/logo_rounded.png" alt="Sono logo" title="navidrome" align="right" height="60px" />
+
+# Sono (From Scratch)
 
 <p align="center">
 Welcome to this repository. It contains the full source code of the Sono app.<br>
@@ -13,7 +15,7 @@ This version of the app is new and currently in a very early stage.
 ## What is Sono?
 
 
-Sono is yet another local music player, but this one is cross platform.  
+Sono is yet another local music player, it's cross platform and NOT material you.  
 It is built with Flutter and and has all the features you need. Not yet, but soon :D
 
 ## Contributing
