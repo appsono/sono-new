@@ -55,9 +55,9 @@ class DiscordTokenManager {
     return _accessToken!;
   }
 
-  void clear() {
+  Future<void> clear() async {
     _accessToken = null;
-    deleteCache('discord_access_token');
+    await deleteCache('discord_access_token');
   }
 
   void dispose() => _client.close();
