@@ -42,6 +42,9 @@ class DiscordRpcService {
   /// Wether RPC is currently active
   bool get isEnabled => _enabled;
 
+  /// Wether a discord token is loaded (user logged in)
+  bool get isConnected => _userToken != null;
+
   /// Raw dsc usr token, if logged in. stored in settings db
   String? _userToken;
 

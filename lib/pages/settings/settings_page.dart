@@ -22,6 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final _delimiterCtrl = TextEditingController();
 
   //discord RPC state
+  bool _discordConnected = false;
   bool _discordEnabled = false;
   String? _discordUsername;
   bool _discordLoading = false;
@@ -55,14 +56,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadDiscord() async {
     final rpc = DiscordRpcService.instance;
+    final connected = rpc.isConnected;
     final enabled = rpc.isEnabled;
     String? username;
-    if (enabled) {
-      final stored = await widget.db.getSetting('discord.username');
-      username = stored;
+    if (connected) {
+      username = await widget.db.getSetting('discord.username');
     }
     if (mounted) {
       setState(() {
+        _discordConnected = connected;
         _discordEnabled = enabled;
         _discordUsername = username;
       });
@@ -82,6 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
       await widget.db.setSetting('discord.username', '@${user.username}');
       if (mounted) {
         setState(() {
+          _discordConnected = true;
           _discordEnabled = true;
           _discordUsername = '@${user.username}';
           _discordLoading = false;
@@ -99,9 +102,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _discordLogout() async {
     await DiscordRpcService.instance.logout();
-    await widget.db.removeSetting('discord.username');
     if (mounted) {
       setState(() {
+        _discordConnected = false;
         _discordEnabled = false;
         _discordUsername = null;
       });
@@ -290,7 +293,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: EdgeInsets.symmetric(vertical: 16),
             child: Center(child: CircularProgressIndicator()),
           )
-        else if (_discordEnabled) ...[
+        else if (_discordConnected) ...[
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(_discordUsername ?? 'Connected'),
