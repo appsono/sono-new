@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
-    tools:keep="@drawable/ic_notification" />
+    tools:keep="@drawable/ic_notification,
+                @drawable/ic_shuffle_on,
+                @drawable/ic_shuffle_off,
+                @drawable/ic_repeat_off,
+                @drawable/ic_repeat_one,
+                @drawable/ic_repeat_all" />
