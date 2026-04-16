@@ -101,17 +101,32 @@ class DiscordRpcService {
 
   /// Disconnect discord rpc
   Future<void> logout() async {
-    await _clearPresence();
     _stop();
-    _tokenManager?.clear();
+
+    try {
+      await _clearPresence();
+    } catch (_) {}
+
+    final tm = _tokenManager;
     _tokenManager = null;
+    if (tm != null) {
+      await tm.clear();
+      tm.dispose();
+    }
+
     _userToken = null;
+    _sessionToken = null;
     _enabled = false;
+    _rateLimitUntil = null;
+    _externalImageCache.clear();
 
     final db = _db;
     if (db != null) {
       await db.removeSetting('discord.token');
-      await db.setSetting('discord.enabled', 'false');
+      await db.removeSetting('discord.access_token');
+      await db.removeSetting('discord.session_token');
+      await db.removeSetting('discord.username');
+      await db.removeSetting('discord.enabled');
     }
   }
 
@@ -375,7 +390,7 @@ class DiscordRpcService {
       if (kDebugMode) print('Discord RPC: failed to clear: $e');
     }
     _sessionToken = null;
-    _db?.removeSetting('discord.session_token');
+    await _db?.removeSetting('discord.session_token');
   }
 
   void dipose() {
