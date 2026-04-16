@@ -1,4 +1,4 @@
-<img src="assets/github/logo_rounded.png" alt="Sono logo" title="dono" align="right" height="60px" />
+<img src="assets/github/logo_rounded.png" alt="Sono logo" title="Sono" align="right" height="60px" />
 
 # Sono
 
