@@ -32,7 +32,7 @@ class _AppShellState extends State<AppShell> {
   }
 
   Future<void> _checkPermissionAndScan({bool force = false}) async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Platform.isAndroid) {
       final status = await Permission.audio.request();
       if (!status.isGranted) return;
     }
