@@ -393,9 +393,13 @@ class DiscordRpcService {
     await _db?.removeSetting('discord.session_token');
   }
 
-  void dispose() {
+  /// Full teardonw of the service. Called when the app is shutting down
+  /// this service for good (not just toggling it off)
+  @visibleForTesting
+  void disposeForTesting() {
     _stop();
     _tokenManager?.dispose();
+    _tokenManager = null;
     _coverUploader.dispose();
     _client.close();
   }
