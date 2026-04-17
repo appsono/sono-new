@@ -214,8 +214,6 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   @override
   Future<void> pause() async {
     _audio.pause();
-    final session = await AudioSession.instance;
-    await session.setActive(false);
   }
 
   @override
