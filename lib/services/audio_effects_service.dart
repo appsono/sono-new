@@ -37,7 +37,7 @@ class AudioEffectsService {
   double _speed = 1.0;
   double _pitch = 1.0;
   Timer? _applyDebounce;
-  Completer<void>? _applyCompleter;
+  List<Completer<void>> _pendingApplies = [];
 
   /// ===========================
   ///           getters
@@ -182,19 +182,24 @@ class AudioEffectsService {
   /// ===========================
 
   Future<void> _applyFilterChain() async {
+    final c = Completer<void>();
+    _pendingApplies.add(c);
     _applyDebounce?.cancel();
-
-    //reuse or create a completer
-    final completer = _applyCompleter ?? Completer<void>();
-    _applyCompleter = completer;
-
     _applyDebounce = Timer(const Duration(milliseconds: 80), () async {
-      await _applyFilterChainNow();
-      _applyCompleter = null;
-      if (!completer.isCompleted) completer.complete();
+      final batch = _pendingApplies;
+      _pendingApplies = [];
+      try {
+        await _applyFilterChainNow();
+        for (final p in batch) {
+          if (!p.isCompleted) p.complete();
+        }
+      } catch (e, st) {
+        for (final p in batch) {
+          if (!p.isCompleted) p.completeError(e, st);
+        }
+      }
     });
-
-    return completer.future;
+    return c.future;
   }
 
   /// Applies current EQ + bass boost filter chain
