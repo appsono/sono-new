@@ -70,5 +70,9 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+    	<string>audio</string>
+	</array>
 </dict>
 </plist>
