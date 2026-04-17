@@ -259,10 +259,15 @@ class _AdaptiveOverlayState extends State<_AdaptiveOverlay> {
   }
 
   Future<void> _computeOverlay() async {
+    ui.Image? image;
     try {
-      final codec = await ui.instantiateImageCodec(widget.coverBytes);
+      final codec = await ui.instantiateImageCodec(
+        widget.coverBytes,
+        targetHeight: 48,
+        targetWidth: 48,
+      );
       final frame = await codec.getNextFrame();
-      final image = frame.image;
+      image = frame.image;
 
       //sample a small version
       final byteData = await image.toByteData(
@@ -271,21 +276,19 @@ class _AdaptiveOverlayState extends State<_AdaptiveOverlay> {
       if (byteData == null || !mounted) return;
 
       final pixels = byteData.buffer.asUint8List();
-      double totalBrightness = 0;
-      int sampleCount = 0;
-
-      //sample every 40th pixel
-      for (int i = 0; i < pixels.length; i += 40 * 4) {
-        final r = pixels[i];
-        final g = pixels[i + 1];
-        final b = pixels[i + 2];
-        //perceived brightness
-        totalBrightness += (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-        sampleCount++;
+      double total = 0;
+      int samples = 0;
+      for (int i = 0; i < pixels.length; i += 4) {
+        total +=
+            (0.299 * pixels[i] +
+                0.587 * pixels[i + 1] +
+                1.114 * pixels[i + 2]) /
+            255;
+        samples++;
       }
 
-      if (sampleCount == 0 || !mounted) return;
-      final brightness = totalBrightness / sampleCount; //0.0–1.0
+      if (samples == 0 || !mounted) return;
+      final brightness = total / samples; //0.0–1.0
 
       //dark cover > lighten, light cover > darken, middle > minimal
       final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -301,7 +304,10 @@ class _AdaptiveOverlayState extends State<_AdaptiveOverlay> {
       }
 
       if (mounted) setState(() => _overlay = overlay);
-    } catch (_) {}
+    } catch (_) {
+    } finally {
+      image?.dispose();
+    }
   }
 
   @override
