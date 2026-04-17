@@ -207,11 +207,13 @@ class AudioService {
     _repeatController.add(_repeat);
   }
 
-  void _savePlaybackState() {
+  void _savePlaybackState() async {
     final db = _db;
     if (db == null) return;
-    db.setSetting('playback.shuffle', _shuffle.toString());
-    db.setSetting('playback.repeat', _repeat.name);
+    await db.transaction(() async {
+      db.setSetting('playback.shuffle', _shuffle.toString());
+      db.setSetting('playback.repeat', _repeat.name);
+    });
   }
 
   /// ===========================
