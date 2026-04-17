@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:sono/theme/theme.dart';
@@ -104,7 +105,7 @@ class _SonoCoverArtState extends State<SonoCoverArt>
       animation: _spinController,
       child: child,
       builder: (_, c) => Transform.rotate(
-        angle: _spinController.value * 2 * 3.14159265,
+        angle: _spinController.value * 2 * pi,
         child: c,
       ),
     );
