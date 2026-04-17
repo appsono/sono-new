@@ -382,7 +382,7 @@ class AudioService {
   }
 
   /// Remove song from queue by index
-  void removeFromQueue(int index) {
+  Future<void> removeFromQueue(int index) async {
     if (index < 0 || index >= _queue.length) return;
     final wasCurrentIndex = _currentIndex;
 
@@ -398,7 +398,7 @@ class AudioService {
       //adjust _currentIndex
       if (index < _currentIndex) {
         _currentIndex--;
-      } else if (_currentIndex >= _queue.length) {
+      } else if (_currentIndex >= _shuffleOrder.length) {
         _currentIndex = _shuffleOrder.length - 1;
       }
     } else {
@@ -411,7 +411,12 @@ class AudioService {
 
     //if the playing song gets removed, play whats now at that position
     if (index == wasCurrentIndex && _queue.isNotEmpty) {
-      _openCurrent();
+      _isAdvancing = true;
+      try {
+        await _openCurrent();
+      } finally {
+        _isAdvancing = false;
+      }
     }
   }
 
