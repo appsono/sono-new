@@ -75,30 +75,32 @@ class _AppShellState extends State<AppShell> {
                     : null,
               ),
             ),
-        ],
-      ),
-      bottomNavigationBar: StreamBuilder<Song?>(
-        stream: AudioService.instance.currentSongStream,
-        builder: (context, snap) {
-          final hasSong =
-              snap.data != null || AudioService.instance.currentSong != null;
-
-          return Padding(
-            padding: const EdgeInsets.only(left: 12, right: 12, bottom: 22),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SonoMiniPlayer(navBarVisible: true),
-                const SizedBox(height: 6),
-                SonoNavBar(
-                  selectedIndex: _tab,
-                  onDestinationSelected: (i) => setState(() => _tab = i),
-                  miniPlayerVisible: hasSong,
-                ),
-              ],
+          Positioned(
+            left: 12,
+            right: 12,
+            bottom: 22,
+            child: StreamBuilder<Song?>(
+              stream: AudioService.instance.currentSongStream,
+              builder: (context, snap) {
+                final hasSong =
+                    snap.data != null ||
+                    AudioService.instance.currentSong != null;
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SonoMiniPlayer(navBarVisible: true),
+                    const SizedBox(height: 6),
+                    SonoNavBar(
+                      selectedIndex: _tab,
+                      onDestinationSelected: (i) => setState(() => _tab = i),
+                      miniPlayerVisible: hasSong,
+                    ),
+                  ],
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
