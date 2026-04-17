@@ -12,6 +12,5 @@ String? getMainArtistFromSong(sq.Song song) {
 /// Splits a raw artist string on common seperators and returns the first
 String? getMainArtist(String? artist) {
   if (artist == null || artist.isEmpty) return null;
-  //split on common separators
-  return artist.split(RegExp(r'[,:&]')).first.trim();
+  return artist.split(RegExp(r'[,;/]')).first.trim();
 }
