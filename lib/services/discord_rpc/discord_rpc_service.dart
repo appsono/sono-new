@@ -393,7 +393,7 @@ class DiscordRpcService {
     await _db?.removeSetting('discord.session_token');
   }
 
-  void dipose() {
+  void dispose() {
     _stop();
     _tokenManager?.dispose();
     _coverUploader.dispose();
