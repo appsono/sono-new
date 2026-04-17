@@ -233,7 +233,7 @@ class AudioEffectsService {
 
     final bassGain = _bassBoost.abs() > 0.1 ? _bassBoost : 0.0;
     buf.write(
-      'equalizer@bass=f=80:width_type=o:w=2.0:g=${bassGain.toStringAsFixed(1)}',
+      ',equalizer@bass=f=80:width_type=o:w=2.0:g=${bassGain.toStringAsFixed(1)}',
     );
     buf.write(']');
     return buf.toString();
