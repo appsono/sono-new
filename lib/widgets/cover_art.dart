@@ -104,10 +104,8 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     child = AnimatedBuilder(
       animation: _spinController,
       child: child,
-      builder: (_, c) => Transform.rotate(
-        angle: _spinController.value * 2 * pi,
-        child: c,
-      ),
+      builder: (_, c) =>
+          Transform.rotate(angle: _spinController.value * 2 * pi, child: c),
     );
 
     return SizedBox.square(dimension: widget.size, child: child);

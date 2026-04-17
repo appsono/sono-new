@@ -72,7 +72,8 @@ class DiscordRpcService {
 
     _userToken = legacyToken ?? await _secure.read(key: 'discord.token');
     _enabled = (await db.getSetting('discord.enabled')) == 'true';
-    _sessionToken = legacySession ?? await _secure.read(key: 'discord.session_token');
+    _sessionToken =
+        legacySession ?? await _secure.read(key: 'discord.session_token');
 
     if (_userToken != null && _enabled) {
       _start();
