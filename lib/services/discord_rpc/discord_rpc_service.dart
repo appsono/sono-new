@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:sono_query/sono_query.dart' as sq;
 
@@ -19,6 +20,7 @@ class DiscordRpcService {
   static const _appId = '1380230010064994325';
   static const _appName = 'Sono';
   static const _appUrl = 'https://github.com/appsono/sono-new';
+  static const _secure = FlutterSecureStorage(aOptions: AndroidOptions());
 
   /// How long after pausing before presence is cleared
   static const _pauseClearDisplay = Duration(minutes: 1);
@@ -57,9 +59,20 @@ class DiscordRpcService {
     final db = _db;
     if (db == null) return;
 
-    _userToken = await db.getSetting('discord.token');
+    final legacyToken = await db.getSetting('discord.token');
+    if (legacyToken != null) {
+      await _secure.write(key: 'discord.token', value: legacyToken);
+      await db.removeSetting('discord.token');
+    }
+    final legacySession = await db.getSetting('discord.session_token');
+    if (legacySession != null) {
+      await _secure.write(key: 'discord.session_token', value: legacySession);
+      await db.removeSetting('discord.session_token');
+    }
+
+    _userToken = legacyToken ?? await _secure.read(key: 'discord.token');
     _enabled = (await db.getSetting('discord.enabled')) == 'true';
-    _sessionToken = await db.getSetting('discord.session_token');
+    _sessionToken = legacySession ?? await _secure.read(key: 'discord.session_token');
 
     if (_userToken != null && _enabled) {
       _start();
@@ -86,7 +99,7 @@ class DiscordRpcService {
         : null;
 
     //persist
-    await db.setSetting('discord.token', userToken);
+    await _secure.write(key: 'discord.token', value: userToken);
     await db.setSetting('discord.enabled', 'true');
     _enabled = true;
 
@@ -122,9 +135,9 @@ class DiscordRpcService {
 
     final db = _db;
     if (db != null) {
-      await db.removeSetting('discord.token');
-      await db.removeSetting('discord.access_token');
-      await db.removeSetting('discord.session_token');
+      await _secure.delete(key: 'discord.token');
+      await _secure.delete(key: 'discord.access_token');
+      await _secure.delete(key: 'discord.session_token');
       await db.removeSetting('discord.username');
       await db.removeSetting('discord.enabled');
     }
@@ -176,12 +189,12 @@ class DiscordRpcService {
 
   void _initTokenManager() {
     if (_tokenManager != null || _userToken == null) return;
-    final db = _db;
     _tokenManager = DiscordTokenManager(
       userToken: _userToken!,
-      writeCache: (key, data) async => db?.setSetting('discord.$key', data),
-      readCache: (key) async => db?.getSetting('discord.$key'),
-      deleteCache: (key) async => db?.removeSetting('discord.$key'),
+      writeCache: (key, data) async =>
+          _secure.write(key: 'discord.$key', value: data),
+      readCache: (key) async => _secure.read(key: 'discord.$key'),
+      deleteCache: (key) async => _secure.delete(key: 'discord.$key'),
     );
   }
 
