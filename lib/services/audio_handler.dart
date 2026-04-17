@@ -90,12 +90,17 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
         final file = File('$_tempDirPath/sono_cover_$_coverCounter.jpg');
         await file.writeAsBytes(imageBytes, flush: true);
         if (token != _updateToken) return;
-
         final old = _previousCoverFile;
+        _previousCoverFile = file;
+        finalArtUri = Uri.file(file.path);
+
         if (old != null && old.path != file.path) {
-          try {
-            await old.delete();
-          } catch (_) {}
+          //let the media session resolve the new URI before the old file gets deleted
+          Future.delayed(const Duration(seconds: 5), () async {
+            try {
+              await old.delete();
+            } catch (_) {}
+          });
         }
         _previousCoverFile = file;
         finalArtUri = Uri.file(file.path);
