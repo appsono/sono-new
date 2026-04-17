@@ -190,6 +190,8 @@ class SonoDatabase extends _$SonoDatabase {
     await (delete(songs)..where((s) => s.path.isNotIn(currentPaths))).go();
   }
 
+  Future<void> clearAllSongs() => delete(songs).go();
+
   /// ==== Settings ====
   Future<String?> getSetting(String key) async {
     final row = await (select(

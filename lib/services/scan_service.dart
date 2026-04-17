@@ -26,7 +26,7 @@ class ScanService {
     sq.ScanErrorCallback? onError,
   }) async {
     if (force) {
-      await db.removeDeletedSongs({});
+      await db.clearAllSongs();
       await db.removeOrphanedAlbums();
       await db.removeOrphanedArtists();
     }
@@ -65,7 +65,9 @@ class ScanService {
       newSongsChunk.clear();
     }
 
-    await db.removeDeletedSongs(allPaths);
+    if (!force) {
+      await db.removeDeletedSongs(allPaths);
+    }
     await db.removeOrphanedAlbums();
     await db.removeOrphanedArtists();
   }
