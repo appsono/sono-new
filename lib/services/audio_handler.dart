@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
 import 'package:rxdart/rxdart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:audio_session/audio_session.dart';
@@ -23,6 +24,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   SonoAudioHandler(this._db) {
     _initSession();
+    _cleanupStaleCover();
 
     //bridge media_kit playing state > audio_service playback state
     _audio.playingStream.listen((playing) async {
@@ -138,6 +140,19 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           : null,
     );
     mediaItem.add(item);
+  }
+
+  Future<void> _cleanupStaleCover() async {
+    try {
+      final dir = Directory((await getTemporaryDirectory()).path);
+      await for (final e in dir.list()) {
+        if (e is File && p.basename(e.path).startsWith('sono_cover_')) {
+          try {
+            await e.delete();
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
   }
 
   void _broadcastState() {
