@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/app_shell.dart';
@@ -42,6 +45,8 @@ void main() async {
   DiscordRpcService.instance.attachDb(db);
   await DiscordRpcService.instance.loadState();
 
+  if (Platform.isIOS) await _createIosReadme();
+
   runApp(SonoApp(db: db));
 }
 
@@ -73,6 +78,17 @@ class _SonoAppState extends State<SonoApp> {
           home: AppShell(db: widget.db),
         );
       },
+    );
+  }
+}
+
+Future<void> _createIosReadme() async {
+  final docs = await getApplicationDocumentsDirectory();
+  final readme = File('${docs.path}/Put your music here.txt');
+  if (!await readme.exists()) {
+    await readme.writeAsString(
+      'Put your music files (mp3, flac, m4a, ogg, wav, opus) into this folder. \n'
+      'Sono will pick them automatically on the next scan.',
     );
   }
 }
