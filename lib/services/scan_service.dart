@@ -25,12 +25,6 @@ class ScanService {
     sq.ScanProgressCallback? onProgress,
     sq.ScanErrorCallback? onError,
   }) async {
-    if (force) {
-      await db.clearAllSongs();
-      await db.removeOrphanedAlbums();
-      await db.removeOrphanedArtists();
-    }
-
     final existingPaths = await db.getAllSongPaths();
     final allPaths = <String>{};
     final newSongsChunk = <sq.Song>[];
@@ -61,7 +55,9 @@ class ScanService {
     }
 
     if (newSongsChunk.isNotEmpty) {
-      await _flushChunk(newSongsChunk, artistCache, albumCache);
+      final caches = await _flushChunk(newSongsChunk, artistCache, albumCache);
+      artistCache = caches.$1;
+      albumCache = caches.$2;
       newSongsChunk.clear();
     }
 
