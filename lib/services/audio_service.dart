@@ -352,10 +352,9 @@ class AudioService {
     _queue.add(song);
     if (_shuffle && _shuffleOrder.isNotEmpty) {
       //insert at random after current, preserving existing order
-      final insertAt =
-          _currentIndex +
-          1 +
-          Random().nextInt(_shuffleOrder.length - _currentIndex);
+      final base = _currentIndex.clamp(-1, _shuffleOrder.length - 1);
+      final range = _shuffleOrder.length - base; //always >= 1
+      final insertAt = base + 1 + Random().nextInt(range);
       _shuffleOrder.insert(insertAt, newIndex);
     }
     _invalidateQueueCache();
