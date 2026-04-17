@@ -477,13 +477,4 @@ class AudioService {
       _shuffleOrder.insert(0, anchor);
     }
   }
-
-  void dispose() {
-    _player.dispose();
-    _currentSongController.close();
-    _queueController.close();
-    _shuffleController.close();
-    _repeatController.close();
-    _artistNameController.close();
-  }
 }
