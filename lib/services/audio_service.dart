@@ -211,8 +211,8 @@ class AudioService {
     final db = _db;
     if (db == null) return;
     await db.transaction(() async {
-      db.setSetting('playback.shuffle', _shuffle.toString());
-      db.setSetting('playback.repeat', _repeat.name);
+      await db.setSetting('playback.shuffle', _shuffle.toString());
+      await db.setSetting('playback.repeat', _repeat.name);
     });
   }
 
