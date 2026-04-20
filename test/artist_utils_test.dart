@@ -19,12 +19,12 @@ void main() {
       expect(getMainArtist('Tyler, The Creator, Pharrell'), 'Tyler');
     });
 
-    test('splits on ampersand', () {
-      expect(getMainArtist('MF DOOM & Madlib'), 'MF DOOM');
+    test('does not split on ampersand', () {
+      expect(getMainArtist('MF DOOM & Madlib'), 'MF DOOM & Madlib');
     });
 
-    test('splits on colon', () {
-      expect(getMainArtist('Kanye West: Sunday Service'), 'Kanye West');
+    test('does not split on colon', () {
+      expect(getMainArtist('Kanye West: Sunday Service'), 'Kanye West: Sunday Service');
     });
 
     test('trims whitespace around result', () {
@@ -32,7 +32,7 @@ void main() {
     });
 
     test('handles mixed separators and takes first split', () {
-      expect(getMainArtist('A & B, C'), 'A');
+      expect(getMainArtist('A & B, C'), 'A & B');
     });
 
     test('returns full string when no separators present', () {
