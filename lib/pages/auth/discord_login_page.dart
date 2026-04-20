@@ -60,7 +60,9 @@ class _DiscordLoginPageState extends State<DiscordLoginPage> {
                 ),
               );
               await controller.loadUrl(
-                urlRequest: URLRequest(url: WebUri('https://discord.com/login')),
+                urlRequest: URLRequest(
+                  url: WebUri('https://discord.com/login'),
+                ),
               );
             },
             onLoadStop: (controller, url) async {
