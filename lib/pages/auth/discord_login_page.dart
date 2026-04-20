@@ -29,19 +29,18 @@ class _DiscordLoginPageState extends State<DiscordLoginPage> {
       body: Stack(
         children: [
           InAppWebView(
-            initialUrlRequest: URLRequest(
-              url: WebUri('https://discord.com/login'),
-            ),
             initialSettings: InAppWebViewSettings(
               javaScriptEnabled: true,
               domStorageEnabled: true,
-              //clear cache to ensure fresh login
-              clearCache: false,
+              clearCache: true,
+              clearSessionCache: true,
               userAgent:
                   'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36',
             ),
-            onWebViewCreated: (controller) {
+            onWebViewCreated: (controller) async {
+              await CookieManager.instance().deleteAllCookies();
+              await WebStorageManager.instance().deleteAllData();
               //inject JS on page start to preserve token
               //discords JS tries to remove the token form localStorage
               //on certain navigations. hook removeItem to prevent that
@@ -59,6 +58,9 @@ class _DiscordLoginPageState extends State<DiscordLoginPage> {
                   ''',
                   injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
                 ),
+              );
+              await controller.loadUrl(
+                urlRequest: URLRequest(url: WebUri('https://discord.com/login')),
               );
             },
             onLoadStop: (controller, url) async {
