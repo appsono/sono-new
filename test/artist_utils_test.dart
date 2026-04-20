@@ -24,7 +24,10 @@ void main() {
     });
 
     test('does not split on colon', () {
-      expect(getMainArtist('Kanye West: Sunday Service'), 'Kanye West: Sunday Service');
+      expect(
+        getMainArtist('Kanye West: Sunday Service'),
+        'Kanye West: Sunday Service',
+      );
     });
 
     test('trims whitespace around result', () {
