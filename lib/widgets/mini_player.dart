@@ -212,20 +212,21 @@ class _BlurredCoverBg extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        //cover image, scaled up > avoid blur edge artifacts
-        Transform.scale(
-          scale: 0.8,
-          child: Image.memory(
-            coverBytes,
-            fit: BoxFit.cover,
-            errorBuilder: (_, _, _) => const SizedBox.shrink(),
+        //cover image
+        ImageFiltered(
+          imageFilter: ui.ImageFilter.blur(
+            sigmaX: 25,
+            sigmaY: 25,
+            tileMode: TileMode.mirror,
           ),
-        ),
-
-        //blur
-        BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-          child: const SizedBox.expand(),
+          child: Transform.scale(
+            scale: 0.8,
+            child: Image.memory(
+              coverBytes,
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const SizedBox.shrink(),
+            ),
+          ),
         ),
 
         //adaptive overlay based on cover brightness
