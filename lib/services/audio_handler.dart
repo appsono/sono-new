@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
@@ -22,6 +23,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   int _updateToken = 0;
 
+  bool _waitingForPosition = false;
+
   SonoAudioHandler(this._db) {
     _initSession();
     _cleanupStaleCover();
@@ -34,10 +37,17 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       }
       _broadcastState();
     });
-    _audio.positionStream
-        .throttleTime(const Duration(seconds: 5))
-        .listen((_) => _broadcastState());
+    _audio.positionStream.throttleTime(const Duration(seconds: 5)).listen((_) {
+      if (_waitingForPosition) {
+        _waitingForPosition = false;
+        _broadcastState();
+      }
+    });
     _audio.durationStream.listen((_) => _broadcastState());
+    _audio.bufferingStream.listen((buffering) {
+      if (buffering) _waitingForPosition = true;
+      _broadcastState();
+    });
 
     //update notification when shuffle/repeat changes
     _audio.shuffleStream.listen((_) => _broadcastState());
@@ -45,7 +55,10 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
     //bridge current song > audio_service mediaItem
     _audio.currentSongStream.listen((song) {
-      if (song != null) _updateMediaItem(song);
+      if (song != null) {
+        _broadcastState();
+        _updateMediaItem(song);
+      }
     });
   }
 
@@ -189,7 +202,9 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           MediaAction.setRepeatMode,
         },
         androidCompactActionIndices: const [1, 2, 3],
-        processingState: AudioProcessingState.ready,
+        processingState: (_audio.isBuffering && _waitingForPosition)
+            ? AudioProcessingState.loading
+            : AudioProcessingState.ready,
         playing: _audio.isPlaying,
         updatePosition: _audio.position,
         shuffleMode: _audio.shuffle
@@ -217,13 +232,22 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   }
 
   @override
-  Future<void> seek(Duration position) => _audio.seek(position);
+  Future<void> seek(Duration position) async {
+    await _audio.seek(position);
+    _broadcastState();
+  }
 
   @override
-  Future<void> skipToNext() => _audio.skipNext();
+  Future<void> skipToNext() async {
+    await _audio.skipNext();
+    _broadcastState();
+  }
 
   @override
-  Future<void> skipToPrevious() => _audio.skipPrevious();
+  Future<void> skipToPrevious() async {
+    await _audio.skipPrevious();
+    _broadcastState();
+  }
 
   @override
   Future<void> customAction(String name, [Map<String, dynamic>? extras]) async {

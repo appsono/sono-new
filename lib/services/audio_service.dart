@@ -108,6 +108,11 @@ class AudioService {
     return _player.state.playing;
   }
 
+  bool get isBuffering {
+    _ensureInitialized();
+    return _player.state.buffering;
+  }
+
   /// Queue in effective order (respects shuffle)
   List<Song> get effectiveQueue {
     if (_cachedEffectiveQueue != null) return _cachedEffectiveQueue!;
