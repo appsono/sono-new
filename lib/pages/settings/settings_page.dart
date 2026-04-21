@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -232,29 +234,30 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: 16),
 
         //additional paths
-        _chipList(
-          'additional paths',
-          c.additionalPaths,
-          _additionalPathCtrl,
-          'e.g. /home/user/Downloads',
-          onAdd: (val) => _save(
-            ScanConfig(
-              excludedPaths: c.excludedPaths,
-              additionalPaths: [...c.additionalPaths, val],
-              minDuration: c.minDuration,
-              artistParser: c.artistParser,
+        if (Platform.isLinux || Platform.isWindows)
+          _chipList(
+            'additional paths',
+            c.additionalPaths,
+            _additionalPathCtrl,
+            'e.g. /home/user/Downloads',
+            onAdd: (val) => _save(
+              ScanConfig(
+                excludedPaths: c.excludedPaths,
+                additionalPaths: [...c.additionalPaths, val],
+                minDuration: c.minDuration,
+                artistParser: c.artistParser,
+              ),
+            ),
+            onRemove: (i) => _save(
+              ScanConfig(
+                excludedPaths: c.excludedPaths,
+                additionalPaths: [...c.additionalPaths]..removeAt(i),
+                minDuration: c.minDuration,
+                artistParser: c.artistParser,
+              ),
             ),
           ),
-          onRemove: (i) => _save(
-            ScanConfig(
-              excludedPaths: c.excludedPaths,
-              additionalPaths: [...c.additionalPaths]..removeAt(i),
-              minDuration: c.minDuration,
-              artistParser: c.artistParser,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
+        if (Platform.isLinux || Platform.isWindows) const SizedBox(height: 16),
 
         //artist parser toggle
         SwitchListTile(
