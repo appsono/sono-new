@@ -18,7 +18,8 @@ jobs:
       - run: flutter build windows --release
 
       - name: Upload Windows build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sono-windows
           path: build/windows/x64/runner/Release/
+          

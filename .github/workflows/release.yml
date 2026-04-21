@@ -71,7 +71,7 @@ jobs:
       - name: Build signed App Bundle
         run: flutter build appbundle --release
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android-release
           path: |
@@ -101,7 +101,7 @@ jobs:
           cp -r build/ios/iphoneos/Runner.app Payload/
           zip -r sono-unsigned.ipa Payload
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ios-release
           path: sono-unsigned.ipa
@@ -113,12 +113,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           name: android-release
           path: artifacts/android
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         if: needs.build-ios.result == 'success'
         with:
           name: ios-release
