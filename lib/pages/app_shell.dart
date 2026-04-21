@@ -1,15 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/settings/settings_page.dart';
 import 'package:sono/pages/test/widget_test_page.dart';
 import 'package:sono/services/audio_service.dart';
 import 'package:sono/services/scan_service.dart';
+import 'package:sono/services/update_service.dart';
 import 'package:sono/services/scan_settings.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/bottom_nav.dart';
+import 'package:sono/widgets/update_banner.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 class AppShell extends StatefulWidget {
@@ -24,11 +27,35 @@ class _AppShellState extends State<AppShell> {
   int _tab = 0;
   ScanProgress? _scanProgress;
   final _scanVersion = ValueNotifier<int>(0);
+  UpdateInfo? _update;
 
   @override
   void initState() {
     super.initState();
     _checkPermissionAndScan();
+    _checkForUpdates();
+  }
+
+  Future<void> _checkForUpdates() async {
+    final info = await UpdateService.instance.checkForUpdates();
+    if (!mounted || info == null) return;
+    setState(() => _update = info);
+  }
+
+  Future<void> _openUpdate() async {
+    final info = _update;
+    if (info == null) return;
+    await UpdateService.instance.dismiss(info.latestVersion);
+    final uri = Uri.parse(info.releaseUrl);
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (mounted) setState(() => _update = null);
+  }
+
+  Future<void> _dismissUpdate() async {
+    final info = _update;
+    if (info == null) return;
+    await UpdateService.instance.dismiss(info.latestVersion);
+    if (mounted) setState(() => _update = null);
   }
 
   Future<void> _checkPermissionAndScan({bool force = false}) async {
@@ -73,6 +100,23 @@ class _AppShellState extends State<AppShell> {
                 value: _scanProgress!.progress > 0
                     ? _scanProgress!.progress
                     : null,
+              ),
+            ),
+          if (_update != null)
+            Positioned(
+              top: 0,
+              left: 12,
+              right: 12,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: UpdateBanner(
+                    info: _update!,
+                    onView: _openUpdate,
+                    onDismiss: _dismissUpdate,
+                  ),
+                ),
               ),
             ),
           Positioned(

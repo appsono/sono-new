@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/auth/discord_login_page.dart';
 import 'package:sono/services/scan_settings.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
+import 'package:sono/services/update_service.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 class SettingsPage extends StatefulWidget {
@@ -26,6 +29,9 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _discordEnabled = false;
   String? _discordUsername;
   bool _discordLoading = false;
+
+  //update state
+  bool _updateChecking = false;
 
   @override
   void initState() {
@@ -108,6 +114,52 @@ class _SettingsPageState extends State<SettingsPage> {
         _discordEnabled = false;
         _discordUsername = null;
       });
+    }
+  }
+
+  Future<void> _checkForUpdatesManual() async {
+    if (_updateChecking) return;
+    setState(() => _updateChecking = true);
+
+    final info = await UpdateService.instance.checkForUpdates(force: true);
+
+    if (!mounted) return;
+    setState(() => _updateChecking = false);
+
+    if (info == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('you are up to date :D')));
+      return;
+    }
+
+    //show dialog with view/dismiss
+    final action = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Update available'),
+        content: Text('${info.currentVersion} > ${info.latestVersion}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, 'dismiss'),
+            child: const Text('Dismiss'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, 'view'),
+            child: const Text('View release'),
+          ),
+        ],
+      ),
+    );
+
+    if (action == 'view') {
+      await UpdateService.instance.dismiss(info.latestVersion);
+      await launchUrl(
+        Uri.parse(info.releaseUrl),
+        mode: LaunchMode.externalApplication,
+      );
+    } else if (action == 'dismiss') {
+      await UpdateService.instance.dismiss(info.latestVersion);
     }
   }
 
@@ -321,6 +373,26 @@ class _SettingsPageState extends State<SettingsPage> {
               child: const Text('Sign in'),
             ),
           ),
+
+        const SizedBox(height: 12),
+        const Divider(),
+        const SizedBox(height: 12),
+
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Check for updates'),
+          subtitle: const Text('looks at the github releases page.'),
+          trailing: _updateChecking
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : TextButton(
+                  onPressed: _checkForUpdatesManual,
+                  child: const Text('Check'),
+                ),
+        ),
       ],
     );
   }
