@@ -8,7 +8,7 @@ import 'package:sono/db/tables.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [Artists, Albums, Songs, Settings],
+  tables: [Artists, Albums, Songs, Settings, Profiles],
   views: [SongWithArtistView, AlbumWithArtistView],
 )
 class SonoDatabase extends _$SonoDatabase {
@@ -16,7 +16,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -28,8 +28,11 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 3) {
         await m.addColumn(songs, songs.displayArtist);
       }
+      if (from < 4) {
+        await m.createTable(profiles);
+      }
       //future migrations go here:
-      // if (from < 4) { .. }
+      // if (from < 5) { .. }
     },
   );
 
@@ -213,6 +216,28 @@ class SonoDatabase extends _$SonoDatabase {
   Future<Map<String, String>> getAllSettings() async {
     final rows = await select(settings).get();
     return {for (final s in rows) s.settingKey: s.value};
+  }
+
+  // ==== Profile ====
+
+  Future<Profile?> getProfile() => select(profiles).getSingleOrNull();
+  Future<void> upsertProfile({
+    String? username,
+    Value<Uint8List?> avatar = const Value.absent(),
+  }) async {
+    final existing = await getProfile();
+    if (existing == null) {
+      await into(profiles).insert(
+        ProfilesCompanion.insert(username: username ?? '', avatar: avatar),
+      );
+    } else {
+      await (update(profiles)..where((p) => p.id.equals(existing.id))).write(
+        ProfilesCompanion(
+          username: username != null ? Value(username) : const Value.absent(),
+          avatar: avatar,
+        ),
+      );
+    }
   }
 }
 

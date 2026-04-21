@@ -80,3 +80,10 @@ abstract class AlbumWithArtistView extends View {
         leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
       ]);
 }
+
+/// Local accounts
+class Profiles extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get username => text()();
+  BlobColumn get avatar => blob().nullable()();
+}
