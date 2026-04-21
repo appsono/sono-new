@@ -175,6 +175,47 @@ class _SettingsPageState extends State<SettingsPage> {
       children: [
         const SizedBox(height: 60),
 
+        if (Platform.isIOS) ...[
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.info_outline_rounded, size: 18),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'To add music, copy your audio files into Sono\'s folder using the Files app.',
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () => launchUrl(
+                          Uri.parse('shareddocuments:///'),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                        child: const Text('Open Files app'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+
         //min dur
         Row(
           children: [
