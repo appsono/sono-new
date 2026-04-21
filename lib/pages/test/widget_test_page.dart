@@ -3,6 +3,7 @@ import 'package:sono/db/database.dart';
 import 'package:sono/main.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/media_card.dart';
 import 'package:sono/widgets/section.dart';
 import 'package:sono/services/audio_service.dart';
@@ -21,6 +22,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
   List<Artist>? _artists;
   Map<int, String>? _artistCoverPaths;
   Map<String, int>? _artistSongCounts;
+  Profile? _profile;
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
   Future<void> _load() async {
     final songs = await widget.db.getAllSongsWithArtists();
     final artists = await widget.db.getAllArtists();
+    final profile = await widget.db.getProfile();
 
     //grab first song path per artist for cover art
     final coverPaths = <int, String>{};
@@ -55,6 +58,7 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
       _artists = artists;
       _artistCoverPaths = coverPaths;
       _artistSongCounts = counts;
+      _profile = profile;
     });
   }
 
@@ -69,6 +73,37 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
       body: SafeArea(
         child: ListView(
           children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: SonoHeader(
+                isHomePage: true,
+                username: _profile?.username.isEmpty == true
+                    ? null
+                    : _profile?.username,
+                avatar: _profile?.avatar,
+                onProfileTap: () { /* open sidebar later */},
+                actions: [
+                  SonoHeaderAction(
+                    icon: Icons.question_mark_rounded,
+                    tooltip: 'Idk',
+                    onTap: () {},
+                  ),
+                  SonoHeaderAction(
+                    icon: Icons.search_rounded,
+                    tooltip: 'Search',
+                    onTap: () {},
+                  ),
+                  SonoHeaderAction(
+                    icon: Icons.settings_rounded,
+                    tooltip: 'Settings',
+                    onTap: () => setState(() {
+                      //navigate to settings page
+                    }),
+                  ),
+                ],
+              ),
+            ),
+
             ValueListenableBuilder<SonoColors>(
               valueListenable: SonoApp.themeNotifier,
               builder: (_, colors, _) {
