@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 
-
 const double _headerElementHeight = 52;
 
 /// A single tappable icon in header action pill

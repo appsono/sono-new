@@ -6,7 +6,7 @@ import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/media_card.dart';
 import 'package:sono/widgets/section.dart';
-import 'package:sono/services/audio_service.dart';
+import 'package:sono/services/audio/audio_service.dart';
 
 class WidgetTestPage extends StatefulWidget {
   final SonoDatabase db;
@@ -81,7 +81,9 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
                     ? null
                     : _profile?.username,
                 avatar: _profile?.avatar,
-                onProfileTap: () { /* open sidebar later */},
+                onProfileTap: () {
+                  /* open sidebar later */
+                },
                 actions: [
                   SonoHeaderAction(
                     icon: Icons.question_mark_rounded,

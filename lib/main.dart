@@ -7,9 +7,9 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/app_shell.dart';
-import 'package:sono/services/audio_handler.dart';
-import 'package:sono/services/audio_service.dart' as sono;
-import 'package:sono/services/audio_effects_service.dart';
+import 'package:sono/services/audio/audio_handler.dart';
+import 'package:sono/services/audio/audio_service.dart' as sono;
+import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/update_service.dart';
 

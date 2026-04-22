@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:sono_query/sono_query.dart' as query;
 
-import 'package:sono/services/audio_service.dart' as sono;
+import 'package:sono/services/audio/audio_service.dart' as sono;
 import 'package:sono/db/database.dart';
 
 class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {

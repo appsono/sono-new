@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:media_kit/media_kit.dart';
 import 'package:sono/db/database.dart';
-import 'package:sono/services/audio_effects_service.dart';
+import 'package:sono/services/audio/audio_effects_service.dart';
 
 enum RepeatMode { off, all, one }
 

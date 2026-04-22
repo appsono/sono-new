@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
-import 'package:sono/services/audio_service.dart';
+import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/theme/theme.dart';

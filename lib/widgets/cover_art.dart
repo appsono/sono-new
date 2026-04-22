@@ -3,7 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:sono/theme/theme.dart';
-import 'package:sono/services/audio_service.dart';
+import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono_query/sono_query.dart';
 import 'package:sono/theme/tokens.dart';
 

@@ -1,7 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sono/db/database.dart';
-import 'package:sono/services/audio_effects_service.dart';
+import 'package:sono/services/audio/audio_effects_service.dart';
 
 void main() {
   group('AudioEffectsService (no player)', () {

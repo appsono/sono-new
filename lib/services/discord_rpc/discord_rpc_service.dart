@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:sono_query/sono_query.dart' as sq;
 
 import 'package:sono/db/database.dart';
-import 'package:sono/services/audio_service.dart' as sa;
+import 'package:sono/services/audio/audio_service.dart' as sa;
 import 'package:sono/services/discord_rpc/models.dart';
 import 'package:sono/services/discord_rpc/token_manager.dart';
 import 'package:sono/services/discord_rpc/cover_uploader.dart';

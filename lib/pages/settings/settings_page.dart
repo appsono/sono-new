@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/auth/discord_login_page.dart';
-import 'package:sono/services/scan_settings.dart';
+import 'package:sono/services/scanner/scan_settings.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/update_service.dart';
 import 'package:sono_query/sono_query.dart' hide Song;

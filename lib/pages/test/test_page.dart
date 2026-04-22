@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart' hide RepeatMode;
 import 'package:sono/db/database.dart';
-import 'package:sono/services/scan_service.dart';
-import 'package:sono/services/audio_service.dart';
-import 'package:sono/services/audio_effects_service.dart';
+import 'package:sono/services/scanner/scan_service.dart';
+import 'package:sono/services/audio/audio_service.dart';
+import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 class TestPage extends StatefulWidget {
