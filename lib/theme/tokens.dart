@@ -187,6 +187,10 @@ abstract final class SonoSizes {
   static const double borderRadiusSm = 8;
 
   static const double navBarRadius = 30;
+
+  static const double iconSm = 18;
+  static const double iconMd = 24;
+  static const double iconLg = 32;
 }
 
 /// ===========================
