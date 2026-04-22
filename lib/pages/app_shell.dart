@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/settings/settings_page.dart';
 import 'package:sono/pages/test/widget_test_page.dart';
+import 'package:sono/pages/test/icons_test_page.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/services/scanner/scan_service.dart';
 import 'package:sono/services/update_service.dart';
@@ -88,7 +89,7 @@ class _AppShellState extends State<AppShell> {
                 db: widget.db,
                 onRescan: () => _checkPermissionAndScan(force: true),
               ),
-              Center(child: Text('Library')),
+              IconsTestPage(),
             ],
           ),
           if (_scanProgress != null)
