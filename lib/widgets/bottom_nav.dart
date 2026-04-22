@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/icons.dart';
 
 class SonoNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -21,18 +22,18 @@ class SonoNavBar extends StatelessWidget {
 
   static const _items = [
     _NavItem(
-      icon: 'assets/app/icons/outlined/home_outlined.svg',
-      iconFilled: 'assets/app/icons/filled/home_filled.svg',
+      icon: IconsSheet.homeOutlined,
+      iconFilled: IconsSheet.homeFilled,
       label: 'Home',
     ),
     _NavItem(
-      icon: 'assets/app/icons/outlined/search_outlined.svg',
-      iconFilled: 'assets/app/icons/filled/search_filled.svg',
+      icon: IconsSheet.searchOutlined,
+      iconFilled: IconsSheet.searchFilled,
       label: 'Search',
     ),
     _NavItem(
-      icon: 'assets/app/icons/outlined/library_outlined.svg',
-      iconFilled: 'assets/app/icons/filled/library_filled.svg',
+      icon: IconsSheet.libraryOutlined,
+      iconFilled: IconsSheet.libraryFilled,
       label: 'Library',
     ),
   ];

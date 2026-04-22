@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/main.dart';
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/icons.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/media_card.dart';
@@ -86,17 +87,14 @@ class _WidgetTestPageState extends State<WidgetTestPage> {
                 },
                 actions: [
                   SonoHeaderAction(
-                    icon: Icons.question_mark_rounded,
-                    tooltip: 'Idk',
-                    onTap: () {},
+                    icon: IconsSheet.bellOutlined,
+                    tooltip: 'News & Updates',
+                    onTap: () => setState(() {
+                      //navigat to "changelog" page
+                    }),
                   ),
                   SonoHeaderAction(
-                    icon: Icons.search_rounded,
-                    tooltip: 'Search',
-                    onTap: () {},
-                  ),
-                  SonoHeaderAction(
-                    icon: Icons.settings_rounded,
+                    icon: IconsSheet.settingsOutlined,
                     tooltip: 'Settings',
                     onTap: () => setState(() {
                       //navigate to settings page

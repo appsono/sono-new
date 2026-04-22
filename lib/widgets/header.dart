@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/icons.dart';
 
 const double _headerElementHeight = 52;
 
 /// A single tappable icon in header action pill
 class SonoHeaderAction {
-  final IconData icon;
+  final String icon;
   final String tooltip;
   final VoidCallback onTap;
 
@@ -95,9 +96,9 @@ class _ProfileCircle extends StatelessWidget {
               ? Image.memory(avatar!, fit: BoxFit.cover)
               : Container(
                   color: colors.primary,
-                  child: Icon(
-                    Icons.person_rounded,
-                    size: _size * 0.5,
+                  child: IconsSheet.svg(
+                    IconsSheet.profileFilled,
+                    size: 22,
                     color: colors.textLight,
                   ),
                 ),
@@ -240,7 +241,11 @@ class _ActionPill extends StatelessWidget {
           return Tooltip(
             message: action.tooltip,
             child: IconButton(
-              icon: Icon(action.icon, size: 22, color: colors.textSecondary),
+              icon: IconsSheet.svg(
+                action.icon,
+                size: 24,
+                color: colors.textSecondary,
+              ),
               onPressed: action.onTap,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(minWidth: 36, minHeight: 36),

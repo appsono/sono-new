@@ -42,10 +42,6 @@ class UpdateBanner extends StatelessWidget {
                 width: 8,
                 height: 8,
                 margin: const EdgeInsets.only(right: 10),
-                decoration: BoxDecoration(
-                  color: colors.primary,
-                  shape: BoxShape.circle,
-                ),
               ),
               Expanded(
                 child: Column(

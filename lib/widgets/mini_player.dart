@@ -8,6 +8,7 @@ import 'package:sono/db/database.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/icons.dart';
 
 class SonoMiniPlayer extends StatelessWidget {
   final bool navBarVisible;
@@ -344,14 +345,14 @@ class _ControlsPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          //queue / group icon (greyed out placeholder)
+          //skip previous
           IconButton(
-            icon: Icon(
-              Icons.group_rounded,
-              size: 22,
-              color: colors.textPlaceholder,
+            icon: IconsSheet.svg(
+              IconsSheet.skipPreviousFilled,
+              size: 21,
+              color: colors.textPrimary,
             ),
-            onPressed: null,
+            onPressed: audio.skipPrevious,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
           ),
@@ -362,9 +363,9 @@ class _ControlsPill extends StatelessWidget {
             builder: (_, snap) {
               final playing = snap.data ?? audio.isPlaying;
               return IconButton(
-                icon: Icon(
-                  playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                  size: 28,
+                icon: IconsSheet.svg(
+                  playing ? IconsSheet.pauseFilled : IconsSheet.playFilled,
+                  size: 21,
                   color: colors.textPrimary,
                 ),
                 onPressed: audio.playOrPause,
@@ -376,9 +377,9 @@ class _ControlsPill extends StatelessWidget {
 
           //skip next
           IconButton(
-            icon: Icon(
-              Icons.skip_next_rounded,
-              size: 28,
+            icon: IconsSheet.svg(
+              IconsSheet.skipNextFilled,
+              size: 21,
               color: colors.textPrimary,
             ),
             onPressed: audio.skipNext,
