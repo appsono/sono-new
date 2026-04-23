@@ -96,10 +96,13 @@ class _ProfileCircle extends StatelessWidget {
               ? Image.memory(avatar!, fit: BoxFit.cover)
               : Container(
                   color: colors.primary,
-                  child: IconsSheet.svg(
-                    IconsSheet.profileFilled,
-                    size: 22,
-                    color: colors.textLight,
+                  child: Align(
+                    alignment: const Alignment(0, 2.5),
+                    child: IconsSheet.svg(
+                      IconsSheet.profileFilled,
+                      size: 45,
+                      color: colors.textLight,
+                    ),
                   ),
                 ),
         ),
@@ -113,12 +116,16 @@ class _ProfileCircle extends StatelessWidget {
 //fallback phrases shown when no username is set
 //chosen once at widget creation and stable for session
 const _fallbackPhrases = [
-  'have fun listening',
-  'enjoy the music',
-  "what's on today",
-  'good to see you',
-  'b- baka',
-  "what we fellin'",
+  'have fun doing whatever',
+  'enjoy the listen!',
+  "what's on today?",
+  'welcome back :D',
+  'b- baka!',
+  "what we fellin'?",
+  'hehe >:D',
+  'mweh :3',
+  'who are you?!',
+  'set your username..',
 ];
 
 class _TimeBasedGreeting extends StatefulWidget {
@@ -154,13 +161,13 @@ class _TimeBasedGreetingState extends State<_TimeBasedGreeting> {
 
   String _computeGreeting() {
     final hour = DateTime.now().hour;
-    if (hour >= 4 && hour < 6) return 'Early bird';
-    if (hour >= 6 && hour < 11) return 'Good morning';
+    if (hour >= 4 && hour < 6) return 'Heyyy sleep';
+    if (hour >= 6 && hour < 11) return 'Morning';
     if (hour >= 11 && hour < 14) return 'Midday';
-    if (hour >= 14 && hour < 17) return 'Good afternoon';
-    if (hour >= 17 && hour < 19) return 'Early evening';
-    if (hour >= 19 && hour < 22) return 'Good evening';
-    return 'Nighty night';
+    if (hour >= 14 && hour < 17) return 'Afternoon';
+    if (hour >= 17 && hour < 20) return 'Evening';
+    if (hour >= 19 && hour < 24) return 'Night';
+    return 'What about sleeping';
   }
 
   @override
