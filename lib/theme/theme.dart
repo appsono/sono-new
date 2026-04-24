@@ -60,6 +60,25 @@ ThemeData buildSonoTheme(SonoColors colors) {
         borderRadius: BorderRadius.circular(SonoSizes.borderRadius),
       ),
     ),
+    chipTheme: ChipThemeData(
+      backgroundColor: colors.bgSurface,
+      selectedColor: colors.primary,
+      labelStyle: TextStyle(
+        fontFamily: SonoFonts.primary,
+        fontSize: 12,
+        color: colors.textPrimary,
+      ),
+      secondaryLabelStyle: TextStyle(
+        fontFamily: SonoFonts.primary,
+        fontSize: 12,
+        color: colors.textLight,
+      ),
+      side: BorderSide(color: colors.borderLight10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(SonoSizes.borderRadiusSm),
+      ),
+      showCheckmark: false,
+    ),
     dividerTheme: DividerThemeData(color: colors.borderLight10, thickness: 1),
     sliderTheme: SliderThemeData(
       activeTrackColor: colors.textPrimary,

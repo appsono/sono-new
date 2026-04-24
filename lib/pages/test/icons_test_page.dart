@@ -1,78 +1,234 @@
 import 'package:flutter/material.dart';
 import 'package:sono/theme/icons.dart';
+import 'package:sono/theme/theme.dart';
+import 'package:sono/theme/tokens.dart';
 
-class IconsTestPage extends StatelessWidget {
+class IconsTestPage extends StatefulWidget {
   const IconsTestPage({super.key});
 
-  static const Map<String, String> allIcons = {
-    'Bell Outlined': IconsSheet.bellOutlined,
-    'Bell Filled': IconsSheet.bellFilled,
+  @override
+  State<IconsTestPage> createState() => _IconsTestPageState();
+}
 
-    'Heart Outlined': IconsSheet.heartOutlined,
-    'Heart Filled': IconsSheet.heartFilled,
+class _IconsTestPageState extends State<IconsTestPage> {
+  double _size = SonoSizes.iconMd;
 
-    'Home Outlined': IconsSheet.homeOutlined,
-    'Home Filled': IconsSheet.homeFilled,
+  static const List<_IconPair> _pairs = [
+    _IconPair('add', IconsSheet.addOutlined, IconsSheet.addFilled),
+    _IconPair(
+      'addToPlaylist',
+      IconsSheet.addToPlaylistOutlined,
+      IconsSheet.addToPlaylistFilled,
+    ),
+    _IconPair('back', IconsSheet.backOutlined, IconsSheet.backFilled),
+    _IconPair('bell', IconsSheet.bellOutlined, IconsSheet.bellFilled),
+    _IconPair('cast', IconsSheet.castOutlined, IconsSheet.castFilled),
+    _IconPair('close', IconsSheet.closeOutlined, IconsSheet.closeFilled),
+    _IconPair(
+      'crossfade',
+      IconsSheet.crossfadeOutlined,
+      IconsSheet.crossfadeFilled,
+    ),
+    _IconPair(
+      'download',
+      IconsSheet.downloadOutlined,
+      IconsSheet.downloadFilled,
+    ),
+    _IconPair(
+      'equalizer',
+      IconsSheet.equalizerOutlined,
+      IconsSheet.equalizerFilled,
+    ),
+    _IconPair('heart', IconsSheet.heartOutlined, IconsSheet.heartFilled),
+    _IconPair('home', IconsSheet.homeOutlined, IconsSheet.homeFilled),
+    _IconPair('library', IconsSheet.libraryOutlined, IconsSheet.libraryFilled),
+    _IconPair('lyrics', IconsSheet.lyricsOutlined, IconsSheet.lyricsFilled),
+    _IconPair(
+      'moreOptions',
+      IconsSheet.moreOptionsOutlined,
+      IconsSheet.moreOptionsFilled,
+    ),
+    _IconPair('pause', IconsSheet.pauseOutlined, IconsSheet.pauseFilled),
+    _IconPair('play', IconsSheet.playOutlined, IconsSheet.playFilled),
+    _IconPair(
+      'playbackSpeed',
+      IconsSheet.playbackSpeedOutlined,
+      IconsSheet.playbackSpeedFilled,
+    ),
+    _IconPair('profile', IconsSheet.profileOutlined, IconsSheet.profileFilled),
+    _IconPair('queue', IconsSheet.queueOutlined, IconsSheet.queueFilled),
+    _IconPair('repeat', IconsSheet.repeatOutlined, IconsSheet.repeatFilled),
+    _IconPair(
+      'repeatOne',
+      IconsSheet.repeatOneOutlined,
+      IconsSheet.repeatOneFilled,
+    ),
+    _IconPair('search', IconsSheet.searchOutlined, IconsSheet.searchFilled),
+    _IconPair(
+      'settings',
+      IconsSheet.settingsOutlined,
+      IconsSheet.settingsFilled,
+    ),
+    _IconPair('share', IconsSheet.shareOutlined, IconsSheet.shareFilled),
+    _IconPair('shuffle', IconsSheet.shuffleOutlined, IconsSheet.shuffleFilled),
+    _IconPair(
+      'skipNext',
+      IconsSheet.skipNextOutlined,
+      IconsSheet.skipNextFilled,
+    ),
+    _IconPair(
+      'skipPrevious',
+      IconsSheet.skipPreviousOutlined,
+      IconsSheet.skipPreviousFilled,
+    ),
+    _IconPair('sort', IconsSheet.sortOutlined, IconsSheet.sortFilled),
+    _IconPair('volume', IconsSheet.volumeOutlined, IconsSheet.volumeFilled),
+    _IconPair(
+      'volumeHigh',
+      IconsSheet.volumeHighOutlined,
+      IconsSheet.volumeHighFilled,
+    ),
+    _IconPair(
+      'volumeLow',
+      IconsSheet.volumeLowOutlined,
+      IconsSheet.volumeLowFilled,
+    ),
+    _IconPair(
+      'volumeMute',
+      IconsSheet.volumeMuteOutlined,
+      IconsSheet.volumeMuteFilled,
+    ),
+  ];
 
-    'Library Outlined': IconsSheet.libraryOutlined,
-    'Library Filled': IconsSheet.libraryFilled,
+  static const double _bottomInset = SonoSizes.playerHeight * 2 + 20;
 
-    'Pause Outlined': IconsSheet.pauseOutlined,
-    'Pause Filled': IconsSheet.pauseFilled,
-
-    'Play Outlined': IconsSheet.playOutlined,
-    'Play Filled': IconsSheet.playFilled,
-
-    'Profile Outlined': IconsSheet.profileOutlined,
-    'Profile Filled': IconsSheet.profileFilled,
-
-    'Queue Outlined': IconsSheet.queueOutlined,
-    'Queue Filled': IconsSheet.queueFilled,
-
-    'Repeat Outlined': IconsSheet.repeatOutlined,
-    'Repeat Filled': IconsSheet.repeatFilled,
-
-    'Search Outlined': IconsSheet.searchOutlined,
-    'Search Filled': IconsSheet.searchFilled,
-
-    'Settings Outlined': IconsSheet.settingsOutlined,
-    'Settings Filled': IconsSheet.settingsFilled,
-
-    'Shuffle Outlined': IconsSheet.shuffleOutlined,
-    'Shuffle Filled': IconsSheet.shuffleFilled,
-
-    'Skip Next Outlined': IconsSheet.skipNextOutlined,
-    'Skip Next Filled': IconsSheet.skipNextFilled,
-
-    'Skip Previous Outlined': IconsSheet.skipPreviousOutlined,
-    'Skip Previous Filled': IconsSheet.skipPreviousFilled,
-  };
+  static const List<double> _sizeOptions = [
+    SonoSizes.iconSm,
+    SonoSizes.iconMd,
+    SonoSizes.iconLg,
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GridView.builder(
-        padding: const EdgeInsets.all(12),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 0.8,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-        ),
-        itemCount: allIcons.length,
-        itemBuilder: (context, index) {
-          final path = allIcons.values.elementAt(index);
+    final textTheme = Theme.of(context).textTheme;
 
-          return Column(
-            children: [
-              Expanded(
-                child: Container(
-                  child: IconsSheet.svg(path, size: 24, color: Colors.white),
-                ),
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+              child: Row(
+                children: [
+                  Text('Size', style: textTheme.bodySmall),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Wrap(
+                      spacing: 6,
+                      children: [
+                        for (final s in _sizeOptions)
+                          ChoiceChip(
+                            label: Text('${s.toInt()}'),
+                            selected: _size == s,
+                            onSelected: (_) => setState(() => _size = s),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          );
-        },
+            ),
+
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, _bottomInset),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 220,
+                  childAspectRatio: 1.2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: _pairs.length,
+                itemBuilder: (context, index) {
+                  return _IconCard(pair: _pairs[index], size: _size);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _IconPair {
+  const _IconPair(this.id, this.outlined, this.filled);
+  final String id;
+  final String outlined;
+  final String filled;
+
+  //camelCase -> Title Case
+  String get label {
+    final spaced = id.replaceAllMapped(RegExp(r'([A-Z])'), (m) => ' ${m[1]}');
+    return spaced[0].toUpperCase() + spaced.substring(1);
+  }
+}
+
+class _IconCard extends StatelessWidget {
+  const _IconCard({required this.pair, required this.size});
+
+  final _IconPair pair;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.sono;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.bgContainer,
+        borderRadius: BorderRadius.circular(SonoSizes.borderRadius),
+        border: Border.all(color: colors.borderLight10),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: Column(
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: IconsSheet.svg(
+                    pair.outlined,
+                    size: size,
+                    color: colors.textPrimary,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: IconsSheet.svg(
+                    pair.filled,
+                    size: size,
+                    color: colors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            pair.label,
+            style: textTheme.bodyMedium,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            pair.id,
+            style: textTheme.labelSmall,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
