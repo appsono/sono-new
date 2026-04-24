@@ -9,9 +9,45 @@ import 'package:sono/theme/tokens.dart';
 /// > IconsSheet.home_filled
 /// > IconsSheet.svg(IconsSheet.home_outlined, color: colors.textPrimary)
 abstract final class IconsSheet {
+  static const String addOutlined =
+      'assets/app/icons/outlined/add_outlined.svg';
+  static const String addFilled = 'assets/app/icons/filled/add_filled.svg';
+
+  static const String addToPlaylistOutlined =
+      'assets/app/icons/outlined/add_to_playlist_outlined.svg';
+  static const String addToPlaylistFilled =
+      'assets/app/icons/filled/add_to_playlist_filled.svg';
+
+  static const String backOutlined =
+      'assets/app/icons/outlined/back_outlined.svg';
+  static const String backFilled = 'assets/app/icons/filled/back_filled.svg';
+
   static const String bellOutlined =
       'assets/app/icons/outlined/bell_outlined.svg';
   static const String bellFilled = 'assets/app/icons/filled/bell_filled.svg';
+
+  static const String castOutlined =
+      'assets/app/icons/outlined/cast_outlined.svg';
+  static const String castFilled = 'assets/app/icons/filled/cast_filled.svg';
+
+  static const String closeOutlined =
+      'assets/app/icons/outlined/close_outlined.svg';
+  static const String closeFilled = 'assets/app/icons/filled/close_filled.svg';
+
+  static const String crossfadeOutlined =
+      'assets/app/icons/outlined/crossfade_outlined.svg';
+  static const String crossfadeFilled =
+      'assets/app/icons/filled/crossfade_filled.svg';
+
+  static const String downloadOutlined =
+      'assets/app/icons/outlined/download_outlined.svg';
+  static const String downloadFilled =
+      'assets/app/icons/filled/download_filled.svg';
+
+  static const String equalizerOutlined =
+      'assets/app/icons/outlined/equalizer_outlined.svg';
+  static const String equalizerFilled =
+      'assets/app/icons/filled/equalizer_filled.svg';
 
   static const String heartOutlined =
       'assets/app/icons/outlined/heart_outlined.svg';
@@ -26,6 +62,16 @@ abstract final class IconsSheet {
   static const String libraryFilled =
       'assets/app/icons/filled/library_filled.svg';
 
+  static const String lyricsOutlined =
+      'assets/app/icons/outlined/lyrics_outlined.svg';
+  static const String lyricsFilled =
+      'assets/app/icons/filled/lyrics_filled.svg';
+
+  static const String moreOptionsOutlined =
+      'assets/app/icons/outlined/more_options_outlined.svg';
+  static const String moreOptionsFilled =
+      'assets/app/icons/filled/more_options_filled.svg';
+
   static const String pauseOutlined =
       'assets/app/icons/outlined/pause_outlined.svg';
   static const String pauseFilled = 'assets/app/icons/filled/pause_filled.svg';
@@ -33,6 +79,11 @@ abstract final class IconsSheet {
   static const String playOutlined =
       'assets/app/icons/outlined/play_outlined.svg';
   static const String playFilled = 'assets/app/icons/filled/play_filled.svg';
+
+  static const String playbackSpeedOutlined =
+      'assets/app/icons/outlined/playback_speed_outlined.svg';
+  static const String playbackSpeedFilled =
+      'assets/app/icons/filled/playback_speed_filled.svg';
 
   static const String profileOutlined =
       'assets/app/icons/outlined/profile_outlined.svg';
@@ -48,6 +99,11 @@ abstract final class IconsSheet {
   static const String repeatFilled =
       'assets/app/icons/filled/repeat_filled.svg';
 
+  static const String repeatOneOutlined =
+      'assets/app/icons/outlined/repeat_one_outlined.svg';
+  static const String repeatOneFilled =
+      'assets/app/icons/filled/repeat_one_filled.svg';
+
   static const String searchOutlined =
       'assets/app/icons/outlined/search_outlined.svg';
   static const String searchFilled =
@@ -57,6 +113,10 @@ abstract final class IconsSheet {
       'assets/app/icons/outlined/settings_outlined.svg';
   static const String settingsFilled =
       'assets/app/icons/filled/settings_filled.svg';
+
+  static const String shareOutlined =
+      'assets/app/icons/outlined/share_outlined.svg';
+  static const String shareFilled = 'assets/app/icons/filled/share_filled.svg';
 
   static const String shuffleOutlined =
       'assets/app/icons/outlined/shuffle_outlined.svg';
@@ -72,6 +132,30 @@ abstract final class IconsSheet {
       'assets/app/icons/outlined/skip_previous_outlined.svg';
   static const String skipPreviousFilled =
       'assets/app/icons/filled/skip_previous_filled.svg';
+
+  static const String sortOutlined =
+      'assets/app/icons/outlined/sort_outlined.svg';
+  static const String sortFilled = 'assets/app/icons/filled/sort_filled.svg';
+
+  static const String volumeOutlined =
+      'assets/app/icons/outlined/volume_outlined.svg';
+  static const String volumeFilled =
+      'assets/app/icons/filled/volume_filled.svg';
+
+  static const String volumeHighOutlined =
+      'assets/app/icons/outlined/volume_high_outlined.svg';
+  static const String volumeHighFilled =
+      'assets/app/icons/filled/volume_high_filled.svg';
+
+  static const String volumeLowOutlined =
+      'assets/app/icons/outlined/volume_low_outlined.svg';
+  static const String volumeLowFilled =
+      'assets/app/icons/filled/volume_low_filled.svg';
+
+  static const String volumeMuteOutlined =
+      'assets/app/icons/outlined/volume_mute_outlined.svg';
+  static const String volumeMuteFilled =
+      'assets/app/icons/filled/volume_mute_filled.svg';
 
   // ==== convenience builder ====
 
