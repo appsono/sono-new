@@ -216,8 +216,6 @@ class DiscordRpcService {
     //snapshot the song path so we can detect a mid-flight song change
     final expectedPath = song.path;
 
-    final isPlaying = audio.isPlaying;
-
     //resolve artist name
     String? artistName = audio.currentArtistName;
     if (artistName == null && song.artistId != null && _db != null) {
@@ -242,6 +240,8 @@ class DiscordRpcService {
     }
 
     if (audio.currentSong?.path != expectedPath) return;
+
+    final isPlaying = audio.isPlaying;
 
     //build timestamps
     final now = DateTime.now().millisecondsSinceEpoch;
