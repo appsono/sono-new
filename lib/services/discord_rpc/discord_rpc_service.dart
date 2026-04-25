@@ -322,7 +322,13 @@ class DiscordRpcService {
       if (list.isEmpty) return null;
 
       final proxyUrl = (list[0] as Map<String, dynamic>)['url'] as String?;
-      if (proxyUrl != null) _externalImageCache[publicUrl] = proxyUrl;
+      if (proxyUrl != null) {
+        if (_externalImageCache.length >= 50) {
+          _externalImageCache.remove(_externalImageCache.keys.first);
+        }
+        _externalImageCache[publicUrl] = proxyUrl;
+      }
+
       return proxyUrl;
     } catch (_) {
       return null;
