@@ -12,20 +12,18 @@ class CoverUploader {
 
   final _client = http.Client();
 
-  String? _lastHash;
-  String? _lastUrl;
-  DateTime? _lastUploadTime;
+  final _cache = <String, ({String url, DateTime uploadedAt})>{};
 
   /// Upload image bytes and return public URL, or null on failure
   Future<String?> upload(Uint8List imageBytes) async {
     final hash = md5.convert(imageBytes).toString();
 
-    final expired =
-        _lastUploadTime == null ||
-        DateTime.now().difference(_lastUploadTime!) >= _urlTtl;
-
-    if (!expired && _lastHash == hash && _lastUrl != null) {
-      return _lastUrl;
+    final cached = _cache[hash];
+    if (cached != null &&
+        DateTime.now().difference(cached.uploadedAt) < _urlTtl) {
+      _cache.remove(hash);
+      _cache[hash] = cached;
+      return cached.url;
     }
 
     try {
@@ -50,9 +48,8 @@ class CoverUploader {
       //tmpfiles returns /123/filename.jpg, need /dl/123/filename.jpg
       final publicUrl = url.replaceFirst('org/', 'org/dl/');
 
-      _lastHash = hash;
-      _lastUrl = publicUrl;
-      _lastUploadTime = DateTime.now();
+      if (_cache.length >= 3) _cache.remove(_cache.keys.first);
+      _cache[hash] = (url: publicUrl, uploadedAt: DateTime.now());
       return publicUrl;
     } catch (_) {
       return null;
