@@ -161,13 +161,13 @@ class _TimeBasedGreetingState extends State<_TimeBasedGreeting> {
 
   String _computeGreeting() {
     final hour = DateTime.now().hour;
-    if (hour >= 4 && hour < 6) return 'Heyyy sleep';
+    if (hour >= 4 && hour < 6) return 'Wow early bird';
     if (hour >= 6 && hour < 11) return 'Morning';
     if (hour >= 11 && hour < 14) return 'Midday';
     if (hour >= 14 && hour < 17) return 'Afternoon';
     if (hour >= 17 && hour < 20) return 'Evening';
-    if (hour >= 19 && hour < 24) return 'Night';
-    return 'What about sleeping';
+    if (hour >= 20 && hour < 24) return 'Night';
+    return 'Heyyy sleep';
   }
 
   @override
