@@ -391,7 +391,7 @@ class DiscordRpcService {
     final body = jsonDecode(res.body) as Map<String, dynamic>;
     _sessionToken = body['token'] as String?;
     if (_sessionToken != null) {
-      _db?.setSetting('discord.session_token', _sessionToken!);
+      await _secure.write(key: 'discord.session_token', value: _sessionToken!);
     }
   }
 
@@ -418,6 +418,8 @@ class DiscordRpcService {
       if (kDebugMode) print('Discord RPC: failed to clear: $e');
     }
     _sessionToken = null;
+    await _secure.delete(key: 'discord.session_token');
+    //kept so any legacy DB entry is also cleared
     await _db?.removeSetting('discord.session_token');
   }
 
