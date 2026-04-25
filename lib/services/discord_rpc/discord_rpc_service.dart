@@ -147,7 +147,7 @@ class DiscordRpcService {
   /// Toggle discord rpc on/off
   Future<void> setEnabled(bool value) async {
     _enabled = value;
-    _db?.setSetting('discord.enabled', value.toString());
+    await _db?.setSetting('discord.enabled', value.toString());
 
     if (value && _userToken != null) {
       _start();
