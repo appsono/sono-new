@@ -345,7 +345,17 @@ class DiscordRpcService {
       return;
     }
 
-    final token = await _tokenManager!.getToken();
+    await _postActivityWithToken(activity, refreshed: false);
+  }
+
+  Future<void> _postActivityWithToken(
+    DiscordActivity activity, {
+    required bool refreshed,
+  }) async {
+    final token = refreshed
+        ? await _tokenManager!.refreshToken()
+        : await _tokenManager!.getToken();
+
     final session = DiscordSession(
       activities: [activity],
       token: _sessionToken,
@@ -359,6 +369,10 @@ class DiscordRpcService {
       },
       body: jsonEncode(session.toJson()),
     );
+
+    if (res.statusCode == 401 && !refreshed) {
+      return _postActivityWithToken(activity, refreshed: true);
+    }
 
     if (res.statusCode == 429) {
       final body = jsonDecode(res.body) as Map<String, dynamic>;
