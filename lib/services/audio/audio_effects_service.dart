@@ -101,14 +101,14 @@ class AudioEffectsService {
     final db = _db;
     if (db == null) return;
 
-    await db.setSetting('fx.eq_enabled', _eqEnabled.toString());
-    await db.setSetting('fx.eq_gains', jsonEncode(_eqGains));
-    await db.setSetting('fx.bass_boost', _bassBoost.toString());
-    await db.setSetting('fx.speed', _speed.toString());
-    await db.setSetting('fx.pitch', _pitch.toString());
-
-    //TEMP: clean up old typo key if it exists
-    await db.removeSetting('fx.bassbost');
+    await db.transaction(() async {
+      await db.setSetting('fx.eq_enabled', _eqEnabled.toString());
+      await db.setSetting('fx.eq_gains', jsonEncode(_eqGains));
+      await db.setSetting('fx.bass_boost', _bassBoost.toString());
+      await db.setSetting('fx.speed', _speed.toString());
+      await db.setSetting('fx.pitch', _pitch.toString());
+      await db.removeSetting('fx.bassbost');
+    });
   }
 
   /// ===========================

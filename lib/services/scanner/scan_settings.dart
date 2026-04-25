@@ -59,8 +59,13 @@ class ScanSettings {
 
   /// Persists a [ScanConfig] to settings table
   Future<void> save(ScanConfig config) async {
-    await db.setSetting(_kExcludedPaths, jsonEncode(config.excludedPaths));
-    await db.setSetting(_kAdditionalPaths, jsonEncode(config.additionalPaths));
+    await db.transaction(() async {
+      await db.setSetting(_kExcludedPaths, jsonEncode(config.excludedPaths));
+      await db.setSetting(
+        _kAdditionalPaths,
+        jsonEncode(config.additionalPaths),
+      );
+    });
 
     if (config.minDuration != null) {
       await db.setSetting(
