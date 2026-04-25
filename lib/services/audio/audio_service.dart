@@ -444,7 +444,7 @@ class AudioService {
     }
 
     //media_kit(ty /j) expects URI not raw path
-    final uri = song.path.startsWith('/') ? 'file://${song.path}' : song.path;
+    final uri = Uri.file(song.path).toString();
     await _player.open(Media(uri), play: true);
   }
 
