@@ -83,7 +83,11 @@ abstract class AlbumWithArtistView extends View {
 
 /// Local accounts
 class Profiles extends Table {
-  IntColumn get id => integer().autoIncrement()();
+  //singleton: always 1, enforces column as primary key
+  IntColumn get id => integer().withDefault(const Constant(1))();
   TextColumn get username => text()();
   BlobColumn get avatar => blob().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }

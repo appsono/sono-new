@@ -31,8 +31,17 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 4) {
         await m.createTable(profiles);
       }
+      if (from < 5) {
+        await customStatement('ALTER TABLE profiles RENAME TO profiles_old');
+        await m.createTable(profiles);
+        await customStatement(
+          'INSERT INTO profiles (id, username, avatar) '
+          'SELECT 1, username, avatar FROM profiles_old LIMIT 1',
+        );
+        await customStatement('DROP TABLE profiles_old');
+      }
       //future migrations go here:
-      // if (from < 5) { .. }
+      // if (from < 6) { .. }
     },
   );
 

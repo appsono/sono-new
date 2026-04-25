@@ -1289,12 +1289,9 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     'id',
     aliasedName,
     false,
-    hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    defaultValue: const Constant(1),
   );
   static const VerificationMeta _usernameMeta = const VerificationMeta(
     'username',
