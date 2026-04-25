@@ -243,8 +243,19 @@ class SonoDatabase extends _$SonoDatabase {
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    final dir = await getApplicationCacheDirectory();
+    final dir = await getApplicationSupportDirectory();
     final file = File(p.join(dir.path, 'sono.db'));
+
+    //one time migration from old cache dir location
+    if (!await file.exists()) {
+      final oldDir = await getApplicationCacheDirectory();
+      final oldFile = File(p.join(oldDir.path, 'sono.db'));
+      if (await oldFile.exists()) {
+        await file.parent.create(recursive: true);
+        await oldFile.rename(file.path);
+      }
+    }
+
     return NativeDatabase.createInBackground(file);
   });
 }
