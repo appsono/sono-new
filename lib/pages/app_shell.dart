@@ -69,10 +69,10 @@ class _AppShellState extends State<AppShell> {
       config: config,
       force: force,
       onProgress: (progress) {
-        setState(() => _scanProgress = progress);
+        if (mounted) setState(() => _scanProgress = progress);
       },
     );
-    setState(() => _scanProgress = null);
+    if (mounted) setState(() => _scanProgress = null);
     _scanVersion.value++;
   }
 

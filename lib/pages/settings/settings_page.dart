@@ -53,12 +53,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _load() async {
     final c = await ScanSettings(widget.db).load();
-    setState(() => _config = c);
+    if (mounted) setState(() => _config = c);
   }
 
   Future<void> _save(ScanConfig c) async {
     await ScanSettings(widget.db).save(c);
-    setState(() => _config = c);
+    if (mounted) setState(() => _config = c);
     widget.onRescan?.call();
   }
 
@@ -404,7 +404,7 @@ class _SettingsPageState extends State<SettingsPage> {
             value: _discordEnabled,
             onChanged: (val) async {
               await DiscordRpcService.instance.setEnabled(val);
-              setState(() => _discordEnabled = val);
+              if (mounted) setState(() => _discordEnabled = val);
             },
           ),
         ] else
