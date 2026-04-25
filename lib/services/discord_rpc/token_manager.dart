@@ -88,7 +88,7 @@ class DiscordTokenManager {
 
     if (authRes.statusCode != 200) {
       throw Exception(
-        'Discord authorize failed: ${authRes.statusCode} {$authRes.body}',
+        'Discord authorize failed: ${authRes.statusCode} ${authRes.body}',
       );
     }
 
