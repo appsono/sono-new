@@ -33,7 +33,7 @@ class ScanSettings {
 
     final minMs = all[_kMinDurationMs];
     final minDuration = minMs != null
-        ? Duration(milliseconds: int.parse(minMs))
+        ? Duration(milliseconds: int.tryParse(minMs) ?? 0)
         : null;
 
     final parserOn = all[_kArtistParserOn] == 'true';
