@@ -25,6 +25,7 @@ class ScanService {
     sq.ScanProgressCallback? onProgress,
     sq.ScanErrorCallback? onError,
   }) async {
+    if (force) await db.clearAllSongs();
     final existingPaths = await db.getAllSongPaths();
     final allPaths = <String>{};
     final newSongsChunk = <sq.Song>[];
