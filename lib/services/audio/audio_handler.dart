@@ -72,6 +72,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
         if (_audio.isPlaying) {
           _audio.pause();
           _wasPlayingBeforeInterruption = true;
+        } else {
+          _wasPlayingBeforeInterruption = false;
         }
       } else {
         if (_wasPlayingBeforeInterruption) {
