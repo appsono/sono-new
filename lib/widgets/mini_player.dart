@@ -284,7 +284,7 @@ class _AdaptiveOverlayState extends State<_AdaptiveOverlay> {
         total +=
             (0.299 * pixels[i] +
                 0.587 * pixels[i + 1] +
-                1.114 * pixels[i + 2]) /
+                0.114 * pixels[i + 2]) /
             255;
         samples++;
       }
