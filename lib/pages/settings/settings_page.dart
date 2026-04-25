@@ -25,6 +25,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final _additionalPathCtrl = TextEditingController();
   final _artistCtrl = TextEditingController();
   final _delimiterCtrl = TextEditingController();
+  final _minDurationCtrl = TextEditingController();
 
   //discord RPC state
   bool _discordConnected = false;
@@ -48,11 +49,13 @@ class _SettingsPageState extends State<SettingsPage> {
     _additionalPathCtrl.dispose();
     _artistCtrl.dispose();
     _delimiterCtrl.dispose();
+    _minDurationCtrl.dispose();
     super.dispose();
   }
 
   Future<void> _load() async {
     final c = await ScanSettings(widget.db).load();
+    _minDurationCtrl.text = c.minDuration?.inSeconds.toString() ?? '';
     if (mounted) setState(() => _config = c);
   }
 
@@ -224,9 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               width: 64,
               child: TextField(
-                controller: TextEditingController(
-                  text: c.minDuration?.inSeconds.toString() ?? '',
-                ),
+                controller: _minDurationCtrl,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   isDense: true,
