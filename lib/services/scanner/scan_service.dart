@@ -91,8 +91,8 @@ class ScanService {
         .where((n) => !artistCache.containsKey(n))
         .toSet();
     if (newArtists.isNotEmpty) {
-      await db.ensureArtistsExist(newArtists);
-      artistCache = await db.getArtistIdMap();
+      final newIds = await db.ensureArtistsExist(newArtists);
+      artistCache = {...artistCache, ...newIds};
     }
 
     final albumKeys = <(String, int)>{};
@@ -109,8 +109,8 @@ class ScanService {
         .where((k) => !albumCache.containsKey(k))
         .toSet();
     if (newAlbums.isNotEmpty) {
-      await db.ensureAlbumsExist(newAlbums);
-      albumCache = await db.getAlbumIdMap();
+      final newIds = await db.ensureAlbumsExist(newAlbums);
+      albumCache = {...albumCache, ...newIds};
     }
 
     final toInsert = <SongsCompanion>[];

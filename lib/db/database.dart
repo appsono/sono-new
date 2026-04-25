@@ -54,8 +54,8 @@ class SonoDatabase extends _$SonoDatabase {
     return into(artists).insert(ArtistsCompanion.insert(name: name));
   }
 
-  Future<void> ensureArtistsExist(Set<String> names) async {
-    if (names.isEmpty) return;
+  Future<Map<String, int>> ensureArtistsExist(Set<String> names) async {
+    if (names.isEmpty) return {};
     await batch((b) {
       b.insertAll(
         artists,
@@ -63,6 +63,11 @@ class SonoDatabase extends _$SonoDatabase {
         mode: InsertMode.insertOrIgnore,
       );
     });
+    //fetch only the names that just got touched, not whole table
+    final rows = await (select(
+      artists,
+    )..where((a) => a.name.isIn(names))).get();
+    return {for (final a in rows) a.name: a.id};
   }
 
   Future<Map<String, int>> getArtistIdMap() async {
@@ -104,8 +109,10 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
-  Future<void> ensureAlbumsExist(Set<(String, int)> albumKeys) async {
-    if (albumKeys.isEmpty) return;
+  Future<Map<(String, int), int>> ensureAlbumsExist(
+    Set<(String, int)> albumKeys,
+  ) async {
+    if (albumKeys.isEmpty) return {};
     await batch((b) {
       b.insertAll(
         albums,
@@ -121,6 +128,17 @@ class SonoDatabase extends _$SonoDatabase {
         mode: InsertMode.insertOrIgnore,
       );
     });
+    final titles = albumKeys.map((k) => k.$1).toSet();
+    final artistIds = albumKeys.map((k) => k.$2).toSet();
+    final rows = await (select(
+      albums,
+    )..where((a) => a.title.isIn(titles) & a.artistId.isIn(artistIds))).get();
+    //filter in dart to avoid to avoid over-matching (same title, different artists)
+    return {
+      for (final a in rows)
+        if (albumKeys.contains((a.title, a.artistId)))
+          (a.title, a.artistId): a.id,
+    };
   }
 
   Future<Map<(String, int), int>> getAlbumIdMap() async {
@@ -192,10 +210,10 @@ class SonoDatabase extends _$SonoDatabase {
       (select(songs)..where((s) => s.artistId.equals(artistId))).get();
 
   Future<bool> songExists(String path) async {
-    final count = await (select(
+    final row = await (select(
       songs,
     )..where((s) => s.path.equals(path))).getSingleOrNull();
-    return count != null;
+    return row != null;
   }
 
   Future<void> removeDeletedSongs(Set<String> currentPaths) async {
