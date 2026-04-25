@@ -117,8 +117,6 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
             } catch (_) {}
           });
         }
-        _previousCoverFile = file;
-        finalArtUri = Uri.file(file.path);
       } else {
         //no cover: delete old file so notification doesnt show stale art
         if (_previousCoverFile != null) {
