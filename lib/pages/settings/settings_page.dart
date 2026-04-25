@@ -174,7 +174,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (c == null) return const SizedBox.shrink();
 
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 150),
       children: [
         const SizedBox(height: 60),
 
