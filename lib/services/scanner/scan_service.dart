@@ -123,12 +123,24 @@ class ScanService {
         albumId = albumCache[(song.album!, mainArtistId)];
       }
 
+      final rawTrack = song.trackNumber;
+      final int? discNumber;
+      final int? trackNumber;
+      if (rawTrack != null && rawTrack >= 1000) {
+        discNumber = rawTrack ~/ 1000;
+        trackNumber = rawTrack % 1000;
+      } else {
+        discNumber = null;
+        trackNumber = rawTrack;
+      }
+
       toInsert.add(
         SongsCompanion.insert(
           path: song.path,
           title: song.title,
           duration: Value(song.duration?.inMilliseconds),
-          trackNumber: Value(song.trackNumber),
+          trackNumber: Value(trackNumber),
+          discNumber: Value(discNumber),
           genre: Value(song.genre),
           releaseDate: Value(song.releaseDate),
           albumId: Value(albumId),

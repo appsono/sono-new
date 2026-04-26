@@ -166,7 +166,7 @@ int _compareVersions(String a, String b) {
 }
 
 class _ParsedVersion {
-  final List<int> parts; //alway lenght 3 (major, minor, patch)
+  final List<int> parts; //alway length 3 (major, minor, patch)
   final int build;
 
   _ParsedVersion(this.parts, this.build);

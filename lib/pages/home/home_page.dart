@@ -1,0 +1,342 @@
+import 'package:flutter/material.dart';
+
+import 'package:sono/db/database.dart';
+import 'package:sono/pages/home/home_actions.dart';
+import 'package:sono/services/audio/audio_service.dart';
+import 'package:sono/theme/icons.dart';
+import 'package:sono/theme/tokens.dart';
+import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/widgets/header.dart';
+import 'package:sono/widgets/media_card.dart';
+import 'package:sono/widgets/section.dart';
+
+const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
+
+class HomePage extends StatefulWidget {
+  final SonoDatabase db;
+  final ValueNotifier<int>? scanVersion;
+
+  const HomePage({required this.db, this.scanVersion, super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<SongWithArtistViewData>? _songs;
+  List<Artist>? _artists;
+  List<AlbumWithArtistViewData>? _albums;
+  Map<int, String>? _artistCoverPaths;
+  Map<String, int>? _artistSongCounts;
+  Profile? _profile;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+    widget.scanVersion?.addListener(_load);
+  }
+
+  @override
+  void dispose() {
+    widget.scanVersion?.removeListener(_load);
+    super.dispose();
+  }
+
+  Future<void> _load() async {
+    final songs = await widget.db.getAllSongsWithArtists();
+    final artists = await widget.db.getAllArtists();
+    final albums = await widget.db.getAllAlbumsWithArtists();
+    final profile = await widget.db.getProfile();
+
+    final coverPaths = <int, String>{};
+    for (final artist in artists) {
+      final artistSongs = await widget.db.getSongsByArtist(artist.id);
+      if (artistSongs.isNotEmpty) {
+        coverPaths[artist.id] = artistSongs.first.path;
+      }
+    }
+
+    final counts = <String, int>{};
+    for (final s in songs) {
+      final name = s.artistName;
+      if (name != null) counts[name] = (counts[name] ?? 0) + 1;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _songs = songs;
+      _artists = artists;
+      _albums = albums;
+      _artistCoverPaths = coverPaths;
+      _artistSongCounts = counts;
+      _profile = profile;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_songs == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [
+            // ==== header ====
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+                child: SonoHeader(
+                  isHomePage: true,
+                  username: _profile?.username.isEmpty == true
+                      ? null
+                      : _profile?.username,
+                  avatar: _profile?.avatar,
+                  onProfileTap: () {
+                    //will open sidebar later
+                  },
+                  actions: [
+                    SonoHeaderAction(
+                      icon: IconsSheet.bellOutlined,
+                      tooltip: 'News & Updates',
+                      onTap: () => setState(() {
+                        //navigate to "changelog" page
+                      }),
+                    ),
+                    SonoHeaderAction(
+                      icon: IconsSheet.settingsOutlined,
+                      tooltip: 'Settings',
+                      onTap: () => setState(() {
+                        //navigate to settings page
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // ==== actions ====
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                child: SonoHomeActions(
+                  onShuffleAll: () {
+                    final songs = _songs;
+                    if (songs == null || songs.isEmpty) return;
+                    final queue = songs
+                        .map(
+                          (s) => Song(
+                            id: s.id,
+                            path: s.path,
+                            title: s.title,
+                            duration: s.duration,
+                            genre: s.genre,
+                            releaseDate: s.releaseDate,
+                            albumId: s.albumId,
+                            artistId: s.artistId,
+                            displayArtist: s.displayArtist,
+                          ),
+                        )
+                        .toList();
+                    queue.shuffle();
+                    AudioService.instance.play(queue, 0);
+                    //AudioService.instance.setShuffle(true);
+                  },
+                  onCreatePlaylist: () {
+                    //later
+                  },
+                ),
+              ),
+            ),
+
+            // ==== recently added ====
+            if (_songs!.isNotEmpty)
+              SliverToBoxAdapter(
+                child: _RecentlyAdded(songs: _songs!, onPlay: _playSong),
+              ),
+
+            // ==== albums ====
+            if (_albums != null && _albums!.isNotEmpty) ...[
+              SliverToBoxAdapter(child: SizedBox(height: 24)),
+              SliverToBoxAdapter(
+                child: SonoSection(
+                  title: 'Albums',
+                  titleStyle: const TextStyle(fontSize: 20),
+                  onSeeAll: () {},
+                  itemExtent: 168,
+                  children: _albums!.map((a) {
+                    return _AlbumCard(album: a, db: widget.db);
+                  }).toList(),
+                ),
+              ),
+            ],
+
+            // ==== artists ====
+            if (_artists != null && _artists!.isNotEmpty) ...[
+              SliverToBoxAdapter(child: SizedBox(height: 24)),
+              SliverToBoxAdapter(
+                child: SonoSection(
+                  title: 'Artists',
+                  titleStyle: const TextStyle(fontSize: 20),
+                  onSeeAll: () {},
+                  itemExtent: 168,
+                  children: _artists!.map((a) {
+                    final count = _artistSongCounts?[a.name] ?? 0;
+                    return SonoMediaCard(
+                      path: _artistCoverPaths?[a.id] ?? '',
+                      title: a.name,
+                      subtitle: '$count ${count == 1 ? 'song' : 'songs'}',
+                      shape: CoverShape.circle,
+                      titleStyle: Theme.of(
+                        context,
+                      ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+
+            // ==== bottom clearance ====
+            SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _playSong(int index) {
+    final songs = _songs;
+    if (songs == null) return;
+    final queue = songs
+        .map(
+          (s) => Song(
+            id: s.id,
+            path: s.path,
+            title: s.title,
+            duration: s.duration,
+            genre: s.genre,
+            releaseDate: s.releaseDate,
+            albumId: s.albumId,
+            artistId: s.artistId,
+            displayArtist: s.displayArtist,
+          ),
+        )
+        .toList();
+    AudioService.instance.play(queue, index);
+  }
+}
+
+/// ===========================
+///       Recently Added
+/// ===========================
+
+class _RecentlyAdded extends StatelessWidget {
+  final List<SongWithArtistViewData> songs;
+  final void Function(int index) onPlay;
+
+  //show last 20 songs (highest id = newest); from db by insertion order
+  static const _limit = 20;
+
+  const _RecentlyAdded({required this.songs, required this.onPlay});
+
+  @override
+  Widget build(BuildContext context) {
+    //songs from db come in insertion order > reverse for newest first
+    final recent = songs.length <= _limit
+        ? songs.reversed.toList()
+        : songs.reversed.take(_limit).toList();
+
+    return SonoSection(
+      title: 'Recently Added',
+      titleStyle: const TextStyle(fontSize: 20),
+      onSeeAll: () {},
+      itemExtent: 168,
+      children: recent.asMap().entries.map((e) {
+        final s = e.value;
+        //resolve original index of correct queue position
+        final originalIndex = songs.indexOf(s);
+        return SonoMediaCard(
+          path: s.path,
+          title: s.title,
+          subtitle: s.displayArtist ?? s.artistName ?? 'Unknown',
+          titleStyle: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+          onTap: () => onPlay(originalIndex),
+        );
+      }).toList(),
+    );
+  }
+}
+
+/// ===========================
+///         Album Card
+/// ===========================
+
+//loads cover on demand so section query stays cover free
+class _AlbumCard extends StatefulWidget {
+  final AlbumWithArtistViewData album;
+  final SonoDatabase db;
+
+  const _AlbumCard({required this.album, required this.db});
+
+  @override
+  State<_AlbumCard> createState() => _AlbumCardState();
+}
+
+class _AlbumCardState extends State<_AlbumCard> {
+  String? _coverPath;
+  List<Song>? _queue;
+
+  @override
+  void initState() {
+    super.initState();
+    _resolveCoverPath();
+  }
+
+  Future<void> _resolveCoverPath() async {
+    //grab first song in album to use its file path for cover extraction
+    final songs = await widget.db.getSongsByAlbum(widget.album.id);
+    if (songs.isNotEmpty && mounted) {
+      setState(() {
+        _coverPath = songs.first.path;
+        _queue = songs
+            .map(
+              (s) => Song(
+                id: s.id,
+                path: s.path,
+                title: s.title,
+                duration: s.duration,
+                genre: s.genre,
+                releaseDate: s.releaseDate,
+                trackNumber: s.trackNumber,
+                albumId: s.albumId,
+                artistId: s.artistId,
+                displayArtist: s.displayArtist,
+              ),
+            )
+            .toList();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SonoMediaCard(
+      path: _coverPath ?? '',
+      title: widget.album.title,
+      subtitle: widget.album.artistName ?? 'Unknown artist',
+      titleStyle: Theme.of(
+        context,
+      ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+      onTap: () {
+        final queue = _queue;
+        if (queue == null || queue.isEmpty) return;
+        AudioService.instance.play(queue, 0);
+      },
+    );
+  }
+}

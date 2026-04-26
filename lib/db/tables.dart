@@ -23,6 +23,7 @@ class Songs extends Table {
   TextColumn get title => text()();
   IntColumn get duration => integer().nullable()();
   IntColumn get trackNumber => integer().nullable()();
+  IntColumn get discNumber => integer().nullable()();
   TextColumn get genre => text().nullable()();
   DateTimeColumn get releaseDate => dateTime().nullable()();
   IntColumn get albumId => integer().nullable().references(Albums, #id)();

@@ -3,6 +3,7 @@ import 'package:sono/theme/theme.dart';
 
 class SonoSection extends StatelessWidget {
   final String title;
+  final TextStyle? titleStyle;
   final VoidCallback? onSeeAll;
   final double itemExtent;
   final double spacing;
@@ -12,6 +13,7 @@ class SonoSection extends StatelessWidget {
   const SonoSection({
     required this.title,
     required this.children,
+    this.titleStyle,
     this.onSeeAll,
     this.itemExtent = 120,
     this.spacing = 12,
@@ -31,7 +33,12 @@ class SonoSection extends StatelessWidget {
           padding: padding,
           child: Row(
             children: [
-              Text(title, style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.merge(titleStyle),
+              ),
               const Spacer(),
               if (onSeeAll != null)
                 GestureDetector(

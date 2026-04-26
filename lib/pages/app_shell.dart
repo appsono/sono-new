@@ -4,8 +4,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/pages/home/home_page.dart';
 import 'package:sono/pages/settings/settings_page.dart';
-import 'package:sono/pages/test/widget_test_page.dart';
 import 'package:sono/pages/test/icons_test_page.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/services/scanner/scan_service.dart';
@@ -84,7 +84,7 @@ class _AppShellState extends State<AppShell> {
           IndexedStack(
             index: _tab,
             children: [
-              WidgetTestPage(db: widget.db, scanVersion: _scanVersion),
+              HomePage(db: widget.db, scanVersion: _scanVersion),
               SettingsPage(
                 db: widget.db,
                 onRescan: () => _checkPermissionAndScan(force: true),
