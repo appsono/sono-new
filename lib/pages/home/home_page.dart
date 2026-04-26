@@ -313,6 +313,7 @@ class _AlbumCardState extends State<_AlbumCard> {
                 genre: s.genre,
                 releaseDate: s.releaseDate,
                 trackNumber: s.trackNumber,
+                discNumber: s.discNumber,
                 albumId: s.albumId,
                 artistId: s.artistId,
                 displayArtist: s.displayArtist,
