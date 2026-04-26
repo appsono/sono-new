@@ -16,7 +16,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -39,6 +39,9 @@ class SonoDatabase extends _$SonoDatabase {
           'SELECT 1, username, avatar FROM profiles_old LIMIT 1',
         );
         await customStatement('DROP TABLE profiles_old');
+      }
+      if (from < 6) {
+        await m.addColumn(songs, songs.trackNumber);
       }
       //future migrations go here:
       // if (from < 6) { .. }
@@ -204,7 +207,10 @@ class SonoDatabase extends _$SonoDatabase {
       select(songWithArtistView).get();
 
   Future<List<Song>> getSongsByAlbum(int albumId) =>
-      (select(songs)..where((s) => s.albumId.equals(albumId))).get();
+      (select(songs)
+            ..where((s) => s.albumId.equals(albumId))
+            ..orderBy([(s) => OrderingTerm.asc(s.trackNumber)]))
+          .get();
 
   Future<List<Song>> getSongsByArtist(int artistId) =>
       (select(songs)..where((s) => s.artistId.equals(artistId))).get();

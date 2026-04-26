@@ -128,6 +128,7 @@ class ScanService {
           path: song.path,
           title: song.title,
           duration: Value(song.duration?.inMilliseconds),
+          trackNumber: Value(song.trackNumber),
           genre: Value(song.genre),
           releaseDate: Value(song.releaseDate),
           albumId: Value(albumId),

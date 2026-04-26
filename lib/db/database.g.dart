@@ -542,6 +542,17 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _trackNumberMeta = const VerificationMeta(
+    'trackNumber',
+  );
+  @override
+  late final GeneratedColumn<int> trackNumber = GeneratedColumn<int>(
+    'track_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _genreMeta = const VerificationMeta('genre');
   @override
   late final GeneratedColumn<String> genre = GeneratedColumn<String>(
@@ -607,6 +618,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     path,
     title,
     duration,
+    trackNumber,
     genre,
     releaseDate,
     albumId,
@@ -648,6 +660,15 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
       context.handle(
         _durationMeta,
         duration.isAcceptableOrUnknown(data['duration']!, _durationMeta),
+      );
+    }
+    if (data.containsKey('track_number')) {
+      context.handle(
+        _trackNumberMeta,
+        trackNumber.isAcceptableOrUnknown(
+          data['track_number']!,
+          _trackNumberMeta,
+        ),
       );
     }
     if (data.containsKey('genre')) {
@@ -711,6 +732,10 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         DriftSqlType.int,
         data['${effectivePrefix}duration'],
       ),
+      trackNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}track_number'],
+      ),
       genre: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}genre'],
@@ -745,6 +770,7 @@ class Song extends DataClass implements Insertable<Song> {
   final String path;
   final String title;
   final int? duration;
+  final int? trackNumber;
   final String? genre;
   final DateTime? releaseDate;
   final int? albumId;
@@ -755,6 +781,7 @@ class Song extends DataClass implements Insertable<Song> {
     required this.path,
     required this.title,
     this.duration,
+    this.trackNumber,
     this.genre,
     this.releaseDate,
     this.albumId,
@@ -769,6 +796,9 @@ class Song extends DataClass implements Insertable<Song> {
     map['title'] = Variable<String>(title);
     if (!nullToAbsent || duration != null) {
       map['duration'] = Variable<int>(duration);
+    }
+    if (!nullToAbsent || trackNumber != null) {
+      map['track_number'] = Variable<int>(trackNumber);
     }
     if (!nullToAbsent || genre != null) {
       map['genre'] = Variable<String>(genre);
@@ -796,6 +826,9 @@ class Song extends DataClass implements Insertable<Song> {
       duration: duration == null && nullToAbsent
           ? const Value.absent()
           : Value(duration),
+      trackNumber: trackNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(trackNumber),
       genre: genre == null && nullToAbsent
           ? const Value.absent()
           : Value(genre),
@@ -824,6 +857,7 @@ class Song extends DataClass implements Insertable<Song> {
       path: serializer.fromJson<String>(json['path']),
       title: serializer.fromJson<String>(json['title']),
       duration: serializer.fromJson<int?>(json['duration']),
+      trackNumber: serializer.fromJson<int?>(json['trackNumber']),
       genre: serializer.fromJson<String?>(json['genre']),
       releaseDate: serializer.fromJson<DateTime?>(json['releaseDate']),
       albumId: serializer.fromJson<int?>(json['albumId']),
@@ -839,6 +873,7 @@ class Song extends DataClass implements Insertable<Song> {
       'path': serializer.toJson<String>(path),
       'title': serializer.toJson<String>(title),
       'duration': serializer.toJson<int?>(duration),
+      'trackNumber': serializer.toJson<int?>(trackNumber),
       'genre': serializer.toJson<String?>(genre),
       'releaseDate': serializer.toJson<DateTime?>(releaseDate),
       'albumId': serializer.toJson<int?>(albumId),
@@ -852,6 +887,7 @@ class Song extends DataClass implements Insertable<Song> {
     String? path,
     String? title,
     Value<int?> duration = const Value.absent(),
+    Value<int?> trackNumber = const Value.absent(),
     Value<String?> genre = const Value.absent(),
     Value<DateTime?> releaseDate = const Value.absent(),
     Value<int?> albumId = const Value.absent(),
@@ -862,6 +898,7 @@ class Song extends DataClass implements Insertable<Song> {
     path: path ?? this.path,
     title: title ?? this.title,
     duration: duration.present ? duration.value : this.duration,
+    trackNumber: trackNumber.present ? trackNumber.value : this.trackNumber,
     genre: genre.present ? genre.value : this.genre,
     releaseDate: releaseDate.present ? releaseDate.value : this.releaseDate,
     albumId: albumId.present ? albumId.value : this.albumId,
@@ -876,6 +913,9 @@ class Song extends DataClass implements Insertable<Song> {
       path: data.path.present ? data.path.value : this.path,
       title: data.title.present ? data.title.value : this.title,
       duration: data.duration.present ? data.duration.value : this.duration,
+      trackNumber: data.trackNumber.present
+          ? data.trackNumber.value
+          : this.trackNumber,
       genre: data.genre.present ? data.genre.value : this.genre,
       releaseDate: data.releaseDate.present
           ? data.releaseDate.value
@@ -895,6 +935,7 @@ class Song extends DataClass implements Insertable<Song> {
           ..write('path: $path, ')
           ..write('title: $title, ')
           ..write('duration: $duration, ')
+          ..write('trackNumber: $trackNumber, ')
           ..write('genre: $genre, ')
           ..write('releaseDate: $releaseDate, ')
           ..write('albumId: $albumId, ')
@@ -910,6 +951,7 @@ class Song extends DataClass implements Insertable<Song> {
     path,
     title,
     duration,
+    trackNumber,
     genre,
     releaseDate,
     albumId,
@@ -924,6 +966,7 @@ class Song extends DataClass implements Insertable<Song> {
           other.path == this.path &&
           other.title == this.title &&
           other.duration == this.duration &&
+          other.trackNumber == this.trackNumber &&
           other.genre == this.genre &&
           other.releaseDate == this.releaseDate &&
           other.albumId == this.albumId &&
@@ -936,6 +979,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
   final Value<String> path;
   final Value<String> title;
   final Value<int?> duration;
+  final Value<int?> trackNumber;
   final Value<String?> genre;
   final Value<DateTime?> releaseDate;
   final Value<int?> albumId;
@@ -946,6 +990,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.path = const Value.absent(),
     this.title = const Value.absent(),
     this.duration = const Value.absent(),
+    this.trackNumber = const Value.absent(),
     this.genre = const Value.absent(),
     this.releaseDate = const Value.absent(),
     this.albumId = const Value.absent(),
@@ -957,6 +1002,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     required String path,
     required String title,
     this.duration = const Value.absent(),
+    this.trackNumber = const Value.absent(),
     this.genre = const Value.absent(),
     this.releaseDate = const Value.absent(),
     this.albumId = const Value.absent(),
@@ -969,6 +1015,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Expression<String>? path,
     Expression<String>? title,
     Expression<int>? duration,
+    Expression<int>? trackNumber,
     Expression<String>? genre,
     Expression<DateTime>? releaseDate,
     Expression<int>? albumId,
@@ -980,6 +1027,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       if (path != null) 'path': path,
       if (title != null) 'title': title,
       if (duration != null) 'duration': duration,
+      if (trackNumber != null) 'track_number': trackNumber,
       if (genre != null) 'genre': genre,
       if (releaseDate != null) 'release_date': releaseDate,
       if (albumId != null) 'album_id': albumId,
@@ -993,6 +1041,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Value<String>? path,
     Value<String>? title,
     Value<int?>? duration,
+    Value<int?>? trackNumber,
     Value<String?>? genre,
     Value<DateTime?>? releaseDate,
     Value<int?>? albumId,
@@ -1004,6 +1053,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       path: path ?? this.path,
       title: title ?? this.title,
       duration: duration ?? this.duration,
+      trackNumber: trackNumber ?? this.trackNumber,
       genre: genre ?? this.genre,
       releaseDate: releaseDate ?? this.releaseDate,
       albumId: albumId ?? this.albumId,
@@ -1026,6 +1076,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
     }
     if (duration.present) {
       map['duration'] = Variable<int>(duration.value);
+    }
+    if (trackNumber.present) {
+      map['track_number'] = Variable<int>(trackNumber.value);
     }
     if (genre.present) {
       map['genre'] = Variable<String>(genre.value);
@@ -1052,6 +1105,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
           ..write('path: $path, ')
           ..write('title: $title, ')
           ..write('duration: $duration, ')
+          ..write('trackNumber: $trackNumber, ')
           ..write('genre: $genre, ')
           ..write('releaseDate: $releaseDate, ')
           ..write('albumId: $albumId, ')
@@ -2704,6 +2758,7 @@ typedef $$SongsTableCreateCompanionBuilder =
       required String path,
       required String title,
       Value<int?> duration,
+      Value<int?> trackNumber,
       Value<String?> genre,
       Value<DateTime?> releaseDate,
       Value<int?> albumId,
@@ -2716,6 +2771,7 @@ typedef $$SongsTableUpdateCompanionBuilder =
       Value<String> path,
       Value<String> title,
       Value<int?> duration,
+      Value<int?> trackNumber,
       Value<String?> genre,
       Value<DateTime?> releaseDate,
       Value<int?> albumId,
@@ -2788,6 +2844,11 @@ class $$SongsTableFilterComposer extends Composer<_$SonoDatabase, $SongsTable> {
 
   ColumnFilters<int> get duration => $composableBuilder(
     column: $table.duration,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get trackNumber => $composableBuilder(
+    column: $table.trackNumber,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2882,6 +2943,11 @@ class $$SongsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get trackNumber => $composableBuilder(
+    column: $table.trackNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get genre => $composableBuilder(
     column: $table.genre,
     builder: (column) => ColumnOrderings(column),
@@ -2964,6 +3030,11 @@ class $$SongsTableAnnotationComposer
 
   GeneratedColumn<int> get duration =>
       $composableBuilder(column: $table.duration, builder: (column) => column);
+
+  GeneratedColumn<int> get trackNumber => $composableBuilder(
+    column: $table.trackNumber,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get genre =>
       $composableBuilder(column: $table.genre, builder: (column) => column);
@@ -3057,6 +3128,7 @@ class $$SongsTableTableManager
                 Value<String> path = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
+                Value<int?> trackNumber = const Value.absent(),
                 Value<String?> genre = const Value.absent(),
                 Value<DateTime?> releaseDate = const Value.absent(),
                 Value<int?> albumId = const Value.absent(),
@@ -3067,6 +3139,7 @@ class $$SongsTableTableManager
                 path: path,
                 title: title,
                 duration: duration,
+                trackNumber: trackNumber,
                 genre: genre,
                 releaseDate: releaseDate,
                 albumId: albumId,
@@ -3079,6 +3152,7 @@ class $$SongsTableTableManager
                 required String path,
                 required String title,
                 Value<int?> duration = const Value.absent(),
+                Value<int?> trackNumber = const Value.absent(),
                 Value<String?> genre = const Value.absent(),
                 Value<DateTime?> releaseDate = const Value.absent(),
                 Value<int?> albumId = const Value.absent(),
@@ -3089,6 +3163,7 @@ class $$SongsTableTableManager
                 path: path,
                 title: title,
                 duration: duration,
+                trackNumber: trackNumber,
                 genre: genre,
                 releaseDate: releaseDate,
                 albumId: albumId,
