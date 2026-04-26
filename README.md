@@ -64,6 +64,10 @@ mathis
 
 Originally announced on the [Discord server](https://discord.sono.wtf).
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=appsono/sono-new&type=date&legend=bottom-right)](https://www.star-history.com/#appsono/sono-new&type=date&legend=bottom-right)
+
 
 ## LICENSE
 
