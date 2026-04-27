@@ -27,10 +27,10 @@
 
 ### Phase 2
 - ~~Create required theme files~~ **DONE**
-- Create required widgets **IN PROGRESS**
+- ~~Create required widgets~~ **DONE**
 
 ### Phase 3
-- Create Home page
+- Create Home page **IN PROGRESS**
 
 <br>
 
