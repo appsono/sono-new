@@ -33,6 +33,10 @@ class _AppShellState extends State<AppShell> {
   @override
   void initState() {
     super.initState();
+    AudioService.instance.attachDb(widget.db);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AudioService.instance.loadState();
+    });
     _checkPermissionAndScan();
     _checkForUpdates();
   }

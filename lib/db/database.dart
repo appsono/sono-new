@@ -206,6 +206,11 @@ class SonoDatabase extends _$SonoDatabase {
     return rows.map((row) => row.read(songs.path)!).toSet();
   }
 
+  Future<List<Song>> getSongsByIds(List<int> ids) {
+    if (ids.isEmpty) return Future.value([]);
+    return (select(songs)..where((s) => s.id.isIn(ids))).get();
+  }
+
   Future<List<SongWithArtistViewData>> getAllSongsWithArtists() =>
       select(songWithArtistView).get();
 

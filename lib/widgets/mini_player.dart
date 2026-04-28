@@ -26,6 +26,7 @@ class SonoMiniPlayer extends StatelessWidget {
 
     return StreamBuilder<Song?>(
       stream: audio.currentSongStream,
+      initialData: audio.currentSong,
       builder: (context, snap) {
         final song = snap.data ?? audio.currentSong;
         if (song == null) return const SizedBox.shrink();

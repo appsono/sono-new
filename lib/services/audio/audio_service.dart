@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:media_kit/media_kit.dart';
 import 'package:sono/db/database.dart';
@@ -34,6 +35,9 @@ class AudioService {
   final _artistNameController = StreamController<String?>.broadcast();
 
   String? _currentArtistName;
+
+  Timer? _saveStateDebounce;
+  DateTime? _lastPositionSave;
 
   void _ensureInitialized() {
     if (!_initialized) {
@@ -188,6 +192,22 @@ class AudioService {
       if (!completed) return;
       _onTrackCompleted();
     });
+
+    _player.stream.position.listen((pos) {
+      if (!_player.state.playing) return;
+      final now = DateTime.now();
+      if (_lastPositionSave == null ||
+          now.difference(_lastPositionSave!).inSeconds >= 5) {
+        _lastPositionSave = now;
+        _persistPosition(pos);
+      }
+    });
+
+    _player.stream.playing.listen((playing) {
+      if (!playing) {
+        _persistPosition(_player.state.position);
+      }
+    });
   }
 
   /// Bind database for persisting playback state
@@ -210,6 +230,57 @@ class AudioService {
 
     _shuffleController.add(_shuffle);
     _repeatController.add(_repeat);
+
+    final queueJson = all['playback.queue'];
+    final savedIndex = int.tryParse(all['playback.current_index'] ?? '') ?? -1;
+    final savedPositionMs =
+        int.tryParse(all['playback.position_ms'] ?? '') ?? 0;
+
+    if (queueJson == null || savedIndex < 0) return;
+
+    try {
+      final ids = (jsonDecode(queueJson) as List).cast<int>();
+      if (ids.isEmpty) return;
+
+      final fetched = await db.getSongsByIds(ids);
+      final songMap = {for (final s in fetched) s.id: s};
+      final ordered = ids.map((id) => songMap[id]).whereType<Song>().toList();
+
+      if (ordered.isEmpty || savedIndex >= ordered.length) return;
+
+      _queue = ordered;
+      _currentIndex = savedIndex;
+
+      if (_shuffle) {
+        _rebuildShuffleOrder(anchorIndex: _queue[savedIndex].id);
+        _currentIndex = 0;
+      }
+
+      _invalidateQueueCache();
+      _currentSongController.add(currentSong);
+      _queueController.add(queue);
+
+      await _openCurrent(play: false); //open but dont autoplay
+
+      if (savedPositionMs > 0) {
+        await Future.delayed(const Duration(milliseconds: 300));
+        await _player.seek(Duration(milliseconds: savedPositionMs));
+      }
+    } catch (_) {
+      //corrupted data, save to ignore
+      //we will just start fresh
+      //
+      //we could also throw an error but I dont know
+      //if it's neccesary
+    }
+  }
+
+  void _scheduleStateSave() {
+    _saveStateDebounce?.cancel();
+    _saveStateDebounce = Timer(
+      const Duration(milliseconds: 200),
+      _savePlaybackState,
+    );
   }
 
   void _savePlaybackState() async {
@@ -218,7 +289,17 @@ class AudioService {
     await db.transaction(() async {
       await db.setSetting('playback.shuffle', _shuffle.toString());
       await db.setSetting('playback.repeat', _repeat.name);
+      //save queue and index
+      final ids = _queue.map((s) => s.id).toList();
+      await db.setSetting('playback.queue', jsonEncode(ids));
+      await db.setSetting('playback.current_index', _effectiveIndex.toString());
     });
+  }
+
+  void _persistPosition(Duration pos) {
+    final db = _db;
+    if (db == null || _queue.isEmpty) return;
+    db.setSetting('playback.position_ms', pos.inMilliseconds.toString());
   }
 
   /// ===========================
@@ -235,6 +316,7 @@ class AudioService {
       _currentIndex = _shuffle ? 0 : index;
       _invalidateQueueCache();
       _queueController.add(queue);
+      _scheduleStateSave();
       await _openCurrent();
     } finally {
       _isAdvancing = false;
@@ -250,6 +332,7 @@ class AudioService {
       if (index < 0 || index >= _queue.length) return;
       _currentIndex = index;
     }
+    _scheduleStateSave();
     await _openCurrent();
   }
 
@@ -273,6 +356,7 @@ class AudioService {
     _invalidateQueueCache();
     _currentSongController.add(null);
     _queueController.add(queue);
+    _scheduleStateSave();
   }
 
   /// ===========================
@@ -284,9 +368,11 @@ class AudioService {
     try {
       if (_currentIndex < _queue.length - 1) {
         _currentIndex++;
+        _scheduleStateSave();
         await _openCurrent();
       } else if (_repeat == RepeatMode.all) {
         _currentIndex = 0;
+        _scheduleStateSave();
         await _openCurrent();
       }
     } finally {
@@ -305,9 +391,11 @@ class AudioService {
       }
       if (_currentIndex > 0) {
         _currentIndex--;
+        _scheduleStateSave();
         await _openCurrent();
       } else if (_repeat == RepeatMode.all) {
         _currentIndex = _queue.length - 1;
+        _scheduleStateSave();
         await _openCurrent();
       }
     } finally {
@@ -369,6 +457,7 @@ class AudioService {
       }
     }
     _invalidateQueueCache();
+    _scheduleStateSave();
     _queueController.add(queue);
   }
 
@@ -388,6 +477,7 @@ class AudioService {
       }
     }
     _invalidateQueueCache();
+    _scheduleStateSave();
     _queueController.add(queue);
   }
 
@@ -417,6 +507,7 @@ class AudioService {
       if (_currentIndex >= _queue.length) _currentIndex = _queue.length - 1;
     }
     _invalidateQueueCache();
+    _scheduleStateSave();
     _queueController.add(queue);
 
     //if the playing song gets removed, play whats now at that position
@@ -433,10 +524,14 @@ class AudioService {
   /// ===========================
   ///         internals
   /// ===========================
-  Future<void> _openCurrent() async {
+  Future<void> _openCurrent({bool play = true}) async {
     final song = currentSong;
     if (song == null) return;
     _currentSongController.add(song);
+
+    if (play) {
+      _persistPosition(Duration.zero);
+    }
 
     //resolve artist name: prefer displayArtist (includes features), fall back to db lookup
     _currentArtistName = song.displayArtist;
@@ -449,7 +544,7 @@ class AudioService {
 
     //media_kit(ty /j) expects URI not raw path
     final uri = Uri.file(song.path).toString();
-    await _player.open(Media(uri), play: true);
+    await _player.open(Media(uri), play: play);
   }
 
   Future<void> _onTrackCompleted() async {

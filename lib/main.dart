@@ -41,7 +41,6 @@ void main() async {
   await AudioEffectsService.instance.loadSettings();
 
   sono.AudioService.instance.attachDb(db);
-  await sono.AudioService.instance.loadState();
 
   DiscordRpcService.instance.attachDb(db);
   await DiscordRpcService.instance.loadState();
