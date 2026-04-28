@@ -35,7 +35,21 @@
 
 ### Phase 3
 
-- Create Home page **IN PROGRESS**
+- ~~Create Home page~~ **DONE (for now)**
+
+### Phase 4
+
+- Create Fullscreen player and it's widgets
+
+### Phase 5
+
+- Create Library Widgets
+- Create the different views (albums, artists, etc.)
+- Create Library Page
+
+### Phase 6
+
+- Create Search Page
 
 <br>
 
