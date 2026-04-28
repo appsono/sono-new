@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _load() async {
     final songs = await widget.db.getAllSongsWithArtists();
+    songs.sort((a, b) => a.id.compareTo(b.id));
     final artists = await widget.db.getAllArtists();
     final albums = await widget.db.getAllAlbumsWithArtists();
     final profile = await widget.db.getProfile();
@@ -155,7 +156,7 @@ class _HomePageState extends State<HomePage> {
             // ==== recently added ====
             if (_songs!.isNotEmpty)
               SliverToBoxAdapter(
-                child: _RecentlyAdded(songs: _songs!, onPlay: _playSong),
+                child: _RecentlyAdded(songs: _songs!, onPlay: _playQueue),
               ),
 
             // ==== albums ====
@@ -207,9 +208,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _playSong(int index) {
-    final songs = _songs;
-    if (songs == null) return;
+  void _playQueue(List<SongWithArtistViewData> songs, int index) {
     final queue = songs
         .map(
           (s) => Song(
@@ -235,7 +234,7 @@ class _HomePageState extends State<HomePage> {
 
 class _RecentlyAdded extends StatelessWidget {
   final List<SongWithArtistViewData> songs;
-  final void Function(int index) onPlay;
+  final void Function(List<SongWithArtistViewData> queue, int index) onPlay;
 
   //show last 20 songs (highest id = newest); from db by insertion order
   static const _limit = 20;
@@ -257,7 +256,6 @@ class _RecentlyAdded extends StatelessWidget {
       children: recent.asMap().entries.map((e) {
         final s = e.value;
         //resolve original index of correct queue position
-        final originalIndex = songs.indexOf(s);
         return SonoMediaCard(
           path: s.path,
           title: s.title,
@@ -265,7 +263,7 @@ class _RecentlyAdded extends StatelessWidget {
           titleStyle: Theme.of(
             context,
           ).textTheme.headlineSmall?.copyWith(fontSize: 13),
-          onTap: () => onPlay(originalIndex),
+          onTap: () => onPlay(recent, e.key),
         );
       }).toList(),
     );
