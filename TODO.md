@@ -37,6 +37,13 @@
 
 - ~~Create Home page~~ **DONE (for now)**
 
+
+### --- Stop ---
+
+- add Weblate support
+
+### --- Continue ---
+
 ### Phase 4
 
 - Create Fullscreen player and it's widgets
