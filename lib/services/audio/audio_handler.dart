@@ -43,7 +43,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           (pos.inMilliseconds - _lastBroadcastPosition.inMilliseconds).abs();
       final timeDiff = DateTime.now().difference(_lastBroadcastTime).inSeconds;
 
-      //boradcast immediately if buffering resolves, position violently shifts (seek/song switch) or
+      //broadcast immediately if buffering resolves, position violently shifts (seek/song switch) or
       //periodically for safety
       if (posDiff > 1500 || timeDiff >= 15) {
         _broadcastState();
@@ -96,7 +96,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       }
     });
 
-    // handle audio becoming noisy (headphones unplugged)
+    //handle audio becoming noisy (headphones unplugged)
     session.becomingNoisyEventStream.listen((_) {
       if (_audio.isPlaying) _audio.pause();
     });
