@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord
+    url: https://discord.sono.wtf
+    about: Questions, general discussion, or anything that is not a bug or feature request
+    
