@@ -14,6 +14,8 @@ class AudioService {
   late final Player _player;
   bool _initialized = false;
   bool _isAdvancing = false;
+  bool _isOpening = false;
+  int _targetIndex = -1;
   SonoDatabase? _db;
 
   //queue state
@@ -172,24 +174,45 @@ class AudioService {
     //cap mpv memory usage for local playback
     final platform = _player.platform;
     if (platform is NativePlayer) {
+      //kill all video & rendering pipelines
       await platform.setProperty('vid', 'no');
       await platform.setProperty('vo', 'null');
-      await platform.setProperty('cache', 'no');
-      await platform.setProperty('demuxer-max-bytes', '512KiB');
-      await platform.setProperty('demuxer-max-back-bytes', '0');
-      await platform.setProperty('demuxer-readhead-secs', '2');
-      await platform.setProperty('audio-buffer', '0.5');
-      await platform.setProperty('idle-active', 'yes');
+      await platform.setProperty('hwdec', 'no');
+      await platform.setProperty('audio-display', 'no');
+
+      //kill unnecessary mpv subsystems
+      await platform.setProperty('load-scripts', 'no');
+      await platform.setProperty('osc', 'no');
       await platform.setProperty('osd-level', '0');
       await platform.setProperty('sub', 'no');
+
+      //lean demuxer / cache
+      await platform.setProperty('cache', 'no');
+      await platform.setProperty('demuxer-max-bytes', '16MiB');
+      await platform.setProperty('demuxer-max-back-bytes', '4MiB');
+      await platform.setProperty('demuxer-readhead-secs', '4');
+      await platform.setProperty('audio-buffer', '0.5');
+
+      //playback behavior
+      await platform.setProperty('idle-active', 'yes');
+      await platform.setProperty('gapless-audio', 'yes');
+      await platform.setProperty('prefetch-playlist', 'yes');
     }
 
     //attach effects
     AudioEffectsService.instance.attach(_player);
 
+    _player.stream.playlist.listen((state) {
+      if (_isAdvancing || _isOpening) return;
+      if (state.index > 0) {
+        _onGaplessAdvance(state.index);
+      }
+    });
+
     //auto-advance on song completion
     _player.stream.completed.listen((completed) {
-      if (!completed) return;
+      if (!completed || _isAdvancing || _isOpening) return;
+      if (_player.state.playlist.medias.length > 1) return;
       _onTrackCompleted();
     });
 
@@ -308,19 +331,14 @@ class AudioService {
 
   /// Start playing [songs] at [index]
   Future<void> play(List<Song> songs, int index) async {
-    _isAdvancing = true;
-    try {
-      _queue = List.of(songs);
-      _rebuildShuffleOrder(anchorIndex: index);
-      //when shuffle is on, the anchor song is at position 0 of shuffle order
-      _currentIndex = _shuffle ? 0 : index;
-      _invalidateQueueCache();
-      _queueController.add(queue);
-      _scheduleStateSave();
-      await _openCurrent();
-    } finally {
-      _isAdvancing = false;
-    }
+    _queue = List.of(songs);
+    _rebuildShuffleOrder(anchorIndex: index);
+    //when shuffle is on, the anchor song is at position 0 of shuffle order
+    _currentIndex = _shuffle ? 0 : index;
+    _invalidateQueueCache();
+    _queueController.add(queue);
+    await _openCurrent();
+    _handleQueueIndexChanged();
   }
 
   /// Jump to [index] in the current queue
@@ -332,8 +350,7 @@ class AudioService {
       if (index < 0 || index >= _queue.length) return;
       _currentIndex = index;
     }
-    _scheduleStateSave();
-    await _openCurrent();
+    _handleQueueIndexChanged();
   }
 
   Future<void> resume() => _player.play();
@@ -362,45 +379,63 @@ class AudioService {
   /// ===========================
   ///           skip
   /// ===========================
-  Future<void> skipNext() async {
-    if (_isAdvancing || queue.isEmpty) return;
-    _isAdvancing = true;
+
+  void _handleQueueIndexChanged() {
+    _scheduleStateSave();
+
+    final song = currentSong;
+    if (song != null) {
+      _currentSongController.add(song);
+      _artistNameController.add(song.displayArtist);
+    }
+
+    if (_isOpening) return;
+    _processOpens();
+  }
+
+  Future<void> _processOpens() async {
+    _isOpening = true;
+    _isAdvancing = true; //lock out automatic gapless listeners
     try {
-      if (_currentIndex < _queue.length - 1) {
-        _currentIndex++;
-        _scheduleStateSave();
-        await _openCurrent();
-      } else if (_repeat == RepeatMode.all) {
-        _currentIndex = 0;
-        _scheduleStateSave();
+      while (_targetIndex != _currentIndex) {
+        _targetIndex = _currentIndex;
+        if (_currentIndex == -1) break;
         await _openCurrent();
       }
     } finally {
+      _isOpening = false;
       _isAdvancing = false;
     }
   }
 
+  Future<void> skipNext() async {
+    if (_queue.isEmpty) return;
+
+    final atEnd = _currentIndex >= _queue.length - 1;
+    if (atEnd && _repeat != RepeatMode.all) return;
+
+    _currentIndex = atEnd ? 0 : _currentIndex + 1;
+    _handleQueueIndexChanged();
+  }
+
   Future<void> skipPrevious() async {
-    if (_isAdvancing || _queue.isEmpty) return;
-    _isAdvancing = true;
-    try {
-      //if past 3 secs: restart current track
-      if (_player.state.position.inSeconds > 3) {
-        await _player.seek(Duration.zero);
-        return;
-      }
-      if (_currentIndex > 0) {
-        _currentIndex--;
-        _scheduleStateSave();
-        await _openCurrent();
-      } else if (_repeat == RepeatMode.all) {
-        _currentIndex = _queue.length - 1;
-        _scheduleStateSave();
-        await _openCurrent();
-      }
-    } finally {
-      _isAdvancing = false;
+    if (_queue.isEmpty) return;
+
+    //only restart song if not currently spamming skips
+    if (!_isOpening && _player.state.position.inSeconds > 3) {
+      await _player.seek(Duration.zero);
+      return;
     }
+
+    if (_currentIndex > 0) {
+      _currentIndex--;
+    } else if (_repeat == RepeatMode.all) {
+      _currentIndex = _queue.length - 1;
+    } else {
+      return;
+    }
+
+    _handleQueueIndexChanged();
   }
 
   /// ===========================
@@ -422,9 +457,10 @@ class AudioService {
     _shuffleController.add(_shuffle);
     _queueController.add(effectiveQueue);
     _savePlaybackState();
+    await _rebuildLookahead();
   }
 
-  void cycleRepeat() {
+  Future<void> cycleRepeat() async {
     switch (_repeat) {
       case RepeatMode.off:
         _repeat = RepeatMode.all;
@@ -435,6 +471,7 @@ class AudioService {
     }
     _repeatController.add(_repeat);
     _savePlaybackState();
+    await _rebuildLookahead();
   }
 
   /// ===========================
@@ -442,7 +479,7 @@ class AudioService {
   /// ===========================
 
   /// Add song to end of queue
-  void addToQueue(Song song) {
+  Future<void> addToQueue(Song song) async {
     final newIndex = _queue.length;
     _queue.add(song);
     if (_shuffle) {
@@ -459,10 +496,11 @@ class AudioService {
     _invalidateQueueCache();
     _scheduleStateSave();
     _queueController.add(queue);
+    await _rebuildLookahead();
   }
 
   /// Insert song as next up
-  void playNext(Song song) {
+  Future<void> playNext(Song song) async {
     if (_shuffle && _shuffleOrder.isNotEmpty) {
       //insert into raw queue at end, but put it in shuffle order
       final newIndex = _queue.length;
@@ -479,6 +517,7 @@ class AudioService {
     _invalidateQueueCache();
     _scheduleStateSave();
     _queueController.add(queue);
+    await _rebuildLookahead();
   }
 
   /// Remove song from queue by index
@@ -512,18 +551,35 @@ class AudioService {
 
     //if the playing song gets removed, play whats now at that position
     if (index == wasCurrentIndex && _queue.isNotEmpty) {
-      _isAdvancing = true;
-      try {
-        await _openCurrent();
-      } finally {
-        _isAdvancing = false;
-      }
+      _handleQueueIndexChanged();
+    } else {
+      await _rebuildLookahead();
     }
   }
 
   /// ===========================
   ///         internals
   /// ===========================
+
+  /// Returns song that should come next after current one, or null if
+  /// there is none (and repeat all is not active)
+  Song? _peekNextSong() {
+    if (_queue.isEmpty || _currentIndex < 0) return null;
+    final nextPos = _currentIndex + 1;
+    if (_shuffle && _shuffleOrder.isNotEmpty) {
+      if (nextPos >= _shuffleOrder.length) {
+        return _repeat == RepeatMode.all ? _queue[_shuffleOrder[0]] : null;
+      }
+      return _queue[_shuffleOrder[nextPos]];
+    }
+    if (nextPos >= _queue.length) {
+      return _repeat == RepeatMode.all ? _queue[0] : null;
+    }
+    return _queue[nextPos];
+  }
+
+  /// Opens current song (and preloads next one into mpv playlist
+  /// for gapless transitions) == hopeium
   Future<void> _openCurrent({bool play = true}) async {
     final song = currentSong;
     if (song == null) return;
@@ -542,13 +598,90 @@ class AudioService {
       _artistNameController.add(_currentArtistName);
     }
 
-    //media_kit(ty /j) expects URI not raw path
-    final uri = Uri.file(song.path).toString();
-    await _player.open(Media(uri), play: play);
+    final currentMedia = Media(Uri.file(song.path).toString());
+
+    // repeat-one: single-item playlist
+    // everything else: always preload next song
+    if (_repeat != RepeatMode.one) {
+      final nextSong = _peekNextSong();
+      if (nextSong != null) {
+        await _player.open(
+          Playlist([currentMedia, Media(Uri.file(nextSong.path).toString())]),
+          play: play,
+        );
+        return;
+      }
+    }
+    await _player.open(Playlist([currentMedia]), play: play);
+  }
+
+  Future<void> _onGaplessAdvance(int passedTracks) async {
+    if (_isAdvancing || _isOpening) return;
+    _isAdvancing = true;
+    try {
+      //advance internal queue pos based on hwo many songs mpv skipped
+      for (int i = 0; i < passedTracks; i++) {
+        if (_currentIndex < _queue.length - 1) {
+          _currentIndex++;
+        } else if (_repeat == RepeatMode.all) {
+          _currentIndex = 0;
+        } else {
+          return; //end of queue
+        }
+      }
+
+      _scheduleStateSave();
+      _persistPosition(Duration.zero);
+
+      final song = currentSong!;
+      _currentSongController.add(song);
+
+      _currentArtistName = song.displayArtist;
+      _artistNameController.add(_currentArtistName);
+      if (_currentArtistName == null && _db != null && song.artistId != null) {
+        final artist = await _db!.getArtistById(song.artistId!);
+        _currentArtistName = artist?.name;
+        _artistNameController.add(_currentArtistName);
+      }
+
+      //drop exact number of old tracks that just played to shift mpv index to 0
+      for (int i = 0; i < passedTracks; i++) {
+        if (_player.state.playlist.medias.isNotEmpty) {
+          await _player.remove(0);
+        }
+      }
+
+      //append next lookahead track to keep gapless alive
+      final nextSong = _peekNextSong();
+      if (nextSong != null) {
+        await _player.add(Media(Uri.file(nextSong.path).toString()));
+      }
+    } finally {
+      _isAdvancing = false;
+    }
+  }
+
+  Future<void> _rebuildLookahead() async {
+    if (_isAdvancing || _isOpening || _queue.isEmpty) return;
+    try {
+      //drop every entry beyond current one (index 1+)
+      while (_player.state.playlist.medias.length > 1) {
+        await _player.remove(1);
+      }
+      //re-add correct next entry if relevant
+      if (_repeat != RepeatMode.one) {
+        final next = _peekNextSong();
+        if (next != null) {
+          await _player.add(Media(Uri.file(next.path).toString()));
+        }
+      }
+    } catch (_) {
+      //best-effort; next explicit skip will call _openCurrent and recover
+    }
   }
 
   Future<void> _onTrackCompleted() async {
-    if (_isAdvancing) return;
+    if (_isAdvancing || _isOpening) return;
     if (_repeat == RepeatMode.one) {
       _isAdvancing = true;
       try {

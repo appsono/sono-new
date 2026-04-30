@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
-import 'package:rxdart/rxdart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:sono_query/sono_query.dart' as query;
@@ -23,7 +22,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   int _updateToken = 0;
 
-  bool _waitingForPosition = false;
+  Duration _lastBroadcastPosition = Duration.zero;
+  DateTime _lastBroadcastTime = DateTime.now();
 
   SonoAudioHandler(this._db) {
     _initSession();
@@ -37,15 +37,28 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       }
       _broadcastState();
     });
-    _audio.positionStream.throttleTime(const Duration(seconds: 5)).listen((_) {
-      if (_waitingForPosition) {
-        _waitingForPosition = false;
+
+    _audio.positionStream.listen((pos) {
+      final posDiff =
+          (pos.inMilliseconds - _lastBroadcastPosition.inMilliseconds).abs();
+      final timeDiff = DateTime.now().difference(_lastBroadcastTime).inSeconds;
+
+      //boradcast immediately if buffering resolves, position violently shifts (seek/song switch) or
+      //periodically for safety
+      if (posDiff > 1500 || timeDiff >= 15) {
         _broadcastState();
       }
+      _lastBroadcastPosition = pos;
     });
-    _audio.durationStream.listen((_) => _broadcastState());
-    _audio.bufferingStream.listen((buffering) {
-      if (buffering) _waitingForPosition = true;
+
+    _audio.durationStream.listen((duration) {
+      if (mediaItem.hasValue && mediaItem.value != null) {
+        final currentItem = mediaItem.value!;
+        if (currentItem.duration == null ||
+            (currentItem.duration!.inSeconds - duration.inSeconds).abs() > 1) {
+          mediaItem.add(currentItem.copyWith(duration: duration));
+        }
+      }
       _broadcastState();
     });
 
@@ -97,7 +110,9 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       _tempDirPath ??= (await getTemporaryDirectory()).path;
       if (token != _updateToken) return;
 
-      final Uint8List? imageBytes = await query.SonoQuery.getCover(song.path);
+      final Uint8List? imageBytes = await query.SonoQuery.getCover(
+        song.path,
+      ).timeout(const Duration(seconds: 2), onTimeout: () => null);
       if (token != _updateToken) return;
 
       if (imageBytes != null && imageBytes.isNotEmpty) {
@@ -169,6 +184,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   }
 
   void _broadcastState() {
+    _lastBroadcastTime = DateTime.now();
     playbackState.add(
       PlaybackState(
         controls: [
@@ -202,9 +218,10 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           MediaAction.setRepeatMode,
         },
         androidCompactActionIndices: const [1, 2, 3],
-        processingState: (_audio.isBuffering && _waitingForPosition)
-            ? AudioProcessingState.loading
-            : AudioProcessingState.ready,
+        //processingState: (_audio.isBuffering)
+        //    ? AudioProcessingState.loading
+        //    : AudioProcessingState.ready,
+        processingState: AudioProcessingState.ready,
         playing: _audio.isPlaying,
         updatePosition: _audio.position,
         shuffleMode: _audio.shuffle
