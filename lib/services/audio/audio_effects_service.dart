@@ -168,6 +168,14 @@ class AudioEffectsService {
   Future<void> setSpeed(double rate) async {
     _speed = rate.clamp(0.25, 4.0);
     await _player?.setRate(_speed);
+    //disable pitch correction at normal speed
+    final platform = _player?.platform;
+    if (platform is NativePlayer) {
+      await platform.setProperty(
+        'audio-pitch-correction',
+        _speed == 1.0 ? 'no' : 'yes',
+      );
+    }
     _saveSettings();
   }
 
@@ -217,7 +225,7 @@ class AudioEffectsService {
     dev.log('AudioEffects: settings af="$afValue"', name: 'sono.fx');
 
     try {
-      await platform.setProperty('af', afValue);
+      await platform.setProperty('af', afValue.isEmpty ? '' : afValue);
       dev.log('AudioEffects: af applied', name: 'sono.fx');
     } catch (e) {
       dev.log('AudioEffects: failed to set af: $e', name: 'sono.fx');
@@ -226,6 +234,11 @@ class AudioEffectsService {
 
   /// Build full af string
   String _buildAfString() {
+    //if nothing active, return empty
+    final anyEqActive = _eqGains.any((g) => g.abs() > 0.01);
+    final bassActive = _bassBoost.abs() > 0.1;
+    if (!anyEqActive && !bassActive) return '';
+
     final buf = StringBuffer('lavfi=[');
     for (int i = 0; i < bandCount; i++) {
       if (i > 0) buf.write(',');
@@ -235,10 +248,8 @@ class AudioEffectsService {
         'equalizer@eq$i=f=${band.freq}:width_type=o:w=${band.width}:g=${gain.toStringAsFixed(1)}',
       );
     }
-
-    final bassGain = _bassBoost.abs() > 0.1 ? _bassBoost : 0.0;
     buf.write(
-      ',equalizer@bass=f=80:width_type=o:w=2.0:g=${bassGain.toStringAsFixed(1)}',
+      ',equalizer@bass=f=80:width_type=o:w=2.0:g=${_bassBoost.toStringAsFixed(1)}',
     );
     buf.write(']');
     return buf.toString();

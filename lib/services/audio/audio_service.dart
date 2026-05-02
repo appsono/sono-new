@@ -170,6 +170,8 @@ class AudioService {
       configuration: const PlayerConfiguration(
         pitch: true, //enable pitch control
         title: 'Sono',
+        bufferSize: 8 * 1024 * 1024, //8mb instead of 32mb default
+        libass: false, //disables subtitle renderer
       ),
     );
 
@@ -188,17 +190,21 @@ class AudioService {
       await platform.setProperty('osd-level', '0');
       await platform.setProperty('sub', 'no');
 
+      //disable terminal status formatting
+      await platform.setProperty('term-status-msg', '');
+      await platform.setProperty('really-quiet', 'yes');
+
       //lean demuxer / cache
       await platform.setProperty('cache', 'no');
       await platform.setProperty('demuxer-max-bytes', '16MiB');
       await platform.setProperty('demuxer-max-back-bytes', '4MiB');
       await platform.setProperty('demuxer-readhead-secs', '4');
-      await platform.setProperty('audio-buffer', '0.5');
+      await platform.setProperty('audio-buffer', '2');
 
       //playback behavior
       await platform.setProperty('idle-active', 'yes');
       await platform.setProperty('gapless-audio', 'yes');
-      await platform.setProperty('prefetch-playlist', 'yes');
+      //await platform.setProperty('prefetch-playlist', 'yes');
     }
 
     //attach effects
