@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
@@ -214,14 +215,15 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           MediaAction.seekBackward,
           MediaAction.play,
           MediaAction.pause,
+          MediaAction.stop,
           MediaAction.setShuffleMode,
           MediaAction.setRepeatMode,
         },
         androidCompactActionIndices: const [1, 2, 3],
+        processingState: AudioProcessingState.ready,
         //processingState: (_audio.isBuffering)
         //    ? AudioProcessingState.loading
         //    : AudioProcessingState.ready,
-        processingState: AudioProcessingState.ready,
         playing: _audio.isPlaying,
         updatePosition: _audio.position,
         shuffleMode: _audio.shuffle
@@ -237,10 +239,51 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   }
 
   @override
+  Future<MediaItem?> getMediaItem(String mediaId) async {
+    if (_audio.queue.isEmpty) await _audio.loadState();
+
+    final song = _audio.currentSong;
+    if (song == null) return null;
+
+    String? artistName = song.displayArtist;
+    if (artistName == null && song.artistId != null) {
+      final artist = await _db.getArtistById(song.artistId!);
+      artistName = artist?.name;
+    }
+
+    return MediaItem(
+      id: song.path,
+      title: song.title,
+      artist: artistName ?? 'Unknown artist',
+      duration: song.duration != null
+          ? Duration(milliseconds: song.duration!)
+          : null,
+    );
+  }
+
+  @override
+  Future<void> onTaskRemoved() async {
+    await stop();
+    final session = await AudioSession.instance;
+    await session.setActive(false);
+    _broadcastState();
+  }
+
+  @override
   Future<void> play() async {
+    //activate session before anything else
     final session = await AudioSession.instance;
     await session.setActive(true);
+
+    if (_audio.queue.isEmpty) {
+      await _audio.loadState();
+      final song = _audio.currentSong;
+
+      if (song != null) await _updateMediaItem(song);
+    }
+
     _audio.resume();
+    _broadcastState();
   }
 
   @override
@@ -250,18 +293,21 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   @override
   Future<void> seek(Duration position) async {
+    if (_audio.queue.isEmpty) await _audio.loadState();
     await _audio.seek(position);
     _broadcastState();
   }
 
   @override
   Future<void> skipToNext() async {
+    if (_audio.queue.isEmpty) await _audio.loadState();
     await _audio.skipNext();
     _broadcastState();
   }
 
   @override
   Future<void> skipToPrevious() async {
+    if (_audio.queue.isEmpty) await _audio.loadState();
     await _audio.skipPrevious();
     _broadcastState();
   }
@@ -288,5 +334,47 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     final session = await AudioSession.instance;
     await session.setActive(false);
     await super.stop();
+  }
+
+  @override
+  Future<List<MediaItem>> getChildren(
+    String parentMediaId, [
+    Map<String, dynamic>? options,
+  ]) async {
+    if (parentMediaId != AudioService.recentRootId) return [];
+    try {
+      final all = await _db.getAllSettings();
+      final queueJson = all['playback.queue'];
+      final savedIndex =
+          int.tryParse(all['playback.current_index'] ?? '') ?? -1;
+
+      if (queueJson == null || savedIndex < 0) return [];
+
+      final ids = (jsonDecode(queueJson) as List).cast<int>();
+      if (ids.isEmpty || savedIndex >= ids.length) return [];
+
+      final songs = await _db.getSongsByIds([ids[savedIndex]]);
+      if (songs.isEmpty) return [];
+
+      final song = songs.first;
+      String? artistName = song.displayArtist;
+      if (artistName == null && song.artistId != null) {
+        final artist = await _db.getArtistById(song.artistId!);
+        artistName = artist?.name;
+      }
+
+      return [
+        MediaItem(
+          id: song.path,
+          title: song.title,
+          artist: artistName ?? 'Unknown artist',
+          duration: song.duration != null
+              ? Duration(milliseconds: song.duration!)
+              : null,
+        ),
+      ];
+    } catch (_) {
+      return [];
+    }
   }
 }

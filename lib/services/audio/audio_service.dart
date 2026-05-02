@@ -15,6 +15,8 @@ class AudioService {
   bool _initialized = false;
   bool _isAdvancing = false;
   bool _isOpening = false;
+  bool _isRestoringState = false;
+  Future<void>? _loadStateFuture;
   int _targetIndex = -1;
   SonoDatabase? _db;
 
@@ -227,7 +229,7 @@ class AudioService {
     });
 
     _player.stream.playing.listen((playing) {
-      if (!playing) {
+      if (!playing && !_isRestoringState) {
         _persistPosition(_player.state.position);
       }
     });
@@ -240,6 +242,16 @@ class AudioService {
 
   /// Load saved shuffle/repeat state from database
   Future<void> loadState() async {
+    if (_loadStateFuture != null) return _loadStateFuture!;
+    _loadStateFuture = _doLoadState();
+    try {
+      await _loadStateFuture!;
+    } finally {
+      _loadStateFuture = null;
+    }
+  }
+
+  Future<void> _doLoadState() async {
     final db = _db;
     if (db == null) return;
 
@@ -283,7 +295,21 @@ class AudioService {
       _currentSongController.add(currentSong);
       _queueController.add(queue);
 
-      await _openCurrent(play: false); //open but dont autoplay
+      _isRestoringState = true;
+      try {
+        await _openCurrent(play: false);
+        if (savedPositionMs > 0) {
+          await _player.stream.duration
+              .firstWhere((d) => d.inMilliseconds > 0)
+              .timeout(
+                const Duration(seconds: 5),
+                onTimeout: () => Duration.zero,
+              );
+          await _player.seek(Duration(milliseconds: savedPositionMs));
+        }
+      } finally {
+        _isRestoringState = false;
+      }
 
       if (savedPositionMs > 0) {
         await Future.delayed(const Duration(milliseconds: 300));
