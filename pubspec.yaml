@@ -41,6 +41,7 @@ dependencies:
   package_info_plus: ^9.0.1
   url_launcher: ^6.3.2
   material_color_utilities: ^0.13.0
+  image: ^4.8.0
 
 dev_dependencies:
   flutter_test:
