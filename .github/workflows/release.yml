@@ -93,7 +93,10 @@ jobs:
 
   upload-artifacts:
     needs: [release-please, build-android, build-ios]
-    if: always() && needs.build-android.result == 'success'
+    if: |
+      always() && 
+      needs.release-please.outputs.release_created == 'true' && 
+      needs.build-android.result == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: write
