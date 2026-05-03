@@ -30,7 +30,7 @@ class DiscordRpcService {
   final _coverUploader = CoverUploader();
   final _client = http.Client();
 
-  String? _sessionToken; //headless session token (from dsc)
+  String? _sessionToken;
   Timer? _clearTimer;
   Timer? _debounceTimer;
   DateTime? _rateLimitUntil;
@@ -41,13 +41,11 @@ class DiscordRpcService {
 
   SonoDatabase? _db;
 
-  /// Wether RPC is currently active
   bool get isEnabled => _enabled;
 
   /// Wether a discord token is loaded (user logged in)
   bool get isConnected => _userToken != null;
 
-  /// Raw dsc usr token, if logged in. stored in settings db
   String? _userToken;
 
   // ==== lifecycle ====
@@ -213,7 +211,6 @@ class DiscordRpcService {
     _clearTimer?.cancel();
     _clearTimer = null;
 
-    //snapshot the song path so we can detect a mid-flight song change
     final expectedPath = song.path;
 
     //resolve artist name
@@ -429,7 +426,7 @@ class DiscordRpcService {
     await _db?.removeSetting('discord.session_token');
   }
 
-  /// Full teardonw of the service. Called when the app is shutting down
+  /// Full teardown of the service. Called when the app is shutting down
   /// this service for good (not just toggling it off)
   @visibleForTesting
   void disposeForTesting() {
