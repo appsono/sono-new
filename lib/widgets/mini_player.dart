@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:sono/pages/player/player_page.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/services/audio/audio_service.dart';
@@ -31,12 +32,36 @@ class SonoMiniPlayer extends StatelessWidget {
         final song = snap.data ?? audio.currentSong;
         if (song == null) return const SizedBox.shrink();
 
-        return _MiniPlayerContent(
-          song: song,
-          navBarVisible: navBarVisible,
-          borderRadius: borderRadius,
+        return GestureDetector(
+          onTap: () => _openPlayer(context),
+          child: _MiniPlayerContent(
+            song: song,
+            navBarVisible: navBarVisible,
+            borderRadius: borderRadius,
+          ),
         );
       },
+    );
+  }
+
+  void _openPlayer(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierColor: Colors.transparent,
+        pageBuilder: (_, _, _) => const FullscreenPlayer(),
+        transitionsBuilder: (_, anim, _, child) {
+          return SlideTransition(
+            position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+                .animate(
+                  CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
+                ),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 380),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
+      ),
     );
   }
 }
