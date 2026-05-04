@@ -3,26 +3,41 @@ name: Release
 on:
   push:
     branches: [main]
-  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  release-please:
+  check-version:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+      changed: ${{ steps.version.outputs.changed }}
+      tag: ${{ steps.version.outputs.tag }}
     steps:
-      - uses: googleapis/release-please-action@v4
-        id: release
+      - uses: actions/checkout@v6
         with:
-          release-type: dart
+          fetch-depth: 2
+
+      - name: Check for version change
+        id: version
+        run: |
+          CURRENT=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          git show HEAD~1:pubspec.yaml > /tmp/old_pubspec.yaml 2>/dev/null || true
+          OLD=$(grep '^version:' /tmp/old_pubspec.yaml 2>/dev/null | awk '{print $2}')
+
+          echo "old=$OLD"
+          echo "current=$CURRENT"
+
+          if [ "$CURRENT" != "$OLD" ] && [ -n "$CURRENT" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "tag=v$CURRENT" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
 
   build-android:
-    needs: release-please
-    if: needs.release-please.outputs.release_created == 'true'
+    needs: check-version
+    if: needs.check-version.outputs.changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -64,8 +79,8 @@ jobs:
             build/app/outputs/bundle/release/app-release.aab
 
   build-ios:
-    needs: release-please
-    if: needs.release-please.outputs.release_created == 'true'
+    needs: check-version
+    if: needs.check-version.outputs.changed == 'true'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v6
@@ -91,16 +106,13 @@ jobs:
           name: ios-release
           path: sono-unsigned.ipa
 
-  upload-artifacts:
-    needs: [release-please, build-android, build-ios]
-    if: |
-      always() && 
-      needs.release-please.outputs.release_created == 'true' && 
-      needs.build-android.result == 'success'
+  release:
+    needs: [check-version, build-android, build-ios]
+    if: always() && needs.build-android.result == 'success'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
+      - uses: actions/checkout@v6
+
       - uses: actions/download-artifact@v7
         with:
           name: android-release
@@ -112,10 +124,17 @@ jobs:
           name: ios-release
           path: artifacts/ios
 
-      - name: Upload release assets
+      - name: Create tag
+        run: |
+          git tag "${{ needs.check-version.outputs.tag }}"
+          git push origin "${{ needs.check-version.outputs.tag }}"
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.release-please.outputs.tag_name }}
+          tag_name: ${{ needs.check-version.outputs.tag }}
           files: |
             artifacts/android/**/*
             artifacts/ios/sono-unsigned.ipa
+          generate_release_notes: true
+          
