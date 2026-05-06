@@ -36,7 +36,6 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
   String? _songPath;
   String? _songTitle;
   String? _songArtist;
-  bool _extracting = false;
 
   @override
   void initState() {
@@ -55,9 +54,9 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
   }
 
   Future<void> _handleSong(Song song) async {
-    if (song.id == _lastSongId || _extracting) return;
+    if (song.id == _lastSongId) return;
     _lastSongId = song.id;
-    _extracting = true;
+
     setState(() {
       _songPath = song.path;
       _songTitle = song.title;
@@ -66,8 +65,8 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
 
     try {
       final bytes = await SonoQuery.getCover(song.path);
-      if (!mounted || song.id != _lastSongId) return;
 
+      if (!mounted || song.id != _lastSongId) return;
       if (bytes == null || bytes.isEmpty) return;
 
       final newColors = await PlayerColors.fromImageBytes(bytes);
@@ -77,8 +76,8 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
         _prevColors = _colors;
         _colors = newColors;
       });
-    } finally {
-      _extracting = false;
+    } catch (_) {
+      //swallow extraction error, fallback colours stay in place
     }
   }
 
