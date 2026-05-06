@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:material_color_utilities/material_color_utilities.dart';
@@ -11,6 +12,9 @@ import 'package:material_color_utilities/material_color_utilities.dart';
 /// Pipeline:
 /// ImageProvider > ui.Image > pixel buffer > QuantizerCelebi (128) >
 /// Score > Hct > TonalPalette > semantic tones
+///
+/// The decode + quantized stages run on a backgroun isolate via [compute] so
+/// they dont stall the ui thread when cover changes
 ///
 /// Key tones:
 /// 10 background dark, 18 surface, 76 accent, 82 progress, 88-93 text
@@ -46,59 +50,70 @@ class PlayerColors {
   );
 
   static Future<PlayerColors> fromImageBytes(Uint8List bytes) async {
+    if (bytes.isEmpty) return fallback;
     try {
-      final decoded = img.decodeImage(bytes);
-      if (decoded == null) return fallback;
-
-      final scale = min(112 / decoded.width, 112 / decoded.height);
-      final w = (decoded.width * scale).round();
-      final h = (decoded.height * scale).round();
-      final scaled = img.copyResize(decoded, width: w, height: h);
-
-      final pixelCount = scaled.width * scaled.height;
-      final pixels = Uint32List(pixelCount);
-      var i = 0;
-      for (var y = 0; y < scaled.height; y++) {
-        for (var x = 0; x < scaled.width; x++) {
-          final p = scaled.getPixel(x, y);
-          pixels[i++] =
-              (p.a.toInt() << 24) |
-              (p.r.toInt() << 16) |
-              (p.g.toInt() << 8) |
-              p.b.toInt();
-        }
-      }
-
-      final quantized = await QuantizerCelebi().quantize(
-        pixels,
-        128,
-        returnInputPixelToClusterPixel: true,
-      );
-
-      final scored = Score.score(
-        quantized.colorToCount,
-        desired: 4,
-        filter: false,
-      );
-      if (scored.isEmpty) return fallback;
-
-      final keyHct = Hct.fromInt(scored.first);
-      final lowVariety = scored.length <= 2;
-
-      final palette = TonalPalette.of(keyHct.hue, keyHct.chroma);
-
-      return PlayerColors(
-        background: Color(palette.get(lowVariety ? 18 : 10)),
-        surface: Color(palette.get(lowVariety ? 26 : 18)),
-        accent: Color(palette.get(lowVariety ? 80 : 76)),
-        progressBar: Color(palette.get(lowVariety ? 85 : 82)),
-        onBackground: Color(palette.get(lowVariety ? 95 : 93)),
-        onSurface: Color(palette.get(lowVariety ? 90 : 88)),
-        onAccent: Color(palette.get(lowVariety ? 18 : 10)),
-      );
+      return await compute(_extractInIsolate, bytes);
     } catch (_) {
       return fallback;
     }
+  }
+
+  //runs on a background isolte
+  //must stay self-contained, no captured state
+  static Future<PlayerColors> _extractInIsolate(Uint8List bytes) async {
+    final decoded = img.decodeImage(bytes);
+    if (decoded == null) return fallback;
+
+    //clamp to <=1.0 so small covers arent enlarged before quantized
+    final scale = min(112 / decoded.width, 112 / decoded.height);
+    final scaled = scale < 1.0
+        ? img.copyResize(
+            decoded,
+            width: (decoded.width * scale).round(),
+            height: (decoded.height * scale).round(),
+          )
+        : decoded;
+
+    final pixelCount = scaled.width * scaled.height;
+    final pixels = Uint32List(pixelCount);
+    var i = 0;
+    for (var y = 0; y < scaled.height; y++) {
+      for (var x = 0; x < scaled.width; x++) {
+        final p = scaled.getPixel(x, y);
+        pixels[i++] =
+            (p.a.toInt() << 24) |
+            (p.r.toInt() << 16) |
+            (p.g.toInt() << 8) |
+            p.b.toInt();
+      }
+    }
+
+    final quantized = await QuantizerCelebi().quantize(
+      pixels,
+      128,
+      returnInputPixelToClusterPixel: true,
+    );
+
+    final scored = Score.score(
+      quantized.colorToCount,
+      desired: 4,
+      filter: false,
+    );
+    if (scored.isEmpty) return fallback;
+
+    final keyHct = Hct.fromInt(scored.first);
+    final lowVariety = scored.length <= 2;
+    final palette = TonalPalette.of(keyHct.hue, keyHct.chroma);
+
+    return PlayerColors(
+      background: Color(palette.get(lowVariety ? 18 : 10)),
+      surface: Color(palette.get(lowVariety ? 26 : 18)),
+      accent: Color(palette.get(lowVariety ? 80 : 76)),
+      progressBar: Color(palette.get(lowVariety ? 85 : 82)),
+      onBackground: Color(palette.get(lowVariety ? 95 : 93)),
+      onSurface: Color(palette.get(lowVariety ? 90 : 88)),
+      onAccent: Color(palette.get(lowVariety ? 18 : 10)),
+    );
   }
 
   /// Linearly interpolates between two PlayerColors
