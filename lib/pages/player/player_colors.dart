@@ -41,13 +41,13 @@ class PlayerColors {
   });
 
   static const fallback = PlayerColors(
-    background: Color(0xFF0D1117),
-    surface: Color(0xFF161B22),
-    accent: Color(0xFF9B8EE8),
-    progressBar: Color(0xFFB8AEFF),
-    onBackground: Color(0xFFE8E8F0),
-    onSurface: Color(0xFFBBBBCC),
-    onAccent: Color(0xFF0D1117),
+    background: Color(0xFF212121),
+    surface: Color(0xFF2D2D2D),
+    accent: Color(0xFFFF4893),
+    progressBar: Color(0xFFFF72AC),
+    onBackground: Color(0xFFE0E0E0),
+    onSurface: Color(0xFFACACAC),
+    onAccent: Color(0xFFFFFFFF),
   );
 
   //LRU cache keyed by md5 of image bytes so songs from same album
