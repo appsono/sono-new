@@ -75,8 +75,8 @@ jobs:
         with:
           name: android-release
           path: |
-            build/app/outputs/flutter-apk/app-prod-*-release.apk
-            build/app/outputs/flutter-apk/app-prod-releasea.apk
+            build/app/outputs/flutter-apk/app-*-prod-release.apk
+            build/app/outputs/flutter-apk/app-prod-release.apk
             build/app/outputs/bundle/prodRelease/app-prod-release.aab
 
   build-ios:
