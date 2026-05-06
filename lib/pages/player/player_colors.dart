@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import 'package:crypto/crypto.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 /// Derived color set extracted from album artwork via material_color_utilities
@@ -49,12 +50,47 @@ class PlayerColors {
     onAccent: Color(0xFF0D1117),
   );
 
+  //LRU cache keyed by md5 of image bytes so songs from same album
+  //(or song re-opening after pause) skip quantizer entirely
+  static const int _cacheCapacity = 32;
+  static final Map<String, PlayerColors> _cache = {};
+  static final List<String> _cacheOrder = [];
+
   static Future<PlayerColors> fromImageBytes(Uint8List bytes) async {
     if (bytes.isEmpty) return fallback;
+
+    final key = md5.convert(bytes).toString();
+    final cached = _cache[key];
+    if (cached != null) {
+      _touchCache(key);
+      return cached;
+    }
+
     try {
-      return await compute(_extractInIsolate, bytes);
+      final result = await compute(_extractInIsolate, bytes);
+      _putCache(key, result);
+      return result;
     } catch (_) {
       return fallback;
+    }
+  }
+
+  static void _touchCache(String key) {
+    _cacheOrder.remove(key);
+    _cacheOrder.add(key);
+  }
+
+  static void _putCache(String key, PlayerColors value) {
+    if (_cache.containsKey(key)) {
+      _cache[key] = value;
+      _touchCache(key);
+      return;
+    }
+    _cache[key] = value;
+    _cacheOrder.add(key);
+    while (_cacheOrder.length > _cacheCapacity) {
+      final oldest = _cacheOrder.removeAt(0);
+      _cache.remove(oldest);
     }
   }
 
