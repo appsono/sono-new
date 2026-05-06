@@ -45,10 +45,10 @@ packages:
     dependency: transitive
     description:
       name: audio_metadata_reader
-      sha256: b7cecf78178075c8f8281ae184ae81d137eb6e751f5d193334984eb732662ee0
+      sha256: "847c7e65ce6c56b684310b90ef165f049a7deca096796ad71a166b9eadd2a1b1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.2"
+    version: "1.6.0"
   audio_service:
     dependency: "direct main"
     description:
@@ -969,11 +969,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.4.0"
-      resolved-ref: "80bae21603f0817d48b6ea1b963f3fa9d80afc38"
+      ref: "v0.4.2"
+      resolved-ref: "3308371854e2e072f674c2fa0b4ffa696a9b8424"
       url: "https://github.com/appsono/sono_query.git"
     source: git
-    version: "0.4.0"
+    version: "0.4.2"
   source_gen:
     dependency: transitive
     description:
