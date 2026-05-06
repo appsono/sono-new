@@ -54,18 +54,34 @@ class PlayerColors {
   //(or song re-opening after pause) skip quantizer entirely
   static const int _cacheCapacity = 32;
   static final Map<String, PlayerColors> _cache = {};
+  static final Map<String, Future<PlayerColors>> _inFlight = {};
   static final List<String> _cacheOrder = [];
 
   static Future<PlayerColors> fromImageBytes(Uint8List bytes) async {
     if (bytes.isEmpty) return fallback;
 
     final key = md5.convert(bytes).toString();
+
     final cached = _cache[key];
     if (cached != null) {
       _touchCache(key);
       return cached;
     }
 
+    //if extraction for this key is already running, await same future
+    final inFlight = _inFlight[key];
+    if (inFlight != null) return inFlight;
+
+    final future = _runExtract(key, bytes);
+    _inFlight[key] = future;
+    try {
+      return await future;
+    } finally {
+      _inFlight.remove(key);
+    }
+  }
+
+  static Future<PlayerColors> _runExtract(String key, Uint8List bytes) async {
     try {
       final result = await compute(_extractInIsolate, bytes);
       _putCache(key, result);
