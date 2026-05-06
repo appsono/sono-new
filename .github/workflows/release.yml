@@ -66,17 +66,18 @@ jobs:
           EOF
 
       - name: Build signed APKs
-        run: flutter build apk --release
+        run: flutter build apk --release --flavor prod
 
       - name: Build signed App Bundle
-        run: flutter build appbundle --release
+        run: flutter build appbundle --release --flavor prod
 
       - uses: actions/upload-artifact@v7
         with:
           name: android-release
           path: |
-            build/app/outputs/flutter-apk/app-*-release.apk
-            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/flutter-apk/app-prod-*-release.apk
+            build/app/outputs/flutter-apk/app-prod-releasea.pk
+            build/app/outputs/bundle/prodRelease/app-prod-release.aab
 
   build-ios:
     needs: check-version
@@ -137,4 +138,3 @@ jobs:
             artifacts/android/**/*
             artifacts/ios/sono-unsigned.ipa
           generate_release_notes: true
-          

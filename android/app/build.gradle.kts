@@ -1,5 +1,5 @@
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -33,9 +33,25 @@ android {
         manifestPlaceholders["appName"] = "Sono"
     }
 
+    flavorDimensions += "env"
+
+    productFlavors {
+        create("prod") {
+            dimension = "env"
+            // uses applicationId from defaultConfig (wtf.sono)
+            manifestPlaceholders["appName"] = "Sono"
+        }
+        create("dev") {
+            dimension = "env"
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-dev"
+            manifestPlaceholders["appName"] = "Sono Dev"
+        }
+    }
+
     signingConfigs {
         getByName("debug") {
-            //default debug signing config
+            // default debug signing config
         }
 
         val keystorePropertiesFile = rootProject.file("key.properties")
@@ -61,7 +77,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
