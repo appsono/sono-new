@@ -65,11 +65,11 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
 
     try {
       final bytes = await SonoQuery.getCover(song.path);
-
       if (!mounted || song.id != _lastSongId) return;
-      if (bytes == null || bytes.isEmpty) return;
 
-      final newColors = await PlayerColors.fromImageBytes(bytes);
+      final newColors = (bytes == null || bytes.isEmpty)
+          ? PlayerColors.fallback
+          : await PlayerColors.fromImageBytes(bytes);
       if (!mounted || song.id != _lastSongId) return;
 
       setState(() {
@@ -77,7 +77,11 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
         _colors = newColors;
       });
     } catch (_) {
-      //swallow extraction error, fallback colours stay in place
+      if (!mounted || song.id != _lastSongId) return;
+      setState(() {
+        _prevColors = _colors;
+        _colors = PlayerColors.fallback;
+      });
     }
   }
 
