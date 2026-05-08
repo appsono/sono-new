@@ -4,6 +4,7 @@ Last updated: 8 May 2026
 
 Sono is a local music player by Mathis, distributed as free,
 open-source software under the GNU GPLv3.
+<br>
 Source: <https://github.com/appsono/sono-new>
 
 This policy covers what data Sono handles and where it goes.
