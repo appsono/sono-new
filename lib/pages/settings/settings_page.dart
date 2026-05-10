@@ -12,6 +12,8 @@ import 'package:sono/services/update_service.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
+const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
+
 class SettingsPage extends StatefulWidget {
   final SonoDatabase db;
   final VoidCallback? onRescan;
@@ -176,7 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (c == null) return const SizedBox.shrink();
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 150),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       children: [
         const SizedBox(height: 60),
 
@@ -459,6 +461,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: const Text('Check'),
                 ),
         ),
+
+        // ==== bottom clearance ====
+        SizedBox(height: _bottomInset),
       ],
     );
   }
