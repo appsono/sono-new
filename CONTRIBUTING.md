@@ -15,17 +15,21 @@ Check [TODO.md](TODO.md) to see what's planned and what's already in progress. I
 ## Setting up the project
 
 **Requirements:**
+
 - Flutter SDK `^3.11.1`
 - Dart SDK `^3.11.1`
 - A device or emulator (Android, iOS, Linux, or Windows. macOS and web are not targets)
 
 **Steps:**
+
 ```bash
 git clone https://github.com/appsono/sono-new.git
 cd sono-new
 flutter pub get
-flutter run
+flutter run --flavor dev
 ```
+
+Use `flutter run --flavor prod` to test the app in production mode.
 
 The app uses a local SQLite database via [Drift](https://drift.simonbinder.eu/). If you change any database table (`lib/db/tables.dart`), you need to regenerate the generated file:
 
@@ -54,24 +58,30 @@ The audio stack lives in `lib/services/audio/` and is the most complex part of t
 ## How to contribute
 
 ### Reporting a bug
+
 Open an issue with:
+
 - What you expected to happen
 - What actually happened
 - Your platform (Android / Linux / Windows / iOS)
 - Steps to reproduce if you can
 
 ### Fixing a bug
+
 - Branch off `main`
 - Keep the fix focused. Don't refactor unrelated things in the same PR
 - Test on at least the platform the bug affects
 
 ### Working on a feature
+
 - Check TODO.md first. If it's listed, it's planned
 - Open an issue to discuss it before building it
 - Keep it small. Sono's goal is a focused local music player, not a kitchen sink (kanye ref btw)
 
 ### Working on UI
+
 The design direction is set (Figma designs exist). If you're touching UI:
+
 - Follow the existing theme system in `lib/theme/`
 - Use `SonoColors`, `SonoTokens`, and `SonoTextStyles`. Don't hardcode values
 - Use icons from `IconsSheet` in `lib/theme/icons.dart`
