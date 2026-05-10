@@ -6,8 +6,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/auth/discord_login_page.dart';
 import 'package:sono/services/scanner/scan_settings.dart';
+import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/update_service.dart';
+import 'package:sono/theme/tokens.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 class SettingsPage extends StatefulWidget {
@@ -219,6 +221,18 @@ class _SettingsPageState extends State<SettingsPage> {
           const SizedBox(height: 16),
         ],
 
+        // ==== playback effects ====
+        const _SectionHeader(label: 'Playback'),
+        const SizedBox(height: 12),
+        const _EffectsSection(),
+        const SizedBox(height: 32),
+        const Divider(),
+        const SizedBox(height: 12),
+
+        // ==== library / scan ====
+        const _SectionHeader(label: 'Library'),
+        const SizedBox(height: 12),
+
         //min dur
         Row(
           children: [
@@ -385,6 +399,10 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: 32),
         const Divider(),
         const SizedBox(height: 12),
+
+        // ==== discord ====
+        const _SectionHeader(label: 'Discord RPC'),
+        const SizedBox(height: 12),
         if (_discordLoading)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16),
@@ -423,6 +441,9 @@ class _SettingsPageState extends State<SettingsPage> {
         const Divider(),
         const SizedBox(height: 12),
 
+        // ==== updates checker ====
+        const _SectionHeader(label: 'Updates'),
+        const SizedBox(height: 12),
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('Check for updates'),
@@ -473,6 +494,192 @@ class _SettingsPageState extends State<SettingsPage> {
             onAdd(val.trim());
             ctrl.clear();
           },
+        ),
+      ],
+    );
+  }
+}
+
+// ==== section header ====
+class _SectionHeader extends StatelessWidget {
+  final String label;
+  const _SectionHeader({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: Theme.of(
+        context,
+      ).textTheme.labelLarge?.copyWith(fontFamily: SonoFonts.heading),
+    );
+  }
+}
+
+// ==== effects section ====
+class _EffectsSection extends StatefulWidget {
+  const _EffectsSection();
+
+  @override
+  State<_EffectsSection> createState() => _EffectsSectionState();
+}
+
+class _EffectsSectionState extends State<_EffectsSection> {
+  final _fx = AudioEffectsService.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // ==== equalizer header ====
+        Row(
+          children: [
+            const Text('EQ'),
+            const Spacer(),
+            IconButton(
+              icon: const Icon(Icons.restart_alt_rounded, size: 20),
+              tooltip: 'Reset EQ',
+              color: Colors.orange,
+              onPressed: () async {
+                await _fx.resetEq();
+                setState(() {});
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh_rounded, size: 20),
+              tooltip: 'Reset All',
+              color: Colors.red,
+              onPressed: () async {
+                await _fx.resetAll();
+                setState(() {});
+              },
+            ),
+            Switch(
+              value: _fx.eqEnabled,
+              onChanged: (v) async {
+                await _fx.setEnabled(v);
+                setState(() {});
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+
+        // ==== eq bands ====
+        SizedBox(
+          height: 180,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: List.generate(bandCount, (i) {
+              return Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: RotatedBox(
+                        quarterTurns: -1,
+                        child: Slider(
+                          value: _fx.eqGains[i],
+                          min: -12.0,
+                          max: 12.0,
+                          onChanged: _fx.eqEnabled
+                              ? (v) async {
+                                  _fx.setEqBand(i, v);
+                                  setState(() {});
+                                }
+                              : null,
+                        ),
+                      ),
+                    ),
+                    Text(eqBands[i].label, style: const TextStyle(fontSize: 9)),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // ==== bass boost ====
+        _EffectRow(
+          label: 'Bass boost',
+          valueLabel: '${_fx.bassBoost.toStringAsFixed(1)} dB',
+          value: _fx.bassBoost,
+          min: 0.0,
+          max: 20.0,
+          onChanged: (v) async {
+            _fx.setBassBoost(v);
+            setState(() {});
+          },
+        ),
+        const SizedBox(height: 8),
+
+        // ==== speed ====
+        _EffectRow(
+          label: 'Speed',
+          valueLabel: '${_fx.speed.toStringAsFixed(2)}x',
+          value: _fx.speed,
+          min: 0.25,
+          max: 4.0,
+          onChanged: (v) async {
+            _fx.setSpeed(v);
+            setState(() {});
+          },
+        ),
+        const SizedBox(height: 8),
+
+        // ==== pitch ====
+        _EffectRow(
+          label: 'Pitch',
+          valueLabel: '${_fx.pitch.toStringAsFixed(2)}x',
+          value: _fx.pitch,
+          min: 0.25,
+          max: 4.0,
+          onChanged: (v) async {
+            _fx.setPitch(v);
+            setState(() {});
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _EffectRow extends StatelessWidget {
+  final String label;
+  final String valueLabel;
+  final double value;
+  final double min;
+  final double max;
+  final ValueChanged<double> onChanged;
+
+  const _EffectRow({
+    required this.label,
+    required this.valueLabel,
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 72,
+          child: Text(label, style: Theme.of(context).textTheme.bodySmall),
+        ),
+        Expanded(
+          child: Slider(value: value, min: min, max: max, onChanged: onChanged),
+        ),
+        SizedBox(
+          width: 52,
+          child: Text(
+            valueLabel,
+            style: Theme.of(context).textTheme.bodySmall,
+            textAlign: TextAlign.end,
+          ),
         ),
       ],
     );

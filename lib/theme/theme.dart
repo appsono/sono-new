@@ -84,6 +84,8 @@ ThemeData buildSonoTheme(SonoColors colors) {
       activeTrackColor: colors.textPrimary,
       inactiveTrackColor: colors.borderLight20,
       thumbColor: colors.textPrimary,
+      disabledThumbColor: colors.textPlaceholder,
+      disabledActiveTrackColor: colors.textPlaceholder,
       trackHeight: 2,
       thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
     ),
