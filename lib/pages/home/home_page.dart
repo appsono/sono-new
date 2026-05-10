@@ -28,7 +28,6 @@ class _HomePageState extends State<HomePage> {
   List<AlbumWithArtistViewData>? _albums;
   Map<int, String>? _artistCoverPaths;
   Map<String, int>? _artistSongCounts;
-  Profile? _profile;
 
   @override
   void initState() {
@@ -48,7 +47,6 @@ class _HomePageState extends State<HomePage> {
     songs.sort((a, b) => a.id.compareTo(b.id));
     final artists = await widget.db.getAllArtists();
     final albums = await widget.db.getAllAlbumsWithArtists();
-    final profile = await widget.db.getProfile();
 
     final coverPaths = <int, String>{};
     for (final artist in artists) {
@@ -71,7 +69,6 @@ class _HomePageState extends State<HomePage> {
       _albums = albums;
       _artistCoverPaths = coverPaths;
       _artistSongCounts = counts;
-      _profile = profile;
     });
   }
 
@@ -90,31 +87,38 @@ class _HomePageState extends State<HomePage> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                child: SonoHeader(
-                  isHomePage: true,
-                  username: _profile?.username.isEmpty == true
-                      ? null
-                      : _profile?.username,
-                  avatar: _profile?.avatar,
-                  onProfileTap: () {
-                    //will open sidebar later
+                child: StreamBuilder<Profile?>(
+                  stream: widget.db.watchProfile(),
+                  builder: (context, snap) {
+                    final profile = snap.data;
+                    final username = (profile?.username.isEmpty ?? true)
+                        ? null
+                        : profile!.username;
+                    return SonoHeader(
+                      isHomePage: true,
+                      username: username,
+                      avatar: profile?.avatar,
+                      onProfileTap: () {
+                        //will open sidebar later
+                      },
+                      actions: [
+                        SonoHeaderAction(
+                          icon: IconsSheet.bellOutlined,
+                          tooltip: 'News & Updates',
+                          onTap: () {
+                            //navigate to "changelog" page
+                          },
+                        ),
+                        SonoHeaderAction(
+                          icon: IconsSheet.settingsOutlined,
+                          tooltip: 'Settings',
+                          onTap: () {
+                            //navigate to settings page
+                          },
+                        ),
+                      ],
+                    );
                   },
-                  actions: [
-                    SonoHeaderAction(
-                      icon: IconsSheet.bellOutlined,
-                      tooltip: 'News & Updates',
-                      onTap: () => setState(() {
-                        //navigate to "changelog" page
-                      }),
-                    ),
-                    SonoHeaderAction(
-                      icon: IconsSheet.settingsOutlined,
-                      tooltip: 'Settings',
-                      onTap: () => setState(() {
-                        //navigate to settings page
-                      }),
-                    ),
-                  ],
                 ),
               ),
             ),

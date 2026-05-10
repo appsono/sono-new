@@ -269,7 +269,7 @@ class SonoDatabase extends _$SonoDatabase {
   }
 
   // ==== Profile ====
-
+  Stream<Profile?> watchProfile() => select(profiles).watchSingleOrNull();
   Future<Profile?> getProfile() => select(profiles).getSingleOrNull();
   Future<void> upsertProfile({
     String? username,
