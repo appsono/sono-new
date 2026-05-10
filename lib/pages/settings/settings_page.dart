@@ -1,7 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:drift/drift.dart' show Value;
+import 'package:file_picker/file_picker.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/auth/discord_login_page.dart';
@@ -10,6 +14,8 @@ import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/update_service.dart';
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/icons.dart';
+import 'package:sono/theme/theme.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
@@ -31,6 +37,11 @@ class _SettingsPageState extends State<SettingsPage> {
   final _delimiterCtrl = TextEditingController();
   final _minDurationCtrl = TextEditingController();
 
+  // profile state
+  String _username = '';
+  Uint8List? _avatar;
+  final _usernameCtrl = TextEditingController();
+
   //discord RPC state
   bool _discordConnected = false;
   bool _discordEnabled = false;
@@ -45,6 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     _load();
     _loadDiscord();
+    _loadProfile();
   }
 
   @override
@@ -54,6 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _artistCtrl.dispose();
     _delimiterCtrl.dispose();
     _minDurationCtrl.dispose();
+    _usernameCtrl.dispose();
     super.dispose();
   }
 
@@ -124,6 +137,67 @@ class _SettingsPageState extends State<SettingsPage> {
         _discordUsername = null;
       });
     }
+  }
+
+  Future<void> _loadProfile() async {
+    final p = await widget.db.getProfile();
+    if (!mounted) return;
+    setState(() {
+      _username = p?.username ?? '';
+      _avatar = p?.avatar;
+      _usernameCtrl.text = _username;
+    });
+  }
+
+  Future<void> _pickAvatar() async {
+    final res = await FilePicker.pickFiles(
+      type: FileType.image,
+      //yes, we could use "custom" to guard file formats, but I hate the SAF document picker ui
+      withData: true,
+    );
+    if (res == null || res.files.isEmpty) return;
+    final file = res.files.first;
+    final bytes = res.files.first.bytes;
+    if (bytes == null) return;
+
+    //extension guard
+    const allowed = {'jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp'};
+    final ext = file.extension?.toLowerCase();
+    if (ext == null || !allowed.contains(ext)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('only images pwease :)'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    //verify its a decodable image
+    try {
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
+      frame.image.dispose();
+      codec.dispose();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('that file there..is NOT a valid image, hmph'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    await widget.db.upsertProfile(avatar: Value(bytes));
+    if (mounted) setState(() => _avatar = bytes);
+  }
+
+  Future<void> _clearAvatar() async {
+    await widget.db.upsertProfile(avatar: const Value(null));
+    if (mounted) setState(() => _avatar = null);
   }
 
   Future<void> _checkForUpdatesManual() async {
@@ -222,6 +296,71 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const SizedBox(height: 16),
         ],
+
+        // ==== profile ====
+        const _SectionHeader(label: 'Profile'),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            GestureDetector(
+              onTap: _pickAvatar,
+              child: CircleAvatar(
+                radius: 28,
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest,
+                backgroundImage: _avatar != null ? MemoryImage(_avatar!) : null,
+                child: _avatar == null
+                    ? IconsSheet.svg(
+                        IconsSheet.profileFilled,
+                        color: context.sono.textSecondary,
+                        size: 26,
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                controller: _usernameCtrl,
+                textInputAction: TextInputAction.done,
+                autofocus: false,
+                onTapOutside: (_) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
+                decoration: const InputDecoration(
+                  isDense: true,
+                  labelText: 'username',
+                  hintText: 'your name',
+                ),
+                onSubmitted: (val) {
+                  final v = _usernameCtrl.text.trim();
+                  if (v == _username) return;
+                  _username = v;
+                  widget.db.upsertProfile(username: v);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('username updated :D'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+              ),
+            ),
+            if (_avatar != null)
+              IconButton(
+                icon: IconsSheet.svg(
+                  IconsSheet.closeOutlined,
+                  color: context.sono.textSecondary,
+                  size: SonoSizes.iconSm,
+                ),
+                tooltip: 'Remove Avatar',
+                onPressed: _clearAvatar,
+              ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        const Divider(),
+        const SizedBox(height: 12),
 
         // ==== playback effects ====
         const _SectionHeader(label: 'Playback'),
