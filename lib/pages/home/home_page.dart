@@ -194,6 +194,7 @@ class _HomePageState extends State<HomePage> {
                       path: _artistCoverPaths?[a.id] ?? '',
                       title: a.name,
                       subtitle: '$count ${count == 1 ? 'song' : 'songs'}',
+                      bordered: true,
                       shape: CoverShape.circle,
                       titleStyle: Theme.of(
                         context,
@@ -264,6 +265,7 @@ class _RecentlyAdded extends StatelessWidget {
           path: s.path,
           title: s.title,
           subtitle: s.displayArtist ?? s.artistName ?? 'Unknown',
+          bordered: true,
           titleStyle: Theme.of(
             context,
           ).textTheme.headlineSmall?.copyWith(fontSize: 13),
@@ -332,6 +334,7 @@ class _AlbumCardState extends State<_AlbumCard> {
       path: _coverPath ?? '',
       title: widget.album.title,
       subtitle: widget.album.artistName ?? 'Unknown artist',
+      bordered: true,
       titleStyle: Theme.of(
         context,
       ).textTheme.headlineSmall?.copyWith(fontSize: 13),
