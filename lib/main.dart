@@ -24,12 +24,6 @@ void main() async {
 
   final db = SonoDatabase();
 
-  //restore saved theme before first build to avoid flash
-  final savedTheme = await db.getSetting('theme');
-  if (savedTheme == 'light') {
-    SonoApp.themeNotifier.value = SonoColors.light;
-  }
-
   await sono.AudioService.instance.init();
   audioHandler = await AudioService.init(
     builder: () => SonoAudioHandler(db),
@@ -52,6 +46,12 @@ void main() async {
   await DiscordRpcService.instance.loadState();
 
   UpdateService.instance.attachDb(db);
+
+  //restore saved theme before first build to avoid flash
+  final savedTheme = await db.getSetting('theme.mode');
+  SonoApp.themeNotifier.value = savedTheme == 'light'
+      ? SonoColors.light
+      : SonoColors.dark;
 
   if (Platform.isIOS) await _createIosReadme();
 
