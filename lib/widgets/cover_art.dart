@@ -115,7 +115,7 @@ class _SonoCoverArtState extends State<SonoCoverArt>
 
   Widget _buildContent(BuildContext context) {
     final border = widget.bordered
-        ? Border.all(color: context.sono.borderLight10, width: 1)
+        ? Border.all(color: SonoColors.light.borderLight10, width: 1)
         : null;
 
     if (widget.shape == CoverShape.circle) {
