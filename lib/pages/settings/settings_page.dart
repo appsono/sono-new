@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:file_picker/file_picker.dart';
 
+import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/auth/discord_login_page.dart';
 import 'package:sono/services/scanner/scan_settings.dart';
@@ -362,6 +363,29 @@ class _SettingsPageState extends State<SettingsPage> {
         const Divider(),
         const SizedBox(height: 12),
 
+        // ==== appearance ====
+        const _SectionHeader(label: 'Appearance'),
+        const SizedBox(height: 4),
+        ValueListenableBuilder<SonoColors>(
+          valueListenable: SonoApp.themeNotifier,
+          builder: (_, colors, _) {
+            final isDark = colors == SonoColors.dark;
+            return SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Dark mode'),
+              value: isDark,
+              onChanged: (val) {
+                SonoApp.themeNotifier.value = val
+                    ? SonoColors.dark
+                    : SonoColors.light;
+              },
+            );
+          },
+        ),
+        const SizedBox(height: 32),
+        const Divider(),
+        const SizedBox(height: 12),
+
         // ==== playback effects ====
         const _SectionHeader(label: 'Playback'),
         const SizedBox(height: 12),
@@ -578,7 +602,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
 
-        const SizedBox(height: 12),
+        const SizedBox(height: 32),
         const Divider(),
         const SizedBox(height: 12),
 

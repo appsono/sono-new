@@ -24,6 +24,12 @@ void main() async {
 
   final db = SonoDatabase();
 
+  //restore saved theme before first build to avoid flash
+  final savedTheme = await db.getSetting('theme');
+  if (savedTheme == 'light') {
+    SonoApp.themeNotifier.value = SonoColors.light;
+  }
+
   await sono.AudioService.instance.init();
   audioHandler = await AudioService.init(
     builder: () => SonoAudioHandler(db),
@@ -70,6 +76,23 @@ class SonoApp extends StatefulWidget {
 }
 
 class _SonoAppState extends State<SonoApp> {
+  @override
+  void initState() {
+    super.initState();
+    SonoApp.themeNotifier.addListener(_saveTheme);
+  }
+
+  @override
+  void dispose() {
+    SonoApp.themeNotifier.removeListener(_saveTheme);
+    super.dispose();
+  }
+
+  void _saveTheme() {
+    final isDark = SonoApp.themeNotifier.value == SonoColors.dark;
+    widget.db.setSetting('theme.mode', isDark ? 'dark' : 'light');
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
