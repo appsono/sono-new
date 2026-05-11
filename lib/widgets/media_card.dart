@@ -10,6 +10,7 @@ class SonoMediaCard extends StatefulWidget {
   final VoidCallback? onTap;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
+  final bool bordered;
 
   const SonoMediaCard({
     required this.path,
@@ -20,6 +21,7 @@ class SonoMediaCard extends StatefulWidget {
     this.onTap,
     this.titleStyle,
     this.subtitleStyle,
+    this.bordered = false,
     super.key,
   });
 
@@ -55,6 +57,7 @@ class _SonoMediaCardState extends State<SonoMediaCard> {
                 path: widget.path,
                 size: widget.size,
                 shape: widget.shape,
+                bordered: widget.bordered,
               ),
             ),
             const SizedBox(height: 6),
