@@ -87,10 +87,21 @@ class _ProfileCircle extends StatelessWidget {
       child: Container(
         width: _size,
         height: _size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: colors.borderLight20, width: 2),
-        ),
+        decoration: avatar == null
+            ? BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: colors.borderLight20, width: 2),
+              )
+            : null,
+        foregroundDecoration: avatar != null
+            ? BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: SonoColors.light.borderLight20,
+                  width: 2,
+                ),
+              )
+            : null,
         child: ClipOval(
           child: avatar != null
               ? Image.memory(avatar!, fit: BoxFit.cover)
