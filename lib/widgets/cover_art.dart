@@ -17,6 +17,7 @@ class SonoCoverArt extends StatefulWidget {
   final IconData fallbackIcon;
   final bool spinning;
   final Duration? songDuration;
+  final bool bordered; //wether a border should be visible
 
   const SonoCoverArt({
     required this.path,
@@ -26,6 +27,7 @@ class SonoCoverArt extends StatefulWidget {
     this.fallbackIcon = Icons.music_note_rounded,
     this.spinning = false,
     this.songDuration,
+    this.bordered = false, //off by default
     super.key,
   });
 
@@ -112,6 +114,10 @@ class _SonoCoverArtState extends State<SonoCoverArt>
   }
 
   Widget _buildContent(BuildContext context) {
+    final border = widget.bordered
+        ? Border.all(color: context.sono.borderLight10, width: 1)
+        : null;
+
     if (widget.shape == CoverShape.circle) {
       return Container(
         width: widget.size,
@@ -119,6 +125,7 @@ class _SonoCoverArtState extends State<SonoCoverArt>
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: context.sono.primary,
+          border: border,
           image: (_loaded && _cover != null)
               ? DecorationImage(
                   image: MemoryImage(_cover!),
@@ -137,26 +144,31 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     }
 
     // rounded shape
+    final radius = BorderRadius.circular(
+      widget.borderRadius ?? SonoSizes.borderRadiusSm,
+    );
+
+    Widget inner;
     if (!_loaded || _cover == null) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(
-          widget.borderRadius ?? SonoSizes.borderRadiusSm,
-        ),
-        child: _Placeholder(size: widget.size, icon: widget.fallbackIcon),
-      );
-    }
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(
-        widget.borderRadius ?? SonoSizes.borderRadiusSm,
-      ),
-      child: Image.memory(
+      inner = _Placeholder(size: widget.size, icon: widget.fallbackIcon);
+    } else {
+      inner = Image.memory(
         _cover!,
         width: widget.size,
         height: widget.size,
         fit: BoxFit.cover,
         errorBuilder: (_, _, _) =>
             _Placeholder(size: widget.size, icon: widget.fallbackIcon),
-      ),
+      );
+    }
+
+    if (border == null) {
+      return ClipRRect(borderRadius: radius, child: inner);
+    }
+
+    return Container(
+      foregroundDecoration: BoxDecoration(borderRadius: radius, border: border),
+      child: ClipRRect(borderRadius: radius, child: inner),
     );
   }
 
