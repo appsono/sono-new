@@ -11,6 +11,7 @@ enum CoverShape { rounded, circle }
 
 class SonoCoverArt extends StatefulWidget {
   final String path;
+  final Uint8List? coverBytes;
   final double size;
   final CoverShape shape;
   final double? borderRadius;
@@ -18,9 +19,11 @@ class SonoCoverArt extends StatefulWidget {
   final bool spinning;
   final Duration? songDuration;
   final bool bordered; //wether a border should be visible
+  final bool allowAsyncLoad;
 
   const SonoCoverArt({
     required this.path,
+    this.coverBytes,
     this.size = 48,
     this.shape = CoverShape.rounded,
     this.borderRadius,
@@ -28,6 +31,7 @@ class SonoCoverArt extends StatefulWidget {
     this.spinning = false,
     this.songDuration,
     this.bordered = false, //off by default
+    this.allowAsyncLoad = true,
     super.key,
   });
 
@@ -46,9 +50,20 @@ class _SonoCoverArtState extends State<SonoCoverArt>
   @override
   void initState() {
     super.initState();
-    _loadCover();
+    _applyExternalOrLoad();
     _spinController = AnimationController(vsync: this, duration: _turnPeriod);
     if (widget.spinning) _startSpin();
+  }
+
+  void _applyExternalOrLoad() {
+    if (widget.coverBytes != null) {
+      _cover = widget.coverBytes;
+      _loaded = true;
+    } else if (widget.allowAsyncLoad) {
+      _loadCover();
+    } else {
+      _loaded = true;
+    }
   }
 
   @override
@@ -57,7 +72,20 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     if (oldWidget.path != widget.path) {
       _loaded = false;
       _cover = null;
-      _loadCover();
+      _applyExternalOrLoad();
+    }
+    if (widget.coverBytes != null &&
+        widget.coverBytes != oldWidget.coverBytes) {
+      setState(() {
+        _cover = widget.coverBytes;
+        _loaded = true;
+      });
+    }
+    if (oldWidget.allowAsyncLoad != widget.allowAsyncLoad &&
+        widget.coverBytes == null) {
+      _loaded = false;
+      _cover = null;
+      _applyExternalOrLoad();
     }
     if (oldWidget.spinning != widget.spinning) {
       if (widget.spinning) {
