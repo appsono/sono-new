@@ -147,7 +147,11 @@ class _HomePageState extends State<HomePage> {
                         )
                         .toList();
                     queue.shuffle();
-                    AudioService.instance.play(queue, 0);
+                    AudioService.instance.play(
+                      queue,
+                      0,
+                      origin: QueueOrigin.allSongs,
+                    );
                     //AudioService.instance.setShuffle(true);
                   },
                   onCreatePlaylist: () {
@@ -229,7 +233,14 @@ class _HomePageState extends State<HomePage> {
           ),
         )
         .toList();
-    AudioService.instance.play(queue, index);
+    AudioService.instance.play(
+      queue,
+      index,
+      origin: const QueueOrigin(
+        source: QueueSource.recentlyAdded,
+        label: 'Recently Added',
+      ),
+    );
   }
 }
 
@@ -341,7 +352,15 @@ class _AlbumCardState extends State<_AlbumCard> {
       onTap: () {
         final queue = _queue;
         if (queue == null || queue.isEmpty) return;
-        AudioService.instance.play(queue, 0);
+        AudioService.instance.play(
+          queue,
+          0,
+          origin: QueueOrigin(
+            source: QueueSource.album,
+            label: widget.album.title,
+            refId: widget.album.id,
+          ),
+        );
       },
     );
   }

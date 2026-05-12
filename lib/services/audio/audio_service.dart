@@ -7,6 +7,51 @@ import 'package:sono/services/audio/audio_effects_service.dart';
 
 enum RepeatMode { off, all, one }
 
+enum QueueSource {
+  allSongs,
+  album,
+  artist,
+  playlist,
+  liked,
+  recentlyAdded,
+  search,
+}
+
+/// Identifies where current playback queue came from
+///
+/// Used to display a source label in fullscreen player top bar
+/// and (later) to navigate back to originating page
+/// > source: category enum
+/// > label: display string shown to user
+/// > refId: optional id to resolve source later (albumId, playlistId, etc)
+class QueueOrigin {
+  final QueueSource source;
+  final String label;
+  final int? refId;
+
+  const QueueOrigin({required this.source, required this.label, this.refId});
+
+  static const allSongs = QueueOrigin(
+    source: QueueSource.allSongs,
+    label: 'All Song',
+  );
+
+  Map<String, dynamic> toJson() => {
+    'source': source.name,
+    'label': label,
+    if (refId != null) 'redId': refId,
+  };
+
+  factory QueueOrigin.fromJson(Map<String, dynamic> json) => QueueOrigin(
+    source: QueueSource.values.firstWhere(
+      (s) => s.name == json['source'],
+      orElse: () => QueueSource.allSongs,
+    ),
+    label: json['label'] as String? ?? 'All Songs',
+    refId: json['refId'] as int?,
+  );
+}
+
 class AudioService {
   AudioService._();
   static final AudioService instance = AudioService._();
@@ -29,6 +74,9 @@ class AudioService {
   int _currentIndex = -1;
   bool _shuffle = false;
   RepeatMode _repeat = RepeatMode.off;
+
+  QueueOrigin _origin = QueueOrigin.allSongs;
+  final _originController = StreamController<QueueOrigin>.broadcast();
 
   //brodcast controllers
   final StreamController<Song?> _currentSongController =
@@ -90,6 +138,9 @@ class AudioService {
 
   Stream<bool> get shuffleStream => _shuffleController.stream;
   Stream<RepeatMode> get repeatMode => _repeatController.stream;
+
+  Stream<QueueOrigin> get originStream => _originController.stream;
+  QueueOrigin get currentOrigin => _origin;
 
   /// ===========================
   ///       current state
@@ -272,6 +323,18 @@ class AudioService {
     _shuffleController.add(_shuffle);
     _repeatController.add(_repeat);
 
+    final originJson = all['playback.origin'];
+    if (originJson != null) {
+      try {
+        _origin = QueueOrigin.fromJson(
+          jsonDecode(originJson) as Map<String, dynamic>,
+        );
+      } catch (_) {
+        _origin = QueueOrigin.allSongs;
+      }
+    }
+    _originController.add(_origin);
+
     final queueJson = all['playback.queue'];
     final savedIndex = int.tryParse(all['playback.current_index'] ?? '') ?? -1;
     final savedPositionMs =
@@ -348,6 +411,7 @@ class AudioService {
       final ids = _queue.map((s) => s.id).toList();
       await db.setSetting('playback.queue', jsonEncode(ids));
       await db.setSetting('playback.current_index', _effectiveIndex.toString());
+      await db.setSetting('playback.origin', jsonEncode(_origin.toJson()));
     });
   }
 
@@ -362,11 +426,16 @@ class AudioService {
   /// ===========================
 
   /// Start playing [songs] at [index]
-  Future<void> play(List<Song> songs, int index) async {
+  ///
+  /// [origin] describes where the queue came from (album, playlist, etc)
+  /// and gets shown in the fullscreen player top bar. Defaults to all songs
+  Future<void> play(List<Song> songs, int index, {QueueOrigin? origin}) async {
     _queue = List.of(songs);
     _rebuildShuffleOrder(anchorIndex: index);
     //when shuffle is on, the anchor song is at position 0 of shuffle order
     _currentIndex = _shuffle ? 0 : index;
+    _origin = origin ?? QueueOrigin.allSongs;
+    _originController.add(_origin);
     _invalidateQueueCache();
     _queueController.add(queue);
     await _openCurrent();
@@ -402,6 +471,8 @@ class AudioService {
     _queue = [];
     _currentIndex = -1;
     _shuffleOrder = [];
+    _origin = QueueOrigin.allSongs;
+    _originController.add(_origin);
     _invalidateQueueCache();
     _currentSongController.add(null);
     _queueController.add(queue);
