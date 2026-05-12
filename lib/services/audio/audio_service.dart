@@ -160,7 +160,8 @@ class AudioService {
     return _cachedUnmodifiableQueue!;
   }
 
-  int get currentIndex => _effectiveIndex;
+  /// Position of the current song within [effectiveQueue].
+  int get currentIndex => _currentIndex;
   int get currentQueueIndex => _currentIndex;
   bool get isPlaying {
     _ensureInitialized();
@@ -362,7 +363,7 @@ class AudioService {
 
       _invalidateQueueCache();
       _currentSongController.add(currentSong);
-      _queueController.add(queue);
+      _queueController.add(effectiveQueue);
 
       _isRestoringState = true;
       try {
@@ -437,7 +438,7 @@ class AudioService {
     _origin = origin ?? QueueOrigin.allSongs;
     _originController.add(_origin);
     _invalidateQueueCache();
-    _queueController.add(queue);
+    _queueController.add(effectiveQueue);
     await _openCurrent();
     _handleQueueIndexChanged();
   }
@@ -475,7 +476,7 @@ class AudioService {
     _originController.add(_origin);
     _invalidateQueueCache();
     _currentSongController.add(null);
-    _queueController.add(queue);
+    _queueController.add(effectiveQueue);
     _scheduleStateSave();
   }
 
@@ -598,7 +599,7 @@ class AudioService {
     }
     _invalidateQueueCache();
     _scheduleStateSave();
-    _queueController.add(queue);
+    _queueController.add(effectiveQueue);
     await _rebuildLookahead();
   }
 
@@ -619,7 +620,7 @@ class AudioService {
     }
     _invalidateQueueCache();
     _scheduleStateSave();
-    _queueController.add(queue);
+    _queueController.add(effectiveQueue);
     await _rebuildLookahead();
   }
 
@@ -650,7 +651,7 @@ class AudioService {
     }
     _invalidateQueueCache();
     _scheduleStateSave();
-    _queueController.add(queue);
+    _queueController.add(effectiveQueue);
 
     //if the playing song gets removed, play whats now at that position
     if (index == wasCurrentIndex && _queue.isNotEmpty) {
