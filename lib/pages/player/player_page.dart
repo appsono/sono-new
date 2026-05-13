@@ -8,6 +8,7 @@ import 'package:sono/pages/player/player_top_bar.dart';
 import 'package:sono/pages/player/player_cover_carousel.dart';
 import 'package:sono/pages/player/player_title_row.dart';
 import 'package:sono/pages/player/player_progress_bar.dart';
+import 'package:sono/pages/player/player_controls.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 
 /// ==== WIP ====
@@ -125,6 +126,8 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
                   TitleRow(c: c, liked: _liked, onToggleLike: _toggleLiked),
                   const SizedBox(height: 24),
                   ProgressBar(c: c),
+                  const SizedBox(height: 28),
+                  MainControls(c: c),
 
                   const Spacer(),
                 ],
