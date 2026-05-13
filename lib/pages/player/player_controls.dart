@@ -94,7 +94,7 @@ class _BouncyTapState extends State<_BouncyTap> {
         scale: _pressed ? widget.pressScale : 1.0,
         duration: _pressed
             ? const Duration(milliseconds: 100)
-            : const Duration(milliseconds: 500),
+            : const Duration(milliseconds: 700),
         curve: _pressed ? Curves.easeIn : Curves.elasticOut,
         child: widget.child,
       ),
@@ -148,7 +148,9 @@ class _PlayButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BouncyTap(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOutCubic,
         height: 84,
         decoration: BoxDecoration(
           color: c.accent,
@@ -159,7 +161,7 @@ class _PlayButton extends StatelessWidget {
         child: Center(
           //small little bittle crossfade between play and pause icons
           child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 180),
+            duration: const Duration(milliseconds: 280),
             transitionBuilder: (child, anim) {
               return FadeTransition(
                 opacity: anim,
