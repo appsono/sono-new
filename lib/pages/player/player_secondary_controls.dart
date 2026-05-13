@@ -44,6 +44,7 @@ class SecondaryControls extends StatelessWidget {
                       : IconsSheet.shuffleOutlined,
                   color: on ? c.accent : inactive,
                   onTap: () => audio.setShuffle(!on),
+                  tooltip: on ? 'Shuffling songs' : 'Shuffle off',
                 );
               },
             ),
@@ -59,10 +60,16 @@ class SecondaryControls extends StatelessWidget {
                   player.RepeatMode.all => IconsSheet.repeatFilled,
                   player.RepeatMode.one => IconsSheet.repeatOneOutlined,
                 };
+                final tip = switch (mode) {
+                  player.RepeatMode.off => 'Repeat off',
+                  player.RepeatMode.all => 'Repeats all',
+                  player.RepeatMode.one => 'Repeats one',
+                };
                 return _PillButton(
                   icon: icon,
                   color: on ? c.accent : inactive,
                   onTap: audio.cycleRepeat,
+                  tooltip: tip,
                   size: 26,
                 );
               },
@@ -72,12 +79,14 @@ class SecondaryControls extends StatelessWidget {
               icon: IconsSheet.queueFilled,
               color: inactive,
               onTap: onOpenQueue ?? () {},
+              tooltip: 'Open Queue',
               size: 26,
             ),
             _PillButton(
               icon: IconsSheet.lyricsOutlined,
               color: inactive,
               onTap: onOpenLyrics ?? () {},
+              tooltip: 'Open Lyrics',
               size: 26,
             ),
           ],
@@ -93,24 +102,29 @@ class _PillButton extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
   final double size;
+  final String tooltip;
 
   const _PillButton({
     required this.icon,
     required this.color,
     required this.onTap,
+    required this.tooltip,
     this.size = 22, // ignore: unused_element_parameter
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 56,
-        height: 44,
-        child: Center(
-          child: IconsSheet.svg(icon, size: size, color: color),
+    return Tooltip(
+      message: tooltip,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
+          width: 56,
+          height: 44,
+          child: Center(
+            child: IconsSheet.svg(icon, size: size, color: color),
+          ),
         ),
       ),
     );
