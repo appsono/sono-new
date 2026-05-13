@@ -137,7 +137,7 @@ class _AppShellState extends State<AppShell> {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SonoMiniPlayer(navBarVisible: true),
+                    SonoMiniPlayer(db: widget.db, navBarVisible: true),
                     const SizedBox(height: 6),
                     SonoNavBar(
                       selectedIndex: _tab,
