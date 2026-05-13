@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -16,7 +17,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -46,8 +47,11 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 7) {
         await m.addColumn(songs, songs.discNumber);
       }
+      if (from < 8) {
+        await m.addColumn(songs, songs.liked);
+      }
       //future migrations go here:
-      // if (from < 8) { .. }
+      // if (from < 9) { .. }
     },
   );
 
@@ -237,6 +241,21 @@ class SonoDatabase extends _$SonoDatabase {
       songs,
     )..where((s) => s.path.equals(path))).getSingleOrNull();
     return row != null;
+  }
+
+  Future<bool> getSongLiked(int id) async {
+    final row =
+        await (selectOnly(songs)
+              ..addColumns([songs.liked])
+              ..where(songs.id.equals(id)))
+            .getSingleOrNull();
+    return row?.read(songs.liked) ?? false;
+  }
+
+  Future<void> setSongLiked(int id, bool liked) async {
+    await (update(songs)..where((s) => s.id.equals(id))).write(
+      SongsCompanion(liked: Value(liked)),
+    );
   }
 
   Future<void> removeDeletedSongs(Set<String> currentPaths) async {

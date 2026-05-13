@@ -623,6 +623,18 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _likedMeta = const VerificationMeta('liked');
+  @override
+  late final GeneratedColumn<bool> liked = GeneratedColumn<bool>(
+    'liked',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("liked" IN (0, 1))',
+    ),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -636,6 +648,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     albumId,
     artistId,
     displayArtist,
+    liked,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -725,6 +738,12 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         ),
       );
     }
+    if (data.containsKey('liked')) {
+      context.handle(
+        _likedMeta,
+        liked.isAcceptableOrUnknown(data['liked']!, _likedMeta),
+      );
+    }
     return context;
   }
 
@@ -778,6 +797,10 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         DriftSqlType.string,
         data['${effectivePrefix}display_artist'],
       ),
+      liked: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}liked'],
+      ),
     );
   }
 
@@ -799,6 +822,7 @@ class Song extends DataClass implements Insertable<Song> {
   final int? albumId;
   final int? artistId;
   final String? displayArtist;
+  final bool? liked;
   const Song({
     required this.id,
     required this.path,
@@ -811,6 +835,7 @@ class Song extends DataClass implements Insertable<Song> {
     this.albumId,
     this.artistId,
     this.displayArtist,
+    this.liked,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -841,6 +866,9 @@ class Song extends DataClass implements Insertable<Song> {
     }
     if (!nullToAbsent || displayArtist != null) {
       map['display_artist'] = Variable<String>(displayArtist);
+    }
+    if (!nullToAbsent || liked != null) {
+      map['liked'] = Variable<bool>(liked);
     }
     return map;
   }
@@ -874,6 +902,9 @@ class Song extends DataClass implements Insertable<Song> {
       displayArtist: displayArtist == null && nullToAbsent
           ? const Value.absent()
           : Value(displayArtist),
+      liked: liked == null && nullToAbsent
+          ? const Value.absent()
+          : Value(liked),
     );
   }
 
@@ -894,6 +925,7 @@ class Song extends DataClass implements Insertable<Song> {
       albumId: serializer.fromJson<int?>(json['albumId']),
       artistId: serializer.fromJson<int?>(json['artistId']),
       displayArtist: serializer.fromJson<String?>(json['displayArtist']),
+      liked: serializer.fromJson<bool?>(json['liked']),
     );
   }
   @override
@@ -911,6 +943,7 @@ class Song extends DataClass implements Insertable<Song> {
       'albumId': serializer.toJson<int?>(albumId),
       'artistId': serializer.toJson<int?>(artistId),
       'displayArtist': serializer.toJson<String?>(displayArtist),
+      'liked': serializer.toJson<bool?>(liked),
     };
   }
 
@@ -926,6 +959,7 @@ class Song extends DataClass implements Insertable<Song> {
     Value<int?> albumId = const Value.absent(),
     Value<int?> artistId = const Value.absent(),
     Value<String?> displayArtist = const Value.absent(),
+    Value<bool?> liked = const Value.absent(),
   }) => Song(
     id: id ?? this.id,
     path: path ?? this.path,
@@ -940,6 +974,7 @@ class Song extends DataClass implements Insertable<Song> {
     displayArtist: displayArtist.present
         ? displayArtist.value
         : this.displayArtist,
+    liked: liked.present ? liked.value : this.liked,
   );
   Song copyWithCompanion(SongsCompanion data) {
     return Song(
@@ -962,6 +997,7 @@ class Song extends DataClass implements Insertable<Song> {
       displayArtist: data.displayArtist.present
           ? data.displayArtist.value
           : this.displayArtist,
+      liked: data.liked.present ? data.liked.value : this.liked,
     );
   }
 
@@ -978,7 +1014,8 @@ class Song extends DataClass implements Insertable<Song> {
           ..write('releaseDate: $releaseDate, ')
           ..write('albumId: $albumId, ')
           ..write('artistId: $artistId, ')
-          ..write('displayArtist: $displayArtist')
+          ..write('displayArtist: $displayArtist, ')
+          ..write('liked: $liked')
           ..write(')'))
         .toString();
   }
@@ -996,6 +1033,7 @@ class Song extends DataClass implements Insertable<Song> {
     albumId,
     artistId,
     displayArtist,
+    liked,
   );
   @override
   bool operator ==(Object other) =>
@@ -1011,7 +1049,8 @@ class Song extends DataClass implements Insertable<Song> {
           other.releaseDate == this.releaseDate &&
           other.albumId == this.albumId &&
           other.artistId == this.artistId &&
-          other.displayArtist == this.displayArtist);
+          other.displayArtist == this.displayArtist &&
+          other.liked == this.liked);
 }
 
 class SongsCompanion extends UpdateCompanion<Song> {
@@ -1026,6 +1065,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
   final Value<int?> albumId;
   final Value<int?> artistId;
   final Value<String?> displayArtist;
+  final Value<bool?> liked;
   const SongsCompanion({
     this.id = const Value.absent(),
     this.path = const Value.absent(),
@@ -1038,6 +1078,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.albumId = const Value.absent(),
     this.artistId = const Value.absent(),
     this.displayArtist = const Value.absent(),
+    this.liked = const Value.absent(),
   });
   SongsCompanion.insert({
     this.id = const Value.absent(),
@@ -1051,6 +1092,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.albumId = const Value.absent(),
     this.artistId = const Value.absent(),
     this.displayArtist = const Value.absent(),
+    this.liked = const Value.absent(),
   }) : path = Value(path),
        title = Value(title);
   static Insertable<Song> custom({
@@ -1065,6 +1107,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Expression<int>? albumId,
     Expression<int>? artistId,
     Expression<String>? displayArtist,
+    Expression<bool>? liked,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1078,6 +1121,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       if (albumId != null) 'album_id': albumId,
       if (artistId != null) 'artist_id': artistId,
       if (displayArtist != null) 'display_artist': displayArtist,
+      if (liked != null) 'liked': liked,
     });
   }
 
@@ -1093,6 +1137,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Value<int?>? albumId,
     Value<int?>? artistId,
     Value<String?>? displayArtist,
+    Value<bool?>? liked,
   }) {
     return SongsCompanion(
       id: id ?? this.id,
@@ -1106,6 +1151,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       albumId: albumId ?? this.albumId,
       artistId: artistId ?? this.artistId,
       displayArtist: displayArtist ?? this.displayArtist,
+      liked: liked ?? this.liked,
     );
   }
 
@@ -1145,6 +1191,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
     if (displayArtist.present) {
       map['display_artist'] = Variable<String>(displayArtist.value);
     }
+    if (liked.present) {
+      map['liked'] = Variable<bool>(liked.value);
+    }
     return map;
   }
 
@@ -1161,7 +1210,8 @@ class SongsCompanion extends UpdateCompanion<Song> {
           ..write('releaseDate: $releaseDate, ')
           ..write('albumId: $albumId, ')
           ..write('artistId: $artistId, ')
-          ..write('displayArtist: $displayArtist')
+          ..write('displayArtist: $displayArtist, ')
+          ..write('liked: $liked')
           ..write(')'))
         .toString();
   }
@@ -2816,6 +2866,7 @@ typedef $$SongsTableCreateCompanionBuilder =
       Value<int?> albumId,
       Value<int?> artistId,
       Value<String?> displayArtist,
+      Value<bool?> liked,
     });
 typedef $$SongsTableUpdateCompanionBuilder =
     SongsCompanion Function({
@@ -2830,6 +2881,7 @@ typedef $$SongsTableUpdateCompanionBuilder =
       Value<int?> albumId,
       Value<int?> artistId,
       Value<String?> displayArtist,
+      Value<bool?> liked,
     });
 
 final class $$SongsTableReferences
@@ -2922,6 +2974,11 @@ class $$SongsTableFilterComposer extends Composer<_$SonoDatabase, $SongsTable> {
 
   ColumnFilters<String> get displayArtist => $composableBuilder(
     column: $table.displayArtist,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get liked => $composableBuilder(
+    column: $table.liked,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3026,6 +3083,11 @@ class $$SongsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get liked => $composableBuilder(
+    column: $table.liked,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AlbumsTableOrderingComposer get albumId {
     final $$AlbumsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -3117,6 +3179,9 @@ class $$SongsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get liked =>
+      $composableBuilder(column: $table.liked, builder: (column) => column);
+
   $$AlbumsTableAnnotationComposer get albumId {
     final $$AlbumsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -3203,6 +3268,7 @@ class $$SongsTableTableManager
                 Value<int?> albumId = const Value.absent(),
                 Value<int?> artistId = const Value.absent(),
                 Value<String?> displayArtist = const Value.absent(),
+                Value<bool?> liked = const Value.absent(),
               }) => SongsCompanion(
                 id: id,
                 path: path,
@@ -3215,6 +3281,7 @@ class $$SongsTableTableManager
                 albumId: albumId,
                 artistId: artistId,
                 displayArtist: displayArtist,
+                liked: liked,
               ),
           createCompanionCallback:
               ({
@@ -3229,6 +3296,7 @@ class $$SongsTableTableManager
                 Value<int?> albumId = const Value.absent(),
                 Value<int?> artistId = const Value.absent(),
                 Value<String?> displayArtist = const Value.absent(),
+                Value<bool?> liked = const Value.absent(),
               }) => SongsCompanion.insert(
                 id: id,
                 path: path,
@@ -3241,6 +3309,7 @@ class $$SongsTableTableManager
                 albumId: albumId,
                 artistId: artistId,
                 displayArtist: displayArtist,
+                liked: liked,
               ),
           withReferenceMapper: (p0) => p0
               .map(
