@@ -6,8 +6,8 @@ import 'package:sono/db/database.dart';
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/pages/player/player_top_bar.dart';
 import 'package:sono/pages/player/player_cover_carousel.dart';
+import 'package:sono/pages/player/player_title_row.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
-import 'package:sono/theme/tokens.dart';
 
 /// ==== WIP ====
 /// Fullscreen player is work in progress
@@ -22,7 +22,8 @@ class _PlayerColorsTween extends Tween<PlayerColors> {
 }
 
 class FullscreenPlayer extends StatefulWidget {
-  const FullscreenPlayer({super.key});
+  final SonoDatabase db;
+  const FullscreenPlayer({required this.db, super.key});
 
   @override
   State<FullscreenPlayer> createState() => _FullscreenPlayerState();
@@ -31,6 +32,7 @@ class FullscreenPlayer extends StatefulWidget {
 class _FullscreenPlayerState extends State<FullscreenPlayer> {
   PlayerColors _colors = PlayerColors.fallback;
   PlayerColors _prevColors = PlayerColors.fallback;
+  bool _liked = false;
 
   StreamSubscription<Song?>? _songSub;
   int? _lastSongId;
@@ -55,6 +57,15 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
     if (song.id == _lastSongId) return;
     _lastSongId = song.id;
 
+    //fetch liked state in parallel with color extraction
+    widget.db
+        .getSongLiked(song.id)
+        .then((liked) {
+          if (!mounted || song.id != _lastSongId) return;
+          setState(() => _liked = liked);
+        })
+        .catchError((_) {});
+
     try {
       final bytes = await SonoQuery.getCover(song.path);
       if (!mounted || song.id != _lastSongId) return;
@@ -75,6 +86,14 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
         _colors = PlayerColors.fallback;
       });
     }
+  }
+
+  Future<void> _toggleLiked() async {
+    final id = _lastSongId;
+    if (id == null) return;
+    final next = !_liked;
+    setState(() => _liked = next);
+    await widget.db.setSongLiked(id, next);
   }
 
   @override
@@ -100,50 +119,11 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
                     },
                   ),
 
-                  const SizedBox(height: 24),
-                  const SizedBox(height: 10),
-                  const Spacer(),
+                  const SizedBox(height: 32),
 
                   CoverCarousel(c: c),
-
-                  const SizedBox(height: 10),
-                  _Swatch(
-                    label: 'background',
-                    color: c.background,
-                    on: c.onBackground,
-                  ),
-                  const SizedBox(height: 10),
-                  _Swatch(
-                    label: 'surface',
-                    color: c.surface,
-                    on: c.onBackground,
-                  ),
-                  const SizedBox(height: 10),
-                  _Swatch(label: 'accent', color: c.accent, on: c.onAccent),
-                  const SizedBox(height: 10),
-                  _Swatch(
-                    label: 'progressBar',
-                    color: c.progressBar,
-                    on: c.onAccent,
-                  ),
-                  const SizedBox(height: 10),
-                  _Swatch(
-                    label: 'onBackground',
-                    color: c.onBackground,
-                    on: c.background,
-                  ),
-                  const SizedBox(height: 10),
-                  _Swatch(
-                    label: 'onSurface',
-                    color: c.onSurface,
-                    on: c.background,
-                  ),
-                  const SizedBox(height: 10),
-                  _Swatch(
-                    label: 'onAccent',
-                    color: c.onAccent,
-                    on: c.onBackground,
-                  ),
+                  const SizedBox(height: 32),
+                  TitleRow(c: c, liked: _liked, onToggleLike: _toggleLiked),
 
                   const Spacer(),
                 ],
@@ -152,54 +132,6 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
           ),
         );
       },
-    );
-  }
-}
-
-class _Swatch extends StatelessWidget {
-  final String label;
-  final Color color;
-  final Color on;
-
-  const _Swatch({required this.label, required this.color, required this.on});
-
-  @override
-  Widget build(BuildContext context) {
-    final hex =
-        '#'
-                '${(color.r * 255).round().toRadixString(16).padLeft(2, '0')}'
-                '${(color.g * 255).round().toRadixString(16).padLeft(2, '0')}'
-                '${(color.b * 255).round().toRadixString(16).padLeft(2, '0')}'
-            .toUpperCase();
-    return Container(
-      height: 52,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(SonoSizes.borderRadius),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: SonoFonts.primary,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: on,
-            ),
-          ),
-          Text(
-            hex,
-            style: TextStyle(
-              fontFamily: SonoFonts.primary,
-              fontSize: 12,
-              color: on.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
