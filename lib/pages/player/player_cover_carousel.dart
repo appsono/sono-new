@@ -184,7 +184,7 @@ class _CoverCarouselState extends State<CoverCarousel> {
         final pageWidth = available * _viewportFraction;
         final coverSize = pageWidth - _cardPadding * 2;
         //shift left so current sits flush-left and prev is off-screen
-        final shift = available * (1 - _viewportFraction) / 1.70;
+        final shift = available * (1 - _viewportFraction) / 1.71;
 
         return SizedBox(
           height: coverSize,
@@ -251,7 +251,6 @@ class _CarouselCoverCard extends StatelessWidget {
     final yOffset = lerpDouble(22, 0, focus)!;
 
     final dimAlpha = lerpDouble(0.3, 0.0, focus)!;
-    final globalAlpha = lerpDouble(0.7, 1.0, focus)!;
 
     final BorderRadius radius;
     if (index < currentIndex) {
@@ -287,18 +286,7 @@ class _CarouselCoverCard extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeOutCubic,
-      decoration: BoxDecoration(
-        borderRadius: radius,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(
-              alpha: lerpDouble(0.08, 0.24, focus)! * globalAlpha,
-            ),
-            blurRadius: lerpDouble(16, 34, focus)!,
-            offset: Offset(0, lerpDouble(8, 18, focus)!),
-          ),
-        ],
-      ),
+      decoration: BoxDecoration(borderRadius: radius),
       child: ClipRRect(
         borderRadius: outerRadius,
         child: Stack(
