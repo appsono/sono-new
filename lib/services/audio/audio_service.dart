@@ -33,7 +33,7 @@ class QueueOrigin {
 
   static const allSongs = QueueOrigin(
     source: QueueSource.allSongs,
-    label: 'All Song',
+    label: 'All Songs',
   );
 
   Map<String, dynamic> toJson() => {
