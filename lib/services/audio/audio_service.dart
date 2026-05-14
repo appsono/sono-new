@@ -661,6 +661,40 @@ class AudioService {
     }
   }
 
+  /// Move song at [oldIndex] to [newIndex] in current queue
+  Future<void> reorderQueue(int oldIndex, int newIndex) async {
+    if (_queue.isEmpty) return;
+    //ReorderableListView gives newIndex as slot AFTER gap removal,
+    //so for downward moves, subtract one to get actual target index
+    if (newIndex > oldIndex) newIndex--;
+    if (oldIndex == newIndex) return;
+
+    if (_shuffle && _shuffleOrder.isNotEmpty) {
+      if (oldIndex < 0 || oldIndex >= _shuffleOrder.length) return;
+      if (newIndex < 0 || newIndex >= _shuffleOrder.length) return;
+      final item = _shuffleOrder.removeAt(oldIndex);
+      _shuffleOrder.insert(newIndex, item);
+    } else {
+      if (oldIndex < 0 || oldIndex >= _queue.length) return;
+      if (newIndex < 0 || newIndex >= _queue.length) return;
+      final item = _queue.removeAt(oldIndex);
+      _queue.insert(newIndex, item);
+    }
+
+    if (oldIndex == _currentIndex) {
+      _currentIndex = newIndex;
+    } else if (oldIndex < _currentIndex && newIndex >= _currentIndex) {
+      _currentIndex--;
+    } else if (oldIndex > _currentIndex && newIndex <= _currentIndex) {
+      _currentIndex++;
+    }
+
+    _invalidateQueueCache();
+    _scheduleStateSave();
+    _queueController.add(effectiveQueue);
+    await _rebuildLookahead();
+  }
+
   /// ===========================
   ///         internals
   /// ===========================
