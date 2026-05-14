@@ -7,6 +7,70 @@ import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono_query/sono_query.dart';
 import 'package:sono/theme/tokens.dart';
 
+/// ==== global cover cache ====
+/// in-memory LRU shared by every SonoCoverArt instance. Repeated lookups for
+/// same path are free and concurrent lookups for the same path share
+/// a single SonoQuery.getCover call
+///
+/// Capacity is intentionally low since cover bytes can be large
+/// depening on file type
+class _CoverCache {
+  static const int _capacity = 64;
+  static final Map<String, Uint8List?> _cache = {};
+  static final List<String> _order = [];
+  static final Map<String, Future<Uint8List?>> _inFlight = {};
+
+  static Future<Uint8List?> get(String path) async {
+    if (path.isEmpty) return null;
+
+    if (_cache.containsKey(path)) {
+      _touch(path);
+      return _cache[path];
+    }
+
+    final inFlight = _inFlight[path];
+    if (inFlight != null) return inFlight;
+
+    final future = _run(path);
+    _inFlight[path] = future;
+    try {
+      return await future;
+    } finally {
+      _inFlight.remove(path);
+    }
+  }
+
+  static Future<Uint8List?> _run(String path) async {
+    try {
+      final bytes = await SonoQuery.getCover(path);
+      _put(path, bytes);
+      return bytes;
+    } catch (_) {
+      _put(path, null);
+      return null;
+    }
+  }
+
+  static void _touch(String path) {
+    _order.remove(path);
+    _order.add(path);
+  }
+
+  static void _put(String path, Uint8List? bytes) {
+    if (_cache.containsKey(path)) {
+      _cache[path] = bytes;
+      _touch(path);
+      return;
+    }
+    _cache[path] = bytes;
+    _order.add(path);
+    while (_order.length > _capacity) {
+      final oldest = _order.removeAt(0);
+      _cache.remove(oldest);
+    }
+  }
+}
+
 enum CoverShape { rounded, circle }
 
 class SonoCoverArt extends StatefulWidget {
@@ -99,7 +163,7 @@ class _SonoCoverArtState extends State<SonoCoverArt>
   }
 
   Future<void> _loadCover() async {
-    final cover = await SonoQuery.getCover(widget.path);
+    final cover = await _CoverCache.get(widget.path);
     if (mounted) {
       setState(() {
         _cover = cover;
