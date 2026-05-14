@@ -72,6 +72,11 @@ abstract final class IconsSheet {
   static const String moreOptionsFilled =
       'assets/app/icons/filled/more_options_filled.svg';
 
+  static const String dragHandlerOutlined =
+      'assets/app/icons/outlined/drag_handler_outlined.svg';
+  static const String dragHandlerFilled =
+      'assets/app/icons/filled/drag_handler_filled.svg';
+
   static const String pauseOutlined =
       'assets/app/icons/outlined/pause_outlined.svg';
   static const String pauseFilled = 'assets/app/icons/filled/pause_filled.svg';
