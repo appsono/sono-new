@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,6 +21,9 @@ late AudioHandler audioHandler;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //smoother scroll on Android devides where touch input rate doesnt match
+  //display refresh rate
+  GestureBinding.instance.resamplingEnabled = true;
   MediaKit.ensureInitialized();
 
   final db = SonoDatabase();
