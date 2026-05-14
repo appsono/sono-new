@@ -14,7 +14,7 @@ import 'package:sono/theme/tokens.dart';
 ///
 /// Capacity is intentionally low since cover bytes can be large
 /// depening on file type
-class _CoverCache {
+class CoverCache {
   static const int _capacity = 64;
   static final Map<String, Uint8List?> _cache = {};
   static final List<String> _order = [];
@@ -38,6 +38,20 @@ class _CoverCache {
     } finally {
       _inFlight.remove(path);
     }
+  }
+
+  /// Sync cache check. Returns true if [path] is known (cover bytes or known-null).
+  /// Use [peek] to fecth value
+  static bool contains(String path) =>
+      path.isNotEmpty && _cache.containsKey(path);
+
+  /// Sync read. Returns cached bytes (or null if cached value was null / no present).
+  /// Pair with [contains] to disambiguate
+  static Uint8List? peek(String path) {
+    if (path.isEmpty) return null;
+    if (!_cache.containsKey(path)) return null;
+    _touch(path);
+    return _cache[path];
   }
 
   static Future<Uint8List?> _run(String path) async {
@@ -124,7 +138,14 @@ class _SonoCoverArtState extends State<SonoCoverArt>
       _cover = widget.coverBytes;
       _loaded = true;
     } else if (widget.allowAsyncLoad) {
-      _loadCover();
+      //sync cache hit: skip microtask gap so placeholder never
+      //flashes between an old cover and known new one
+      if (CoverCache.contains(widget.path)) {
+        _cover = CoverCache.peek(widget.path);
+        _loaded = true;
+      } else {
+        _loadCover();
+      }
     } else {
       _loaded = true;
     }
@@ -163,7 +184,7 @@ class _SonoCoverArtState extends State<SonoCoverArt>
   }
 
   Future<void> _loadCover() async {
-    final cover = await _CoverCache.get(widget.path);
+    final cover = await CoverCache.get(widget.path);
     if (mounted) {
       setState(() {
         _cover = cover;
