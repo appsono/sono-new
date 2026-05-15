@@ -29,10 +29,16 @@ class _IconsTestPageState extends State<IconsTestPage> {
       IconsSheet.crossfadeOutlined,
       IconsSheet.crossfadeFilled,
     ),
+    _IconPair('delete', IconsSheet.deleteOutlined, IconsSheet.deleteFilled),
     _IconPair(
       'download',
       IconsSheet.downloadOutlined,
       IconsSheet.downloadFilled,
+    ),
+    _IconPair(
+      'dragHandler',
+      IconsSheet.dragHandlerOutlined,
+      IconsSheet.dragHandlerFilled,
     ),
     _IconPair(
       'equalizer',
