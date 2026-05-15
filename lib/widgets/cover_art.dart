@@ -121,7 +121,7 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     with TickerProviderStateMixin {
   Uint8List? _cover;
   bool _loaded = false;
-  late final AnimationController _spinController;
+  AnimationController? _spinController;
   StreamSubscription<Duration>? _positionSub;
   static const _turnPeriod = Duration(seconds: 20);
 
@@ -129,7 +129,9 @@ class _SonoCoverArtState extends State<SonoCoverArt>
   void initState() {
     super.initState();
     _applyExternalOrLoad();
-    _spinController = AnimationController(vsync: this, duration: _turnPeriod);
+    if (widget.spinning) {
+      _spinController = AnimationController(vsync: this, duration: _turnPeriod);
+    }
     if (widget.spinning) _startSpin();
   }
 
@@ -174,11 +176,15 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     }
     if (oldWidget.spinning != widget.spinning) {
       if (widget.spinning) {
+        _spinController ??= AnimationController(
+          vsync: this,
+          duration: _turnPeriod,
+        );
         _startSpin();
       } else {
         _positionSub?.cancel();
         _positionSub = null;
-        _spinController.stop();
+        _spinController?.stop();
       }
     }
   }
@@ -194,20 +200,23 @@ class _SonoCoverArtState extends State<SonoCoverArt>
   }
 
   void _startSpin() {
+    final ctrl = _spinController;
+    if (ctrl == null) return;
     _syncToPosition(AudioService.instance.position);
-    _spinController.repeat();
+    ctrl.repeat();
     _positionSub?.cancel();
     _positionSub = AudioService.instance.positionStream.listen(_syncToPosition);
   }
 
   void _syncToPosition(Duration pos) {
-    if (!_spinController.isAnimating) return;
+    final ctrl = _spinController;
+    if (ctrl == null || !ctrl.isAnimating) return;
     final target =
         (pos.inMilliseconds % _turnPeriod.inMilliseconds) /
         _turnPeriod.inMilliseconds;
-    if ((target - _spinController.value).abs() > 0.05) {
-      _spinController.value = target;
-      _spinController.repeat();
+    if ((target - ctrl.value).abs() > 0.05) {
+      ctrl.value = target;
+      ctrl.repeat();
     }
   }
 
@@ -216,17 +225,25 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     Widget child = _buildContent(context);
 
     //spin anim
-    child = AnimatedBuilder(
-      animation: _spinController,
-      child: child,
-      builder: (_, c) =>
-          Transform.rotate(angle: _spinController.value * 2 * pi, child: c),
-    );
+    if (widget.spinning) {
+      final ctrl = _spinController;
+      if (_spinController != null) {
+        child = AnimatedBuilder(
+          animation: ctrl!,
+          child: child,
+          builder: (_, c) =>
+              Transform.rotate(angle: ctrl.value * 2 * pi, child: c),
+        );
+      }
+    }
 
     return SizedBox.square(dimension: widget.size, child: child);
   }
 
   Widget _buildContent(BuildContext context) {
+    final dpr = MediaQuery.devicePixelRatioOf(context);
+    final px = (widget.size * dpr).toInt();
+
     final border = widget.bordered
         ? Border.all(color: SonoColors.light.borderLight10, width: 1)
         : null;
@@ -241,7 +258,11 @@ class _SonoCoverArtState extends State<SonoCoverArt>
           border: border,
           image: (_loaded && _cover != null)
               ? DecorationImage(
-                  image: MemoryImage(_cover!),
+                  image: ResizeImage(
+                    MemoryImage(_cover!),
+                    width: px,
+                    height: px,
+                  ),
                   fit: BoxFit.contain,
                 )
               : null,
@@ -269,6 +290,8 @@ class _SonoCoverArtState extends State<SonoCoverArt>
         _cover!,
         width: widget.size,
         height: widget.size,
+        cacheWidth: px, //< decode to this  size
+        cacheHeight: px, //< decode to this size
         fit: BoxFit.cover,
         errorBuilder: (_, _, _) =>
             _Placeholder(size: widget.size, icon: widget.fallbackIcon),
@@ -288,7 +311,7 @@ class _SonoCoverArtState extends State<SonoCoverArt>
   @override
   void dispose() {
     _positionSub?.cancel();
-    _spinController.dispose();
+    _spinController?.dispose();
     super.dispose();
   }
 }
