@@ -39,10 +39,20 @@ abstract final class IconsSheet {
   static const String crossfadeFilled =
       'assets/app/icons/filled/crossfade_filled.svg';
 
+  static const String deleteOutlined =
+      'assets/app/icons/outlined/delete_outlined.svg';
+  static const String deleteFilled =
+      'assets/app/icons/filled/delete_filled.svg';
+
   static const String downloadOutlined =
       'assets/app/icons/outlined/download_outlined.svg';
   static const String downloadFilled =
       'assets/app/icons/filled/download_filled.svg';
+
+  static const String dragHandlerOutlined =
+      'assets/app/icons/outlined/drag_handler_outlined.svg';
+  static const String dragHandlerFilled =
+      'assets/app/icons/filled/drag_handler_filled.svg';
 
   static const String equalizerOutlined =
       'assets/app/icons/outlined/equalizer_outlined.svg';
@@ -71,11 +81,6 @@ abstract final class IconsSheet {
       'assets/app/icons/outlined/more_options_outlined.svg';
   static const String moreOptionsFilled =
       'assets/app/icons/filled/more_options_filled.svg';
-
-  static const String dragHandlerOutlined =
-      'assets/app/icons/outlined/drag_handler_outlined.svg';
-  static const String dragHandlerFilled =
-      'assets/app/icons/filled/drag_handler_filled.svg';
 
   static const String pauseOutlined =
       'assets/app/icons/outlined/pause_outlined.svg';

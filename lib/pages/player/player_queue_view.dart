@@ -505,11 +505,11 @@ class _QueueRow extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 24),
         color: c.accent.withValues(alpha: 0.15),
-        child: Icon(
-          Icons.delete_outline_rounded,
+        child: IconsSheet.svg(
+          IconsSheet.deleteOutlined,
           size: 22,
           color: c.accent,
-        ), //TODO: add delete icon
+        ),
       ),
       child: reorderable,
     );
