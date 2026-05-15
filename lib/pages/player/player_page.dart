@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/db/database.dart';
+import 'package:sono/services/audio/audio_service.dart' as player;
+//widgets
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/pages/player/player_top_bar.dart';
 import 'package:sono/pages/player/player_cover_carousel.dart';
@@ -10,11 +12,13 @@ import 'package:sono/pages/player/player_title_row.dart';
 import 'package:sono/pages/player/player_progress_bar.dart';
 import 'package:sono/pages/player/player_controls.dart';
 import 'package:sono/pages/player/player_secondary_controls.dart';
-import 'package:sono/services/audio/audio_service.dart' as player;
+//views
+import 'package:sono/pages/player/player_queue_view.dart';
 
 /// ==== WIP ====
 /// Fullscreen player is work in progress
-/// Currently displays the palette extracted from the current song cover
+
+enum _SubView { none, queue }
 
 class _PlayerColorsTween extends Tween<PlayerColors> {
   _PlayerColorsTween({required PlayerColors begin, required PlayerColors end})
@@ -32,13 +36,19 @@ class FullscreenPlayer extends StatefulWidget {
   State<FullscreenPlayer> createState() => _FullscreenPlayerState();
 }
 
-class _FullscreenPlayerState extends State<FullscreenPlayer> {
+class _FullscreenPlayerState extends State<FullscreenPlayer>
+    with SingleTickerProviderStateMixin {
   PlayerColors _colors = PlayerColors.fallback;
   PlayerColors _prevColors = PlayerColors.fallback;
   bool _liked = false;
 
   StreamSubscription<Song?>? _songSub;
   int? _lastSongId;
+
+  late final AnimationController _subViewCtrl;
+  late final Animation<Offset> _queueSlide;
+  _SubView _subView = _SubView.none;
+  bool _queueMounted = false;
 
   @override
   void initState() {
@@ -48,11 +58,30 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
     _songSub = player.AudioService.instance.currentSongStream.listen((s) {
       if (s != null) _handleSong(s);
     });
+    _subViewCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 380),
+      reverseDuration: const Duration(milliseconds: 300),
+    );
+    _queueSlide = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _subViewCtrl,
+            curve: Curves.easeOutCubic,
+            reverseCurve: Curves.easeInCubic,
+          ),
+        );
+    //pre-mount queue in background after fullscreen player has settles,
+    //so slide-in feels instant
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) setState(() => _queueMounted = true);
+    });
   }
 
   @override
   void dispose() {
     _songSub?.cancel();
+    _subViewCtrl.dispose();
     super.dispose();
   }
 
@@ -99,6 +128,20 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
     await widget.db.setSongLiked(id, next);
   }
 
+  void _openQueue() {
+    setState(() {
+      _queueMounted = true;
+      _subView = _SubView.queue;
+    });
+    _subViewCtrl.forward(from: 0);
+  }
+
+  Future<void> _closeSubView() async {
+    await _subViewCtrl.reverse();
+    if (!mounted) return;
+    setState(() => _subView = _SubView.none);
+  }
+
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<PlayerColors>(
@@ -106,33 +149,59 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeOutCubic,
       builder: (contex, c, _) {
-        return Scaffold(
-          backgroundColor: c.background,
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+        return PopScope(
+          canPop: _subView == _SubView.none,
+          onPopInvokedWithResult: (didPop, _) {
+            if (didPop) return;
+            if (_subView != _SubView.none) _closeSubView();
+          },
+          child: Scaffold(
+            backgroundColor: c.background,
+            body: SafeArea(
+              child: Stack(
                 children: [
-                  TopBar(
-                    c: c,
-                    onCollapse: () => Navigator.maybePop(context),
-                    onMore: () {
-                      //later: open options bottom sheet
-                    },
-                  ),
-                  const SizedBox(height: 42),
-                  CoverCarousel(c: c),
-                  const SizedBox(height: 42),
-                  TitleRow(c: c, liked: _liked, onToggleLike: _toggleLiked),
-                  const SizedBox(height: 34),
-                  ProgressBar(c: c),
-                  const SizedBox(height: 24),
-                  MainControls(c: c),
-                  const SizedBox(height: 60),
-                  SecondaryControls(c: c),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TopBar(
+                          c: c,
+                          onCollapse: () => Navigator.maybePop(context),
+                          onMore: () {
+                            //later: open options bottom sheet
+                          },
+                        ),
+                        const SizedBox(height: 42),
+                        CoverCarousel(c: c),
+                        const SizedBox(height: 42),
+                        TitleRow(
+                          c: c,
+                          liked: _liked,
+                          onToggleLike: _toggleLiked,
+                        ),
+                        const SizedBox(height: 34),
+                        ProgressBar(c: c),
+                        const SizedBox(height: 24),
+                        MainControls(c: c),
+                        const SizedBox(height: 60),
+                        SecondaryControls(c: c, onOpenQueue: _openQueue),
 
-                  const Spacer(),
+                        const Spacer(),
+                      ],
+                    ),
+                  ),
+                  if (_queueMounted)
+                    Positioned.fill(
+                      child: SlideTransition(
+                        position: _queueSlide,
+                        child: PlayerQueueView(
+                          c: c,
+                          slideAnimation: _subViewCtrl,
+                          onClose: _closeSubView,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
