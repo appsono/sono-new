@@ -109,7 +109,7 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
 
     final titleBox = _titleKey.currentContext?.findRenderObject() as RenderBox?;
     if (titleBox != null && titleBox.hasSize) {
-      final w = titleBox.size.width;
+      final w = titleBox.getMaxIntrinsicWidth(double.infinity);
       if ((w - _titleWidth).abs() > 0.1) {
         _titleWidth = w;
         changed = true;
@@ -119,19 +119,42 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
     final subtitleBox =
         _subtitleKey.currentContext?.findRenderObject() as RenderBox?;
     if (subtitleBox != null && subtitleBox.hasSize) {
-      final w = subtitleBox.size.width;
+      final w = subtitleBox.getMaxIntrinsicWidth(double.infinity);
       if ((w - _subtitleWidth).abs() > 0.1) {
         _subtitleWidth = w;
         changed = true;
       }
     }
 
-    if (!changed || !_needsScroll) return;
-
     final longest = _titleWidth > _subtitleWidth ? _titleWidth : _subtitleWidth;
-    _scrollDistance = longest + widget.gap + 2;
-    final scrollMs = (_scrollDistance / widget.pixelsPerSecond * 1000).round();
-    _anim?.duration = Duration(milliseconds: scrollMs);
+    final nowNeedsScroll = longest > _containerWidth;
+
+    //if real render size changes scroll requirement, flip it
+    if (nowNeedsScroll != _needsScroll) {
+      _needsScroll = nowNeedsScroll;
+      changed = true;
+
+      if (_needsScroll) {
+        _scrollDistance = longest + widget.gap + 2;
+        final scrollMs = (_scrollDistance / widget.pixelsPerSecond * 1000)
+            .round();
+
+        _anim?.dispose();
+        _anim = AnimationController(
+          vsync: this,
+          duration: Duration(milliseconds: scrollMs),
+        );
+        _runLoop(_anim!);
+      } else {
+        _anim?.dispose();
+        _anim = null;
+      }
+    } else if (_needsScroll && changed) {
+      _scrollDistance = longest + widget.gap + 2;
+      final scrollMs = (_scrollDistance / widget.pixelsPerSecond * 1000)
+          .round();
+      _anim?.duration = Duration(milliseconds: scrollMs);
+    }
   }
 
   Future<void> _runLoop(AnimationController controller) async {
@@ -194,14 +217,15 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
   }) {
     final overflows = textWidth > _containerWidth;
 
-    if (!overflows || _anim == null) {
+    if (!overflows) {
       return SizedBox(
         height: height,
         child: Text(
           text,
+          key: scrollKey,
           style: style,
           maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          softWrap: false,
         ),
       );
     }
