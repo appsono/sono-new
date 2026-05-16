@@ -13,8 +13,14 @@ import 'package:sono/widgets/marquee_text.dart';
 class HeaderCard extends StatefulWidget {
   final PlayerColors c;
   final Song? song;
+  final BorderRadius? borderRadius;
 
-  const HeaderCard({required this.c, required this.song, super.key});
+  const HeaderCard({
+    required this.c,
+    required this.song,
+    this.borderRadius,
+    super.key,
+  });
 
   @override
   State<HeaderCard> createState() => _HeaderCardState();
@@ -34,7 +40,7 @@ class _HeaderCardState extends State<HeaderCard> {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: c.surface,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: widget.borderRadius ?? BorderRadius.circular(24),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
