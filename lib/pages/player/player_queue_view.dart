@@ -178,6 +178,9 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
 
   // ==== list actions ====
   void _onReorder(int oldIndex, int newIndex) {
+    //dont let currently playing song get moved, and dont let anything
+    //get dropped on top if it (would also shift its index)
+    if (oldIndex == _currentIndex) return;
     player.AudioService.instance.reorderQueue(oldIndex, newIndex);
   }
 
@@ -396,6 +399,7 @@ class _QueueRow extends StatelessWidget {
 
     final row = Container(
       height: rowHeight,
+      margin: isCurrent ? const EdgeInsets.only(left: 22) : null,
       decoration: isCurrent
           ? BoxDecoration(
               color: c.surface.withValues(alpha: 0.55),
@@ -406,20 +410,23 @@ class _QueueRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //drag handle
-          ReorderableDragStartListener(
-            index: index,
-            child: SizedBox(
-              width: 32,
-              height: rowHeight,
-              child: Center(
-                child: IconsSheet.svg(
-                  IconsSheet.dragHandlerFilled,
-                  size: 18,
-                  color: c.onBackground.withValues(alpha: 0.5),
+          isCurrent
+              ? const SizedBox(width: 10)
+              : ReorderableDragStartListener(
+                  index: index,
+                  child: SizedBox(
+                    width: 32,
+                    height: rowHeight,
+                    child: Center(
+                      child: IconsSheet.svg(
+                        IconsSheet.dragHandlerFilled,
+                        size: 18,
+                        color: c.onBackground.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
+
           //cover
           SonoCoverArt(
             key: ValueKey(song.path),
@@ -484,14 +491,20 @@ class _QueueRow extends StatelessWidget {
 
     //wrap in long press reorder + swipe to remove
     //immediate drag handle wins inside its hit area (gesture arena)
-    final reorderable = ReorderableDelayedDragStartListener(
-      index: index,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: row,
-      ),
-    );
+    final reorderable = isCurrent
+        ? GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onTap,
+            child: row,
+          )
+        : ReorderableDelayedDragStartListener(
+            index: index,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: onTap,
+              child: row,
+            ),
+          );
 
     return Dismissible(
       key: ValueKey('dismiss-${song.id}'),
