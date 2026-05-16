@@ -165,14 +165,12 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
   bool _onScrollNotification(ScrollNotification n) {
     //track downward overscroll at top, fire close when threshold passed
     if (n is OverscrollNotification && n.overscroll < 0) {
-      _overscrollAccum += n.overscroll;
+      _overscrollAccum += -n.overscroll;
       if (_overscrollAccum > 90) {
         _overscrollAccum = 0;
         widget.onClose();
       }
-    } else if (n is ScrollEndNotification) {
-      _overscrollAccum = 0;
-    } else if (n is ScrollStartNotification) {
+    } else if (n is ScrollEndNotification || n is ScrollStartNotification) {
       _overscrollAccum = 0;
     }
     return false;
@@ -227,7 +225,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
                 itemCount: _queue.length,
                 itemExtent: _rowHeight,
                 buildDefaultDragHandles: false,
-                physics: const BouncingScrollPhysics(
+                physics: const ClampingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
                 padding: const EdgeInsets.only(bottom: 120),
