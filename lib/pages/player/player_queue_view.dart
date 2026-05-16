@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:sono/db/database.dart';
@@ -54,6 +55,10 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
   double _overscrollAccum = 0;
   //tracks wether background cover-prefetch is running
   bool _prefetching = false;
+  //true once slide-in has completed, false once dismissed
+  bool _queueOpen = false;
+  //jump-to-current button visible when current is off-screen
+  bool _showJumpButton = false;
 
   static const double _rowHeight = 68;
 
@@ -71,10 +76,18 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
 
     _songSub = audio.currentSongStream.listen((s) {
       if (!mounted) return;
+      final prevIndex = _currentIndex;
+      final wasFollowing = _isInViewport(prevIndex);
       setState(() {
         _song = s;
         _currentIndex = player.AudioService.instance.currentQueueIndex;
       });
+      if (!_queueOpen) return;
+      if (_currentIndex != prevIndex && wasFollowing) {
+        _scrollToCurrent(animated: true).then((_) => _refreshJumpButton());
+      } else {
+        _refreshJumpButton();
+      }
     });
     _queueSub = audio.queueStream.listen((q) {
       if (!mounted) return;
@@ -101,6 +114,16 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
   }
 
   void _onSlideStatus(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      _queueOpen = true;
+      _refreshJumpButton();
+    } else if (status == AnimationStatus.dismissed) {
+      _queueOpen = false;
+      if (_showJumpButton) {
+        setState(() => _showJumpButton = false);
+      }
+    }
+
     if (status != AnimationStatus.forward) return;
     if (!_scrollController.hasClients || _currentIndex < 0) return;
     final target = (_currentIndex * _rowHeight).clamp(
@@ -110,7 +133,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     _scrollController.jumpTo(target);
   }
 
-  /// Sequentially warms CoverCache fro songs near currentIndex so theyre
+  /// Sequentially warms CoverCache for songs near currentIndex so theyre
   /// in memory by time the user scrolls to them. Sequential (not parralel) so
   /// platform thread stays responsive
   Future<void> _prefetchCover() async {
@@ -173,7 +196,47 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     } else if (n is ScrollEndNotification || n is ScrollStartNotification) {
       _overscrollAccum = 0;
     }
+    if (n is ScrollUpdateNotification) _refreshJumpButton();
     return false;
+  }
+
+  // ==== auto-scroll stuff ====
+  bool _isInViewport(int index) {
+    if (!_scrollController.hasClients || index < 0) return false;
+    final pos = _scrollController.position;
+    final rowTop = index * _rowHeight;
+    return rowTop + _rowHeight > pos.pixels &&
+        rowTop < pos.pixels + pos.viewportDimension;
+  }
+
+  bool _currentBelowViewport() {
+    if (!_scrollController.hasClients || _currentIndex < 0) return true;
+    final pos = _scrollController.position;
+    return _currentIndex * _rowHeight >= pos.pixels + pos.viewportDimension;
+  }
+
+  Future<void> _scrollToCurrent({bool animated = true}) async {
+    if (!_scrollController.hasClients || _currentIndex < 0) return;
+    final target = (_currentIndex * _rowHeight).clamp(
+      0.0,
+      _scrollController.position.maxScrollExtent,
+    );
+    if (animated) {
+      await _scrollController.animateTo(
+        target,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
+      );
+    } else {
+      _scrollController.jumpTo(target);
+    }
+  }
+
+  void _refreshJumpButton() {
+    final shouldShow = _queueOpen && !_isInViewport(_currentIndex);
+    if (shouldShow != _showJumpButton) {
+      setState(() => _showJumpButton = shouldShow);
+    }
   }
 
   // ==== list actions ====
@@ -199,58 +262,124 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     return Container(
       color: c.background,
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Stack(
         children: [
-          //pinned header (swipe down zone)
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onVerticalDragStart: _onDragStart,
-            onVerticalDragUpdate: _onDragUpdate,
-            onVerticalDragEnd: _onDragEnd,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _HeaderCard(c: c, song: _song),
-                const SizedBox(height: 20),
-                _LabelRow(c: c),
-                const SizedBox(height: 12),
-              ],
-            ),
-          ),
-
-          //reorderable song list
-          Expanded(
-            child: NotificationListener<ScrollNotification>(
-              onNotification: _onScrollNotification,
-              child: ReorderableListView.builder(
-                scrollController: _scrollController,
-                itemCount: _queue.length,
-                itemExtent: _rowHeight,
-                buildDefaultDragHandles: false,
-                physics: const ClampingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //pinned header (swipe down zone)
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onVerticalDragStart: _onDragStart,
+                onVerticalDragUpdate: _onDragUpdate,
+                onVerticalDragEnd: _onDragEnd,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _HeaderCard(c: c, song: _song),
+                    const SizedBox(height: 20),
+                    _LabelRow(c: c),
+                    const SizedBox(height: 12),
+                  ],
                 ),
-                padding: const EdgeInsets.only(bottom: 120),
-                proxyDecorator: (child, index, anim) =>
-                    Material(color: Colors.transparent, child: child),
-                onReorder: _onReorder,
-                itemBuilder: (ctx, i) {
-                  final song = _queue[i];
-                  final isCurrent = i == _currentIndex;
-                  return RepaintBoundary(
-                    key: ValueKey('queue-${song.id}'),
-                    child: _QueueRow(
-                      c: c,
-                      index: i,
-                      song: song,
-                      isCurrent: isCurrent,
-                      rowHeight: _rowHeight,
-                      onTap: () => _onTapRow(i),
-                      onRemove: () => _onRemove(i),
+              ),
+
+              //reorderable song list
+              Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: _onScrollNotification,
+                  child: ReorderableListView.builder(
+                    scrollController: _scrollController,
+                    itemCount: _queue.length,
+                    itemExtent: _rowHeight,
+                    buildDefaultDragHandles: false,
+                    physics: const ClampingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
                     ),
-                  );
-                },
+                    padding: const EdgeInsets.only(bottom: 120),
+                    proxyDecorator: (child, index, anim) =>
+                        Material(color: Colors.transparent, child: child),
+                    onReorder: _onReorder,
+                    itemBuilder: (ctx, i) {
+                      final song = _queue[i];
+                      final isCurrent = i == _currentIndex;
+                      return RepaintBoundary(
+                        key: ValueKey('queue-${song.id}'),
+                        child: _QueueRow(
+                          c: c,
+                          index: i,
+                          song: song,
+                          isCurrent: isCurrent,
+                          rowHeight: _rowHeight,
+                          onTap: () => _onTapRow(i),
+                          onRemove: () => _onRemove(i),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 100,
+            child: IgnorePointer(
+              ignoring: !_showJumpButton,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: _showJumpButton ? 1.0 : 0.0,
+                child: AnimatedSlide(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOutCubic,
+                  offset: _showJumpButton ? Offset.zero : const Offset(0, 0.5),
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () => _scrollToCurrent(animated: true),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: c.accent,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Transform.rotate(
+                              angle: _currentBelowViewport() ? -pi / 2 : pi / 2,
+                              child: IconsSheet.svg(
+                                IconsSheet.backOutlined,
+                                size: 16,
+                                color: c.onAccent,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Now Playing',
+                              style: TextStyle(
+                                fontFamily: SonoFonts.primary,
+                                color: c.onAccent,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
