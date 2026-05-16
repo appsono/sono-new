@@ -77,13 +77,13 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     _songSub = audio.currentSongStream.listen((s) {
       if (!mounted) return;
       final prevIndex = _currentIndex;
-      final wasFollowing = _isInViewport(prevIndex);
       setState(() {
         _song = s;
         _currentIndex = player.AudioService.instance.currentQueueIndex;
       });
       if (!_queueOpen) return;
-      if (_currentIndex != prevIndex && wasFollowing) {
+      if (_currentIndex == prevIndex) return;
+      if (_isInViewport(_currentIndex)) {
         _scrollToCurrent(animated: true).then((_) => _refreshJumpButton());
       } else {
         _refreshJumpButton();
@@ -371,7 +371,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
                                 fontFamily: SonoFonts.primary,
                                 color: c.onAccent,
                                 fontSize: 13,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
