@@ -14,11 +14,12 @@ import 'package:sono/pages/player/player_controls.dart';
 import 'package:sono/pages/player/player_secondary_controls.dart';
 //views
 import 'package:sono/pages/player/player_queue_view.dart';
+import 'package:sono/pages/player/player_lyrics_view.dart';
 
 /// ==== WIP ====
 /// Fullscreen player is work in progress
 
-enum _SubView { none, queue }
+enum _SubView { none, queue, lyrics }
 
 class _PlayerColorsTween extends Tween<PlayerColors> {
   _PlayerColorsTween({required PlayerColors begin, required PlayerColors end})
@@ -37,7 +38,7 @@ class FullscreenPlayer extends StatefulWidget {
 }
 
 class _FullscreenPlayerState extends State<FullscreenPlayer>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   PlayerColors _colors = PlayerColors.fallback;
   PlayerColors _prevColors = PlayerColors.fallback;
   bool _liked = false;
@@ -45,10 +46,13 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
   StreamSubscription<Song?>? _songSub;
   int? _lastSongId;
 
-  late final AnimationController _subViewCtrl;
+  late final AnimationController _queueCtrl;
   late final Animation<Offset> _queueSlide;
+  late final AnimationController _lyricsCtrl;
+  late final Animation<Offset> _lyricsSlide;
   _SubView _subView = _SubView.none;
   bool _queueMounted = false;
+  bool _lyricsMounted = false;
 
   @override
   void initState() {
@@ -58,7 +62,8 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     _songSub = player.AudioService.instance.currentSongStream.listen((s) {
       if (s != null) _handleSong(s);
     });
-    _subViewCtrl = AnimationController(
+
+    _queueCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 380),
       reverseDuration: const Duration(milliseconds: 300),
@@ -66,22 +71,42 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     _queueSlide = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
         .animate(
           CurvedAnimation(
-            parent: _subViewCtrl,
+            parent: _queueCtrl,
             curve: Curves.easeOutCubic,
             reverseCurve: Curves.easeInCubic,
           ),
         );
-    //pre-mount queue in background after fullscreen player has settles,
+
+    _lyricsCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 380),
+      reverseDuration: const Duration(milliseconds: 300),
+    );
+    _lyricsSlide = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _lyricsCtrl,
+            curve: Curves.easeOutCubic,
+            reverseCurve: Curves.easeInCubic,
+          ),
+        );
+
+    //pre-mount sub-views in background after fullscreen player has settles,
     //so slide-in feels instant
     Future.delayed(const Duration(milliseconds: 500), () {
-      if (mounted) setState(() => _queueMounted = true);
+      if (!mounted) return;
+      setState(() {
+        _queueMounted = true;
+        _lyricsMounted = true;
+      });
     });
   }
 
   @override
   void dispose() {
     _songSub?.cancel();
-    _subViewCtrl.dispose();
+    _queueCtrl.dispose();
+    _lyricsCtrl.dispose();
     super.dispose();
   }
 
@@ -133,11 +158,25 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
       _queueMounted = true;
       _subView = _SubView.queue;
     });
-    _subViewCtrl.forward(from: 0);
+    _queueCtrl.forward(from: 0);
+  }
+
+  void _openLyrics() {
+    setState(() {
+      _lyricsMounted = true;
+      _subView = _SubView.lyrics;
+    });
+    _lyricsCtrl.forward(from: 0);
   }
 
   Future<void> _closeSubView() async {
-    await _subViewCtrl.reverse();
+    final ctrl = switch (_subView) {
+      _SubView.queue => _queueCtrl,
+      _SubView.lyrics => _lyricsCtrl,
+      _SubView.none => null,
+    };
+    if (ctrl == null) return;
+    await ctrl.reverse();
     if (!mounted) return;
     setState(() => _subView = _SubView.none);
   }
@@ -185,7 +224,11 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
                         const SizedBox(height: 24),
                         MainControls(c: c),
                         const SizedBox(height: 60),
-                        SecondaryControls(c: c, onOpenQueue: _openQueue),
+                        SecondaryControls(
+                          c: c,
+                          onOpenQueue: _openQueue,
+                          onOpenLyrics: _openLyrics,
+                        ),
 
                         const Spacer(),
                       ],
@@ -197,7 +240,18 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
                         position: _queueSlide,
                         child: PlayerQueueView(
                           c: c,
-                          slideAnimation: _subViewCtrl,
+                          slideAnimation: _queueCtrl,
+                          onClose: _closeSubView,
+                        ),
+                      ),
+                    ),
+                  if (_lyricsMounted)
+                    Positioned.fill(
+                      child: SlideTransition(
+                        position: _lyricsSlide,
+                        child: PlayerLyricsView(
+                          c: c,
+                          slideAnimation: _lyricsCtrl,
                           onClose: _closeSubView,
                         ),
                       ),
