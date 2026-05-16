@@ -7,8 +7,8 @@ import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/widgets/player_header_card.dart';
 import 'package:sono/widgets/cover_art.dart';
-import 'package:sono/widgets/marquee_text.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
 
 /// ==== Queue View ====
@@ -273,7 +273,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _HeaderCard(c: c, song: _song),
+                    HeaderCard(c: c, song: _song),
                     const SizedBox(height: 20),
                     _LabelRow(c: c),
                     const SizedBox(height: 12),
@@ -381,64 +381,6 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
             ),
           ),
           Positioned(left: 0, right: 0, bottom: 28, child: _QueueActions(c: c)),
-        ],
-      ),
-    );
-  }
-}
-
-// ==== header card ====
-//
-// a spinning disc and artist and title
-// basically a mini player without controls...lol
-class _HeaderCard extends StatelessWidget {
-  final PlayerColors c;
-  final Song? song;
-
-  const _HeaderCard({required this.c, required this.song});
-
-  @override
-  Widget build(BuildContext context) {
-    final title = song?.title ?? '';
-    final artist = song?.displayArtist ?? 'Unknown artist';
-    final muted = c.onBackground.withValues(alpha: 0.5);
-
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: c.surface,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SonoCoverArt(
-            key: ValueKey(song?.path),
-            path: song?.path ?? '',
-            size: 52,
-            shape: CoverShape.circle,
-            spinning: true,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: SonoMarqueeText(
-              title: title,
-              titleStyle: TextStyle(
-                fontFamily: SonoFonts.heading,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: c.onBackground,
-              ),
-              subtitle: artist,
-              subtitleStyle: TextStyle(
-                fontFamily: SonoFonts.primary,
-                fontSize: 13,
-                fontWeight: FontWeight.w400,
-                color: muted,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
         ],
       ),
     );
