@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:sono/pages/player/player_colors.dart';
+import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/theme/icons.dart';
 
@@ -58,50 +59,6 @@ class MainControls extends StatelessWidget {
   }
 }
 
-// ==== bouncy press wrapper ====
-//
-// Scales child to pressScale on tap down, springs back via elasticOut
-// on release. Same feel as SonoMediaCard mweh
-class _BouncyTap extends StatefulWidget {
-  final VoidCallback onTap;
-  final Widget child;
-  final double pressScale;
-
-  const _BouncyTap({
-    required this.onTap,
-    required this.child,
-    this.pressScale = 0.92, // ignore: unused_element_parameter
-  });
-
-  @override
-  State<_BouncyTap> createState() => _BouncyTapState();
-}
-
-class _BouncyTapState extends State<_BouncyTap> {
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) async {
-        await Future.delayed(const Duration(milliseconds: 100));
-        if (mounted) setState(() => _pressed = false);
-      },
-      onTapCancel: () => setState(() => _pressed = false),
-      child: AnimatedScale(
-        scale: _pressed ? widget.pressScale : 1.0,
-        duration: _pressed
-            ? const Duration(milliseconds: 100)
-            : const Duration(milliseconds: 700),
-        curve: _pressed ? Curves.easeIn : Curves.elasticOut,
-        child: widget.child,
-      ),
-    );
-  }
-}
-
 // ==== skip buttons ====
 class _SkipButton extends StatelessWidget {
   final PlayerColors c;
@@ -112,7 +69,7 @@ class _SkipButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BouncyTap(
+    return BouncyTap(
       onTap: onTap,
       child: Container(
         height: 78,
@@ -146,7 +103,7 @@ class _PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BouncyTap(
+    return BouncyTap(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 280),
