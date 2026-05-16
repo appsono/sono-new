@@ -9,6 +9,7 @@ import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/marquee_text.dart';
+import 'package:sono/widgets/bouncy_tap.dart';
 
 /// ==== Queue View ====
 ///
@@ -133,9 +134,6 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     _scrollController.jumpTo(target);
   }
 
-  /// Sequentially warms CoverCache for songs near currentIndex so theyre
-  /// in memory by time the user scrolls to them. Sequential (not parralel) so
-  /// platform thread stays responsive
   Future<void> _prefetchCover() async {
     if (_prefetching) return;
     _prefetching = true;
@@ -186,7 +184,6 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
   }
 
   bool _onScrollNotification(ScrollNotification n) {
-    //track downward overscroll at top, fire close when threshold passed
     if (n is OverscrollNotification && n.overscroll < 0) {
       _overscrollAccum += -n.overscroll;
       if (_overscrollAccum > 90) {
@@ -383,6 +380,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
               ),
             ),
           ),
+          Positioned(left: 0, right: 0, bottom: 28, child: _QueueActions(c: c)),
         ],
       ),
     );
@@ -652,6 +650,252 @@ class _QueueRow extends StatelessWidget {
         ),
       ),
       child: reorderable,
+    );
+  }
+}
+
+// ==== bottom row ====
+class _QueueActions extends StatelessWidget {
+  final PlayerColors c;
+
+  const _QueueActions({required this.c});
+
+  @override
+  Widget build(BuildContext context) {
+    final audio = player.AudioService.instance;
+    const height = 60.0;
+    const bigRadius = 28.0;
+    const smallRadius = 12.0;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          flex: 4,
+          child: _QueuePill(
+            c: c,
+            height: height,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(bigRadius),
+              bottomLeft: Radius.circular(bigRadius),
+              topRight: Radius.circular(smallRadius),
+              bottomRight: Radius.circular(smallRadius),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        //play / pause
+        Expanded(
+          flex: 3,
+          child: StreamBuilder<bool>(
+            stream: audio.playingStream,
+            initialData: audio.isPlaying,
+            builder: (_, snap) {
+              final playing = snap.data ?? false;
+              return _QueueActionButton(
+                icon: playing ? IconsSheet.pauseFilled : IconsSheet.playFilled,
+                background: c.accent,
+                foreground: c.onAccent,
+                onTap: audio.playOrPause,
+                tooltip: playing ? 'Pause' : 'Play',
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(smallRadius),
+                  bottomLeft: Radius.circular(smallRadius),
+                  topRight: Radius.circular(smallRadius),
+                  bottomRight: Radius.circular(smallRadius),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(width: 8),
+        //skip next
+        Expanded(
+          flex: 2,
+          child: _QueueActionButton(
+            icon: IconsSheet.skipNextFilled,
+            background: c.surface,
+            foreground: c.onBackground.withValues(alpha: 0.85),
+            onTap: audio.skipNext,
+            tooltip: 'Next',
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(smallRadius),
+              bottomLeft: Radius.circular(smallRadius),
+              topRight: Radius.circular(bigRadius),
+              bottomRight: Radius.circular(bigRadius),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ==== bottom pill ====
+class _QueuePill extends StatelessWidget {
+  final PlayerColors c;
+  final double height;
+  final BorderRadius borderRadius;
+
+  const _QueuePill({
+    required this.c,
+    required this.height,
+    required this.borderRadius,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final audio = player.AudioService.instance;
+    final inactive = c.onBackground.withValues(alpha: 0.6);
+
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: c.surface,
+        borderRadius: borderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          //shuffle
+          StreamBuilder<bool>(
+            stream: audio.shuffleStream,
+            initialData: audio.shuffle,
+            builder: (_, snap) {
+              final on = snap.data ?? false;
+              return _PillButton(
+                icon: on
+                    ? IconsSheet.shuffleFilled
+                    : IconsSheet.shuffleOutlined,
+                color: on ? c.accent : inactive,
+                onTap: () => audio.setShuffle(!on),
+                tooltip: on ? 'Shuffling songs' : 'Shuffle off',
+              );
+            },
+          ),
+          //repeat
+          StreamBuilder<player.RepeatMode>(
+            stream: audio.repeatMode,
+            initialData: audio.repeat,
+            builder: (_, snap) {
+              final mode = snap.data ?? player.RepeatMode.off;
+              final on = mode != player.RepeatMode.off;
+              final icon = switch (mode) {
+                player.RepeatMode.off => IconsSheet.repeatOutlined,
+                player.RepeatMode.all => IconsSheet.repeatFilled,
+                player.RepeatMode.one => IconsSheet.repeatOneFilled,
+              };
+              final tip = switch (mode) {
+                player.RepeatMode.off => 'Repeat off',
+                player.RepeatMode.all => 'Repeats all',
+                player.RepeatMode.one => 'Repeats one',
+              };
+              return _PillButton(
+                icon: icon,
+                color: on ? c.accent : inactive,
+                onTap: audio.cycleRepeat,
+                tooltip: tip,
+                size: 26,
+              );
+            },
+          ),
+          //add to playist (no-op for now)
+          _PillButton(
+            icon: IconsSheet.addToPlaylistOutlined,
+            color: inactive,
+            onTap: () {
+              //will open playlist picker later
+            },
+            tooltip: 'Add to plalist',
+            size: 26,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PillButton extends StatelessWidget {
+  final String icon;
+  final Color color;
+  final VoidCallback onTap;
+  final double size;
+  final String tooltip;
+
+  const _PillButton({
+    required this.icon,
+    required this.color,
+    required this.onTap,
+    required this.tooltip,
+    this.size = 22, // ignore: unused_element_parameter
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: BouncyTap(
+        onTap: onTap,
+        child: SizedBox(
+          child: Center(
+            child: IconsSheet.svg(icon, size: size, color: color),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ==== Action Buttons ====
+class _QueueActionButton extends StatelessWidget {
+  final String icon;
+  final Color background;
+  final Color foreground;
+  final VoidCallback onTap;
+  final String tooltip;
+  final BorderRadius borderRadius;
+
+  const _QueueActionButton({
+    required this.icon,
+    required this.background,
+    required this.foreground,
+    required this.onTap,
+    required this.tooltip,
+    required this.borderRadius,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: BouncyTap(
+        onTap: onTap,
+        child: Container(
+          width: 64,
+          height: 56,
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: borderRadius,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Center(
+            child: IconsSheet.svg(icon, size: 22, color: foreground),
+          ),
+        ),
+      ),
     );
   }
 }
