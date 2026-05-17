@@ -158,6 +158,9 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<List<Album>> getAllAlbums() => select(albums).get();
 
+  Future<Album?> getAlbumById(int id) =>
+      (select(albums)..where((a) => a.id.equals(id))).getSingleOrNull();
+
   Future<List<AlbumWithArtistViewData>> getAllAlbumsWithArtists() async {
     final query = selectOnly(albumWithArtistView)
       ..addColumns([
