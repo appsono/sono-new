@@ -178,6 +178,7 @@ class LrclibService {
       if (tags.isEmpty) continue;
 
       final text = line.substring(cursor).trim();
+      if (text.isEmpty) continue;
       for (final t in tags) {
         out.add(LyricsLine(timestamp: t, text: text));
       }

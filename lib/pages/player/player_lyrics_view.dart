@@ -328,7 +328,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     final gap = nextTime - currentTime;
 
     //short gaps between sung lines dont count
-    if (gap < const Duration(seconds: 3)) return false;
+    if (gap < const Duration(seconds: 5)) return false;
 
     final since = p - currentTime;
     final until = nextTime - p;
@@ -640,32 +640,49 @@ class _LyricsRow extends StatelessWidget {
     final muted = c.onBackground.withValues(alpha: 0.35);
     final text = line.text;
 
+    final textWidget = AnimatedDefaultTextStyle(
+      key: const ValueKey('text'),
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOutCubic,
+      style: TextStyle(
+        fontFamily: SonoFonts.heading,
+        fontSize: 22,
+        fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w500,
+        color: isCurrent ? c.onBackground : muted,
+        height: 1.25,
+      ),
+      child: Text(text, textAlign: TextAlign.left),
+    );
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 14),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: text.isEmpty && showIdle
-            ? (isCurrent && nextLine != null
-                  ? _IdleGapBar(
-                      key: const ValueKey('idle'),
-                      c: c,
-                      start: line.timestamp,
-                      end: nextLine!.timestamp,
-                    )
-                  : const SizedBox.shrink())
-            : AnimatedDefaultTextStyle(
-                key: const ValueKey('text'),
-                duration: const Duration(milliseconds: 250),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            textWidget,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
+              height: showIdle && nextLine != null ? 11 : 0,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOutCubic,
-                style: TextStyle(
-                  fontFamily: SonoFonts.heading,
-                  fontSize: 22,
-                  fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w500,
-                  color: isCurrent ? c.onBackground : muted,
-                  height: 1.25,
+                opacity: showIdle && nextLine != null ? 1.0 : 0.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: _IdleGapBar(
+                    c: c,
+                    start: line.timestamp,
+                    end: nextLine?.timestamp ?? Duration.zero,
+                  ),
                 ),
-                child: Text(text, textAlign: TextAlign.left),
               ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -757,12 +774,7 @@ class _IdleGapBar extends StatefulWidget {
   final Duration start;
   final Duration end;
 
-  const _IdleGapBar({
-    required this.c,
-    required this.start,
-    required this.end,
-    super.key,
-  });
+  const _IdleGapBar({required this.c, required this.start, required this.end});
 
   @override
   State<_IdleGapBar> createState() => _IdleGapBarState();
