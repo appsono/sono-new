@@ -87,6 +87,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       if (!mounted) return;
       setState(() => _song = s);
       _loadFor(s);
+      _preloadUpcoming(audio.queue);
     });
     _positionSub = audio.positionStream.listen((p) {
       if (!mounted) return;
@@ -326,8 +327,8 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     final nextTime = _lines[currentIndex + 1].timestamp;
     final gap = nextTime - currentTime;
 
-    //short gapes between sung lines don count
-    if (gap < const Duration(seconds: 5)) return false;
+    //short gaps between sung lines dont count
+    if (gap < const Duration(seconds: 3)) return false;
 
     final since = p - currentTime;
     final until = nextTime - p;
@@ -384,12 +385,27 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     }
   }
 
-  // ==== preloading ====
+  void _preloadUpcoming(List<Song> queue) {
+    if (_song == null) return;
+
+    final activeId = _song!.id;
+    //fire-and-forget
+    final targets = queue
+        .where((s) => s.id != activeId && s.id != _loadedSongId)
+        .take(3)
+        .toList();
+
+    for (final s in targets) {
+      _preloadSong(s);
+    }
+  }
+
   Future<void> _preloadSong(Song song) async {
     if (_preloadingIds.contains(song.id)) return;
+    if (_song?.id == song.id || _loadedSongId == song.id) return;
+
     final existing = await widget.db.getLyricsCache(song.id);
-    if (existing != null) return; //already cached
-    if (_loadedSongId == song.id) return; //current
+    if (existing != null) return;
 
     _preloadingIds.add(song.id);
     try {
@@ -398,14 +414,18 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
         final album = await widget.db.getAlbumById(song.albumId!);
         albumName = album?.title;
       }
+
+      if (_song?.id == song.id || _loadedSongId == song.id) {
+        _preloadingIds.remove(song.id);
+        return;
+      }
+
       final results = await _searchLyrics(song, albumName);
       await widget.db.cacheLyrics(song.id, _songsToJson(results));
-    } catch (_) {}
-  }
-
-  void _preloadUpcoming(List<Song> queue) {
-    //fire-and-forget
-    queue.where((s) => s.id != _song?.id).take(3).forEach(_preloadSong);
+    } catch (_) {
+    } finally {
+      _preloadingIds.remove(song.id);
+    }
   }
 
   @override
