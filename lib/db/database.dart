@@ -9,7 +9,7 @@ import 'package:sono/db/tables.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [Artists, Albums, Songs, Settings, Profiles],
+  tables: [Artists, Albums, Songs, LyricsCache, Settings, Profiles],
   views: [SongWithArtistView, AlbumWithArtistView],
 )
 class SonoDatabase extends _$SonoDatabase {
@@ -50,8 +50,11 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 8) {
         await m.addColumn(songs, songs.liked);
       }
+      if (from < 9) {
+        await m.createTable(lyricsCache);
+      }
       //future migrations go here:
-      // if (from < 9) { .. }
+      // if (from < 10) { .. }
     },
   );
 
@@ -266,6 +269,32 @@ class SonoDatabase extends _$SonoDatabase {
   }
 
   Future<void> clearAllSongs() => delete(songs).go();
+
+  /// ==== Lyrics Cache ====
+  Future<void> cacheLyrics(
+    int songId,
+    String versionsJson, {
+    int selectedIndex = 0,
+  }) async {
+    await into(lyricsCache).insertOnConflictUpdate(
+      LyricsCacheCompanion(
+        songId: Value(songId),
+        versionsJson: Value(versionsJson),
+        selectedIndex: Value(selectedIndex),
+        fetchedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<LyricsCacheData?> getLyricsCache(int songId) => (select(
+    lyricsCache,
+  )..where((c) => c.songId.equals(songId))).getSingleOrNull();
+
+  Future<void> clearLyricsCache(int songId) async {
+    await (delete(lyricsCache)..where((c) => c.songId.equals(songId))).go();
+  }
+
+  Future<void> clearAllLyricsCache() => delete(lyricsCache).go();
 
   /// ==== Settings ====
   Future<String?> getSetting(String key) async {

@@ -1217,6 +1217,322 @@ class SongsCompanion extends UpdateCompanion<Song> {
   }
 }
 
+class $LyricsCacheTable extends LyricsCache
+    with TableInfo<$LyricsCacheTable, LyricsCacheData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LyricsCacheTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _songIdMeta = const VerificationMeta('songId');
+  @override
+  late final GeneratedColumn<int> songId = GeneratedColumn<int>(
+    'song_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES songs (id)',
+    ),
+  );
+  static const VerificationMeta _versionsJsonMeta = const VerificationMeta(
+    'versionsJson',
+  );
+  @override
+  late final GeneratedColumn<String> versionsJson = GeneratedColumn<String>(
+    'versions_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _selectedIndexMeta = const VerificationMeta(
+    'selectedIndex',
+  );
+  @override
+  late final GeneratedColumn<int> selectedIndex = GeneratedColumn<int>(
+    'selected_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _fetchedAtMeta = const VerificationMeta(
+    'fetchedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> fetchedAt = GeneratedColumn<DateTime>(
+    'fetched_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    songId,
+    versionsJson,
+    selectedIndex,
+    fetchedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'lyrics_cache';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LyricsCacheData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('song_id')) {
+      context.handle(
+        _songIdMeta,
+        songId.isAcceptableOrUnknown(data['song_id']!, _songIdMeta),
+      );
+    }
+    if (data.containsKey('versions_json')) {
+      context.handle(
+        _versionsJsonMeta,
+        versionsJson.isAcceptableOrUnknown(
+          data['versions_json']!,
+          _versionsJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_versionsJsonMeta);
+    }
+    if (data.containsKey('selected_index')) {
+      context.handle(
+        _selectedIndexMeta,
+        selectedIndex.isAcceptableOrUnknown(
+          data['selected_index']!,
+          _selectedIndexMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fetched_at')) {
+      context.handle(
+        _fetchedAtMeta,
+        fetchedAt.isAcceptableOrUnknown(data['fetched_at']!, _fetchedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fetchedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {songId};
+  @override
+  LyricsCacheData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LyricsCacheData(
+      songId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}song_id'],
+      )!,
+      versionsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}versions_json'],
+      )!,
+      selectedIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}selected_index'],
+      )!,
+      fetchedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}fetched_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LyricsCacheTable createAlias(String alias) {
+    return $LyricsCacheTable(attachedDatabase, alias);
+  }
+}
+
+class LyricsCacheData extends DataClass implements Insertable<LyricsCacheData> {
+  final int songId;
+  final String versionsJson;
+  final int selectedIndex;
+  final DateTime fetchedAt;
+  const LyricsCacheData({
+    required this.songId,
+    required this.versionsJson,
+    required this.selectedIndex,
+    required this.fetchedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['song_id'] = Variable<int>(songId);
+    map['versions_json'] = Variable<String>(versionsJson);
+    map['selected_index'] = Variable<int>(selectedIndex);
+    map['fetched_at'] = Variable<DateTime>(fetchedAt);
+    return map;
+  }
+
+  LyricsCacheCompanion toCompanion(bool nullToAbsent) {
+    return LyricsCacheCompanion(
+      songId: Value(songId),
+      versionsJson: Value(versionsJson),
+      selectedIndex: Value(selectedIndex),
+      fetchedAt: Value(fetchedAt),
+    );
+  }
+
+  factory LyricsCacheData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LyricsCacheData(
+      songId: serializer.fromJson<int>(json['songId']),
+      versionsJson: serializer.fromJson<String>(json['versionsJson']),
+      selectedIndex: serializer.fromJson<int>(json['selectedIndex']),
+      fetchedAt: serializer.fromJson<DateTime>(json['fetchedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'songId': serializer.toJson<int>(songId),
+      'versionsJson': serializer.toJson<String>(versionsJson),
+      'selectedIndex': serializer.toJson<int>(selectedIndex),
+      'fetchedAt': serializer.toJson<DateTime>(fetchedAt),
+    };
+  }
+
+  LyricsCacheData copyWith({
+    int? songId,
+    String? versionsJson,
+    int? selectedIndex,
+    DateTime? fetchedAt,
+  }) => LyricsCacheData(
+    songId: songId ?? this.songId,
+    versionsJson: versionsJson ?? this.versionsJson,
+    selectedIndex: selectedIndex ?? this.selectedIndex,
+    fetchedAt: fetchedAt ?? this.fetchedAt,
+  );
+  LyricsCacheData copyWithCompanion(LyricsCacheCompanion data) {
+    return LyricsCacheData(
+      songId: data.songId.present ? data.songId.value : this.songId,
+      versionsJson: data.versionsJson.present
+          ? data.versionsJson.value
+          : this.versionsJson,
+      selectedIndex: data.selectedIndex.present
+          ? data.selectedIndex.value
+          : this.selectedIndex,
+      fetchedAt: data.fetchedAt.present ? data.fetchedAt.value : this.fetchedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LyricsCacheData(')
+          ..write('songId: $songId, ')
+          ..write('versionsJson: $versionsJson, ')
+          ..write('selectedIndex: $selectedIndex, ')
+          ..write('fetchedAt: $fetchedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(songId, versionsJson, selectedIndex, fetchedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LyricsCacheData &&
+          other.songId == this.songId &&
+          other.versionsJson == this.versionsJson &&
+          other.selectedIndex == this.selectedIndex &&
+          other.fetchedAt == this.fetchedAt);
+}
+
+class LyricsCacheCompanion extends UpdateCompanion<LyricsCacheData> {
+  final Value<int> songId;
+  final Value<String> versionsJson;
+  final Value<int> selectedIndex;
+  final Value<DateTime> fetchedAt;
+  const LyricsCacheCompanion({
+    this.songId = const Value.absent(),
+    this.versionsJson = const Value.absent(),
+    this.selectedIndex = const Value.absent(),
+    this.fetchedAt = const Value.absent(),
+  });
+  LyricsCacheCompanion.insert({
+    this.songId = const Value.absent(),
+    required String versionsJson,
+    this.selectedIndex = const Value.absent(),
+    required DateTime fetchedAt,
+  }) : versionsJson = Value(versionsJson),
+       fetchedAt = Value(fetchedAt);
+  static Insertable<LyricsCacheData> custom({
+    Expression<int>? songId,
+    Expression<String>? versionsJson,
+    Expression<int>? selectedIndex,
+    Expression<DateTime>? fetchedAt,
+  }) {
+    return RawValuesInsertable({
+      if (songId != null) 'song_id': songId,
+      if (versionsJson != null) 'versions_json': versionsJson,
+      if (selectedIndex != null) 'selected_index': selectedIndex,
+      if (fetchedAt != null) 'fetched_at': fetchedAt,
+    });
+  }
+
+  LyricsCacheCompanion copyWith({
+    Value<int>? songId,
+    Value<String>? versionsJson,
+    Value<int>? selectedIndex,
+    Value<DateTime>? fetchedAt,
+  }) {
+    return LyricsCacheCompanion(
+      songId: songId ?? this.songId,
+      versionsJson: versionsJson ?? this.versionsJson,
+      selectedIndex: selectedIndex ?? this.selectedIndex,
+      fetchedAt: fetchedAt ?? this.fetchedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (songId.present) {
+      map['song_id'] = Variable<int>(songId.value);
+    }
+    if (versionsJson.present) {
+      map['versions_json'] = Variable<String>(versionsJson.value);
+    }
+    if (selectedIndex.present) {
+      map['selected_index'] = Variable<int>(selectedIndex.value);
+    }
+    if (fetchedAt.present) {
+      map['fetched_at'] = Variable<DateTime>(fetchedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LyricsCacheCompanion(')
+          ..write('songId: $songId, ')
+          ..write('versionsJson: $versionsJson, ')
+          ..write('selectedIndex: $selectedIndex, ')
+          ..write('fetchedAt: $fetchedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -2159,6 +2475,7 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
   late final $ArtistsTable artists = $ArtistsTable(this);
   late final $AlbumsTable albums = $AlbumsTable(this);
   late final $SongsTable songs = $SongsTable(this);
+  late final $LyricsCacheTable lyricsCache = $LyricsCacheTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
   late final $ProfilesTable profiles = $ProfilesTable(this);
   late final $SongWithArtistViewView songWithArtistView =
@@ -2173,6 +2490,7 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
     artists,
     albums,
     songs,
+    lyricsCache,
     settings,
     profiles,
     songWithArtistView,
@@ -2922,6 +3240,24 @@ final class $$SongsTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static MultiTypedResultKey<$LyricsCacheTable, List<LyricsCacheData>>
+  _lyricsCacheRefsTable(_$SonoDatabase db) => MultiTypedResultKey.fromTable(
+    db.lyricsCache,
+    aliasName: $_aliasNameGenerator(db.songs.id, db.lyricsCache.songId),
+  );
+
+  $$LyricsCacheTableProcessedTableManager get lyricsCacheRefs {
+    final manager = $$LyricsCacheTableTableManager(
+      $_db,
+      $_db.lyricsCache,
+    ).filter((f) => f.songId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_lyricsCacheRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$SongsTableFilterComposer extends Composer<_$SonoDatabase, $SongsTable> {
@@ -3026,6 +3362,31 @@ class $$SongsTableFilterComposer extends Composer<_$SonoDatabase, $SongsTable> {
           ),
     );
     return composer;
+  }
+
+  Expression<bool> lyricsCacheRefs(
+    Expression<bool> Function($$LyricsCacheTableFilterComposer f) f,
+  ) {
+    final $$LyricsCacheTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.lyricsCache,
+      getReferencedColumn: (t) => t.songId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LyricsCacheTableFilterComposer(
+            $db: $db,
+            $table: $db.lyricsCache,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 }
 
@@ -3227,6 +3588,31 @@ class $$SongsTableAnnotationComposer
     );
     return composer;
   }
+
+  Expression<T> lyricsCacheRefs<T extends Object>(
+    Expression<T> Function($$LyricsCacheTableAnnotationComposer a) f,
+  ) {
+    final $$LyricsCacheTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.lyricsCache,
+      getReferencedColumn: (t) => t.songId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LyricsCacheTableAnnotationComposer(
+            $db: $db,
+            $table: $db.lyricsCache,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$SongsTableTableManager
@@ -3242,7 +3628,11 @@ class $$SongsTableTableManager
           $$SongsTableUpdateCompanionBuilder,
           (Song, $$SongsTableReferences),
           Song,
-          PrefetchHooks Function({bool albumId, bool artistId})
+          PrefetchHooks Function({
+            bool albumId,
+            bool artistId,
+            bool lyricsCacheRefs,
+          })
         > {
   $$SongsTableTableManager(_$SonoDatabase db, $SongsTable table)
     : super(
@@ -3317,7 +3707,346 @@ class $$SongsTableTableManager
                     (e.readTable(table), $$SongsTableReferences(db, table, e)),
               )
               .toList(),
-          prefetchHooksCallback: ({albumId = false, artistId = false}) {
+          prefetchHooksCallback:
+              ({albumId = false, artistId = false, lyricsCacheRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (lyricsCacheRefs) db.lyricsCache,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (albumId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.albumId,
+                                    referencedTable: $$SongsTableReferences
+                                        ._albumIdTable(db),
+                                    referencedColumn: $$SongsTableReferences
+                                        ._albumIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+                        if (artistId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.artistId,
+                                    referencedTable: $$SongsTableReferences
+                                        ._artistIdTable(db),
+                                    referencedColumn: $$SongsTableReferences
+                                        ._artistIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (lyricsCacheRefs)
+                        await $_getPrefetchedData<
+                          Song,
+                          $SongsTable,
+                          LyricsCacheData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SongsTableReferences
+                              ._lyricsCacheRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SongsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).lyricsCacheRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.songId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$SongsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$SonoDatabase,
+      $SongsTable,
+      Song,
+      $$SongsTableFilterComposer,
+      $$SongsTableOrderingComposer,
+      $$SongsTableAnnotationComposer,
+      $$SongsTableCreateCompanionBuilder,
+      $$SongsTableUpdateCompanionBuilder,
+      (Song, $$SongsTableReferences),
+      Song,
+      PrefetchHooks Function({
+        bool albumId,
+        bool artistId,
+        bool lyricsCacheRefs,
+      })
+    >;
+typedef $$LyricsCacheTableCreateCompanionBuilder =
+    LyricsCacheCompanion Function({
+      Value<int> songId,
+      required String versionsJson,
+      Value<int> selectedIndex,
+      required DateTime fetchedAt,
+    });
+typedef $$LyricsCacheTableUpdateCompanionBuilder =
+    LyricsCacheCompanion Function({
+      Value<int> songId,
+      Value<String> versionsJson,
+      Value<int> selectedIndex,
+      Value<DateTime> fetchedAt,
+    });
+
+final class $$LyricsCacheTableReferences
+    extends BaseReferences<_$SonoDatabase, $LyricsCacheTable, LyricsCacheData> {
+  $$LyricsCacheTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $SongsTable _songIdTable(_$SonoDatabase db) => db.songs.createAlias(
+    $_aliasNameGenerator(db.lyricsCache.songId, db.songs.id),
+  );
+
+  $$SongsTableProcessedTableManager get songId {
+    final $_column = $_itemColumn<int>('song_id')!;
+
+    final manager = $$SongsTableTableManager(
+      $_db,
+      $_db.songs,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_songIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$LyricsCacheTableFilterComposer
+    extends Composer<_$SonoDatabase, $LyricsCacheTable> {
+  $$LyricsCacheTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get versionsJson => $composableBuilder(
+    column: $table.versionsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get selectedIndex => $composableBuilder(
+    column: $table.selectedIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$SongsTableFilterComposer get songId {
+    final $$SongsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.songId,
+      referencedTable: $db.songs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SongsTableFilterComposer(
+            $db: $db,
+            $table: $db.songs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LyricsCacheTableOrderingComposer
+    extends Composer<_$SonoDatabase, $LyricsCacheTable> {
+  $$LyricsCacheTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get versionsJson => $composableBuilder(
+    column: $table.versionsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get selectedIndex => $composableBuilder(
+    column: $table.selectedIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SongsTableOrderingComposer get songId {
+    final $$SongsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.songId,
+      referencedTable: $db.songs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SongsTableOrderingComposer(
+            $db: $db,
+            $table: $db.songs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LyricsCacheTableAnnotationComposer
+    extends Composer<_$SonoDatabase, $LyricsCacheTable> {
+  $$LyricsCacheTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get versionsJson => $composableBuilder(
+    column: $table.versionsJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get selectedIndex => $composableBuilder(
+    column: $table.selectedIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get fetchedAt =>
+      $composableBuilder(column: $table.fetchedAt, builder: (column) => column);
+
+  $$SongsTableAnnotationComposer get songId {
+    final $$SongsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.songId,
+      referencedTable: $db.songs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SongsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.songs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LyricsCacheTableTableManager
+    extends
+        RootTableManager<
+          _$SonoDatabase,
+          $LyricsCacheTable,
+          LyricsCacheData,
+          $$LyricsCacheTableFilterComposer,
+          $$LyricsCacheTableOrderingComposer,
+          $$LyricsCacheTableAnnotationComposer,
+          $$LyricsCacheTableCreateCompanionBuilder,
+          $$LyricsCacheTableUpdateCompanionBuilder,
+          (LyricsCacheData, $$LyricsCacheTableReferences),
+          LyricsCacheData,
+          PrefetchHooks Function({bool songId})
+        > {
+  $$LyricsCacheTableTableManager(_$SonoDatabase db, $LyricsCacheTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LyricsCacheTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LyricsCacheTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LyricsCacheTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> songId = const Value.absent(),
+                Value<String> versionsJson = const Value.absent(),
+                Value<int> selectedIndex = const Value.absent(),
+                Value<DateTime> fetchedAt = const Value.absent(),
+              }) => LyricsCacheCompanion(
+                songId: songId,
+                versionsJson: versionsJson,
+                selectedIndex: selectedIndex,
+                fetchedAt: fetchedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> songId = const Value.absent(),
+                required String versionsJson,
+                Value<int> selectedIndex = const Value.absent(),
+                required DateTime fetchedAt,
+              }) => LyricsCacheCompanion.insert(
+                songId: songId,
+                versionsJson: versionsJson,
+                selectedIndex: selectedIndex,
+                fetchedAt: fetchedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$LyricsCacheTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({songId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -3337,28 +4066,15 @@ class $$SongsTableTableManager
                       dynamic
                     >
                   >(state) {
-                    if (albumId) {
+                    if (songId) {
                       state =
                           state.withJoin(
                                 currentTable: table,
-                                currentColumn: table.albumId,
-                                referencedTable: $$SongsTableReferences
-                                    ._albumIdTable(db),
-                                referencedColumn: $$SongsTableReferences
-                                    ._albumIdTable(db)
-                                    .id,
-                              )
-                              as T;
-                    }
-                    if (artistId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.artistId,
-                                referencedTable: $$SongsTableReferences
-                                    ._artistIdTable(db),
-                                referencedColumn: $$SongsTableReferences
-                                    ._artistIdTable(db)
+                                currentColumn: table.songId,
+                                referencedTable: $$LyricsCacheTableReferences
+                                    ._songIdTable(db),
+                                referencedColumn: $$LyricsCacheTableReferences
+                                    ._songIdTable(db)
                                     .id,
                               )
                               as T;
@@ -3375,19 +4091,19 @@ class $$SongsTableTableManager
       );
 }
 
-typedef $$SongsTableProcessedTableManager =
+typedef $$LyricsCacheTableProcessedTableManager =
     ProcessedTableManager<
       _$SonoDatabase,
-      $SongsTable,
-      Song,
-      $$SongsTableFilterComposer,
-      $$SongsTableOrderingComposer,
-      $$SongsTableAnnotationComposer,
-      $$SongsTableCreateCompanionBuilder,
-      $$SongsTableUpdateCompanionBuilder,
-      (Song, $$SongsTableReferences),
-      Song,
-      PrefetchHooks Function({bool albumId, bool artistId})
+      $LyricsCacheTable,
+      LyricsCacheData,
+      $$LyricsCacheTableFilterComposer,
+      $$LyricsCacheTableOrderingComposer,
+      $$LyricsCacheTableAnnotationComposer,
+      $$LyricsCacheTableCreateCompanionBuilder,
+      $$LyricsCacheTableUpdateCompanionBuilder,
+      (LyricsCacheData, $$LyricsCacheTableReferences),
+      LyricsCacheData,
+      PrefetchHooks Function({bool songId})
     >;
 typedef $$SettingsTableCreateCompanionBuilder =
     SettingsCompanion Function({
@@ -3685,6 +4401,8 @@ class $SonoDatabaseManager {
       $$AlbumsTableTableManager(_db, _db.albums);
   $$SongsTableTableManager get songs =>
       $$SongsTableTableManager(_db, _db.songs);
+  $$LyricsCacheTableTableManager get lyricsCache =>
+      $$LyricsCacheTableTableManager(_db, _db.lyricsCache);
   $$SettingsTableTableManager get settings =>
       $$SettingsTableTableManager(_db, _db.settings);
   $$ProfilesTableTableManager get profiles =>

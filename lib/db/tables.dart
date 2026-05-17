@@ -32,6 +32,16 @@ class Songs extends Table {
   BoolColumn get liked => boolean().nullable()();
 }
 
+class LyricsCache extends Table {
+  IntColumn get songId => integer().references(Songs, #id)();
+  TextColumn get versionsJson => text()();
+  IntColumn get selectedIndex => integer().withDefault(const Constant(0))();
+  DateTimeColumn get fetchedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {songId};
+}
+
 /// Key-value store for app settings (EQ, playback state, prefernces, etc.)
 class Settings extends Table {
   TextColumn get settingKey => text()();
