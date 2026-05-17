@@ -140,6 +140,16 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     if (_loadedSongId == song.id) return;
     _loadedSongId = song.id;
 
+    setState(() {
+      _versions = const [];
+      _versionIndex = 0;
+      _lines = const [];
+      _lineKeys = const [];
+      _plainText = null;
+      _currentLineIndex = -1;
+      _loading = true;
+    });
+
     //try perma db cache first
     final cached = await widget.db.getLyricsCache(song.id);
     if (!mounted) return;
@@ -155,6 +165,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
   void _applyDbCache(LyricsCacheData cache, Song song) {
     if (!mounted) return;
+    if (_loadedSongId != song.id) return;
     try {
       final songs = _songsFromJson(cache.versionsJson);
       setState(() {
@@ -171,7 +182,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     } catch (_) {
       //corrupt cache, nuke and fall back to network
       widget.db.clearLyricsCache(cache.songId);
-      if (mounted) _loadLyrics(song);
+      if (mounted && _loadedSongId == song.id) _loadLyrics(song);
     }
   }
 
@@ -210,6 +221,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
     final results = await _searchLyrics(song, albumName);
     if (seq != _loadSeq || !mounted) return;
+    if (_loadedSongId != song.id) return;
 
     //synced versions float to top, otherwise keep lrclib order
     results.sort((a, b) {
