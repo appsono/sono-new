@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:sono/db/database.dart';
@@ -54,7 +55,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
   late final ScrollController _lyricsScroll = ScrollController();
 
-  static const double _lyricRowHeight = 64;
+  List<GlobalKey> _lineKeys = const [];
 
   //lrclib results for current song
   List<LrclibTrack> _versions = const [];
@@ -65,6 +66,11 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   //header swipe down accumulator
   double _dragAccum = 0;
 
+  //queue sub for preloading songs
+  StreamSubscription<List<Song>>? _queueSub;
+
+  final Set<int> _preloadingIds = {};
+
   @override
   void initState() {
     super.initState();
@@ -72,6 +78,10 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     _song = audio.currentSong;
     _position = audio.position;
     _loadFor(_song);
+
+    //initial preload of whatever is already queued
+    _preloadUpcoming(audio.queue);
+
     _songSub = audio.currentSongStream.listen((s) {
       if (!mounted) return;
       setState(() => _song = s);
@@ -81,12 +91,18 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       if (!mounted) return;
       _handlePositon(p);
     });
+
+    _queueSub = audio.queueStream.listen((queue) {
+      if (!mounted) return;
+      _preloadUpcoming(queue);
+    });
   }
 
   @override
   void dispose() {
     _songSub?.cancel();
     _positionSub?.cancel();
+    _queueSub?.cancel();
     _lyricsScroll.dispose();
     super.dispose();
   }
@@ -104,15 +120,73 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     _dragAccum = 0;
   }
 
+  /// ==== JSON helpers
+  String _songsToJson(List<LrclibTrack> songs) =>
+      jsonEncode(songs.map((s) => s.toJson()).toList());
+
+  List<LrclibTrack> _songsFromJson(String jsonStr) {
+    final list = jsonDecode(jsonStr) as List<dynamic>;
+    return list
+        .map((e) => LrclibTrack.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
   // ==== lrclib load ====
   // fetches every canidate from lrclib for current song, sorts synced
   // results to front, exposes them via _versions. song id is tracked
   // so duplicate stream emissions for same song skip network
-  void _loadFor(Song? song) {
+  void _loadFor(Song? song) async {
     if (song == null) return;
     if (_loadedSongId == song.id) return;
     _loadedSongId = song.id;
+
+    //try perma db cache first
+    final cached = await widget.db.getLyricsCache(song.id);
+    if (!mounted) return;
+    if (_loadedSongId != song.id) return; //changed while awaiting
+
+    if (cached != null) {
+      _applyDbCache(cached, song);
+      return;
+    }
+
     _loadLyrics(song);
+  }
+
+  void _applyDbCache(LyricsCacheData cache, Song song) {
+    if (!mounted) return;
+    try {
+      final songs = _songsFromJson(cache.versionsJson);
+      setState(() {
+        _versions = songs;
+        _versionIndex = cache.selectedIndex.clamp(
+          0,
+          songs.isEmpty ? 0 : songs.length - 1,
+        );
+        _refreshLinesFromCurrent();
+        _loading = false;
+      });
+      if (_lyricsScroll.hasClients) _lyricsScroll.jumpTo(0);
+      _scrollToCurrentLine();
+    } catch (_) {
+      //corrupt cache, nuke and fall back to network
+      widget.db.clearLyricsCache(cache.songId);
+      if (mounted) _loadLyrics(song);
+    }
+  }
+
+  Future<List<LrclibTrack>> _searchLyrics(Song song, String? albumName) async {
+    final results = await LrclibService.instance.search(
+      trackName: song.title,
+      artistName: song.displayArtist ?? '',
+      albumName: albumName,
+    );
+    results.sort((a, b) {
+      if (a.hasSynced && !b.hasSynced) return -1;
+      if (!a.hasSynced && b.hasSynced) return 1;
+      return 0;
+    });
+    return results;
   }
 
   Future<void> _loadLyrics(Song song) async {
@@ -121,6 +195,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       _versions = const [];
       _versionIndex = 0;
       _lines = const [];
+      _lineKeys = const [];
       _plainText = null;
       _currentLineIndex = -1;
       _loading = true;
@@ -133,12 +208,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       albumName = album?.title;
     }
 
-    final results = await LrclibService.instance.search(
-      trackName: song.title,
-      artistName: song.displayArtist ?? '',
-      albumName: albumName,
-    );
-
+    final results = await _searchLyrics(song, albumName);
     if (seq != _loadSeq || !mounted) return;
 
     //synced versions float to top, otherwise keep lrclib order
@@ -147,6 +217,10 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       if (!a.hasSynced && b.hasSynced) return 1;
       return 0;
     });
+
+    try {
+      await widget.db.cacheLyrics(song.id, _songsToJson(results));
+    } catch (_) {}
 
     setState(() {
       _versions = results;
@@ -162,32 +236,44 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   void _refreshLinesFromCurrent() {
     if (_versions.isEmpty) {
       _lines = const [];
+      _lineKeys = const [];
       _plainText = null;
       _currentLineIndex = -1;
       return;
     }
-    final track = _versions[_versionIndex];
-    if (track.hasSynced) {
-      _lines = LrclibService.parseLrc(track.syncedLyrics!);
+    final song = _versions[_versionIndex];
+    if (song.hasSynced) {
+      _lines = LrclibService.parseLrc(song.syncedLyrics!);
       _plainText = null;
-    } else if (track.hasPlain) {
+    } else if (song.hasPlain) {
       _lines = const [];
-      _plainText = null;
+      _plainText = song.plainLyrics;
     } else {
       _lines = const [];
       _plainText = null;
     }
+    _lineKeys = List.generate(_lines.length, (i) => GlobalKey());
     _currentLineIndex = _findLineIndex(_position);
   }
 
-  void _selectVersion(int i) {
+  void _selectVersion(int i) async {
     if (i < 0 || i >= _versions.length) return;
     setState(() {
-      _versionIndex = 1;
+      _versionIndex = i;
       _refreshLinesFromCurrent();
     });
     if (_lyricsScroll.hasClients) _lyricsScroll.jumpTo(0);
     _scrollToCurrentLine();
+
+    if (_song != null && _versions.isNotEmpty) {
+      try {
+        await widget.db.cacheLyrics(
+          _song!.id,
+          _songsToJson(_versions),
+          selectedIndex: i,
+        );
+      } catch (_) {}
+    }
   }
 
   void _nextVersion() {
@@ -199,6 +285,9 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   void _handlePositon(Duration p) {
     _position = p;
     if (_lines.isEmpty) return;
+    if (_loading) return;
+    if (_lineKeys.length != _lineKeys.length) return;
+
     final newIndex = _findLineIndex(p);
     if (newIndex == _currentLineIndex) return;
     setState(() => _currentLineIndex = newIndex);
@@ -222,17 +311,58 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   void _scrollToCurrentLine() {
     if (!_lyricsScroll.hasClients) return;
     if (_currentLineIndex < 0) return;
-    final viewport = _lyricsScroll.position.viewportDimension;
-    final target =
-        _currentLineIndex * _lyricRowHeight -
-        viewport * 0.4 +
-        _lyricRowHeight / 2;
-    final clamped = target.clamp(0.0, _lyricsScroll.position.maxScrollExtent);
-    _lyricsScroll.animateTo(
-      clamped,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeOutCubic,
-    );
+    if (_lineKeys.isEmpty) return;
+    if (_currentLineIndex >= _lineKeys.length) return;
+
+    final targetContext = _lineKeys[_currentLineIndex].currentContext;
+    if (targetContext != null) {
+      Scrollable.ensureVisible(
+        targetContext,
+        alignment: 0.4,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOutCubic,
+      );
+    } else {
+      final viewport = _lyricsScroll.position.viewportDimension;
+      const fallbackRowHeight = 64.0;
+      final targetOffset =
+          _currentLineIndex * fallbackRowHeight -
+          viewport * 0.4 +
+          fallbackRowHeight / 2;
+      final clamped = targetOffset.clamp(
+        0.0,
+        _lyricsScroll.position.maxScrollExtent,
+      );
+      _lyricsScroll.animateTo(
+        clamped,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
+
+  // ==== preloading ====
+  Future<void> _preloadSong(Song song) async {
+    if (_preloadingIds.contains(song.id)) return;
+    final existing = await widget.db.getLyricsCache(song.id);
+    if (existing != null) return; //already cached
+    if (_loadedSongId == song.id) return; //current
+
+    _preloadingIds.add(song.id);
+    try {
+      String? albumName;
+      if (song.albumId != null) {
+        final album = await widget.db.getAlbumById(song.albumId!);
+        albumName = album?.title;
+      }
+      final results = await _searchLyrics(song, albumName);
+      await widget.db.cacheLyrics(song.id, _songsToJson(results));
+    } catch (_) {}
+  }
+
+  void _preloadUpcoming(List<Song> queue) {
+    //fire-and-forget
+    queue.where((s) => s.id != _song?.id).take(3).forEach(_preloadSong);
   }
 
   @override
@@ -316,9 +446,9 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
               ? _SyncedLyricsList(
                   c: c,
                   lines: _lines,
+                  lineKeys: _lineKeys,
                   currentIndex: _currentLineIndex,
                   scrollController: _lyricsScroll,
-                  rowHeight: _lyricRowHeight,
                 )
               : _PlainLyricsView(
                   c: c,
@@ -389,16 +519,16 @@ class _VersionSwitcher extends StatelessWidget {
 class _SyncedLyricsList extends StatelessWidget {
   final PlayerColors c;
   final List<LyricsLine> lines;
+  final List<GlobalKey> lineKeys;
   final int currentIndex;
   final ScrollController scrollController;
-  final double rowHeight;
 
   const _SyncedLyricsList({
     required this.c,
     required this.lines,
+    required this.lineKeys,
     required this.currentIndex,
     required this.scrollController,
-    required this.rowHeight,
   });
 
   @override
@@ -406,16 +536,15 @@ class _SyncedLyricsList extends StatelessWidget {
     return ListView.builder(
       controller: scrollController,
       itemCount: lines.length,
-      itemExtent: rowHeight,
       padding: const EdgeInsets.symmetric(vertical: 80),
       physics: const ClampingScrollPhysics(),
       itemBuilder: (cty, i) {
         final line = lines[i];
         return _LyricsRow(
+          key: lineKeys[i],
           c: c,
           text: line.text,
           isCurrent: i == currentIndex,
-          height: rowHeight,
         );
       },
     );
@@ -426,20 +555,19 @@ class _LyricsRow extends StatelessWidget {
   final PlayerColors c;
   final String text;
   final bool isCurrent;
-  final double height;
 
   const _LyricsRow({
+    super.key,
     required this.c,
     required this.text,
     required this.isCurrent,
-    required this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     final muted = c.onBackground.withValues(alpha: 0.35);
-    return SizedBox(
-      height: height,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
       child: Align(
         alignment: Alignment.centerLeft,
         child: AnimatedDefaultTextStyle(
@@ -455,8 +583,6 @@ class _LyricsRow extends StatelessWidget {
           child: Text(
             text.isEmpty ? 'no vocals' : text,
             textAlign: TextAlign.left,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),
