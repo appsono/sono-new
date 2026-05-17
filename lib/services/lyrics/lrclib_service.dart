@@ -21,7 +21,8 @@ class LrclibService {
   static final LrclibService instance = LrclibService._();
 
   static const _base = 'https://lrclib.net/api';
-  static const _timeout = Duration(seconds: 10);
+  //lrclib api is hella slow so 20s timeout
+  static const _timeout = Duration(seconds: 20);
 
   Map<String, String>? _cachedHeaders;
   Future<Map<String, String>>? _headersFuture;
