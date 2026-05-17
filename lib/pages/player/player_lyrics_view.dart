@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
+import 'package:sono/services/lyrics/lrclib_service.dart';
+import 'package:sono/services/lyrics/models.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/player_header_card.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
@@ -23,11 +25,13 @@ import 'package:sono/widgets/bouncy_tap.dart';
 /// pre-mount pattern as queue
 class PlayerLyricsView extends StatefulWidget {
   final PlayerColors c;
+  final SonoDatabase db;
   final Animation<double>? slideAnimation;
   final VoidCallback onClose;
 
   const PlayerLyricsView({
     required this.c,
+    required this.db,
     required this.onClose,
     this.slideAnimation,
     super.key,
@@ -41,9 +45,11 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   StreamSubscription<Song?>? _songSub;
   Song? _song;
 
-  //lyrics version state, placeholder until lrclib loader lands
-  final int _versionIndex = 0;
-  final int _versionCount = 0;
+  //lrclib results for current song
+  List<LrclibTrack> _versions = const [];
+  int _versionIndex = 0;
+  int _loadSeq = 0;
+  int? _loadedSongId;
 
   //header swipe down accumulator
   double _dragAccum = 0;
@@ -56,6 +62,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     _songSub = audio.currentSongStream.listen((s) {
       if (!mounted) return;
       setState(() => _song = s);
+      _loadFor(s);
     });
   }
 
@@ -76,6 +83,57 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     final v = d.velocity.pixelsPerSecond.dy;
     if (_dragAccum > 80 || v > 300) widget.onClose();
     _dragAccum = 0;
+  }
+
+  // ==== lrclib load ====
+  // fetches every canidate from lrclib for current song, sorts synced
+  // results to front, exposes them via _versions. song id is tracked
+  // so duplicate stream emissions for same song skip network
+  void _loadFor(Song? song) {
+    if (song == null) return;
+    if (_loadedSongId == song.id) return;
+    _loadedSongId = song.id;
+    _loadLyrics(song);
+  }
+
+  Future<void> _loadLyrics(Song song) async {
+    final seq = ++_loadSeq;
+    setState(() {
+      _versions = const [];
+      _versionIndex = 0;
+    });
+
+    //resolve album title
+    String? albumName;
+    if (song.albumId != null) {
+      final album = await widget.db.getAlbumById(song.albumId!);
+      if (seq != _loadSeq || !mounted) return;
+      albumName = album?.title;
+    }
+
+    final results = await LrclibService.instance.search(
+      trackName: song.title,
+      artistName: song.displayArtist ?? '',
+      albumName: albumName,
+    );
+
+    if (seq != _loadSeq || !mounted) return;
+
+    //synced versions float to top, otherwise keep lrclib order
+    results.sort((a, b) {
+      if (a.hasSynced && !b.hasSynced) return -1;
+      if (!a.hasSynced && b.hasSynced) return 1;
+      return 0;
+    });
+
+    setState(() => _versions = results);
+  }
+
+  void _nextVersion() {
+    if (_versions.length <= 1) return;
+    setState(() {
+      _versionIndex = (_versionIndex + 1) % _versions.length;
+    });
   }
 
   @override
@@ -112,8 +170,8 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
                 _VersionSwitcher(
                   c: c,
                   index: _versionIndex,
-                  count: _versionCount,
-                  onTap: null, //wired once lrclib loader lands
+                  count: _versions.length,
+                  onTap: _nextVersion,
                 ),
               ],
             ),

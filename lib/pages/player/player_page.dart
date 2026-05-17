@@ -251,6 +251,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
                         position: _lyricsSlide,
                         child: PlayerLyricsView(
                           c: c,
+                          db: widget.db,
                           slideAnimation: _lyricsCtrl,
                           onClose: _closeSubView,
                         ),
