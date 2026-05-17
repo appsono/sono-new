@@ -52,6 +52,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   String? _plainText;
   int _currentLineIndex = -1;
   bool _loading = false;
+  bool _isInIdleGap = false;
 
   late final ScrollController _lyricsScroll = ScrollController();
 
@@ -147,6 +148,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       _lineKeys = const [];
       _plainText = null;
       _currentLineIndex = -1;
+      _isInIdleGap = false;
       _loading = true;
     });
 
@@ -209,6 +211,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       _lineKeys = const [];
       _plainText = null;
       _currentLineIndex = -1;
+      _isInIdleGap = false;
       _loading = true;
     });
 
@@ -251,6 +254,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       _lineKeys = const [];
       _plainText = null;
       _currentLineIndex = -1;
+      _isInIdleGap = false;
       return;
     }
     final song = _versions[_versionIndex];
@@ -301,9 +305,36 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     if (_lineKeys.length != _lines.length) return;
 
     final newIndex = _findLineIndex(p);
-    if (newIndex == _currentLineIndex) return;
-    setState(() => _currentLineIndex = newIndex);
-    _scrollToCurrentLine();
+    final newIdle = _computeIdle(p, newIndex);
+
+    final indexChanged = newIndex != _currentLineIndex;
+    final idleChanged = newIdle != _isInIdleGap;
+    if (!indexChanged && !idleChanged) return;
+
+    setState(() {
+      _currentLineIndex = newIndex;
+      _isInIdleGap = newIdle;
+    });
+    if (indexChanged) _scrollToCurrentLine();
+  }
+
+  bool _computeIdle(Duration p, int currentIndex) {
+    //idle only apies between two real lines
+    if (currentIndex < 0 || currentIndex >= _lines.length - 1) return false;
+
+    final currentTime = _lines[currentIndex].timestamp;
+    final nextTime = _lines[currentIndex + 1].timestamp;
+    final gap = nextTime - currentTime;
+
+    //short gapes between sung lines don count
+    if (gap < const Duration(seconds: 5)) return false;
+
+    final since = p - currentTime;
+    final until = nextTime - p;
+
+    //wait a beat after current line
+    return since > const Duration(seconds: 2) &&
+        until > const Duration(seconds: 1);
   }
 
   int _findLineIndex(Duration p) {
@@ -460,6 +491,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
                   lines: _lines,
                   lineKeys: _lineKeys,
                   currentIndex: _currentLineIndex,
+                  isInIdleGap: _isInIdleGap,
                   scrollController: _lyricsScroll,
                 )
               : _PlainLyricsView(
@@ -533,6 +565,7 @@ class _SyncedLyricsList extends StatelessWidget {
   final List<LyricsLine> lines;
   final List<GlobalKey> lineKeys;
   final int currentIndex;
+  final bool isInIdleGap;
   final ScrollController scrollController;
 
   const _SyncedLyricsList({
@@ -540,6 +573,7 @@ class _SyncedLyricsList extends StatelessWidget {
     required this.lines,
     required this.lineKeys,
     required this.currentIndex,
+    required this.isInIdleGap,
     required this.scrollController,
   });
 
@@ -551,12 +585,14 @@ class _SyncedLyricsList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 80),
       physics: const ClampingScrollPhysics(),
       itemBuilder: (cty, i) {
+        final isCurrent = i == currentIndex;
         return _LyricsRow(
           key: lineKeys[i],
           c: c,
           line: lines[i],
           nextLine: i + 1 < lines.length ? lines[i + 1] : null,
           isCurrent: i == currentIndex,
+          showIdle: isCurrent && isInIdleGap,
         );
       },
     );
@@ -568,6 +604,7 @@ class _LyricsRow extends StatelessWidget {
   final LyricsLine line;
   final LyricsLine? nextLine;
   final bool isCurrent;
+  final bool showIdle;
 
   const _LyricsRow({
     super.key,
@@ -575,6 +612,7 @@ class _LyricsRow extends StatelessWidget {
     required this.line,
     required this.nextLine,
     required this.isCurrent,
+    required this.showIdle,
   });
 
   @override
@@ -586,15 +624,17 @@ class _LyricsRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 14),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: text.isEmpty
+        child: text.isEmpty && showIdle
             ? (isCurrent && nextLine != null
                   ? _IdleGapBar(
+                      key: const ValueKey('idle'),
                       c: c,
                       start: line.timestamp,
                       end: nextLine!.timestamp,
                     )
                   : const SizedBox.shrink())
             : AnimatedDefaultTextStyle(
+                key: const ValueKey('text'),
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeOutCubic,
                 style: TextStyle(
@@ -697,7 +737,12 @@ class _IdleGapBar extends StatefulWidget {
   final Duration start;
   final Duration end;
 
-  const _IdleGapBar({required this.c, required this.start, required this.end});
+  const _IdleGapBar({
+    required this.c,
+    required this.start,
+    required this.end,
+    super.key,
+  });
 
   @override
   State<_IdleGapBar> createState() => _IdleGapBarState();
