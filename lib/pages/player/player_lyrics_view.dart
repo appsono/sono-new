@@ -54,7 +54,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
   late final ScrollController _lyricsScroll = ScrollController();
 
-  static const double _lyricRowHeight = 56;
+  static const double _lyricRowHeight = 64;
 
   //lrclib results for current song
   List<LrclibTrack> _versions = const [];
