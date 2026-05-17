@@ -298,7 +298,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     _position = p;
     if (_lines.isEmpty) return;
     if (_loading) return;
-    if (_lineKeys.length != _lineKeys.length) return;
+    if (_lineKeys.length != _lines.length) return;
 
     final newIndex = _findLineIndex(p);
     if (newIndex == _currentLineIndex) return;
@@ -551,11 +551,11 @@ class _SyncedLyricsList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 80),
       physics: const ClampingScrollPhysics(),
       itemBuilder: (cty, i) {
-        final line = lines[i];
         return _LyricsRow(
           key: lineKeys[i],
           c: c,
-          text: line.text,
+          line: lines[i],
+          nextLine: i + 1 < lines.length ? lines[i + 1] : null,
           isCurrent: i == currentIndex,
         );
       },
@@ -565,38 +565,47 @@ class _SyncedLyricsList extends StatelessWidget {
 
 class _LyricsRow extends StatelessWidget {
   final PlayerColors c;
-  final String text;
+  final LyricsLine line;
+  final LyricsLine? nextLine;
   final bool isCurrent;
 
   const _LyricsRow({
     super.key,
     required this.c,
-    required this.text,
+    required this.line,
+    required this.nextLine,
     required this.isCurrent,
   });
 
   @override
   Widget build(BuildContext context) {
     final muted = c.onBackground.withValues(alpha: 0.35);
+    final text = line.text;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 14),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic,
-          style: TextStyle(
-            fontFamily: SonoFonts.heading,
-            fontSize: 22,
-            fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w500,
-            color: isCurrent ? c.onBackground : muted,
-            height: 1.25,
-          ),
-          child: Text(
-            text.isEmpty ? 'no vocals' : text,
-            textAlign: TextAlign.left,
-          ),
-        ),
+        child: text.isEmpty
+            ? (isCurrent && nextLine != null
+                  ? _IdleGapBar(
+                      c: c,
+                      start: line.timestamp,
+                      end: nextLine!.timestamp,
+                    )
+                  : const SizedBox.shrink())
+            : AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+                style: TextStyle(
+                  fontFamily: SonoFonts.heading,
+                  fontSize: 22,
+                  fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w500,
+                  color: isCurrent ? c.onBackground : muted,
+                  height: 1.25,
+                ),
+                child: Text(text, textAlign: TextAlign.left),
+              ),
       ),
     );
   }
@@ -676,6 +685,73 @@ class _ProviderCredit extends StatelessWidget {
           fontSize: 11,
           fontWeight: FontWeight.w400,
           color: c.onBackground.withValues(alpha: 0.4),
+        ),
+      ),
+    );
+  }
+}
+
+// ==== Idle Gap Bar ====
+class _IdleGapBar extends StatefulWidget {
+  final PlayerColors c;
+  final Duration start;
+  final Duration end;
+
+  const _IdleGapBar({required this.c, required this.start, required this.end});
+
+  @override
+  State<_IdleGapBar> createState() => _IdleGapBarState();
+}
+
+class _IdleGapBarState extends State<_IdleGapBar> {
+  StreamSubscription<Duration>? _sub;
+  double _progress = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    final audio = player.AudioService.instance;
+    _progress = _calc(audio.position);
+    _sub = audio.positionStream.listen((p) {
+      if (!mounted) return;
+      final next = _calc(p);
+      if ((next - _progress).abs() < 0.01) return;
+      setState(() => _progress = next);
+    });
+  }
+
+  double _calc(Duration p) {
+    final totalMs = (widget.end - widget.start).inMilliseconds;
+    if (totalMs <= 0) return 0;
+    final elapsedMs = (p - widget.start).inMilliseconds;
+    return (elapsedMs / totalMs).clamp(0.0, 1.0);
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = widget.c;
+    return SizedBox(
+      width: 80,
+      height: 3,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(1.5),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(color: c.onBackground.withValues(alpha: 0.15)),
+            ),
+            FractionallySizedBox(
+              widthFactor: _progress,
+              alignment: Alignment.centerLeft,
+              child: Container(color: c.onBackground.withValues(alpha: 0.6)),
+            ),
+          ],
         ),
       ),
     );

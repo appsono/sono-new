@@ -75,15 +75,15 @@ class LrclibService {
       final res = await http
           .get(uri, headers: await _getHeaders())
           .timeout(_timeout);
-      if (res.statusCode == 404) return const [];
-      if (res.statusCode != 200) return const [];
+      if (res.statusCode == 404) return [];
+      if (res.statusCode != 200) return [];
 
       final list = jsonDecode(res.body) as List<dynamic>;
       return [
         for (final j in list) LrclibTrack.fromJson(j as Map<String, dynamic>),
       ];
     } catch (_) {
-      return const [];
+      return [];
     }
   }
 
