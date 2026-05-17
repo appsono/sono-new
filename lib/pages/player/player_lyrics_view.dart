@@ -45,6 +45,17 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   StreamSubscription<Song?>? _songSub;
   Song? _song;
 
+  StreamSubscription<Duration>? _positionSub;
+  Duration _position = Duration.zero;
+  List<LyricsLine> _lines = const [];
+  String? _plainText;
+  int _currentLineIndex = -1;
+  bool _loading = false;
+
+  late final ScrollController _lyricsScroll = ScrollController();
+
+  static const double _lyricRowHeight = 56;
+
   //lrclib results for current song
   List<LrclibTrack> _versions = const [];
   int _versionIndex = 0;
@@ -59,16 +70,24 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     super.initState();
     final audio = player.AudioService.instance;
     _song = audio.currentSong;
+    _position = audio.position;
+    _loadFor(_song);
     _songSub = audio.currentSongStream.listen((s) {
       if (!mounted) return;
       setState(() => _song = s);
       _loadFor(s);
+    });
+    _positionSub = audio.positionStream.listen((p) {
+      if (!mounted) return;
+      _handlePositon(p);
     });
   }
 
   @override
   void dispose() {
     _songSub?.cancel();
+    _positionSub?.cancel();
+    _lyricsScroll.dispose();
     super.dispose();
   }
 
@@ -101,9 +120,12 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     setState(() {
       _versions = const [];
       _versionIndex = 0;
+      _lines = const [];
+      _plainText = null;
+      _currentLineIndex = -1;
+      _loading = true;
     });
 
-    //resolve album title
     String? albumName;
     if (song.albumId != null) {
       final album = await widget.db.getAlbumById(song.albumId!);
@@ -126,14 +148,91 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       return 0;
     });
 
-    setState(() => _versions = results);
+    setState(() {
+      _versions = results;
+      _versionIndex = 0;
+      _refreshLinesFromCurrent();
+      _loading = false;
+    });
+
+    if (_lyricsScroll.hasClients) _lyricsScroll.jumpTo(0);
+    _scrollToCurrentLine();
+  }
+
+  void _refreshLinesFromCurrent() {
+    if (_versions.isEmpty) {
+      _lines = const [];
+      _plainText = null;
+      _currentLineIndex = -1;
+      return;
+    }
+    final track = _versions[_versionIndex];
+    if (track.hasSynced) {
+      _lines = LrclibService.parseLrc(track.syncedLyrics!);
+      _plainText = null;
+    } else if (track.hasPlain) {
+      _lines = const [];
+      _plainText = null;
+    } else {
+      _lines = const [];
+      _plainText = null;
+    }
+    _currentLineIndex = _findLineIndex(_position);
+  }
+
+  void _selectVersion(int i) {
+    if (i < 0 || i >= _versions.length) return;
+    setState(() {
+      _versionIndex = 1;
+      _refreshLinesFromCurrent();
+    });
+    if (_lyricsScroll.hasClients) _lyricsScroll.jumpTo(0);
+    _scrollToCurrentLine();
   }
 
   void _nextVersion() {
     if (_versions.length <= 1) return;
-    setState(() {
-      _versionIndex = (_versionIndex + 1) % _versions.length;
-    });
+    _selectVersion((_versionIndex + 1) % _versions.length);
+  }
+
+  // ==== position tracking + scroll ====
+  void _handlePositon(Duration p) {
+    _position = p;
+    if (_lines.isEmpty) return;
+    final newIndex = _findLineIndex(p);
+    if (newIndex == _currentLineIndex) return;
+    setState(() => _currentLineIndex = newIndex);
+    _scrollToCurrentLine();
+  }
+
+  int _findLineIndex(Duration p) {
+    int lo = 0, hi = _lines.length - 1, ans = -1;
+    while (lo <= hi) {
+      final mid = (lo + hi) >> 1;
+      if (_lines[mid].timestamp <= p) {
+        ans = mid;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return ans;
+  }
+
+  void _scrollToCurrentLine() {
+    if (!_lyricsScroll.hasClients) return;
+    if (_currentLineIndex < 0) return;
+    final viewport = _lyricsScroll.position.viewportDimension;
+    final target =
+        _currentLineIndex * _lyricRowHeight -
+        viewport * 0.4 +
+        _lyricRowHeight / 2;
+    final clamped = target.clamp(0.0, _lyricsScroll.position.maxScrollExtent);
+    _lyricsScroll.animateTo(
+      clamped,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   @override
@@ -176,8 +275,59 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
               ],
             ),
           ),
+          const SizedBox(height: 16),
+          //middle: lyrics body + provider credit
+          Expanded(child: _buildMiddle(c)),
         ],
       ),
+    );
+  }
+
+  // ==== middle ====
+  Widget _buildMiddle(PlayerColors c) {
+    if (_loading) {
+      return Center(
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(color: c.accent, strokeWidth: 2.5),
+        ),
+      );
+    }
+
+    if (_versions.isEmpty) {
+      return _CenteredMessage(c: c, text: 'No lyrics found :(');
+    }
+
+    if (_lines.isEmpty && _plainText == null) {
+      final track = _versions[_versionIndex];
+      return _CenteredMessage(
+        c: c,
+        text: track.instrumental
+            ? 'Instrumental'
+            : 'No lyrics in this version :/',
+      );
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: _lines.isNotEmpty
+              ? _SyncedLyricsList(
+                  c: c,
+                  lines: _lines,
+                  currentIndex: _currentLineIndex,
+                  scrollController: _lyricsScroll,
+                  rowHeight: _lyricRowHeight,
+                )
+              : _PlainLyricsView(
+                  c: c,
+                  text: _plainText!,
+                  scrollController: _lyricsScroll,
+                ),
+        ),
+        _ProviderCredit(c: c),
+      ],
     );
   }
 }
@@ -223,8 +373,8 @@ class _VersionSwitcher extends StatelessWidget {
         label,
         style: TextStyle(
           fontFamily: SonoFonts.heading,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
           color: enabled ? c.onBackground : muted,
         ),
       ),
@@ -232,5 +382,164 @@ class _VersionSwitcher extends StatelessWidget {
 
     if (!enabled) return card;
     return BouncyTap(onTap: onTap!, child: card);
+  }
+}
+
+// ==== synced lyrics list ====
+class _SyncedLyricsList extends StatelessWidget {
+  final PlayerColors c;
+  final List<LyricsLine> lines;
+  final int currentIndex;
+  final ScrollController scrollController;
+  final double rowHeight;
+
+  const _SyncedLyricsList({
+    required this.c,
+    required this.lines,
+    required this.currentIndex,
+    required this.scrollController,
+    required this.rowHeight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      controller: scrollController,
+      itemCount: lines.length,
+      itemExtent: rowHeight,
+      padding: const EdgeInsets.symmetric(vertical: 80),
+      physics: const ClampingScrollPhysics(),
+      itemBuilder: (cty, i) {
+        final line = lines[i];
+        return _LyricsRow(
+          c: c,
+          text: line.text,
+          isCurrent: i == currentIndex,
+          height: rowHeight,
+        );
+      },
+    );
+  }
+}
+
+class _LyricsRow extends StatelessWidget {
+  final PlayerColors c;
+  final String text;
+  final bool isCurrent;
+  final double height;
+
+  const _LyricsRow({
+    required this.c,
+    required this.text,
+    required this.isCurrent,
+    required this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final muted = c.onBackground.withValues(alpha: 0.35);
+    return SizedBox(
+      height: height,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOutCubic,
+          style: TextStyle(
+            fontFamily: SonoFonts.heading,
+            fontSize: 22,
+            fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w500,
+            color: isCurrent ? c.onBackground : muted,
+            height: 1.25,
+          ),
+          child: Text(
+            text.isEmpty ? 'no vocals' : text,
+            textAlign: TextAlign.left,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ==== plain text fallback ====
+//
+// shown when selected version has no synced lyrics
+class _PlainLyricsView extends StatelessWidget {
+  final PlayerColors c;
+  final String text;
+  final ScrollController scrollController;
+
+  const _PlainLyricsView({
+    required this.c,
+    required this.text,
+    required this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: scrollController,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Text(
+        text,
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontFamily: SonoFonts.heading,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: c.onBackground.withValues(alpha: 0.7),
+          height: 1.6,
+        ),
+      ),
+    );
+  }
+}
+
+class _CenteredMessage extends StatelessWidget {
+  final PlayerColors c;
+  final String text;
+
+  const _CenteredMessage({required this.c, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        text,
+        style: TextStyle(
+          fontFamily: SonoFonts.primary,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: c.onBackground.withValues(alpha: 0.5),
+        ),
+      ),
+    );
+  }
+}
+
+// ==== provider credit ====
+class _ProviderCredit extends StatelessWidget {
+  final PlayerColors c;
+
+  const _ProviderCredit({required this.c});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Text(
+        'Lyrics provided by lrclib.net',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: SonoFonts.primary,
+          fontSize: 11,
+          fontWeight: FontWeight.w400,
+          color: c.onBackground.withValues(alpha: 0.4),
+        ),
+      ),
+    );
   }
 }
