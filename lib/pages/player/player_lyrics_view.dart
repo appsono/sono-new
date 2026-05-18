@@ -8,8 +8,10 @@ import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/services/lyrics/lrclib_service.dart';
 import 'package:sono/services/lyrics/models.dart';
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/icons.dart';
 import 'package:sono/widgets/player_header_card.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
+import 'package:sono/widgets/bottom_modal_sheet.dart';
 
 /// ==== Lyrics View ====
 ///
@@ -64,6 +66,19 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   int _loadSeq = 0;
   int? _loadedSongId;
 
+  //per-song sync offset in ms
+  //positive => lyrics show later
+  //for now in-memory
+  final Map<int, int> _syncOffset = {};
+  int _syncOffsetMs = 0;
+
+  bool _showAsStatic = false; // true = render as plan text
+
+  bool _syncAdjustOpen = false; // true = swap row 2 to sync-offset controls
+
+  //cached liked state
+  bool _liked = false;
+
   //header swipe down accumulator
   double _dragAccum = 0;
 
@@ -82,6 +97,8 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
     //initial preload of whatever is already queued
     _preloadUpcoming(audio.queue);
+
+    _loadLiked();
 
     _songSub = audio.currentSongStream.listen((s) {
       if (!mounted) return;
@@ -122,7 +139,23 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     _dragAccum = 0;
   }
 
-  /// ==== JSON helpers
+  // ==== liked methods ====
+  Future<void> _loadLiked() async {
+    final song = _song;
+    if (song == null) return;
+    final liked = await widget.db.getSongLiked(song.id);
+    if (!mounted) return;
+    setState(() => _liked = liked);
+  }
+
+  Future<void> _setLiked(bool v) async {
+    final song = _song;
+    if (song == null) return;
+    setState(() => _liked = v);
+    await widget.db.setSongLiked(song.id, v);
+  }
+
+  /// ==== JSON helpers ====
   String _songsToJson(List<LrclibTrack> songs) =>
       jsonEncode(songs.map((s) => s.toJson()).toList());
 
@@ -141,6 +174,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     if (song == null) return;
     if (_loadedSongId == song.id) return;
     _loadedSongId = song.id;
+    _syncOffsetMs = _syncOffset[song.id] ?? 0;
 
     setState(() {
       _versions = const [];
@@ -259,13 +293,21 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       return;
     }
     final song = _versions[_versionIndex];
-    if (song.hasSynced) {
+    if (song.hasSynced && !_showAsStatic) {
+      //synced display: full lrc with timestamps
       _lines = LrclibService.parseLrc(song.syncedLyrics!);
       _plainText = null;
+    } else if (song.hasSynced) {
+      //static display, but synced => strip timestamps
+      final parsed = LrclibService.parseLrc(song.syncedLyrics!);
+      _lines = const [];
+      _plainText = parsed.map((l) => l.text).join('\n');
     } else if (song.hasPlain) {
+      //no synced at all, fall back to plain
       _lines = const [];
       _plainText = song.plainLyrics;
     } else {
+      //instrumental or empty
       _lines = const [];
       _plainText = null;
     }
@@ -296,6 +338,136 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   void _nextVersion() {
     if (_versions.length <= 1) return;
     _selectVersion((_versionIndex + 1) % _versions.length);
+  }
+
+  // ==== synced / static display mode ====
+
+  bool get _hasSynced =>
+      _versionIndex >= 0 &&
+      _versionIndex < _versions.length &&
+      _versions[_versionIndex].hasSynced;
+
+  bool get _showingSynced => _hasSynced && !_showAsStatic;
+
+  void _showSynced() {
+    if (!_hasSynced) return;
+    _setShowAsStatic(false);
+  }
+
+  void _showStatic() => _setShowAsStatic(true);
+
+  void _setShowAsStatic(bool v) {
+    if (_showAsStatic == v) return;
+    setState(() {
+      _showAsStatic = v;
+      _refreshLinesFromCurrent();
+    });
+    if (_lyricsScroll.hasClients) _lyricsScroll.jumpTo(0);
+    if (!v) _scrollToCurrentLine();
+  }
+
+  // ==== reset & sync adjust ====
+
+  Future<void> _resetLyrics() async {
+    final song = _song;
+    if (song == null) return;
+    await widget.db.clearLyricsCache(song.id);
+    _syncOffset.remove(song.id);
+    _syncOffsetMs = 0;
+    _loadedSongId = null;
+    if (mounted) _loadFor(song);
+  }
+
+  void _setSyncOffset(int ms) {
+    final song = _song;
+    setState(() {
+      _syncOffsetMs = ms;
+      if (song != null) _syncOffset[song.id] = ms;
+    });
+    _handlePositon(_position);
+  }
+
+  void _openSyncAdjust() => setState(() => _syncAdjustOpen = true);
+  void _closeSyncAdjust() => setState(() => _syncAdjustOpen = false);
+
+  void _bumpSyncOffset(int deltaMs) {
+    _setSyncOffset((_syncOffsetMs + deltaMs).clamp(-10000, 10000));
+  }
+
+  String _formatOffset(int ms) {
+    final secs = (ms / 1000).toStringAsFixed(ms.abs() < 1000 ? 2 : 1);
+    return ms > 0 ? '+${secs}s' : '${secs}';
+  }
+
+  // ==== more menu ====
+
+  void _openMenu() {
+    final c = widget.c;
+    BottomModalSheet.show(
+      context: context,
+      title: 'Lyrics & Playback',
+      background: c.background,
+      surface: c.surface,
+      accent: c.accent,
+      onBackground: c.onBackground,
+      onAccent: c.onAccent,
+      itemsBuilder: () {
+        final audio = player.AudioService.instance;
+        final repeat = audio.repeat;
+        final repeatLabel = switch (repeat) {
+          player.RepeatMode.off => 'Off',
+          player.RepeatMode.all => 'Repeat all',
+          player.RepeatMode.one => 'Repeat all',
+        };
+        final repeatIcon = switch (repeat) {
+          player.RepeatMode.off => IconsSheet.repeatOutlined,
+          player.RepeatMode.all => IconsSheet.repeatFilled,
+          player.RepeatMode.one => IconsSheet.repeatOneFilled,
+        };
+
+        return [
+          const BottomSheetSectionLabel('Lyrics'),
+          BottomSheetAction(
+            icon: IconsSheet.playbackSpeedOutlined,
+            label: 'Adjust sync',
+            subtitle: _syncOffsetMs == 0
+                ? 'Shift lyric timing for this song'
+                : 'Currenlty ${_formatOffset(_syncOffsetMs)}',
+            onTap: _openSyncAdjust,
+          ),
+          BottomSheetAction(
+            icon: IconsSheet.deleteOutlined,
+            label: 'Reset saved lyrics',
+            subtitle: 'Clear cached and re-fetch lyrics',
+            tint: c.accent,
+            onTap: _resetLyrics,
+          ),
+          const BottomSheetDivider(),
+          const BottomSheetSectionLabel('Playback'),
+          BottomSheetToggle(
+            icon: audio.shuffle
+                ? IconsSheet.shuffleFilled
+                : IconsSheet.shuffleOutlined,
+            label: 'Shuffle',
+            value: audio.shuffle,
+            onChanged: (v) => audio.setShuffle(v),
+          ),
+          BottomSheetAction(
+            icon: repeatIcon,
+            label: 'Repeat',
+            subtitle: repeatLabel,
+            dismissOnTap: false,
+            onTap: () => audio.cycleRepeat(),
+          ),
+          BottomSheetToggle(
+            icon: _liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
+            label: 'Liked song',
+            value: _liked,
+            onChanged: _setLiked,
+          ),
+        ];
+      },
+    );
   }
 
   // ==== position tracking + scroll ====
@@ -339,10 +511,13 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   }
 
   int _findLineIndex(Duration p) {
+    //sync offset shifts position
+    //positive offset means lyrics land later than audio
+    final adjusted = p - Duration(milliseconds: _syncOffsetMs);
     int lo = 0, hi = _lines.length - 1, ans = -1;
     while (lo <= hi) {
       final mid = (lo + hi) >> 1;
-      if (_lines[mid].timestamp <= p) {
+      if (_lines[mid].timestamp <= adjusted) {
         ans = mid;
         lo = mid + 1;
       } else {
@@ -471,6 +646,21 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
           const SizedBox(height: 16),
           //middle: lyrics body + provider credit
           Expanded(child: _buildMiddle(c)),
+          const SizedBox(height: 12),
+          _LyricsBottomActions(
+            c: c,
+            hasSynced: _hasSynced,
+            showingSynced: _showingSynced,
+            onTapSynced: _hasSynced ? _showSynced : null,
+            onTapStatic: _showStatic,
+            onTapBack: widget.onClose,
+            onTapMenu: _openMenu,
+            syncAdjustOpen: _syncAdjustOpen,
+            syncOffsetMs: _syncOffsetMs,
+            onBumpSync: _bumpSyncOffset,
+            onResetSync: () => _setSyncOffset(0),
+            onCloseSync: _closeSyncAdjust,
+          ),
         ],
       ),
     );
@@ -828,6 +1018,672 @@ class _IdleGapBarState extends State<_IdleGapBar> {
               alignment: Alignment.centerLeft,
               child: Container(color: c.onBackground.withValues(alpha: 0.6)),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LyricsBottomActions extends StatelessWidget {
+  final PlayerColors c;
+  final bool hasSynced;
+  final bool showingSynced;
+  final VoidCallback? onTapSynced;
+  final VoidCallback? onTapStatic;
+  final VoidCallback onTapBack;
+  final VoidCallback onTapMenu;
+
+  //sync overlay state and wires
+  final bool syncAdjustOpen;
+  final int syncOffsetMs;
+  final void Function(int) onBumpSync;
+  final VoidCallback onResetSync;
+  final VoidCallback onCloseSync;
+
+  const _LyricsBottomActions({
+    required this.c,
+    required this.hasSynced,
+    required this.showingSynced,
+    required this.onTapSynced,
+    required this.onTapStatic,
+    required this.onTapBack,
+    required this.onTapMenu,
+    required this.syncAdjustOpen,
+    required this.syncOffsetMs,
+    required this.onBumpSync,
+    required this.onResetSync,
+    required this.onCloseSync,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const bigRadius = 28.0;
+    const smallRadius = 12.0;
+    const rowHeight = 60.0;
+    final audio = player.AudioService.instance;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        //progress pill + play/pause
+        Row(
+          children: [
+            Expanded(
+              flex: 7,
+              child: Container(
+                height: rowHeight,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: c.surface,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(bigRadius),
+                    bottomLeft: Radius.circular(smallRadius),
+                    topRight: Radius.circular(smallRadius),
+                    bottomRight: Radius.circular(smallRadius),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: _CompactProgressBar(c: c),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              flex: 2,
+              child: StreamBuilder<bool>(
+                stream: audio.playingStream,
+                initialData: audio.isPlaying,
+                builder: (_, snap) {
+                  final playing = snap.data ?? false;
+                  return _LyricsActionButton(
+                    icon: playing
+                        ? IconsSheet.pauseFilled
+                        : IconsSheet.playFilled,
+                    background: c.accent,
+                    foreground: c.onAccent,
+                    onTap: audio.playOrPause,
+                    tooltip: playing ? 'Pause' : 'Play',
+                    height: rowHeight,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(smallRadius),
+                      bottomLeft: Radius.circular(smallRadius),
+                      topRight: Radius.circular(bigRadius),
+                      bottomRight: Radius.circular(smallRadius),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        //either normal ctrls or sync adjust bar
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 220),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          layoutBuilder: (currentChild, previousChildren) => Stack(
+            alignment: Alignment.center,
+            children: [...previousChildren, ?currentChild],
+          ),
+          child: syncAdjustOpen
+              ? _SyncAdjustBar(
+                  key: const ValueKey('sync-adjust'),
+                  c: c,
+                  offsetMs: syncOffsetMs,
+                  onBump: onBumpSync,
+                  onReset: onResetSync,
+                  onClose: onCloseSync,
+                  rowHeight: rowHeight,
+                  bigRadius: bigRadius,
+                  smallRadius: smallRadius,
+                )
+              : _NormalControlRow(
+                  key: const ValueKey('normal-controls'),
+                  c: c,
+                  hasSynced: hasSynced,
+                  showingSynced: showingSynced,
+                  onTapSynced: onTapSynced,
+                  onTapStatic: onTapStatic,
+                  onTapBack: onTapBack,
+                  onTapMenu: onTapMenu,
+                  rowHeight: rowHeight,
+                  bigRadius: bigRadius,
+                  smallRadius: smallRadius,
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+// ==== compact progress bar ====
+class _CompactProgressBar extends StatefulWidget {
+  final PlayerColors c;
+  const _CompactProgressBar({required this.c});
+
+  @override
+  State<_CompactProgressBar> createState() => _CompactProgressBarState();
+}
+
+class _CompactProgressBarState extends State<_CompactProgressBar> {
+  StreamSubscription<Duration>? _posSub;
+  StreamSubscription<Duration>? _durSub;
+  Duration _position = Duration.zero;
+  Duration _duration = Duration.zero;
+  bool _dragging = false;
+  double _dragMs = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    final audio = player.AudioService.instance;
+    _position = audio.position;
+    _duration = audio.duration;
+    _posSub = audio.positionStream.listen((p) {
+      if (!mounted || _dragging) return;
+      setState(() => _position = p);
+    });
+    _durSub = audio.durationStream.listen((d) {
+      if (!mounted) return;
+      setState(() => _duration = d);
+    });
+  }
+
+  @override
+  void dispose() {
+    _posSub?.cancel();
+    _durSub?.cancel();
+    super.dispose();
+  }
+
+  static String _fmt(Duration d) {
+    final h = d.inHours;
+    final m = d.inMinutes.toString().padLeft(2, '0');
+    final s = (d.inSeconds % 60).toString().padLeft(2, '0');
+    if (h > 0) return '$h:$m:$s';
+    return '$m:$s';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = widget.c;
+    final totalMs = _duration.inMilliseconds.toDouble();
+    final safeMax = totalMs > 0 ? totalMs : 1.0;
+    final posMs = _dragging
+        ? _dragMs.clamp(0.0, safeMax)
+        : _position.inMilliseconds.toDouble().clamp(0.0, safeMax);
+    final displayPos = Duration(milliseconds: posMs.toInt());
+
+    final muted = c.onBackground.withValues(alpha: 0.55);
+    final inactive = c.onBackground.withValues(alpha: 0.18);
+
+    final timeStyle = TextStyle(
+      fontFamily: SonoFonts.primary,
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      color: muted,
+    );
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(width: 38, child: Text(_fmt(displayPos), style: timeStyle)),
+        Expanded(
+          child: SliderTheme(
+            data: SliderThemeData(
+              trackHeight: 3,
+              padding: EdgeInsets.zero,
+              activeTrackColor: c.progressBar,
+              inactiveTrackColor: inactive,
+              thumbColor: c.progressBar,
+              disabledActiveTrackColor: c.progressBar,
+              disabledInactiveTrackColor: inactive,
+              disabledThumbColor: c.progressBar,
+              thumbShape: const RoundSliderThumbShape(
+                enabledThumbRadius: 6,
+                elevation: 0,
+                pressedElevation: 0,
+              ),
+              overlayShape: SliderComponentShape.noOverlay,
+              trackShape: const RoundedRectSliderTrackShape(),
+            ),
+            child: Slider(
+              value: posMs,
+              min: 0,
+              max: safeMax,
+              onChangeStart: totalMs > 0
+                  ? (v) => setState(() {
+                      _dragging = true;
+                      _dragMs = v;
+                    })
+                  : null,
+              onChanged: totalMs > 0
+                  ? (v) => setState(() => _dragMs = v)
+                  : null,
+              onChangeEnd: totalMs > 0
+                  ? (v) {
+                      player.AudioService.instance.seek(
+                        Duration(milliseconds: v.toInt()),
+                      );
+                    }
+                  : null,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 38,
+          child: Text(
+            _fmt(_duration),
+            style: timeStyle,
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ==== row 2 normal mode ====
+class _NormalControlRow extends StatelessWidget {
+  final PlayerColors c;
+  final bool hasSynced;
+  final bool showingSynced;
+  final VoidCallback? onTapSynced;
+  final VoidCallback? onTapStatic;
+  final VoidCallback onTapBack;
+  final VoidCallback onTapMenu;
+  final double rowHeight;
+  final double bigRadius;
+  final double smallRadius;
+
+  const _NormalControlRow({
+    required this.c,
+    required this.hasSynced,
+    required this.showingSynced,
+    required this.onTapSynced,
+    required this.onTapStatic,
+    required this.onTapBack,
+    required this.onTapMenu,
+    required this.rowHeight,
+    required this.bigRadius,
+    required this.smallRadius,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: _LyricsActionButton(
+            icon: IconsSheet.backOutlined,
+            background: c.surface,
+            foreground: c.onBackground.withValues(alpha: 0.85),
+            onTap: onTapBack,
+            tooltip: 'Back to player',
+            height: rowHeight,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(smallRadius),
+              bottomLeft: Radius.circular(bigRadius),
+              topRight: Radius.circular(smallRadius),
+              bottomRight: Radius.circular(smallRadius),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 5,
+          child: _SyncedStaticPill(
+            c: c,
+            hasSynced: hasSynced,
+            showingSynced: showingSynced,
+            onTapSynced: onTapSynced,
+            onTapStatic: onTapStatic,
+            height: rowHeight,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 2,
+          child: _LyricsActionButton(
+            icon: IconsSheet.moreOptionsFilled,
+            background: c.surface,
+            foreground: c.onBackground.withValues(alpha: 0.85),
+            onTap: onTapMenu,
+            tooltip: 'More',
+            height: rowHeight,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(smallRadius),
+              bottomLeft: Radius.circular(smallRadius),
+              topRight: Radius.circular(smallRadius),
+              bottomRight: Radius.circular(smallRadius),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ==== action button ====
+class _LyricsActionButton extends StatelessWidget {
+  final String icon;
+  final Color background;
+  final Color foreground;
+  final VoidCallback? onTap;
+  final String tooltip;
+  final BorderRadius borderRadius;
+  final double height;
+
+  const _LyricsActionButton({
+    required this.icon,
+    required this.background,
+    required this.foreground,
+    required this.onTap,
+    required this.tooltip,
+    required this.borderRadius,
+    required this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final card = Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: borderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Center(child: IconsSheet.svg(icon, size: 22, color: foreground)),
+    );
+
+    if (onTap == null) {
+      return IgnorePointer(child: Opacity(opacity: 0.4, child: card));
+    }
+    return Tooltip(
+      message: tooltip,
+      child: BouncyTap(onTap: onTap!, child: card),
+    );
+  }
+}
+
+// ==== synced / static pill ====
+class _SyncedStaticPill extends StatelessWidget {
+  final PlayerColors c;
+  final bool hasSynced;
+  final bool showingSynced;
+  final VoidCallback? onTapSynced;
+  final VoidCallback? onTapStatic;
+  final double height;
+
+  const _SyncedStaticPill({
+    required this.c,
+    required this.hasSynced,
+    required this.showingSynced,
+    required this.onTapSynced,
+    required this.onTapStatic,
+    required this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: c.surface,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _PillSegment(
+              c: c,
+              label: 'Synced',
+              active: showingSynced,
+              enabled: hasSynced,
+              onTap: onTapSynced,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: _PillSegment(
+              c: c,
+              label: 'Static',
+              active: !showingSynced,
+              enabled: true,
+              onTap: onTapStatic,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PillSegment extends StatelessWidget {
+  final PlayerColors c;
+  final String label;
+  final bool active;
+  final bool enabled;
+  final VoidCallback? onTap;
+
+  const _PillSegment({
+    required this.c,
+    required this.label,
+    required this.active,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = !enabled
+        ? c.onBackground.withValues(alpha: 0.25)
+        : active
+        ? c.onAccent
+        : c.onBackground.withValues(alpha: 0.7);
+
+    final inner = AnimatedContainer(
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: active ? c.accent : Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontFamily: SonoFonts.primary,
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: fg,
+        ),
+      ),
+    );
+    if (!enabled || onTap == null) return inner;
+    return BouncyTap(onTap: onTap!, child: inner);
+  }
+}
+
+// ==== sync adjust bar ====
+class _SyncAdjustBar extends StatelessWidget {
+  final PlayerColors c;
+  final int offsetMs;
+  final void Function(int) onBump;
+  final VoidCallback onReset;
+  final VoidCallback onClose;
+  final double rowHeight;
+  final double bigRadius;
+  final double smallRadius;
+
+  const _SyncAdjustBar({
+    required this.c,
+    required this.offsetMs,
+    required this.onBump,
+    required this.onReset,
+    required this.onClose,
+    required this.rowHeight,
+    required this.bigRadius,
+    required this.smallRadius,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: rowHeight,
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: c.surface,
+        borderRadius: BorderRadiusGeometry.only(
+          topLeft: Radius.circular(smallRadius),
+          bottomLeft: Radius.circular(bigRadius),
+          topRight: Radius.circular(smallRadius),
+          bottomRight: Radius.circular(bigRadius),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _SyncBumpButton(c: c, label: '-1s', onTap: () => onBump(-1000)),
+          const SizedBox(width: 4),
+          _SyncBumpButton(c: c, label: '-.1s', onTap: () => onBump(-100)),
+          const SizedBox(width: 6),
+          Expanded(
+            child: _SyncDisplay(c: c, offsetMs: offsetMs, onReset: onReset),
+          ),
+          const SizedBox(width: 6),
+          _SyncBumpButton(c: c, label: '+.1s', onTap: () => onBump(100)),
+          const SizedBox(width: 4),
+          _SyncBumpButton(c: c, label: '+1s', onTap: () => onBump(1000)),
+          const SizedBox(width: 4),
+          _SyncBumpButton(c: c, icon: IconsSheet.closeOutlined, onTap: onClose),
+        ],
+      ),
+    );
+  }
+}
+
+class _SyncBumpButton extends StatelessWidget {
+  final PlayerColors c;
+  final String? label;
+  final String? icon;
+  final VoidCallback onTap;
+
+  const _SyncBumpButton({
+    required this.c,
+    required this.onTap,
+    this.label,
+    this.icon,
+  }) : assert(label != null || icon != null);
+
+  @override
+  Widget build(BuildContext context) {
+    return BouncyTap(
+      onTap: onTap,
+      child: Container(
+        width: 46,
+        height: double.infinity,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: c.background.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: icon != null
+            ? IconsSheet.svg(
+                icon!,
+                size: 16,
+                color: c.onBackground.withValues(alpha: 0.85),
+              )
+            : Text(
+                label!,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: c.onBackground.withValues(alpha: 0.85),
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class _SyncDisplay extends StatelessWidget {
+  final PlayerColors c;
+  final int offsetMs;
+  final VoidCallback onReset;
+
+  const _SyncDisplay({
+    required this.c,
+    required this.offsetMs,
+    required this.onReset,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final dirty = offsetMs != 0;
+    final secs = (offsetMs / 1000).toStringAsFixed(
+      offsetMs.abs() < 1000 ? 2 : 1,
+    );
+    final formatted = offsetMs > 0 ? '+${secs}s' : '${secs}s';
+    final color = dirty ? c.accent : c.onBackground.withValues(alpha: 0.85);
+
+    return GestureDetector(
+      onTap: dirty ? onReset : null,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              dirty ? formatted : 'Sync: 0.0s',
+              style: TextStyle(
+                fontFamily: SonoFonts.heading,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+            ),
+            if (dirty) ...[
+              const SizedBox(width: 6),
+              IconsSheet.svg(
+                IconsSheet.closeOutlined,
+                size: 12,
+                color: c.onBackground.withValues(alpha: 0.45),
+              ),
+            ],
           ],
         ),
       ),
