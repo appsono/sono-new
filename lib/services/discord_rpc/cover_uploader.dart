@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 /// which host originally served it
 class CoverUploader {
   //min ttl across hosts sos cached urls are always valid
-  static const _urlTtl = Duration(hours: 3);
+  static const _urlTtl = Duration(hours: 1);
   //how long to skip a host after failure before retry
   static const _hostCooldown = Duration(minutes: 10);
   //pre-request upload timeout
