@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Last updated: 8 May 2026
+Last updated: 18 May 2026
 
 Sono is a local music player by Mathis, distributed as free,
 open-source software under the GNU GPLv3.
@@ -36,9 +36,13 @@ when you uninstall.
 
 ---
 
-## Optional network features
+## Network features
 
-All network features are off by default.
+Sono works fully offline. The features below use the internet only when their conditions apply.
+
+- Discord must be explicitly connected.
+- Lyrics fetch when the fullscreen player is opened.
+- The update check runs on launch or when manually used by user.
 
 ### Discord Rich Presence
 
@@ -48,12 +52,23 @@ When enabled, Sono:
   (Android Keystore). The token never leaves your device.
 - Sends the current song title, artist, playback timestamps, and a
   cover art URL to Discord for display on your profile.
-- Uploads the current song's cover art to [tmpfiles.org][tmpfiles]
-  (files expire after one hour) so Discord can fetch it.
-  The upload contains only the image.
+- Uploads the current song's cover art to a temporary file host so
+  Discord can fetch it. The primary host is [uguu.se][uguu]
+  (3 h expiry); if it fails, Sono falls back to [Litterbox][litterbox]
+  (1 h expiry). Uploads contain only them image.
 
 Disconnecting from Settings deletes the stored token and stops all
 Discord traffic immediately.
+
+### Lyrics
+
+When the fullscreen player is opened, Sono fetches lyrics from
+[lrclib.net][lrclib] for the current song and pre-fetches lyrics for
+the next few queued songs. Each request contains the song's title,
+artist name, and (when available) album name, plus a User-Agent string
+identifying Sono and its version. Fetched lyrics are cached locally so
+the same song is not re-requested. No identifiers are attached beyond
+what lrclib logs for any HTTPS request.
 
 ### Update check
 
@@ -77,13 +92,19 @@ request. Nothing is downloaded automatically.
 
 - **Discord**: Rich Presence display.
 [Privacy policy][discord-privacy]
-- **tmpfiles.org**: Transient cover art hosting (1 h expiry).
-[tmpfiles.org][tmpfiles]
+- **uguu.se**: Transient cover art hosting (3 h expiry).
+[uguu.se][uguu]
+- **Litterbox** (litterbox.catbox.moe): Transient cover art hosting fallback (1 h expiry).
+[Litterbox][litterbox]
+- **lrclib.net**: Open-source Lyrics database.
+[lrclib.net][lrclib]
 - **GitHub**: Update checks and source hosting.
 [Privacy statement][github-privacy]
 
 [discord-privacy]: https://discord.com/privacy
-[tmpfiles]: https://tmpfiles.org/
+[uguu]: https://uguu.se/
+[litterbox]: https://litterbox.catbox.moe/
+[lrclib]: https://lrclib.net/
 [github-privacy]: https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement
 
 ---
