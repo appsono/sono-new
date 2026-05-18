@@ -5,14 +5,28 @@ import 'package:http/http.dart' as http;
 
 /// Uploads cover art bytes to a temp file host so discord can display them
 ///
-/// Uses tmpfiles.org. The URL is valid for one hour.
+/// Tries hosts in order with short cooldown on failure so a dead service
+/// doesnt punish every upload with a full timeout. Cached URL TTL is he
+/// shortest across all hosts so a hit is always still valid regardless of
+/// which host originally served it
 class CoverUploader {
-  static const _uploadUrl = 'https://tmpfiles.org/api/v1/upload';
-  static const _urlTtl = Duration(hours: 1);
+  //min ttl across hosts sos cached urls are always valid
+  static const _urlTtl = Duration(hours: 3);
+  //how long to skip a host after failure before retry
+  static const _hostCooldown = Duration(minutes: 10);
+  //pre-request upload timeout
+  static const _uploadTimeout = Duration(seconds: 15);
 
   final _client = http.Client();
 
   final _cache = <String, ({String url, DateTime uploadedAt})>{};
+  //hosts that recently failed
+  final _cooldownUntil = <String, DateTime>{};
+
+  static final _hosts = <({String name, _UploadFn fn})>[
+    (name: 'uguu', fn: _uploadUguu),
+    (name: 'litterbox', fn: _uploadLitterbox),
+  ];
 
   /// Upload image bytes and return public URL, or null on failure
   Future<String?> upload(Uint8List imageBytes) async {
@@ -26,35 +40,93 @@ class CoverUploader {
       return cached.url;
     }
 
-    try {
-      final request = http.MultipartRequest('POST', Uri.parse(_uploadUrl))
-        ..files.add(
-          http.MultipartFile.fromBytes(
-            'file',
-            imageBytes,
-            filename: 'cover.jpg',
-          ),
-        );
+    final now = DateTime.now();
+    for (final host in _hosts) {
+      final coolUntil = _cooldownUntil[host.name];
+      if (coolUntil != null && now.isBefore(coolUntil)) continue;
 
-      final response = await _client.send(request);
-      final body = await response.stream.bytesToString();
+      try {
+        final url = await host.fn(_client, imageBytes).timeout(_uploadTimeout);
+        if (url != null) {
+          _cooldownUntil.remove(host.name);
+          _cachePut(hash, url);
+          return url;
+        }
+      } catch (_) {}
 
-      if (response.statusCode != 200) return null;
-
-      final json = jsonDecode(body) as Map<String, dynamic>;
-      final url = (json['data'] as Map<String, dynamic>?)?['url'] as String?;
-      if (url == null) return null;
-
-      //tmpfiles returns /123/filename.jpg, need /dl/123/filename.jpg
-      final publicUrl = url.replaceFirst('org/', 'org/dl/');
-
-      if (_cache.length >= 3) _cache.remove(_cache.keys.first);
-      _cache[hash] = (url: publicUrl, uploadedAt: DateTime.now());
-      return publicUrl;
-    } catch (_) {
-      return null;
+      _cooldownUntil[host.name] = now.add(_hostCooldown);
     }
+
+    return null;
+  }
+
+  void _cachePut(String hash, String url) {
+    if (_cache.length >= 3) _cache.remove(_cache.keys.first);
+    _cache[hash] = (url: url, uploadedAt: DateTime.now());
+  }
+
+  // ==== hosts ====
+  // https://uguu.se/api
+  static Future<String?> _uploadUguu(
+    http.Client client,
+    Uint8List bytes,
+  ) async {
+    final request =
+        http.MultipartRequest('POST', Uri.parse('https://uguu.se/upload'))
+          ..files.add(
+            http.MultipartFile.fromBytes(
+              'files[]',
+              bytes,
+              filename: 'cover.jpg',
+            ),
+          );
+
+    final response = await client.send(request);
+    if (response.statusCode != 200) return null;
+
+    final body = await response.stream.bytesToString();
+    final json = jsonDecode(body) as Map<String, dynamic>;
+    if (json['success'] != true) return null;
+
+    final files = json['files'] as List<dynamic>?;
+    if (files == null || files.isEmpty) return null;
+
+    return (files.first as Map<String, dynamic>)['url'] as String?;
+  }
+
+  // https://litterbox.catbox.moe/tools.php
+  static Future<String?> _uploadLitterbox(
+    http.Client client,
+    Uint8List bytes,
+  ) async {
+    final request =
+        http.MultipartRequest(
+            'POST',
+            Uri.parse(
+              'https://litterbox.catbox.moe/resources/internals/api.https',
+            ),
+          )
+          ..fields['reqtype'] = 'fileupload'
+          ..fields['time'] = '1h'
+          ..files.add(
+            http.MultipartFile.fromBytes(
+              'fileToUpload',
+              bytes,
+              filename: 'cover.jpg',
+            ),
+          );
+
+    final response = await client.send(request);
+    if (response.statusCode != 200) return null;
+
+    //catbox retunrs url as plain text on success
+    //error text on failure
+    final body = (await response.stream.bytesToString()).trim();
+    if (!body.startsWith('https://')) return null;
+    return body;
   }
 
   void dispose() => _client.close();
 }
+
+typedef _UploadFn = Future<String?> Function(http.Client, Uint8List);
