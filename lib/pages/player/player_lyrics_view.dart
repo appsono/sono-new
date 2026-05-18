@@ -417,7 +417,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
         final repeatLabel = switch (repeat) {
           player.RepeatMode.off => 'Off',
           player.RepeatMode.all => 'Repeat all',
-          player.RepeatMode.one => 'Repeat all',
+          player.RepeatMode.one => 'Repeat one',
         };
         final repeatIcon = switch (repeat) {
           player.RepeatMode.off => IconsSheet.repeatOutlined,
