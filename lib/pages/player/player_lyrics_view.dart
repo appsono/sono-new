@@ -67,7 +67,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   int? _loadedSongId;
 
   //per-song sync offset in ms
-  //positive => lyrics show later
+  //positive => lyrics advance (lead audio)
   //for now in-memory
   final Map<int, int> _syncOffset = {};
   int _syncOffsetMs = 0;
@@ -513,7 +513,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   int _findLineIndex(Duration p) {
     //sync offset shifts position
     //positive offset means lyrics land later than audio
-    final adjusted = p - Duration(milliseconds: _syncOffsetMs);
+    final adjusted = p + Duration(milliseconds: _syncOffsetMs);
     int lo = 0, hi = _lines.length - 1, ans = -1;
     while (lo <= hi) {
       final mid = (lo + hi) >> 1;
