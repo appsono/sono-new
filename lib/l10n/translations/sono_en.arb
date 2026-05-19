@@ -1,0 +1,128 @@
+{
+  "@@locale": "en",
+
+  "appName": "Sono",
+  "@appName": {
+    "description": "Application name, shown in window titles and stores"
+  },
+
+  "commonUnknown": "Unknown",
+  "commonUnknownArtist": "Unknown artist",
+  "commonSongsCount": "{count, plural, =0{no songs} =1{1 song} other{{count} songs}}",
+  "@commonSongsCount": {
+    "description": "Number of songs for an artist/album/playlist",
+    "placeholders": {
+      "count": { "type": "int", "format": "compact" }
+    }
+  },
+
+  "navHome": "Home",
+  "navLibrary": "Library",
+  "navSearch": "Search",
+
+  "homeActionShuffleAll": "Shuffle all",
+  "homeActionCreatePlaylist": "Create Playlist",
+  "homeHeaderNewsAndUpdates": "News & Updates",
+  "homeHeaderSettings": "Settings",
+  "homeSectionRecentlyAdded": "Recently Added",
+
+  "homeGreetingEarlyBird": "Wow early bird",
+  "homeGreetingMorning": "Morning",
+  "homeGreetingMidday": "Midday",
+  "homeGreetingAfternoon": "Afternoon",
+  "homeGreetingEvening": "Evening",
+  "homeGreetingNight": "Night",
+  "homeGreetingLate": "Heyyy sleep",
+  "@homeGreetingEarlyBird": { "description": "Greeting shown roughly 04:00–06:00" },
+  "@homeGreetingMorning":   { "description": "Greeting shown roughly 06:00–11:00" },
+  "@homeGreetingMidday":    { "description": "Greeting shown roughly 11:00–14:00" },
+  "@homeGreetingAfternoon": { "description": "Greeting shown roughly 14:00–17:00" },
+  "@homeGreetingEvening":   { "description": "Greeting shown roughly 17:00–20:00" },
+  "@homeGreetingNight":     { "description": "Greeting shown roughly 20:00–24:00" },
+  "@homeGreetingLate":      { "description": "Greeting shown roughly 00:00–04:00" },
+
+  "homeFallbackPhrase1": "have fun doing whatever",
+  "homeFallbackPhrase2": "enjoy the listen!",
+  "homeFallbackPhrase3": "what's on today?",
+  "homeFallbackPhrase4": "welcome back :D",
+  "homeFallbackPhrase5": "b- baka!",
+  "homeFallbackPhrase6": "what we fellin'?",
+  "homeFallbackPhrase7": "hehe >:D",
+  "homeFallbackPhrase8": "mweh :3",
+  "homeFallbackPhrase9": "who are you?!",
+  "homeFallbackPhrase10": "set your username..",
+  "@homeFallbackPhrase1": {
+    "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful — match the tone, not the literal words."
+  },
+
+  "playerNowPlaying": "Now Playing",
+  "@playerNowPlaying": {
+    "description": "Used in the player top bar and on the queue view's collapse button."
+  },
+  "playerOriginAllSongs": "All Songs",
+  "@playerOriginAllSongs": {
+    "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
+  },
+
+  "playerTooltipPlay": "Play",
+  "playerTooltipPause": "Pause",
+  "playerTooltipSkipNext": "Next",
+
+  "playerTooltipShuffleOn": "Shuffling songs",
+  "playerTooltipShuffleOff": "Shuffle off",
+  "@playerTooltipShuffleOn": {
+    "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
+  },
+  "@playerTooltipShuffleOff": {
+    "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
+  },
+
+  "playerTooltipRepeatOff": "Repeat off",
+  "playerTooltipRepeatAll": "Repeats all",
+  "playerTooltipRepeatOne": "Repeats one",
+  "@playerTooltipRepeatOff": {
+    "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
+  },
+
+  "playerTooltipOpenQueue": "Open Queue",
+  "playerTooltipOpenLyrics": "Open Lyrics",
+
+  "queueLabelUpNext": "Up Next",
+  "queueTooltipAddToPlaylist": "Add to playlist",
+  "@queueTooltipAddToPlaylist": {
+    "description": "Tooltip on the add-to-playlist button in the queue view."
+  },
+
+  "lyricsEmptyNoneFound": "No lyrics found :(",
+  "lyricsEmptyInstrumental": "Instrumental",
+  "lyricsEmptyNoneInVersion": "No lyrics in this version :/",
+  "lyricsPillSynced": "Synced",
+  "lyricsPillStatic": "Static",
+  "lyricsProviderCredit": "Lyrics provided by lrclib.net",
+
+  "lyricsMenuTitle": "Lyrics & Playback",
+  "lyricsMenuSectionLyrics": "Lyrics",
+  "lyricsMenuSectionPlayback": "Playback",
+  "lyricsMenuAdjustSync": "Adjust sync",
+  "lyricsMenuAdjustSyncSubtitleZero": "Shift lyric timing for this song",
+  "lyricsMenuAdjustSyncSubtitleOffset": "Currently {offset}",
+  "@lyricsMenuAdjustSyncSubtitleOffset": {
+    "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
+    "placeholders": {
+      "offset": { "type": "String", "example": "+2s" }
+    }
+  },
+  "lyricsMenuResetSaved": "Reset saved lyrics",
+  "lyricsMenuResetSavedSubtitle": "Clear cached and re-fetch lyrics",
+  "lyricsMenuShuffle": "Shuffle",
+  "lyricsMenuRepeat": "Repeat",
+  "lyricsMenuRepeatOff": "Off",
+  "lyricsMenuRepeatAll": "Repeat all",
+  "lyricsMenuRepeatOne": "Repeat one",
+  "@lyricsMenuRepeatOff": {
+    "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+  },
+
+  "authSignIn": "Sign in"
+}
+
