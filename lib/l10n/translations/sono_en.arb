@@ -24,7 +24,10 @@
   "homeActionCreatePlaylist": "Create Playlist",
   "homeHeaderNewsAndUpdates": "News & Updates",
   "homeHeaderSettings": "Settings",
+
   "homeSectionRecentlyAdded": "Recently Added",
+  "homeSectionAlbums": "Albums",
+  "homeSectionArtists": "Artists",
 
   "homeGreetingEarlyBird": "Wow early bird",
   "homeGreetingMorning": "Morning",
@@ -34,12 +37,12 @@
   "homeGreetingNight": "Night",
   "homeGreetingLate": "Heyyy sleep",
   "@homeGreetingEarlyBird": { "description": "Greeting shown roughly 04:00–06:00" },
-  "@homeGreetingMorning":   { "description": "Greeting shown roughly 06:00–11:00" },
-  "@homeGreetingMidday":    { "description": "Greeting shown roughly 11:00–14:00" },
+  "@homeGreetingMorning": { "description": "Greeting shown roughly 06:00–11:00" },
+  "@homeGreetingMidday": { "description": "Greeting shown roughly 11:00–14:00" },
   "@homeGreetingAfternoon": { "description": "Greeting shown roughly 14:00–17:00" },
-  "@homeGreetingEvening":   { "description": "Greeting shown roughly 17:00–20:00" },
-  "@homeGreetingNight":     { "description": "Greeting shown roughly 20:00–24:00" },
-  "@homeGreetingLate":      { "description": "Greeting shown roughly 00:00–04:00" },
+  "@homeGreetingEvening": { "description": "Greeting shown roughly 17:00–20:00" },
+  "@homeGreetingNight": { "description": "Greeting shown roughly 20:00–24:00" },
+  "@homeGreetingLate": { "description": "Greeting shown roughly 00:00–04:00" },
 
   "homeFallbackPhrase1": "have fun doing whatever",
   "homeFallbackPhrase2": "enjoy the listen!",
@@ -52,7 +55,7 @@
   "homeFallbackPhrase9": "who are you?!",
   "homeFallbackPhrase10": "set your username..",
   "@homeFallbackPhrase1": {
-    "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful — match the tone, not the literal words."
+    "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
   },
 
   "playerNowPlaying": "Now Playing",
