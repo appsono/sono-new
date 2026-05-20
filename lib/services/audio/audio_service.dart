@@ -26,20 +26,20 @@ enum QueueSource {
 /// > refId: optional id to resolve source later (albumId, playlistId, etc)
 class QueueOrigin {
   final QueueSource source;
-  final String label;
+  final String? label;
   final int? refId;
 
-  const QueueOrigin({required this.source, required this.label, this.refId});
+  const QueueOrigin({required this.source, this.label, this.refId});
 
-  static const allSongs = QueueOrigin(
-    source: QueueSource.allSongs,
-    label: 'All Songs',
-  );
+  static const allSongs = QueueOrigin(source: QueueSource.allSongs);
+  static const recentlyAdded = QueueOrigin(source: QueueSource.recentlyAdded);
+  static const liked = QueueOrigin(source: QueueSource.liked);
+  static const search = QueueOrigin(source: QueueSource.search);
 
   Map<String, dynamic> toJson() => {
     'source': source.name,
     'label': label,
-    if (refId != null) 'redId': refId,
+    if (refId != null) 'refId': refId,
   };
 
   factory QueueOrigin.fromJson(Map<String, dynamic> json) => QueueOrigin(
