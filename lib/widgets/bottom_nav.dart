@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/icons.dart';
@@ -21,26 +23,34 @@ class SonoNavBar extends StatelessWidget {
   });
 
   static const _items = [
-    _NavItem(
-      icon: IconsSheet.homeOutlined,
-      iconFilled: IconsSheet.homeFilled,
-      label: 'Home',
-    ),
+    _NavItem(icon: IconsSheet.homeOutlined, iconFilled: IconsSheet.homeFilled),
     _NavItem(
       icon: IconsSheet.searchOutlined,
       iconFilled: IconsSheet.searchFilled,
-      label: 'Search',
     ),
     _NavItem(
       icon: IconsSheet.libraryOutlined,
       iconFilled: IconsSheet.libraryFilled,
-      label: 'Library',
     ),
   ];
+
+  String _labeFor(AppLocalizations l, int index) {
+    switch (index) {
+      case 0:
+        return l.navHome;
+      case 1:
+        return l.navSearch;
+      case 2:
+        return l.navLibrary;
+      default:
+        return '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.sono;
+    final l = AppLocalizations.of(context);
 
     final radius = miniPlayerVisible
         ? BorderRadius.only(
@@ -68,7 +78,7 @@ class SonoNavBar extends StatelessWidget {
           return _NavBarItem(
             icon: item.icon,
             iconFilled: item.iconFilled,
-            label: item.label,
+            label: _labeFor(l, i),
             selected: selected,
             onTap: () => onDestinationSelected(i),
           );
@@ -81,12 +91,7 @@ class SonoNavBar extends StatelessWidget {
 class _NavItem {
   final String icon;
   final String iconFilled;
-  final String label;
-  const _NavItem({
-    required this.icon,
-    required this.iconFilled,
-    required this.label,
-  });
+  const _NavItem({required this.icon, required this.iconFilled});
 }
 
 class _NavBarItem extends StatelessWidget {
