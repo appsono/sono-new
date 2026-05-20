@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/theme/icons.dart';
@@ -21,6 +23,7 @@ class SecondaryControls extends StatelessWidget {
   Widget build(BuildContext context) {
     final audio = player.AudioService.instance;
     final inactive = c.onBackground.withValues(alpha: 0.6);
+    final l = AppLocalizations.of(context);
 
     return Center(
       child: Container(
@@ -44,7 +47,9 @@ class SecondaryControls extends StatelessWidget {
                       : IconsSheet.shuffleOutlined,
                   color: on ? c.accent : inactive,
                   onTap: () => audio.setShuffle(!on),
-                  tooltip: on ? 'Shuffling songs' : 'Shuffle off',
+                  tooltip: on
+                      ? l.playerTooltipShuffleOn
+                      : l.playerTooltipShuffleOff,
                 );
               },
             ),
@@ -61,9 +66,9 @@ class SecondaryControls extends StatelessWidget {
                   player.RepeatMode.one => IconsSheet.repeatOneOutlined,
                 };
                 final tip = switch (mode) {
-                  player.RepeatMode.off => 'Repeat off',
-                  player.RepeatMode.all => 'Repeats all',
-                  player.RepeatMode.one => 'Repeats one',
+                  player.RepeatMode.off => l.playerTooltipRepeatOff,
+                  player.RepeatMode.all => l.playerTooltipRepeatAll,
+                  player.RepeatMode.one => l.playerTooltipRepeatOne,
                 };
                 return _PillButton(
                   icon: icon,
@@ -79,14 +84,14 @@ class SecondaryControls extends StatelessWidget {
               icon: IconsSheet.queueFilled,
               color: inactive,
               onTap: onOpenQueue ?? () {},
-              tooltip: 'Open Queue',
+              tooltip: l.playerTooltipOpenQueue,
               size: 26,
             ),
             _PillButton(
               icon: IconsSheet.lyricsOutlined,
               color: inactive,
               onTap: onOpenLyrics ?? () {},
-              tooltip: 'Open Lyrics',
+              tooltip: l.playerTooltipOpenLyrics,
               size: 26,
             ),
           ],

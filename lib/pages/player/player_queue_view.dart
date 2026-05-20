@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+import 'package:sono/l10n/localizations.dart';
+import 'package:sono/utils/queue_origin_label.dart';
+
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
@@ -255,6 +258,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
   @override
   Widget build(BuildContext context) {
     final c = widget.c;
+    final l = AppLocalizations.of(context);
 
     return Container(
       color: c.background,
@@ -363,7 +367,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'Now Playing',
+                              l.playerNowPlaying,
                               style: TextStyle(
                                 fontFamily: SonoFonts.primary,
                                 color: c.onAccent,
@@ -396,6 +400,7 @@ class _LabelRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final muted = c.onBackground.withValues(alpha: 0.5);
+    final l = AppLocalizations.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -404,7 +409,7 @@ class _LabelRow extends StatelessWidget {
         textBaseline: TextBaseline.alphabetic,
         children: [
           Text(
-            'Up Next',
+            l.queueLabelUpNext,
             style: TextStyle(
               fontFamily: SonoFonts.heading,
               fontSize: 16,
@@ -418,7 +423,10 @@ class _LabelRow extends StatelessWidget {
               stream: player.AudioService.instance.originStream,
               initialData: player.AudioService.instance.currentOrigin,
               builder: (_, snap) {
-                final label = snap.data?.label ?? 'All Songs';
+                final label = queueOriginLabel(
+                  context: context,
+                  origin: snap.data ?? player.QueueOrigin.allSongs,
+                );
                 return Text(
                   label,
                   textAlign: TextAlign.end,
@@ -462,8 +470,9 @@ class _QueueRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final title = song.title;
-    final artist = song.displayArtist ?? 'Unknown artist';
+    final artist = song.displayArtist ?? l.commonUnknownArtist;
     final muted = c.onBackground.withValues(alpha: 0.55);
 
     final row = Container(
@@ -605,6 +614,7 @@ class _QueueActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final audio = player.AudioService.instance;
+    final l = AppLocalizations.of(context);
     const height = 60.0;
     const bigRadius = 28.0;
     const smallRadius = 12.0;
@@ -639,7 +649,7 @@ class _QueueActions extends StatelessWidget {
                 background: c.accent,
                 foreground: c.onAccent,
                 onTap: audio.playOrPause,
-                tooltip: playing ? 'Pause' : 'Play',
+                tooltip: playing ? l.playerTooltipPause : l.playerTooltipPlay,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(smallRadius),
                   bottomLeft: Radius.circular(smallRadius),
@@ -659,7 +669,7 @@ class _QueueActions extends StatelessWidget {
             background: c.surface,
             foreground: c.onBackground.withValues(alpha: 0.85),
             onTap: audio.skipNext,
-            tooltip: 'Next',
+            tooltip: l.playerTooltipSkipNext,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(smallRadius),
               bottomLeft: Radius.circular(smallRadius),
@@ -689,6 +699,7 @@ class _QueuePill extends StatelessWidget {
   Widget build(BuildContext context) {
     final audio = player.AudioService.instance;
     final inactive = c.onBackground.withValues(alpha: 0.6);
+    final l = AppLocalizations.of(context);
 
     return Container(
       height: height,
@@ -718,7 +729,9 @@ class _QueuePill extends StatelessWidget {
                     : IconsSheet.shuffleOutlined,
                 color: on ? c.accent : inactive,
                 onTap: () => audio.setShuffle(!on),
-                tooltip: on ? 'Shuffling songs' : 'Shuffle off',
+                tooltip: on
+                    ? l.playerTooltipShuffleOn
+                    : l.playerTooltipShuffleOff,
               );
             },
           ),
@@ -735,9 +748,9 @@ class _QueuePill extends StatelessWidget {
                 player.RepeatMode.one => IconsSheet.repeatOneFilled,
               };
               final tip = switch (mode) {
-                player.RepeatMode.off => 'Repeat off',
-                player.RepeatMode.all => 'Repeats all',
-                player.RepeatMode.one => 'Repeats one',
+                player.RepeatMode.off => l.playerTooltipRepeatOff,
+                player.RepeatMode.all => l.playerTooltipRepeatAll,
+                player.RepeatMode.one => l.playerTooltipRepeatOne,
               };
               return _PillButton(
                 icon: icon,
@@ -755,7 +768,7 @@ class _QueuePill extends StatelessWidget {
             onTap: () {
               //will open playlist picker later
             },
-            tooltip: 'Add to plalist',
+            tooltip: l.queueTooltipAddToPlaylist,
             size: 26,
           ),
         ],

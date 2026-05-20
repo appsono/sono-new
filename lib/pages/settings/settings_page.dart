@@ -7,6 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:file_picker/file_picker.dart';
 
+import 'package:sono/services/locale_service.dart';
+
 import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/auth/discord_login_page.dart';
@@ -363,6 +365,14 @@ class _SettingsPageState extends State<SettingsPage> {
         const Divider(),
         const SizedBox(height: 12),
 
+        // ==== language ====
+        _SectionHeader(label: 'Language'),
+        const SizedBox(height: 12),
+        const _LanguageSection(),
+        const SizedBox(height: 32),
+        const Divider(),
+        const SizedBox(height: 12),
+
         // ==== appearance ====
         const _SectionHeader(label: 'Appearance'),
         const SizedBox(height: 4),
@@ -680,6 +690,41 @@ class _SectionHeader extends StatelessWidget {
       style: Theme.of(
         context,
       ).textTheme.labelLarge?.copyWith(fontFamily: SonoFonts.heading),
+    );
+  }
+}
+
+// ==== language section ====
+class _LanguageSection extends StatelessWidget {
+  const _LanguageSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: LocaleService.notifier,
+      builder: (_, current, _) {
+        return ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('App language'),
+          trailing: DropdownButton<Locale?>(
+            value: current,
+            underline: const SizedBox.shrink(),
+            dropdownColor: context.sono.bgNav,
+            items: [
+              const DropdownMenuItem<Locale?>(
+                value: null,
+                child: Text('System default'),
+              ),
+              for (final locale in LocaleService.supportedLocales)
+                DropdownMenuItem<Locale?>(
+                  value: locale,
+                  child: Text(LocaleService.nativeNameOf(locale)),
+                ),
+            ],
+            onChanged: (locale) => LocaleService.instance.setLocale(locale),
+          ),
+        );
+      },
     );
   }
 }

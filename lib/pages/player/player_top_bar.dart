@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+import 'package:sono/l10n/localizations.dart';
+import 'package:sono/utils/queue_origin_label.dart';
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/theme/icons.dart';
@@ -21,6 +23,7 @@ class TopBar extends StatefulWidget {
 class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final muted = widget.c.onBackground.withValues(alpha: 0.45);
 
     return Row(
@@ -44,7 +47,7 @@ class _TopBarState extends State<TopBar> {
         ),
         const SizedBox(width: 4),
         Text(
-          'Now Playing',
+          l.playerNowPlaying,
           style: TextStyle(
             fontFamily: SonoFonts.heading,
             fontSize: 16,
@@ -67,7 +70,10 @@ class _TopBarState extends State<TopBar> {
             stream: player.AudioService.instance.originStream,
             initialData: player.AudioService.instance.currentOrigin,
             builder: (_, snap) {
-              final label = snap.data?.label ?? 'All Songs';
+              final label = queueOriginLabel(
+                context: context,
+                origin: snap.data ?? player.QueueOrigin.allSongs,
+              );
               return Text(
                 label,
                 maxLines: 1,

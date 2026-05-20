@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
@@ -403,9 +405,10 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
   void _openMenu() {
     final c = widget.c;
+    final l = AppLocalizations.of(context);
     BottomModalSheet.show(
       context: context,
-      title: 'Lyrics & Playback',
+      title: l.lyricsMenuTitle,
       background: c.background,
       surface: c.surface,
       accent: c.accent,
@@ -415,9 +418,9 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
         final audio = player.AudioService.instance;
         final repeat = audio.repeat;
         final repeatLabel = switch (repeat) {
-          player.RepeatMode.off => 'Off',
-          player.RepeatMode.all => 'Repeat all',
-          player.RepeatMode.one => 'Repeat one',
+          player.RepeatMode.off => l.lyricsMenuRepeatOff,
+          player.RepeatMode.all => l.lyricsMenuRepeatAll,
+          player.RepeatMode.one => l.lyricsMenuRepeatOne,
         };
         final repeatIcon = switch (repeat) {
           player.RepeatMode.off => IconsSheet.repeatOutlined,
@@ -426,44 +429,50 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
         };
 
         return [
-          const BottomSheetSectionLabel('Lyrics'),
+          BottomSheetSectionLabel(l.lyricsMenuSectionLyrics),
           BottomSheetAction(
             icon: IconsSheet.playbackSpeedOutlined,
-            label: 'Adjust sync',
+            label: l.lyricsMenuAdjustSync,
             subtitle: _syncOffsetMs == 0
-                ? 'Shift lyric timing for this song'
-                : 'Currenlty ${_formatOffset(_syncOffsetMs)}',
+                ? l.lyricsMenuAdjustSyncSubtitleZero
+                : l.lyricsMenuAdjustSyncSubtitleOffset(
+                    _formatOffset(_syncOffsetMs),
+                  ),
             onTap: _openSyncAdjust,
           ),
           BottomSheetAction(
             icon: IconsSheet.deleteOutlined,
-            label: 'Reset saved lyrics',
-            subtitle: 'Clear cached and re-fetch lyrics',
+            label: l.lyricsMenuResetSaved,
+            subtitle: l.lyricsMenuResetSavedSubtitle,
             tint: c.accent,
             onTap: _resetLyrics,
           ),
           const BottomSheetDivider(),
-          const BottomSheetSectionLabel('Playback'),
-          BottomSheetToggle(
+          BottomSheetSectionLabel(l.lyricsMenuSectionPlayback),
+          BottomSheetAction(
             icon: audio.shuffle
                 ? IconsSheet.shuffleFilled
                 : IconsSheet.shuffleOutlined,
-            label: 'Shuffle',
-            value: audio.shuffle,
-            onChanged: (v) => audio.setShuffle(v),
+            label: l.lyricsMenuShuffle,
+            subtitle: audio.shuffle
+                ? l.playerTooltipShuffleOn
+                : l.playerTooltipShuffleOff,
+            dismissOnTap: false,
+            onTap: () => audio.setShuffle(!audio.shuffle),
           ),
           BottomSheetAction(
             icon: repeatIcon,
-            label: 'Repeat',
+            label: l.lyricsMenuRepeat,
             subtitle: repeatLabel,
             dismissOnTap: false,
             onTap: () => audio.cycleRepeat(),
           ),
-          BottomSheetToggle(
+          BottomSheetAction(
             icon: _liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
-            label: 'Liked song',
-            value: _liked,
-            onChanged: _setLiked,
+            label: _liked ? l.lyricsMenuLiked : l.lyricsMenuLike,
+            subtitle: _liked ? l.lyricsMenuLiked : l.lyricsMenuLike,
+            dismissOnTap: false,
+            onTap: () => _setLiked(!_liked),
           ),
         ];
       },
@@ -679,16 +688,20 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     }
 
     if (_versions.isEmpty) {
-      return _CenteredMessage(c: c, text: 'No lyrics found :(');
+      return _CenteredMessage(
+        c: c,
+        text: AppLocalizations.of(context).lyricsEmptyNoneFound,
+      );
     }
 
     if (_lines.isEmpty && _plainText == null) {
+      final l = AppLocalizations.of(context);
       final track = _versions[_versionIndex];
       return _CenteredMessage(
         c: c,
         text: track.instrumental
-            ? 'Instrumental'
-            : 'No lyrics in this version :/',
+            ? l.lyricsEmptyInstrumental
+            : l.lyricsEmptyNoneInVersion,
       );
     }
 
@@ -945,7 +958,7 @@ class _ProviderCredit extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Text(
-        'Lyrics provided by lrclib.net',
+        AppLocalizations.of(context).lyricsProviderCredit,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: SonoFonts.primary,
@@ -1062,6 +1075,7 @@ class _LyricsBottomActions extends StatelessWidget {
     const smallRadius = 12.0;
     const rowHeight = 60.0;
     final audio = player.AudioService.instance;
+    final l = AppLocalizations.of(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1108,7 +1122,9 @@ class _LyricsBottomActions extends StatelessWidget {
                     background: c.accent,
                     foreground: c.onAccent,
                     onTap: audio.playOrPause,
-                    tooltip: playing ? 'Pause' : 'Play',
+                    tooltip: playing
+                        ? l.playerTooltipPause
+                        : l.playerTooltipPlay,
                     height: rowHeight,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(smallRadius),
@@ -1319,6 +1335,7 @@ class _NormalControlRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(
@@ -1328,7 +1345,7 @@ class _NormalControlRow extends StatelessWidget {
             background: c.surface,
             foreground: c.onBackground.withValues(alpha: 0.85),
             onTap: onTapBack,
-            tooltip: 'Back to player',
+            tooltip: l.lyricsTooltipBackToPlayer,
             height: rowHeight,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(smallRadius),
@@ -1358,7 +1375,7 @@ class _NormalControlRow extends StatelessWidget {
             background: c.surface,
             foreground: c.onBackground.withValues(alpha: 0.85),
             onTap: onTapMenu,
-            tooltip: 'More',
+            tooltip: l.lyricsTooltiplMore,
             height: rowHeight,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(smallRadius),
@@ -1441,6 +1458,7 @@ class _SyncedStaticPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Container(
       height: height,
       padding: const EdgeInsets.all(6),
@@ -1460,7 +1478,7 @@ class _SyncedStaticPill extends StatelessWidget {
           Expanded(
             child: _PillSegment(
               c: c,
-              label: 'Synced',
+              label: l.lyricsPillSynced,
               active: showingSynced,
               enabled: hasSynced,
               onTap: onTapSynced,
@@ -1470,7 +1488,7 @@ class _SyncedStaticPill extends StatelessWidget {
           Expanded(
             child: _PillSegment(
               c: c,
-              label: 'Static',
+              label: l.lyricsPillStatic,
               active: !showingSynced,
               enabled: true,
               onTap: onTapStatic,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
@@ -12,12 +14,14 @@ class SonoHomeActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
     return Row(
       children: [
         Expanded(
           child: _ActionButton(
             icon: IconsSheet.shuffleOutlined,
-            label: 'Shuffle all',
+            label: l.homeActionShuffleAll,
             filled: false,
             onTap: onShuffleAll,
           ),
@@ -26,7 +30,7 @@ class SonoHomeActions extends StatelessWidget {
         Expanded(
           child: _ActionButton(
             icon: IconsSheet.addOutlined,
-            label: 'Create Playlist',
+            label: l.homeActionCreatePlaylist,
             filled: true,
             onTap: onCreatePlaylist,
           ),

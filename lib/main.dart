@@ -6,6 +6,9 @@ import 'package:media_kit/media_kit.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:sono/l10n/localizations.dart';
+import 'package:sono/services/locale_service.dart';
+
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/app_shell.dart';
 import 'package:sono/services/audio/audio_handler.dart';
@@ -50,6 +53,9 @@ void main() async {
   await DiscordRpcService.instance.loadState();
 
   UpdateService.instance.attachDb(db);
+
+  LocaleService.instance.attachDb(db);
+  await LocaleService.instance.loadSaved();
 
   //restore saved theme before first build to avoid flash
   final savedTheme = await db.getSetting('theme.mode');
@@ -102,9 +108,17 @@ class _SonoAppState extends State<SonoApp> {
     return ValueListenableBuilder(
       valueListenable: SonoApp.themeNotifier,
       builder: (_, colors, _) {
-        return MaterialApp(
-          theme: buildSonoTheme(colors),
-          home: AppShell(db: widget.db),
+        return ValueListenableBuilder<Locale?>(
+          valueListenable: LocaleService.notifier,
+          builder: (_, locale, _) {
+            return MaterialApp(
+              theme: buildSonoTheme(colors),
+              locale: locale,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: LocaleService.supportedLocales,
+              home: AppShell(db: widget.db),
+            );
+          },
         );
       },
     );
