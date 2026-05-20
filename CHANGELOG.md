@@ -1,10 +1,15 @@
 # Changelog
 
-## 0.4.8+2 (2026-05-20)
+## [0.4.8+2](https://github.com/appsono/sono-new/compare/v0.3.6+1...v0.4.8+2) (2026-05-20)
 
 ### Features
 
-Migrate app from hardcoded user-facing strings to localization.
+* Multi-language support: The app now provides full UI localization in English and German
+* Language selector: New language preference option in Settings to choose your preferred language or follow system default
+
+### Chores**
+
+* Updated dependencies to support localization infrastructure
 
 ## [0.4.0+1](https://github.com/appsono/sono-new/compare/v0.3.6+1...v0.4.0+1) (2026-05-03)
 
