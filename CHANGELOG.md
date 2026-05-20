@@ -7,7 +7,7 @@
 * Multi-language support: The app now provides full UI localization in English and German
 * Language selector: New language preference option in Settings to choose your preferred language or follow system default
 
-### Chores**
+### Chores
 
 * Updated dependencies to support localization infrastructure
 
