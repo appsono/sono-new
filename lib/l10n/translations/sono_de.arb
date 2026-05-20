@@ -1,136 +1,138 @@
 {
-  "@@locale": "de",
-
-  "appName": "Sono",
-  "@appName": {
-    "description": "Application name, shown in window titles and stores"
-  },
-
-  "commonUnknown": "Unbekannt",
-  "commonUnknownArtist": "Unbekannter Künstler",
-  "commonSongsCount": "{count, plural, =0{Keine Songs} =1{1 Song} other{{count} Songs}}",
-  "@commonSongsCount": {
-    "description": "Number of songs for an artist/album/playlist",
-    "placeholders": {
-      "count": { "type": "int", "format": "compact" }
-    }
-  },
-
-  "navHome": "Start",
-  "navLibrary": "Library",
-  "navSearch": "Suche",
-
-  "homeActionShuffleAll": "Alles shufflen",
-  "homeActionCreatePlaylist": "Playlist erstellen",
-  "homeHeaderNewsAndUpdates": "Neues & Updates",
-  "homeHeaderSettings": "Einstellungen",
-
-  "homeSectionRecentlyAdded": "Neu Hinzugefügt",
-  "homeSectionAlbums": "Alben",
-  "homeSectionArtists": "Künstler",
-
-  "homeGreetingEarlyBird": "Wow Frühaufsteher",
-  "homeGreetingMorning": "Morgen",
-  "homeGreetingMidday": "Mittag",
-  "homeGreetingAfternoon": "Guten Tag",
-  "homeGreetingEvening": "Abend",
-  "homeGreetingNight": "Noch da",
-  "homeGreetingLate": "Heyyy schlaf",
-  "@homeGreetingEarlyBird": { "description": "Greeting shown roughly 04:00–06:00" },
-  "@homeGreetingMorning": { "description": "Greeting shown roughly 06:00–11:00" },
-  "@homeGreetingMidday": { "description": "Greeting shown roughly 11:00–14:00" },
-  "@homeGreetingAfternoon": { "description": "Greeting shown roughly 14:00–17:00" },
-  "@homeGreetingEvening": { "description": "Greeting shown roughly 17:00–20:00" },
-  "@homeGreetingNight": { "description": "Greeting shown roughly 20:00–24:00" },
-  "@homeGreetingLate": { "description": "Greeting shown roughly 00:00–04:00" },
-
-  "homeFallbackPhrase1": "hab spaß mit was auch immer",
-  "homeFallbackPhrase2": "viel spaß beim hören!",
-  "homeFallbackPhrase3": "was ist es heute?",
-  "homeFallbackPhrase4": "willkommen zurück :D",
-  "homeFallbackPhrase5": "b- baka!",
-  "homeFallbackPhrase6": "was ist geplant?",
-  "homeFallbackPhrase7": "hehe >:D",
-  "homeFallbackPhrase8": "mweh :3",
-  "homeFallbackPhrase9": "wer bist du?!",
-  "homeFallbackPhrase10": "setzt deinen username..",
-  "@homeFallbackPhrase1": {
-    "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
-  },
-
-  "playerNowPlaying": "Jetzt läuft",
-  "@playerNowPlaying": {
-    "description": "Used in the player top bar and on the queue view's collapse button."
-  },
-  "playerOriginAllSongs": "Alle songs",
-  "@playerOriginAllSongs": {
-    "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
-  },
-
-  "playerTooltipPlay": "Spielen",
-  "playerTooltipPause": "Pausieren",
-  "playerTooltipSkipNext": "Nächster Song",
-
-  "playerTooltipShuffleOn": "Alle songs geshuffled",
-  "playerTooltipShuffleOff": "Shuffle ist aus",
-  "@playerTooltipShuffleOn": {
-    "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
-  },
-  "@playerTooltipShuffleOff": {
-    "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
-  },
-
-  "playerTooltipRepeatOff": "Widerholt nichts",
-  "playerTooltipRepeatAll": "Wiederholt alle",
-  "playerTooltipRepeatOne": "Widerholt diesen",
-  "@playerTooltipRepeatOff": {
-    "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
-  },
-
-  "playerTooltipOpenQueue": "Queue öffnen",
-  "playerTooltipOpenLyrics": "Lyrics öffnen",
-
-  "queueLabelUpNext": "Als Nächstes",
-  "queueTooltipAddToPlaylist": "Zu Playlist hinzufügen",
-  "@queueTooltipAddToPlaylist": {
-    "description": "Tooltip on the add-to-playlist button in the queue view."
-  },
-
-  "lyricsEmptyNoneFound": "Keine Lyrics gefunden :(",
-  "lyricsEmptyInstrumental": "Instrumentel",
-  "lyricsEmptyNoneInVersion": "Keine Lyrics in dieser version :/",
-  "lyricsPillSynced": "Synced",
-  "lyricsPillStatic": "Statisch",
-  "lyricsProviderCredit": "Lyrics von lrclib.net",
-
-  "lyricsMenuTitle": "Lyrics & Playback",
-  "lyricsMenuSectionLyrics": "Lyrics",
-  "lyricsMenuSectionPlayback": "Playback",
-  "lyricsMenuAdjustSync": "Sync anpassen",
-  "lyricsMenuAdjustSyncSubtitleZero": "Lyrics Timing anpassen",
-  "lyricsMenuAdjustSyncSubtitleOffset": "Aktuell {offset}",
-  "@lyricsMenuAdjustSyncSubtitleOffset": {
-    "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
-    "placeholders": {
-      "offset": { "type": "String", "example": "+2s" }
-    }
-  },
-  "lyricsMenuResetSaved": "Lösche gespeicherte Lyrics",
-  "lyricsMenuResetSavedSubtitle": "Lösche gecachte und erneut suchen",
-  "lyricsMenuShuffle": "Shuffle",
-  "lyricsMenuRepeat": "Repeat",
-  "lyricsMenuRepeatOff": "Aus",
-  "lyricsMenuRepeatAll": "Widerhole alle",
-  "lyricsMenuRepeatOne": "Widerhole diesen",
-  "lyricsMenuLike": "Like",
-  "lyricsMenuLiked": "Liked",
-  "@lyricsMenuRepeatOff": {
-    "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
-  },
-
-  "lyricsTooltipBackToPlayer": "Zurück zum Player",
-  "lyricsTooltiplMore": "Mehr",
-
-  "authSignIn": "Einloggen"
+    "@@locale": "de",
+    "appName": "Sono",
+    "@appName": {
+        "description": "Application name, shown in window titles and stores"
+    },
+    "commonUnknown": "Unbekannt",
+    "commonUnknownArtist": "Unbekannter Künstler",
+    "commonSongsCount": "{count, plural, =0{Keine Songs} =1{1 Song} other{{count} Songs}}",
+    "@commonSongsCount": {
+        "description": "Number of songs for an artist/album/playlist",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "navHome": "Start",
+    "navLibrary": "Library",
+    "navSearch": "Suche",
+    "homeActionShuffleAll": "Alles shufflen",
+    "homeActionCreatePlaylist": "Playlist erstellen",
+    "homeHeaderNewsAndUpdates": "Neues & Updates",
+    "homeHeaderSettings": "Einstellungen",
+    "homeSectionRecentlyAdded": "Neu Hinzugefügt",
+    "homeSectionAlbums": "Alben",
+    "homeSectionArtists": "Künstler",
+    "homeGreetingEarlyBird": "Wow Frühaufsteher",
+    "@homeGreetingEarlyBird": {
+        "description": "Greeting shown roughly 04:00–06:00"
+    },
+    "homeGreetingMorning": "Morgen",
+    "@homeGreetingMorning": {
+        "description": "Greeting shown roughly 06:00–11:00"
+    },
+    "homeGreetingMidday": "Mittag",
+    "@homeGreetingMidday": {
+        "description": "Greeting shown roughly 11:00–14:00"
+    },
+    "homeGreetingAfternoon": "Guten Tag",
+    "@homeGreetingAfternoon": {
+        "description": "Greeting shown roughly 14:00–17:00"
+    },
+    "homeGreetingEvening": "Abend",
+    "@homeGreetingEvening": {
+        "description": "Greeting shown roughly 17:00–20:00"
+    },
+    "homeGreetingNight": "Noch da",
+    "@homeGreetingNight": {
+        "description": "Greeting shown roughly 20:00–24:00"
+    },
+    "homeGreetingLate": "Heyyy schlaf",
+    "@homeGreetingLate": {
+        "description": "Greeting shown roughly 00:00–04:00"
+    },
+    "homeFallbackPhrase1": "hab spaß mit was auch immer",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
+    "homeFallbackPhrase2": "viel spaß beim hören!",
+    "homeFallbackPhrase3": "was ist es heute?",
+    "homeFallbackPhrase4": "willkommen zurück :D",
+    "homeFallbackPhrase5": "b- baka!",
+    "homeFallbackPhrase6": "was ist geplant?",
+    "homeFallbackPhrase7": "hehe >:D",
+    "homeFallbackPhrase8": "mweh :3",
+    "homeFallbackPhrase9": "wer bist du?!",
+    "homeFallbackPhrase10": "setzt deinen username..",
+    "playerNowPlaying": "Jetzt läuft",
+    "@playerNowPlaying": {
+        "description": "Used in the player top bar and on the queue view's collapse button."
+    },
+    "playerOriginAllSongs": "Alle songs",
+    "@playerOriginAllSongs": {
+        "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
+    },
+    "playerTooltipPlay": "Spielen",
+    "playerTooltipPause": "Pausieren",
+    "playerTooltipSkipNext": "Nächster Song",
+    "playerTooltipShuffleOn": "Songs werden geshuffelt",
+    "@playerTooltipShuffleOn": {
+        "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
+    },
+    "playerTooltipShuffleOff": "Shuffle ist aus",
+    "@playerTooltipShuffleOff": {
+        "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
+    },
+    "playerTooltipRepeatOff": "Widerholt nichts",
+    "@playerTooltipRepeatOff": {
+        "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
+    },
+    "playerTooltipRepeatAll": "Wiederholt alle",
+    "playerTooltipRepeatOne": "Widerholt diesen",
+    "playerTooltipOpenQueue": "Queue öffnen",
+    "playerTooltipOpenLyrics": "Lyrics öffnen",
+    "queueLabelUpNext": "Als Nächstes",
+    "queueTooltipAddToPlaylist": "Zu Playlist hinzufügen",
+    "@queueTooltipAddToPlaylist": {
+        "description": "Tooltip on the add-to-playlist button in the queue view."
+    },
+    "lyricsEmptyNoneFound": "Keine Lyrics gefunden :(",
+    "lyricsEmptyInstrumental": "Instrumentel",
+    "lyricsEmptyNoneInVersion": "Keine Lyrics in dieser version :/",
+    "lyricsPillSynced": "Synced",
+    "lyricsPillStatic": "Statisch",
+    "lyricsProviderCredit": "Lyrics von lrclib.net",
+    "lyricsMenuTitle": "Lyrics & Playback",
+    "lyricsMenuSectionLyrics": "Lyrics",
+    "lyricsMenuSectionPlayback": "Playback",
+    "lyricsMenuAdjustSync": "Sync anpassen",
+    "lyricsMenuAdjustSyncSubtitleZero": "Lyrics Timing anpassen",
+    "lyricsMenuAdjustSyncSubtitleOffset": "Aktuell {offset}",
+    "@lyricsMenuAdjustSyncSubtitleOffset": {
+        "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
+        "placeholders": {
+            "offset": {
+                "type": "String",
+                "example": "+2s"
+            }
+        }
+    },
+    "lyricsMenuResetSaved": "Lösche gespeicherte Lyrics",
+    "lyricsMenuResetSavedSubtitle": "Lösche gecachte und erneut suchen",
+    "lyricsMenuShuffle": "Shuffle",
+    "lyricsMenuRepeat": "Wiederholen",
+    "lyricsMenuRepeatOff": "Aus",
+    "@lyricsMenuRepeatOff": {
+        "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+    },
+    "lyricsMenuRepeatAll": "Widerhole alle",
+    "lyricsMenuRepeatOne": "Widerhole diesen",
+    "lyricsMenuLike": "Like",
+    "lyricsMenuLiked": "Liked",
+    "lyricsTooltipBackToPlayer": "Zurück zum Player",
+    "lyricsTooltiplMore": "Mehr",
+    "authSignIn": "Einloggen"
 }
-
