@@ -10,7 +10,8 @@ import 'package:sono/db/database.dart';
 /// - Nerimity: nerimity.com/i/sono
 /// - Email: sonosupport@gmail.com
 ///
-/// Add a missing language to [supportedLocales] below
+/// Add a missing language to [supportedLocales] below and
+/// add its native name to [nativeNameOf]
 class LocaleService {
   LocaleService._();
   static final LocaleService instance = LocaleService._();
@@ -20,6 +21,17 @@ class LocaleService {
   ///
   /// Order matters for picker. English first then alphabetical.
   static const supportedLocales = <Locale>[Locale('en'), Locale('de')];
+
+  /// Native name of [locale]
+  ///
+  ///(NOT LOCALIZED)
+  static String nativeNameOf(Locale locale) {
+    return switch (locale.languageCode) {
+      'en' => 'English',
+      'de' => 'Deutsch',
+      _ => locale.toLanguageTag(),
+    };
+  }
 
   /// Selected local
   /// null == follow system
