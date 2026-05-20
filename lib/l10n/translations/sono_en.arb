@@ -122,9 +122,14 @@
   "lyricsMenuRepeatOff": "Off",
   "lyricsMenuRepeatAll": "Repeat all",
   "lyricsMenuRepeatOne": "Repeat one",
+  "lyricsMenuLike": "Like",
+  "lyricsMenuLiked": "Liked",
   "@lyricsMenuRepeatOff": {
     "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
   },
+
+  "lyricsTooltipBackToPlayer": "Back to player",
+  "lyricsTooltiplMore": "More",
 
   "authSignIn": "Sign in"
 }

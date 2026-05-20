@@ -122,9 +122,14 @@
   "lyricsMenuRepeatOff": "Aus",
   "lyricsMenuRepeatAll": "Widerhole alle",
   "lyricsMenuRepeatOne": "Widerhole diesen",
+  "lyricsMenuLike": "Like",
+  "lyricsMenuLiked": "Liked",
   "@lyricsMenuRepeatOff": {
     "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
   },
+
+  "lyricsTooltipBackToPlayer": "Zurück zum Player",
+  "lyricsTooltiplMore": "Mehr",
 
   "authSignIn": "Einloggen"
 }
