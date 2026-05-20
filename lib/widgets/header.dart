@@ -3,6 +3,8 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/icons.dart';
@@ -122,23 +124,6 @@ class _ProfileCircle extends StatelessWidget {
   }
 }
 
-// ==== time-based greeting ====
-
-//fallback phrases shown when no username is set
-//chosen once at widget creation and stable for session
-const _fallbackPhrases = [
-  'have fun doing whatever',
-  'enjoy the listen!',
-  "what's on today?",
-  'welcome back :D',
-  'b- baka!',
-  "what we fellin'?",
-  'hehe >:D',
-  'mweh :3',
-  'who are you?!',
-  'set your username..',
-];
-
 class _TimeBasedGreeting extends StatefulWidget {
   final String? username;
   const _TimeBasedGreeting({this.username});
@@ -148,19 +133,19 @@ class _TimeBasedGreeting extends StatefulWidget {
 }
 
 class _TimeBasedGreetingState extends State<_TimeBasedGreeting> {
-  late String _greeting;
-  late final String _fallback;
+  late final int _fallbackIndex;
   Timer? _timer;
+  int _tick = 0; //only used to force rebuild when boundary crosses
+
+  static const _fallbackCount = 10;
 
   @override
   void initState() {
     super.initState();
-    _fallback = _fallbackPhrases[Random().nextInt(_fallbackPhrases.length)];
-    _greeting = _computeGreeting();
+    _fallbackIndex = Random().nextInt(_fallbackCount);
     //recheck every minute in case phrase boundary is crossed
     _timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      final next = _computeGreeting();
-      if (next != _greeting && mounted) setState(() => _greeting = next);
+      if (mounted) setState(() => _tick++);
     });
   }
 
@@ -170,28 +155,55 @@ class _TimeBasedGreetingState extends State<_TimeBasedGreeting> {
     super.dispose();
   }
 
-  String _computeGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour >= 4 && hour < 6) return 'Wow early bird';
-    if (hour >= 6 && hour < 11) return 'Morning';
-    if (hour >= 11 && hour < 14) return 'Midday';
-    if (hour >= 14 && hour < 17) return 'Afternoon';
-    if (hour >= 17 && hour < 20) return 'Evening';
-    if (hour >= 20 && hour < 24) return 'Night';
-    return 'Heyyy sleep';
+  String _greetingFor(AppLocalizations l, int hour) {
+    if (hour >= 4 && hour < 6) return l.homeGreetingEarlyBird;
+    if (hour >= 6 && hour < 11) return l.homeGreetingMorning;
+    if (hour >= 11 && hour < 14) return l.homeGreetingMidday;
+    if (hour >= 14 && hour < 17) return l.homeGreetingAfternoon;
+    if (hour >= 17 && hour < 20) return l.homeGreetingEvening;
+    if (hour >= 20 && hour < 24) return l.homeGreetingNight;
+    return l.homeGreetingLate;
+  }
+
+  //fallback phrases shown when no username is set
+  String _fallbackFor(AppLocalizations l, int index) {
+    switch (index) {
+      case 0:
+        return l.homeFallbackPhrase1;
+      case 1:
+        return l.homeFallbackPhrase2;
+      case 2:
+        return l.homeFallbackPhrase3;
+      case 3:
+        return l.homeFallbackPhrase4;
+      case 4:
+        return l.homeFallbackPhrase5;
+      case 5:
+        return l.homeFallbackPhrase6;
+      case 6:
+        return l.homeFallbackPhrase7;
+      case 7:
+        return l.homeFallbackPhrase8;
+      case 8:
+        return l.homeFallbackPhrase9;
+      default:
+        return l.homeFallbackPhrase10;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.sono;
-    final sub = widget.username ?? _fallback;
+    final l = AppLocalizations.of(context);
+    final greeting = _greetingFor(l, DateTime.now().hour);
+    final sub = widget.username ?? _fallbackFor(l, _fallbackIndex);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          '$_greeting,',
+          '$greeting,',
           style: TextStyle(
             fontFamily: SonoFonts.primary,
             fontSize: 13,
