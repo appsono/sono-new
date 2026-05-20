@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/home/home_actions.dart';
 import 'package:sono/services/audio/audio_service.dart';
@@ -74,6 +76,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
     if (_songs == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -104,14 +108,14 @@ class _HomePageState extends State<HomePage> {
                       actions: [
                         SonoHeaderAction(
                           icon: IconsSheet.bellOutlined,
-                          tooltip: 'News & Updates',
+                          tooltip: l.homeHeaderNewsAndUpdates,
                           onTap: () {
                             //navigate to "changelog" page
                           },
                         ),
                         SonoHeaderAction(
                           icon: IconsSheet.settingsOutlined,
-                          tooltip: 'Settings',
+                          tooltip: l.homeHeaderSettings,
                           onTap: () {
                             //navigate to settings page
                           },
@@ -172,7 +176,7 @@ class _HomePageState extends State<HomePage> {
               SliverToBoxAdapter(child: SizedBox(height: 24)),
               SliverToBoxAdapter(
                 child: SonoSection(
-                  title: 'Albums',
+                  title: l.homeSectionAlbums,
                   titleStyle: const TextStyle(fontSize: 20),
                   onSeeAll: () {},
                   itemExtent: 168,
@@ -188,7 +192,7 @@ class _HomePageState extends State<HomePage> {
               SliverToBoxAdapter(child: SizedBox(height: 24)),
               SliverToBoxAdapter(
                 child: SonoSection(
-                  title: 'Artists',
+                  title: l.homeSectionArtists,
                   titleStyle: const TextStyle(fontSize: 20),
                   onSeeAll: () {},
                   itemExtent: 168,
@@ -197,7 +201,7 @@ class _HomePageState extends State<HomePage> {
                     return SonoMediaCard(
                       path: _artistCoverPaths?[a.id] ?? '',
                       title: a.name,
-                      subtitle: '$count ${count == 1 ? 'song' : 'songs'}',
+                      subtitle: l.commonSongsCount(count),
                       bordered: true,
                       shape: CoverShape.circle,
                       titleStyle: Theme.of(
@@ -218,6 +222,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _playQueue(List<SongWithArtistViewData> songs, int index) {
+    final l = AppLocalizations.of(context);
+
     final queue = songs
         .map(
           (s) => Song(
@@ -236,9 +242,9 @@ class _HomePageState extends State<HomePage> {
     AudioService.instance.play(
       queue,
       index,
-      origin: const QueueOrigin(
+      origin: QueueOrigin(
         source: QueueSource.recentlyAdded,
-        label: 'Recently Added',
+        label: l.homeSectionRecentlyAdded,
       ),
     );
   }
@@ -259,13 +265,15 @@ class _RecentlyAdded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
     //songs from db come in insertion order > reverse for newest first
     final recent = songs.length <= _limit
         ? songs.reversed.toList()
         : songs.reversed.take(_limit).toList();
 
     return SonoSection(
-      title: 'Recently Added',
+      title: l.homeSectionRecentlyAdded,
       titleStyle: const TextStyle(fontSize: 20),
       onSeeAll: () {},
       itemExtent: 168,
@@ -275,7 +283,7 @@ class _RecentlyAdded extends StatelessWidget {
         return SonoMediaCard(
           path: s.path,
           title: s.title,
-          subtitle: s.displayArtist ?? s.artistName ?? 'Unknown',
+          subtitle: s.displayArtist ?? s.artistName ?? l.commonUnknown,
           bordered: true,
           titleStyle: Theme.of(
             context,
@@ -341,10 +349,12 @@ class _AlbumCardState extends State<_AlbumCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
     return SonoMediaCard(
       path: _coverPath ?? '',
       title: widget.album.title,
-      subtitle: widget.album.artistName ?? 'Unknown artist',
+      subtitle: widget.album.artistName ?? l.commonUnknownArtist,
       bordered: true,
       titleStyle: Theme.of(
         context,
