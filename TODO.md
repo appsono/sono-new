@@ -37,10 +37,9 @@
 
 - ~~Create Home page~~ **DONE (for now)**
 
-
 ### --- Stop ---
 
-- add Weblate support
+- ~~add Weblate support~~ **DONE**
 
 ### --- Continue ---
 

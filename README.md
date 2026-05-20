@@ -31,8 +31,16 @@ See [TODO](TODO.md) for current progress and planned work.
 
 ---
 
-## Why the restart?
+## Translations
 
+Sono is translated on [Weblate](TODO: setup weblate project). Everyone can contribute
+to translations.
+
+- **Source language:** English (`lib/l10n/translations/sono_en.arb`)
+- **Translation format:** [Flutter ARB](https://docs.flutter.dev/ui/internationalization)
+- **Component mask:** `lib/l10n/translations/sono_*.arb`
+
+## Why the restart?
 
 ```
 
@@ -74,7 +82,6 @@ Originally announced on the [Discord server](https://discord.sono.wtf).
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=appsono/sono-new&type=date&legend=bottom-right" />
  </picture>
 </a>
-
 
 ## LICENSE
 

@@ -92,6 +92,8 @@ The design direction is set (Figma designs exist). If you're touching UI:
 
 - Run `dart format .` before committing. Unformatted PRs won't be merged
 - Comments should follow the same styling as existing ones
+- Never hardcode user-facing strings. Use `AppLocalizations.of(context).<key>`
+  and add the key to `lib/l10n/translations/sono_en.arb` with a `@<key>` description.
 - Use the existing commit style: `type(scope): description`
   - Types: `feat`, `fix`, `chore`, `refactor`, `perf`, `docs`, `style`, `test`
   - Example: `fix(audio): prevent stale state on pause`
