@@ -119,5 +119,19 @@
             }
         }
     },
-    "lyricsMenuResetSaved": "Скінуць захаваны тэкст"
+    "lyricsMenuResetSaved": "Скінуць захаваны тэкст",
+    "lyricsMenuResetSavedSubtitle": "Ачысціць кэш і паўторна загрузіць тэкст",
+    "lyricsMenuShuffle": "Перамешаць",
+    "lyricsMenuRepeat": "Паўтараць",
+    "lyricsMenuRepeatOff": "Выключана",
+    "@lyricsMenuRepeatOff": {
+        "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+    },
+    "lyricsMenuRepeatAll": "Паўтараць усё",
+    "lyricsMenuRepeatOne": "Паўтараць адну",
+    "lyricsMenuLike": "Упадабаць",
+    "lyricsMenuLiked": "Упадабана",
+    "lyricsTooltipBackToPlayer": "Вярнуцца да прайгравальніка",
+    "lyricsTooltiplMore": "Яшчэ",
+    "authSignIn": "Увайсці"
 }
