@@ -99,5 +99,39 @@
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
     "lyricsEmptyNoneFound": "Nie znaleziono tekstu :(",
-    "lyricsEmptyInstrumental": "Instrumental"
+    "lyricsEmptyInstrumental": "Instrumental",
+    "lyricsEmptyNoneInVersion": "Brak tekstu na tą wersję :/",
+    "lyricsPillSynced": "Zsynchronizowano",
+    "lyricsPillStatic": "Statyczne",
+    "lyricsProviderCredit": "Tekst dostarczony przez lrclib.net",
+    "lyricsMenuTitle": "Tekst i odtwarzanie",
+    "lyricsMenuSectionLyrics": "Tekst",
+    "lyricsMenuSectionPlayback": "Odtwarzanie",
+    "lyricsMenuAdjustSync": "Ustaw synchronizacje",
+    "lyricsMenuAdjustSyncSubtitleZero": "Zmień tempo tekstu tej piosenki",
+    "lyricsMenuAdjustSyncSubtitleOffset": "Teraz {offset}",
+    "@lyricsMenuAdjustSyncSubtitleOffset": {
+        "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
+        "placeholders": {
+            "offset": {
+                "type": "String",
+                "example": "+2s"
+            }
+        }
+    },
+    "lyricsMenuResetSaved": "Zresetuj zapisany tekst",
+    "lyricsMenuResetSavedSubtitle": "Wyczyść pamięć podręczną i ponownie pobierz teksty piosenek",
+    "lyricsMenuShuffle": "Odtwórz losowo..",
+    "lyricsMenuRepeat": "Powtórz",
+    "lyricsMenuRepeatOff": "Wyłączony",
+    "@lyricsMenuRepeatOff": {
+        "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+    },
+    "lyricsMenuRepeatAll": "Powtórz wszystko",
+    "lyricsMenuRepeatOne": "Powtórz raz..",
+    "lyricsMenuLike": "Polub",
+    "lyricsMenuLiked": "Polubiono",
+    "lyricsTooltipBackToPlayer": "Spowrotem do odtwarzacza",
+    "lyricsTooltiplMore": "Więcej",
+    "authSignIn": "Zaloguj się"
 }
