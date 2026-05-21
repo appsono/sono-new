@@ -98,5 +98,6 @@
     "@queueTooltipAddToPlaylist": {
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
-    "lyricsEmptyNoneFound": "Nie znaleziono tekstu :("
+    "lyricsEmptyNoneFound": "Nie znaleziono tekstu :(",
+    "lyricsEmptyInstrumental": "Instrumental"
 }
