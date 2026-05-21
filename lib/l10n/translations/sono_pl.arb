@@ -19,13 +19,13 @@
     "navLibrary": "Biblioteka",
     "navSearch": "Wyszukaj",
     "homeActionShuffleAll": "Odtwórz losowo",
-    "homeActionCreatePlaylist": "Stwórz playlistę",
+    "homeActionCreatePlaylist": "Stwórz Playliste",
     "homeHeaderNewsAndUpdates": "Wiadomości i Uaktualnienia",
     "homeHeaderSettings": "Ustawienia",
     "homeSectionRecentlyAdded": "Ostatnio Dodane",
     "homeSectionAlbums": "Albumy",
     "homeSectionArtists": "Artyści",
-    "homeGreetingEarlyBird": "Wow Ranny Ptaszek",
+    "homeGreetingEarlyBird": "Wow, Ranny Ptaszek",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
@@ -41,7 +41,7 @@
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
-    "homeGreetingEvening": "Dobry Wieczór",
+    "homeGreetingEvening": "Wieczór",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
