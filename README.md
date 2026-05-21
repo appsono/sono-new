@@ -33,7 +33,7 @@ See [TODO](TODO.md) for current progress and planned work.
 
 ## Translations
 
-Sono is translated on [Weblate]((https://hosted.weblate.org/projects/sono/). Everyone can contribute
+Sono is translated on [Weblate](https://hosted.weblate.org/projects/sono/). Everyone can contribute
 to translations.
 
 - **Source language:** English (`lib/l10n/translations/sono_en.arb`)
