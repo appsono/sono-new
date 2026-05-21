@@ -15,7 +15,7 @@
             }
         }
     },
-    "navHome": "Strona Główna",
+    "navHome": "Start",
     "navLibrary": "Biblioteka",
     "navSearch": "Wyszukaj",
     "homeActionShuffleAll": "Odtwórz losowo",
@@ -121,14 +121,14 @@
     },
     "lyricsMenuResetSaved": "Zresetuj zapisany tekst",
     "lyricsMenuResetSavedSubtitle": "Wyczyść pamięć podręczną i ponownie pobierz teksty piosenek",
-    "lyricsMenuShuffle": "Odtwórz losowo..",
+    "lyricsMenuShuffle": "Losowo",
     "lyricsMenuRepeat": "Powtórz",
     "lyricsMenuRepeatOff": "Wyłączony",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
     "lyricsMenuRepeatAll": "Powtórz wszystko",
-    "lyricsMenuRepeatOne": "Powtórz raz..",
+    "lyricsMenuRepeatOne": "Powtarzaj jeden",
     "lyricsMenuLike": "Polub",
     "lyricsMenuLiked": "Polubiono",
     "lyricsTooltipBackToPlayer": "Spowrotem do odtwarzacza",
