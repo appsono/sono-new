@@ -1,1 +1,102 @@
-{}
+{
+    "appName": "Sono",
+    "@appName": {
+        "description": "Application name, shown in window titles and stores"
+    },
+    "commonUnknown": "Nieznany",
+    "commonUnknownArtist": "Nieznany artysta",
+    "commonSongsCount": "{count, plural, =0{no songs} =1{1 song} other{{count} songs}}",
+    "@commonSongsCount": {
+        "description": "Number of songs for an artist/album/playlist",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "navHome": "Strona Główna",
+    "navLibrary": "Biblioteka",
+    "navSearch": "Wyszukaj",
+    "homeActionShuffleAll": "Odtwórz losowo",
+    "homeActionCreatePlaylist": "Stwórz playlistę",
+    "homeHeaderNewsAndUpdates": "Wiadomości i Uaktualnienia",
+    "homeHeaderSettings": "Ustawienia",
+    "homeSectionRecentlyAdded": "Ostatnio Dodane",
+    "homeSectionAlbums": "Albumy",
+    "homeSectionArtists": "Artyści",
+    "homeGreetingEarlyBird": "Wow Ranny Ptaszek",
+    "@homeGreetingEarlyBird": {
+        "description": "Greeting shown roughly 04:00–06:00"
+    },
+    "homeGreetingMorning": "Dzień Dobry",
+    "@homeGreetingMorning": {
+        "description": "Greeting shown roughly 06:00–11:00"
+    },
+    "homeGreetingMidday": "Południe",
+    "@homeGreetingMidday": {
+        "description": "Greeting shown roughly 11:00–14:00"
+    },
+    "homeGreetingAfternoon": "Popołudnie",
+    "@homeGreetingAfternoon": {
+        "description": "Greeting shown roughly 14:00–17:00"
+    },
+    "homeGreetingEvening": "Dobry Wieczór",
+    "@homeGreetingEvening": {
+        "description": "Greeting shown roughly 17:00–20:00"
+    },
+    "homeGreetingNight": "Dobranoc",
+    "@homeGreetingNight": {
+        "description": "Greeting shown roughly 20:00–24:00"
+    },
+    "homeGreetingLate": "Hej idź spać",
+    "@homeGreetingLate": {
+        "description": "Greeting shown roughly 00:00–04:00"
+    },
+    "homeFallbackPhrase1": "baw się dobrze robiąc cokolwiek",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
+    "homeFallbackPhrase2": "miłego słuchania!",
+    "homeFallbackPhrase3": "co się dzieje dzisiaj?",
+    "homeFallbackPhrase4": "witaj ponownie :D",
+    "homeFallbackPhrase5": "b- baka!",
+    "homeFallbackPhrase6": "co dzisiaj czujemy?",
+    "homeFallbackPhrase7": "hehe >:D",
+    "homeFallbackPhrase8": "mweh :3",
+    "homeFallbackPhrase9": "kim jesteś?!",
+    "homeFallbackPhrase10": "ustaw nazwe użytkownika..",
+    "playerNowPlaying": "Teraz Odtwarzane",
+    "@playerNowPlaying": {
+        "description": "Used in the player top bar and on the queue view's collapse button."
+    },
+    "playerOriginAllSongs": "Wszystkie Piosenki",
+    "@playerOriginAllSongs": {
+        "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
+    },
+    "playerTooltipPlay": "Odtwórz",
+    "playerTooltipPause": "Pauza",
+    "playerTooltipSkipNext": "Następny",
+    "playerTooltipShuffleOn": "Mieszanie piosenek",
+    "@playerTooltipShuffleOn": {
+        "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
+    },
+    "playerTooltipShuffleOff": "Odtwarzanie losowe wyłączone",
+    "@playerTooltipShuffleOff": {
+        "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
+    },
+    "playerTooltipRepeatOff": "Powtórzenie wyłączone",
+    "@playerTooltipRepeatOff": {
+        "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
+    },
+    "playerTooltipRepeatAll": "Powtórz wszystkie",
+    "playerTooltipRepeatOne": "Powtórz raz",
+    "playerTooltipOpenQueue": "Otwórz kolejkę",
+    "playerTooltipOpenLyrics": "Otwórz tekst",
+    "queueLabelUpNext": "Następne",
+    "queueTooltipAddToPlaylist": "Dodaj do playlistę",
+    "@queueTooltipAddToPlaylist": {
+        "description": "Tooltip on the add-to-playlist button in the queue view."
+    },
+    "lyricsEmptyNoneFound": "Nie znaleziono tekstu :("
+}
