@@ -52,6 +52,7 @@ jobs:
           channel: stable
 
       - run: flutter pub get
+      - run: dart run scripts/compute_translation_progress.dart
 
       - name: Decode keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/sono.jks
@@ -92,6 +93,7 @@ jobs:
           cache: true
 
       - run: flutter pub get
+      - run: dart run scripts/compute_translation_progress.dart
 
       - name: Build iOS (unsigned)
         run: flutter build ios --release --no-codesign

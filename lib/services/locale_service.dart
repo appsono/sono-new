@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/l10n/translation_progress.dart';
 
 /// Available app locales
 /// null means follow system locale
@@ -42,6 +43,23 @@ class LocaleService {
       'uk' => 'Українська',
       _ => locale.toLanguageTag(),
     };
+  }
+
+  /// Translation completion fraction (0.0 - 1.0) for [locale]
+  ///
+  /// Returns null if locale has no entry in generated progress map
+  /// (e.g. freshly added locale before [compute_translation_progress.dart]
+  /// has been rerun)
+  ///
+  /// Regenerate via:
+  /// dart run scripts/compute_translation_progress.dart
+  static double? completionFor(Locale locale) {
+    //try full code first (pt_BR), fall back to language only (pt)
+    final fullCode = locale.countryCode == null
+        ? locale.languageCode
+        : '${locale.languageCode}_${locale.countryCode}';
+    return translationProgress[fullCode] ??
+        translationProgress[locale.languageCode];
   }
 
   /// Selected local

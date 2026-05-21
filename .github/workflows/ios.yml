@@ -16,6 +16,7 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+      - run: dart run scripts/compute_translation_progress.dart
 
       - name: Build iOS (unsigned)
         run: flutter build ios --release --no-codesign
@@ -31,4 +32,4 @@ jobs:
         with:
           name: sono-ios-unsigned
           path: sono-unsigned.ipa
-          
+
