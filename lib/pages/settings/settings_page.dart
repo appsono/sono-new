@@ -698,6 +698,13 @@ class _SectionHeader extends StatelessWidget {
 class _LanguageSection extends StatelessWidget {
   const _LanguageSection();
 
+  String _labelFor(Locale locale) {
+    final name = LocaleService.nativeNameOf(locale);
+    final pct = LocaleService.completionFor(locale);
+    if (pct == null || pct >= 1.0) return name;
+    return '$name (${(pct * 100).round()}%)';
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Locale?>(
@@ -716,10 +723,11 @@ class _LanguageSection extends StatelessWidget {
                 child: Text('System default'),
               ),
               for (final locale in LocaleService.supportedLocales)
-                DropdownMenuItem<Locale?>(
-                  value: locale,
-                  child: Text(LocaleService.nativeNameOf(locale)),
-                ),
+                if ((LocaleService.completionFor(locale) ?? 0) > 0)
+                  DropdownMenuItem<Locale?>(
+                    value: locale,
+                    child: Text(_labelFor(locale)),
+                  ),
             ],
             onChanged: (locale) => LocaleService.instance.setLocale(locale),
           ),
