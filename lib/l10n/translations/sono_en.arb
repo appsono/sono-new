@@ -1,6 +1,4 @@
 {
-  "@@locale": "en",
-
   "appName": "Sono",
   "@appName": {
     "description": "Application name, shown in window titles and stores"
