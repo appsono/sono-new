@@ -5,7 +5,7 @@
     },
     "commonUnknown": "Невядома",
     "commonUnknownArtist": "Невядомы выканаўца",
-    "commonSongsCount": "{count, plural, =0{песняў няма} one{{count} песня} few{{count} песні} many{{count} песняў} other{{count} песняў}}",
+    "commonSongsCount": "{count, plural, =0{песняў няма} one{{count} песня} few{{count} песні} other{{count} песняў}}",
     "@commonSongsCount": {
         "description": "Number of songs for an artist/album/playlist",
         "placeholders": {
@@ -19,7 +19,7 @@
     "navLibrary": "Бібліятэка",
     "navSearch": "Пошук",
     "homeActionShuffleAll": "Перамяшаць усе",
-    "homeActionCreatePlaylist": "Стварыць плэй-ліст",
+    "homeActionCreatePlaylist": "Новы плэй-ліст",
     "homeHeaderNewsAndUpdates": "Навіны і абнаўленні",
     "homeHeaderSettings": "Налады",
     "homeSectionRecentlyAdded": "Нядаўна даданыя",
@@ -74,7 +74,7 @@
     "@playerOriginAllSongs": {
         "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
     },
-    "playerTooltipPlay": "Прайграць",
+    "playerTooltipPlay": "Граць",
     "playerTooltipPause": "Паўза",
     "playerTooltipSkipNext": "Наступная",
     "playerTooltipShuffleOn": "Песні ўперамешку",
@@ -101,8 +101,8 @@
     "lyricsEmptyNoneFound": "Тэксту не знойдзена :(",
     "lyricsEmptyInstrumental": "Інструментальная",
     "lyricsEmptyNoneInVersion": "У гэтай версіі няма тэксту :/",
-    "lyricsPillSynced": "Сінхранізаваныя",
-    "lyricsPillStatic": "Звычайныя",
+    "lyricsPillSynced": "Сінхранізаваны",
+    "lyricsPillStatic": "Звычайны",
     "lyricsProviderCredit": "Тэкст пастаўляецца lrclib.net",
     "lyricsMenuTitle": "Тэкст і прайграванне",
     "lyricsMenuSectionLyrics": "Тэкст",
@@ -121,7 +121,7 @@
     },
     "lyricsMenuResetSaved": "Скінуць захаваны тэкст",
     "lyricsMenuResetSavedSubtitle": "Ачысціць кэш і паўторна загрузіць тэкст",
-    "lyricsMenuShuffle": "Перамешаць",
+    "lyricsMenuShuffle": "Перамяшаць",
     "lyricsMenuRepeat": "Паўтараць",
     "lyricsMenuRepeatOff": "Выключана",
     "@lyricsMenuRepeatOff": {
