@@ -17,10 +17,17 @@ class LocaleService {
   static final LocaleService instance = LocaleService._();
 
   /// Locales app has
-  /// View available here: hosted.weblate.com/project/TODO: set this up
+  /// View available here: https://hosted.weblate.org/projects/sono/sono-app/
   ///
   /// Order matters for picker. English first then alphabetical.
-  static const supportedLocales = <Locale>[Locale('en'), Locale('de')];
+  static const supportedLocales = <Locale>[
+    Locale('en'), // ALWAYS FIRST!
+    Locale('be'),
+    Locale('de'),
+    Locale('et'),
+    Locale('pl'),
+    Locale('uk'),
+  ];
 
   /// Native name of [locale]
   ///
@@ -28,7 +35,11 @@ class LocaleService {
   static String nativeNameOf(Locale locale) {
     return switch (locale.languageCode) {
       'en' => 'English',
+      'be' => 'Беларуская',
       'de' => 'Deutsch',
+      'et' => 'Eesti',
+      'pl' => 'Polski',
+      'uk' => 'Українська',
       _ => locale.toLanguageTag(),
     };
   }
