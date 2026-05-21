@@ -398,7 +398,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
   String _formatOffset(int ms) {
     final secs = (ms / 1000).toStringAsFixed(ms.abs() < 1000 ? 2 : 1);
-    return ms > 0 ? '+${secs}s' : '${secs}';
+    return ms > 0 ? '+${secs}s' : secs;
   }
 
   // ==== more menu ====
