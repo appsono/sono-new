@@ -56,7 +56,7 @@ void main() {
     ..writeln('/// Completion fraction (0.0 - 1.0) per locale code')
     ..writeln('const translationProgress = <String, double>{');
   for (final key in sorted) {
-    buffer.writeln("   '$key': ${completion[key]!.toStringAsFixed(3)},");
+    buffer.writeln("  '$key': ${completion[key]!.toStringAsFixed(3)},");
   }
   buffer.writeln('};');
 
