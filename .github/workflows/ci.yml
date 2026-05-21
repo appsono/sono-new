@@ -43,4 +43,5 @@ jobs:
         with:
           channel: stable
       - run: flutter pub get
+      - run: dart run scripts/compute_translation_progress.dart
       - run: flutter build apk --debug --flavor dev
