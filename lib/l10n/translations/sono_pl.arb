@@ -15,17 +15,17 @@
             }
         }
     },
-    "navHome": "Strona Główna",
+    "navHome": "Start",
     "navLibrary": "Biblioteka",
     "navSearch": "Wyszukaj",
     "homeActionShuffleAll": "Odtwórz losowo",
-    "homeActionCreatePlaylist": "Stwórz playlistę",
+    "homeActionCreatePlaylist": "Stwórz Playliste",
     "homeHeaderNewsAndUpdates": "Wiadomości i Uaktualnienia",
     "homeHeaderSettings": "Ustawienia",
     "homeSectionRecentlyAdded": "Ostatnio Dodane",
     "homeSectionAlbums": "Albumy",
     "homeSectionArtists": "Artyści",
-    "homeGreetingEarlyBird": "Wow Ranny Ptaszek",
+    "homeGreetingEarlyBird": "Wow, Ranny Ptaszek",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
@@ -41,7 +41,7 @@
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
-    "homeGreetingEvening": "Dobry Wieczór",
+    "homeGreetingEvening": "Wieczór",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
@@ -99,5 +99,39 @@
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
     "lyricsEmptyNoneFound": "Nie znaleziono tekstu :(",
-    "lyricsEmptyInstrumental": "Instrumental"
+    "lyricsEmptyInstrumental": "Instrumental",
+    "lyricsEmptyNoneInVersion": "Brak tekstu na tą wersję :/",
+    "lyricsPillSynced": "Zsynchronizowano",
+    "lyricsPillStatic": "Statyczne",
+    "lyricsProviderCredit": "Tekst dostarczony przez lrclib.net",
+    "lyricsMenuTitle": "Tekst i odtwarzanie",
+    "lyricsMenuSectionLyrics": "Tekst",
+    "lyricsMenuSectionPlayback": "Odtwarzanie",
+    "lyricsMenuAdjustSync": "Ustaw synchronizacje",
+    "lyricsMenuAdjustSyncSubtitleZero": "Zmień tempo tekstu tej piosenki",
+    "lyricsMenuAdjustSyncSubtitleOffset": "Teraz {offset}",
+    "@lyricsMenuAdjustSyncSubtitleOffset": {
+        "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
+        "placeholders": {
+            "offset": {
+                "type": "String",
+                "example": "+2s"
+            }
+        }
+    },
+    "lyricsMenuResetSaved": "Zresetuj zapisany tekst",
+    "lyricsMenuResetSavedSubtitle": "Wyczyść pamięć podręczną i ponownie pobierz teksty piosenek",
+    "lyricsMenuShuffle": "Losowo",
+    "lyricsMenuRepeat": "Powtórz",
+    "lyricsMenuRepeatOff": "Wyłączony",
+    "@lyricsMenuRepeatOff": {
+        "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+    },
+    "lyricsMenuRepeatAll": "Powtórz wszystko",
+    "lyricsMenuRepeatOne": "Powtarzaj jeden",
+    "lyricsMenuLike": "Polub",
+    "lyricsMenuLiked": "Polubiono",
+    "lyricsTooltipBackToPlayer": "Spowrotem do odtwarzacza",
+    "lyricsTooltiplMore": "Więcej",
+    "authSignIn": "Zaloguj się"
 }

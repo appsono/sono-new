@@ -1,1 +1,137 @@
-{}
+{
+    "appName": "Sono",
+    "@appName": {
+        "description": "Application name, shown in window titles and stores"
+    },
+    "commonUnknown": "Невядома",
+    "commonUnknownArtist": "Невядомы выканаўца",
+    "commonSongsCount": "{count, plural, =0{песняў няма} one{{count} песня} few{{count} песні} many{{count} песняў} other{{count} песняў}}",
+    "@commonSongsCount": {
+        "description": "Number of songs for an artist/album/playlist",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "navHome": "Галоўная",
+    "navLibrary": "Бібліятэка",
+    "navSearch": "Пошук",
+    "homeActionShuffleAll": "Перамяшаць усе",
+    "homeActionCreatePlaylist": "Стварыць плэй-ліст",
+    "homeHeaderNewsAndUpdates": "Навіны і абнаўленні",
+    "homeHeaderSettings": "Налады",
+    "homeSectionRecentlyAdded": "Нядаўна даданыя",
+    "homeSectionAlbums": "Альбомы",
+    "homeSectionArtists": "Выканаўцы",
+    "homeGreetingEarlyBird": "Ого, ранняя птушка",
+    "@homeGreetingEarlyBird": {
+        "description": "Greeting shown roughly 04:00–06:00"
+    },
+    "homeGreetingMorning": "Добрага ранку",
+    "@homeGreetingMorning": {
+        "description": "Greeting shown roughly 06:00–11:00"
+    },
+    "homeGreetingMidday": "Добрага дня",
+    "@homeGreetingMidday": {
+        "description": "Greeting shown roughly 11:00–14:00"
+    },
+    "homeGreetingAfternoon": "Добрага позняга дня",
+    "@homeGreetingAfternoon": {
+        "description": "Greeting shown roughly 14:00–17:00"
+    },
+    "homeGreetingEvening": "Добрага вечару",
+    "@homeGreetingEvening": {
+        "description": "Greeting shown roughly 17:00–20:00"
+    },
+    "homeGreetingNight": "Добрай ночы",
+    "@homeGreetingNight": {
+        "description": "Greeting shown roughly 20:00–24:00"
+    },
+    "homeGreetingLate": "Ідзі спаць",
+    "@homeGreetingLate": {
+        "description": "Greeting shown roughly 00:00–04:00"
+    },
+    "homeFallbackPhrase1": "весяліся, табе гэта да твару",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
+    "homeFallbackPhrase2": "нацешся музыкай!",
+    "homeFallbackPhrase3": "што ў нас на сёння?",
+    "homeFallbackPhrase4": "ізноў вітаю :D",
+    "homeFallbackPhrase5": "б- бака!",
+    "homeFallbackPhrase6": "як справы?",
+    "homeFallbackPhrase7": "хехе >:D",
+    "homeFallbackPhrase8": "хіхі :3",
+    "homeFallbackPhrase9": "ты хто такі?!",
+    "homeFallbackPhrase10": "задайце імя карыстальніка..",
+    "playerNowPlaying": "Зараз грае",
+    "@playerNowPlaying": {
+        "description": "Used in the player top bar and on the queue view's collapse button."
+    },
+    "playerOriginAllSongs": "Усе песні",
+    "@playerOriginAllSongs": {
+        "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
+    },
+    "playerTooltipPlay": "Прайграць",
+    "playerTooltipPause": "Паўза",
+    "playerTooltipSkipNext": "Наступная",
+    "playerTooltipShuffleOn": "Песні ўперамешку",
+    "@playerTooltipShuffleOn": {
+        "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
+    },
+    "playerTooltipShuffleOff": "Перамешванне выключана",
+    "@playerTooltipShuffleOff": {
+        "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
+    },
+    "playerTooltipRepeatOff": "Паўтор выключаны",
+    "@playerTooltipRepeatOff": {
+        "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
+    },
+    "playerTooltipRepeatAll": "Паўтор усяго",
+    "playerTooltipRepeatOne": "Паўтор адной",
+    "playerTooltipOpenQueue": "Адкрыць чаргу",
+    "playerTooltipOpenLyrics": "Адкрыць тэкст",
+    "queueLabelUpNext": "Наступная песня",
+    "queueTooltipAddToPlaylist": "Дадаць у плэй-ліст",
+    "@queueTooltipAddToPlaylist": {
+        "description": "Tooltip on the add-to-playlist button in the queue view."
+    },
+    "lyricsEmptyNoneFound": "Тэксту не знойдзена :(",
+    "lyricsEmptyInstrumental": "Інструментальная",
+    "lyricsEmptyNoneInVersion": "У гэтай версіі няма тэксту :/",
+    "lyricsPillSynced": "Сінхранізаваныя",
+    "lyricsPillStatic": "Звычайныя",
+    "lyricsProviderCredit": "Тэкст пастаўляецца lrclib.net",
+    "lyricsMenuTitle": "Тэкст і прайграванне",
+    "lyricsMenuSectionLyrics": "Тэкст",
+    "lyricsMenuSectionPlayback": "Прайграванне",
+    "lyricsMenuAdjustSync": "Адрэгуляваць сінхранізацыю",
+    "lyricsMenuAdjustSyncSubtitleZero": "Наладзіць сінхранізацыю з тэкстам для гэтай песні",
+    "lyricsMenuAdjustSyncSubtitleOffset": "Зараз {offset}",
+    "@lyricsMenuAdjustSyncSubtitleOffset": {
+        "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
+        "placeholders": {
+            "offset": {
+                "type": "String",
+                "example": "+2s"
+            }
+        }
+    },
+    "lyricsMenuResetSaved": "Скінуць захаваны тэкст",
+    "lyricsMenuResetSavedSubtitle": "Ачысціць кэш і паўторна загрузіць тэкст",
+    "lyricsMenuShuffle": "Перамешаць",
+    "lyricsMenuRepeat": "Паўтараць",
+    "lyricsMenuRepeatOff": "Выключана",
+    "@lyricsMenuRepeatOff": {
+        "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+    },
+    "lyricsMenuRepeatAll": "Паўтараць усё",
+    "lyricsMenuRepeatOne": "Паўтараць адну",
+    "lyricsMenuLike": "Упадабаць",
+    "lyricsMenuLiked": "Упадабана",
+    "lyricsTooltipBackToPlayer": "Вярнуцца да прайгравальніка",
+    "lyricsTooltiplMore": "Яшчэ",
+    "authSignIn": "Увайсці"
+}
