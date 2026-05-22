@@ -133,5 +133,16 @@
     "lyricsMenuLiked": "Упадабана",
     "lyricsTooltipBackToPlayer": "Вярнуцца да прайгравальніка",
     "lyricsTooltiplMore": "Яшчэ",
-    "authSignIn": "Увайсьці"
+    "authSignIn": "Увайсьці",
+    "settingsSupportKofi": "Падтрымаць мяне",
+    "settingsContributors": "Удзельнікі",
+    "contributorsTitle": "Удзельнікі",
+    "@contributorsTitle": {
+        "description": "Title of the contributors bottom sheet"
+    },
+    "contributorsCodeSection": "Распрацоўка",
+    "contributorsTranslatorSection": "Пераклады",
+    "contributorsLoading": "Загрузка…",
+    "contributorsLoadFailed": "Не ўдалося загрузіць удзельнікаў :/",
+    "contributorsMaintainer": "Аўтар"
 }
