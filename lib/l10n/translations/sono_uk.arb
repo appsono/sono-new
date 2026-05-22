@@ -1,1 +1,148 @@
-{}
+{
+    "appName": "Sono",
+    "@appName": {
+        "description": "Application name, shown in window titles and stores"
+    },
+    "commonUnknown": "Невідомо",
+    "commonUnknownArtist": "Невідомий виконавець",
+    "commonSongsCount": "{count, plural, =0{немає пісень} one{\n{count} пісня} few{\n{count} пісні} other{\n{count} пісень}}",
+    "@commonSongsCount": {
+        "description": "Number of songs for an artist/album/playlist",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "navHome": "Головна",
+    "navLibrary": "Бібліотека",
+    "navSearch": "Знайти",
+    "homeActionShuffleAll": "Перемішати все",
+    "homeActionCreatePlaylist": "Створити список відтворення",
+    "homeHeaderNewsAndUpdates": "Новини й оновлення",
+    "homeHeaderSettings": "Налаштування",
+    "homeSectionRecentlyAdded": "Нещодавно додано",
+    "homeSectionAlbums": "Альбоми",
+    "homeSectionArtists": "Виконавці",
+    "homeGreetingEarlyBird": "Ого, яка рання пташка",
+    "@homeGreetingEarlyBird": {
+        "description": "Greeting shown roughly 04:00–06:00"
+    },
+    "homeGreetingMorning": "Раночку",
+    "@homeGreetingMorning": {
+        "description": "Greeting shown roughly 06:00–11:00"
+    },
+    "homeGreetingMidday": "Доброго полудня",
+    "@homeGreetingMidday": {
+        "description": "Greeting shown roughly 11:00–14:00"
+    },
+    "homeGreetingAfternoon": "Добридень",
+    "@homeGreetingAfternoon": {
+        "description": "Greeting shown roughly 14:00–17:00"
+    },
+    "homeGreetingEvening": "Доброго вечора",
+    "@homeGreetingEvening": {
+        "description": "Greeting shown roughly 17:00–20:00"
+    },
+    "homeGreetingNight": "Доброї ночі",
+    "@homeGreetingNight": {
+        "description": "Greeting shown roughly 20:00–24:00"
+    },
+    "homeGreetingLate": "Гей, лягай спати",
+    "@homeGreetingLate": {
+        "description": "Greeting shown roughly 00:00–04:00"
+    },
+    "homeFallbackPhrase1": "розважайся як хочеш",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
+    "homeFallbackPhrase2": "приємного прослуховування!",
+    "homeFallbackPhrase3": "що там сьогодні?",
+    "homeFallbackPhrase4": "з поверненням :D",
+    "homeFallbackPhrase5": "б- бака!",
+    "homeFallbackPhrase6": "що там по настрою?",
+    "homeFallbackPhrase7": "хе-хе >:D",
+    "homeFallbackPhrase8": "хі-хі :3",
+    "homeFallbackPhrase9": "ти хто такий?!",
+    "homeFallbackPhrase10": "вигадай собі ім’я користувача...",
+    "playerNowPlaying": "Зараз грає",
+    "@playerNowPlaying": {
+        "description": "Used in the player top bar and on the queue view's collapse button."
+    },
+    "playerOriginAllSongs": "Усі пісні",
+    "@playerOriginAllSongs": {
+        "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
+    },
+    "playerTooltipPlay": "Грати",
+    "playerTooltipPause": "Призупинити",
+    "playerTooltipSkipNext": "Далі",
+    "playerTooltipShuffleOn": "Перемішування пісень",
+    "@playerTooltipShuffleOn": {
+        "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
+    },
+    "playerTooltipShuffleOff": "Переміщування вимкнено",
+    "@playerTooltipShuffleOff": {
+        "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
+    },
+    "playerTooltipRepeatOff": "Повтор вимкнено",
+    "@playerTooltipRepeatOff": {
+        "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
+    },
+    "playerTooltipRepeatAll": "Повторювати все",
+    "playerTooltipRepeatOne": "Повторювати одну",
+    "playerTooltipOpenQueue": "Відкрити чергу",
+    "playerTooltipOpenLyrics": "Відкрити текст пісні",
+    "queueLabelUpNext": "Наступна",
+    "queueTooltipAddToPlaylist": "Додати до списку відтворення",
+    "@queueTooltipAddToPlaylist": {
+        "description": "Tooltip on the add-to-playlist button in the queue view."
+    },
+    "lyricsEmptyNoneFound": "Текст пісні не знайдено :(",
+    "lyricsEmptyInstrumental": "Інструментальна",
+    "lyricsEmptyNoneInVersion": "У цій версії немає тексту пісні :/",
+    "lyricsPillSynced": "Синхронізовано",
+    "lyricsPillStatic": "Статично",
+    "lyricsProviderCredit": "Текст пісні надано lrclib.net",
+    "lyricsMenuTitle": "Тексти пісень і відтворення",
+    "lyricsMenuSectionLyrics": "Текст пісні",
+    "lyricsMenuSectionPlayback": "Відтворення",
+    "lyricsMenuAdjustSync": "Налаштувати синхронізацію",
+    "lyricsMenuAdjustSyncSubtitleZero": "Налаштувати синхронізацію тексту для цієї пісні",
+    "lyricsMenuAdjustSyncSubtitleOffset": "Наразі {offset}",
+    "@lyricsMenuAdjustSyncSubtitleOffset": {
+        "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
+        "placeholders": {
+            "offset": {
+                "type": "String",
+                "example": "+2s"
+            }
+        }
+    },
+    "lyricsMenuResetSaved": "Скинути збережені тексти пісень",
+    "lyricsMenuResetSavedSubtitle": "Очистити кеш і повторно завантажити текст пісні",
+    "lyricsMenuShuffle": "Перемішати",
+    "lyricsMenuRepeat": "Повторювати",
+    "lyricsMenuRepeatOff": "Вимк.",
+    "@lyricsMenuRepeatOff": {
+        "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+    },
+    "lyricsMenuRepeatAll": "Повторювати все",
+    "lyricsMenuRepeatOne": "Повторювати одну",
+    "lyricsMenuLike": "Подобається",
+    "lyricsMenuLiked": "Уподобано",
+    "lyricsTooltipBackToPlayer": "Назад до програвача",
+    "lyricsTooltiplMore": "Більше",
+    "authSignIn": "Увійти",
+    "settingsSupportKofi": "Підтримати мене",
+    "settingsContributors": "Вкладники",
+    "contributorsTitle": "Вкладники",
+    "@contributorsTitle": {
+        "description": "Title of the contributors bottom sheet"
+    },
+    "contributorsMaintainer": "Автор",
+    "contributorsCodeSection": "Код",
+    "contributorsTranslatorSection": "Перекладачі",
+    "contributorsLoading": "Завантаження…",
+    "contributorsLoadFailed": "Не вдалося завантажити вкладників :/"
+}
