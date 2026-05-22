@@ -211,12 +211,16 @@ class _SonoCoverArtState extends State<SonoCoverArt>
   void _syncToPosition(Duration pos) {
     final ctrl = _spinController;
     if (ctrl == null || !ctrl.isAnimating) return;
+
     final target =
         (pos.inMilliseconds % _turnPeriod.inMilliseconds) /
         _turnPeriod.inMilliseconds;
-    if ((target - ctrl.value).abs() > 0.05) {
+
+    double diff = (target - ctrl.value).abs();
+    if (diff > 0.5) diff = 1.0 - diff;
+
+    if (diff > 0.5) {
       ctrl.value = target;
-      ctrl.repeat();
     }
   }
 
