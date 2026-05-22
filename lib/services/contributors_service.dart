@@ -61,8 +61,9 @@ class ContributorsService {
         if (login == null) continue;
         final loginLower = login.toLowerCase();
         if (loginLower == _maintainerLogin.toLowerCase() ||
-            loginLower == _maintainerLogin2)
+            loginLower == _maintainerLogin2) {
           continue;
+        }
         if (type == 'Bot' || login.endsWith('[bot]')) continue;
 
         out.add(
