@@ -737,27 +737,30 @@ class _LanguageSection extends StatelessWidget {
     return ValueListenableBuilder<Locale?>(
       valueListenable: LocaleService.notifier,
       builder: (_, current, _) {
-        return ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('App language'),
-          trailing: DropdownButton<Locale?>(
-            value: current,
-            underline: const SizedBox.shrink(),
-            dropdownColor: context.sono.bgNav,
-            items: [
-              const DropdownMenuItem<Locale?>(
-                value: null,
-                child: Text('System default'),
-              ),
-              for (final locale in LocaleService.supportedLocales)
-                if ((LocaleService.completionFor(locale) ?? 0) > 0)
-                  DropdownMenuItem<Locale?>(
-                    value: locale,
-                    child: Text(_labelFor(locale)),
-                  ),
-            ],
-            onChanged: (locale) => LocaleService.instance.setLocale(locale),
-          ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('App language'),
+            const SizedBox(height: 8),
+            DropdownButton<Locale?>(
+              value: current,
+              underline: const SizedBox.shrink(),
+              dropdownColor: context.sono.bgNav,
+              items: [
+                const DropdownMenuItem<Locale?>(
+                  value: null,
+                  child: Text('System default'),
+                ),
+                for (final locale in LocaleService.supportedLocales)
+                  if ((LocaleService.completionFor(locale) ?? 0) > 0)
+                    DropdownMenuItem<Locale?>(
+                      value: locale,
+                      child: Text(_labelFor(locale)),
+                    ),
+              ],
+              onChanged: (locale) => LocaleService.instance.setLocale(locale),
+            ),
+          ],
         );
       },
     );
