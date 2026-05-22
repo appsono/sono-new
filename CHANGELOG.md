@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.91+2](https://github.com/appsono/sono-new/compare/v0.4.9+2...v0.4.91+2) (2026-05-22)
+
+### Translation
+
+* [Sasha Galzko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
+* [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+* [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
+
 ## [0.4.9+2](https://github.com/appsono/sono-new/compare/v0.4.8+2...v0.4.9+2) (2026-05-22)
 
 ### Features
