@@ -24,8 +24,10 @@ class LocaleService {
   static const supportedLocales = <Locale>[
     Locale('en'), // ALWAYS FIRST!
     Locale('be'),
+    Locale.fromSubtags(languageCode: 'be', scriptCode: 'Tarask'),
     Locale('de'),
     Locale('et'),
+    Locale('fr'),
     Locale('pl'),
     Locale('uk'),
   ];
@@ -34,11 +36,15 @@ class LocaleService {
   ///
   ///(NOT LOCALIZED)
   static String nativeNameOf(Locale locale) {
-    return switch (locale.languageCode) {
+    final tag = locale.toLanguageTag().toLowerCase();
+
+    return switch (tag) {
       'en' => 'English',
       'be' => 'Беларуская',
+      'be-tarask' => 'Беларуская (тарашкевіца)',
       'de' => 'Deutsch',
       'et' => 'Eesti',
+      'fr' => 'Français',
       'pl' => 'Polski',
       'uk' => 'Українська',
       _ => locale.toLanguageTag(),
