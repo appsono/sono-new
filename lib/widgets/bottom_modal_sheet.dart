@@ -97,6 +97,22 @@ class BottomSheetSlider extends BottomSheetItem {
   });
 }
 
+/// avatar + name + optional subtitle row
+/// tapping opens contributors profile externally and closes modal
+class BottomSheetContributor extends BottomSheetItem {
+  final String name;
+  final String? avatarUrl;
+  final String? subtitle;
+  final VoidCallback? onTap;
+
+  const BottomSheetContributor({
+    required this.name,
+    this.avatarUrl,
+    this.subtitle,
+    this.onTap,
+  });
+}
+
 class BottomModalSheet extends StatefulWidget {
   /// builder invoked on every rebuild so items see fresh state
   final List<BottomSheetItem> Function() itemsBuilder;
@@ -159,61 +175,75 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
   Widget build(BuildContext context) {
     final muted = widget.onBackground.withValues(alpha: 0.55);
     final items = widget.itemsBuilder();
+    final maxHeight = MediaQuery.sizeOf(context).height * 0.85;
 
     return SafeArea(
       top: false,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Container(
-          decoration: BoxDecoration(
-            color: widget.background,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: widget.onBackground.withValues(alpha: 0.06),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 24,
-                offset: const Offset(0, -4),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Container(
+            decoration: BoxDecoration(
+              color: widget.background,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: widget.onBackground.withValues(alpha: 0.06),
               ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                //drag handle
-                Center(
-                  child: Container(
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: muted,
-                      borderRadius: BorderRadius.circular(2),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.25),
+                  blurRadius: 24,
+                  offset: const Offset(0, -4),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  //drag handle
+                  Center(
+                    child: Container(
+                      width: 36,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: muted,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
                   ),
-                ),
-                if (widget.title != null) ...[
-                  const SizedBox(height: 14),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      widget.title!,
-                      style: TextStyle(
-                        fontFamily: SonoFonts.heading,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: widget.onBackground,
+                  if (widget.title != null) ...[
+                    const SizedBox(height: 14),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        widget.title!,
+                        style: TextStyle(
+                          fontFamily: SonoFonts.heading,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: widget.onBackground,
+                        ),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 4),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (final item in items) _render(item, muted),
+                        ],
                       ),
                     ),
                   ),
                 ],
-                const SizedBox(height: 4),
-                for (final item in items) _render(item, muted),
-              ],
+              ),
             ),
           ),
         ),
@@ -271,6 +301,13 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
         accent: widget.accent,
         muted: muted,
         onAfterChange: _refresh,
+      ),
+      BottomSheetContributor() => _ContributorRow(
+        item: item,
+        bg: widget.surface,
+        fg: widget.onBackground,
+        muted: muted,
+        onAfterTap: () => Navigator.of(context).maybePop(),
       ),
     };
   }
@@ -565,6 +602,116 @@ class _SliderRow extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ==== contributor row ====
+class _ContributorRow extends StatelessWidget {
+  final BottomSheetContributor item;
+  final Color bg;
+  final Color fg;
+  final Color muted;
+  final VoidCallback onAfterTap;
+
+  const _ContributorRow({
+    required this.item,
+    required this.bg,
+    required this.fg,
+    required this.muted,
+    required this.onAfterTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final initial = item.name.isEmpty
+        ? '?'
+        : item.name.characters.first.toUpperCase();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+      child: BouncyTap(
+        onTap: () {
+          item.onTap?.call();
+          if (item.onTap != null) onAfterTap();
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            children: [
+              ClipOval(
+                child: SizedBox(
+                  width: 36,
+                  height: 36,
+                  child: item.avatarUrl != null
+                      ? Image.network(
+                          item.avatarUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) =>
+                              _initial(initial, muted, fg),
+                          loadingBuilder: (_, child, p) =>
+                              p == null ? child : _initial(initial, muted, fg),
+                        )
+                      : _initial(initial, muted, fg),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      item.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: SonoFonts.primary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: fg,
+                      ),
+                    ),
+                    if (item.subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        item.subtitle!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: SonoFonts.primary,
+                          fontSize: 11,
+                          color: muted,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _initial(String initial, Color muted, Color fg) {
+    return Container(
+      color: muted.withValues(alpha: 0.15),
+      alignment: Alignment.center,
+      child: Text(
+        initial,
+        style: TextStyle(
+          fontFamily: SonoFonts.heading,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          color: fg,
         ),
       ),
     );

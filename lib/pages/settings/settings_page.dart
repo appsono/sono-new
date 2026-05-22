@@ -7,18 +7,26 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:file_picker/file_picker.dart';
 
+import 'package:sono/l10n/localizations.dart';
 import 'package:sono/services/locale_service.dart';
 
-import 'package:sono/main.dart';
-import 'package:sono/db/database.dart';
-import 'package:sono/pages/auth/discord_login_page.dart';
 import 'package:sono/services/scanner/scan_settings.dart';
 import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/update_service.dart';
+
+import 'package:sono/main.dart';
+import 'package:sono/db/database.dart';
+import 'package:sono/pages/auth/discord_login_page.dart';
+
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
+
+import 'package:sono/widgets/bouncy_tap.dart';
+import 'package:sono/widgets/contributors_sheet.dart';
+import 'package:sono/widgets/kofi_button.dart';
+
 import 'package:sono_query/sono_query.dart' hide Song;
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
@@ -253,6 +261,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final c = _config;
     if (c == null) return const SizedBox.shrink();
+    final l = AppLocalizations.of(context);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -635,6 +644,24 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
         ),
 
+        const SizedBox(height: 32),
+        const Divider(),
+        const SizedBox(height: 12),
+
+        // ==== contributors & support ====
+        Row(
+          children: [
+            Expanded(child: _ContributorsButton(label: l.settingsContributors)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: KofiButton(
+                url: 'https://ko-fi.com/mathiiis',
+                label: l.settingsSupportKofi,
+              ),
+            ),
+          ],
+        ),
+
         // ==== bottom clearance ====
         SizedBox(height: _bottomInset),
       ],
@@ -903,6 +930,50 @@ class _EffectRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// ==== contributors button ====
+class _ContributorsButton extends StatelessWidget {
+  final String label;
+  const _ContributorsButton({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    return BouncyTap(
+      onTap: () => ContributorsSheet.show(context),
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SonoSizes.borderRadius),
+          border: Border.all(color: c.borderLight20, width: 1.5),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconsSheet.svg(
+              IconsSheet.profileFilled,
+              size: SonoSizes.iconSm,
+              color: c.textPrimary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: SonoFonts.primary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: c.textPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

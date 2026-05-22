@@ -129,6 +129,19 @@
   "lyricsTooltipBackToPlayer": "Back to player",
   "lyricsTooltiplMore": "More",
 
-  "authSignIn": "Sign in"
+  "authSignIn": "Sign in",
+
+  "settingsSupportKofi": "Support me",
+  "settingsContributors": "Contributors",
+
+  "contributorsTitle": "Contributors",
+  "@contributorsTitle": {
+    "description": "Title of the contributors bottom sheet"
+  },
+  "contributorsMaintainer": "Maintainer",
+  "contributorsCodeSection": "Code",
+  "contributorsTranslatorSection": "Translations",
+  "contributorsLoading": "Loading...",
+  "contributorsLoadFailed": "Couldn't load contributors :/"
 }
 

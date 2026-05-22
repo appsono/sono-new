@@ -65,6 +65,8 @@ flutter:
     - assets/app/icon/
     - assets/app/icons/outlined/
     - assets/app/icons/filled/
+    - assets/app/brands/
+    - assets/app/translators.json
 
   fonts:
     - family: VarelaRound
