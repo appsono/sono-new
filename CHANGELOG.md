@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.4.9+2](https://github.com/appsono/sono-new/compare/v0.4.8+2...v0.4.9+2) (2026-05-22)
+
+### Features
+
+* Added 4 new languages (Belarusian, Belarusian (be_TARASK), French, Polish)
+* Added two button at the bottom of Settings (Contributors, Support Me)
+* Added Contributors Modal (Code Commits [github], Translations [manual])
+* Added a translation progress indicator to language picker
+
+### Fixes
+
+* Remove unnecessary string interpolation in offset formatting (lib/pages/player/player_lyrics_view.dart)
+* Moved language picker under Text so both have full width
+
+### Translation
+
+* [Sasha Galzko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (89%) and Belarusian (be_TARASK) (89%)
+* [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into French (89%)
+* [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (89%)
+* [prlz](https://hosted.weblate.org/user/prlz/) translated Sono into Polish (89%)
+
 ## [0.4.8+2](https://github.com/appsono/sono-new/compare/v0.3.6+1...v0.4.8+2) (2026-05-20)
 
 ### Features
