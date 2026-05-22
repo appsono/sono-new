@@ -133,5 +133,16 @@
     "lyricsMenuLiked": "Liked",
     "lyricsTooltipBackToPlayer": "Zurück zum Player",
     "lyricsTooltiplMore": "Mehr",
-    "authSignIn": "Einloggen"
+    "authSignIn": "Einloggen",
+    "settingsSupportKofi": "Unterstützte mich",
+    "settingsContributors": "Mitwirkende",
+    "contributorsTitle": "Mitwirkende",
+    "@contributorsTitle": {
+        "description": "Title of the contributors bottom sheet"
+    },
+    "contributorsMaintainer": "Maintainer",
+    "contributorsCodeSection": "Code",
+    "contributorsTranslatorSection": "Übersetzungen",
+    "contributorsLoading": "Lade...",
+    "contributorsLoadFailed": "Könnte Mitwirkende nicht laden :/"
 }
