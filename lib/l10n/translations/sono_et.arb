@@ -1,1 +1,27 @@
-{}
+{
+    "appName": "Sono",
+    "@appName": {
+        "description": "Application name, shown in window titles and stores"
+    },
+    "commonUnknown": "Pole teada",
+    "commonUnknownArtist": "Tundmatu esitaja",
+    "commonSongsCount": "{count, plural, =0{lugusid pole} =1{1 lugu} other{{count} lugu}}",
+    "@commonSongsCount": {
+        "description": "Number of songs for an artist/album/playlist",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "navHome": "Avaleht",
+    "navLibrary": "Muusikakogu",
+    "navSearch": "Otsi",
+    "homeActionShuffleAll": "Sega kõik lood",
+    "homeActionCreatePlaylist": "Loo esitusloend",
+    "homeHeaderNewsAndUpdates": "Uudised ja uuendused",
+    "homeHeaderSettings": "Seadistused",
+    "homeSectionRecentlyAdded": "Hiljuti lisatud",
+    "homeSectionAlbums": "Albumid"
+}
