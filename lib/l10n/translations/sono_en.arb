@@ -141,7 +141,7 @@
   "contributorsMaintainer": "Maintainer",
   "contributorsCodeSection": "Code",
   "contributorsTranslatorSection": "Translations",
-  "contributorsLoading": "Loading...",
+  "contributorsLoading": "Loading…",
   "contributorsLoadFailed": "Couldn't load contributors :/"
 }
 
