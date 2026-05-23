@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/utils/format_ms.dart';
 
 /// ==== Progress Bar ====
 ///
@@ -48,15 +49,6 @@ class _ProgressBarState extends State<ProgressBar> {
     _posSub?.cancel();
     _durSub?.cancel();
     super.dispose();
-  }
-
-  // ==== format ====
-  static String _fmt(Duration d) {
-    final h = d.inHours;
-    final m = d.inMinutes.toString().padLeft(2, '0');
-    final s = (d.inSeconds % 60).toString().padLeft(2, '0');
-    if (h > 0) return '$h:$m:$s';
-    return '$m:$s';
   }
 
   @override
@@ -130,8 +122,8 @@ class _ProgressBarState extends State<ProgressBar> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(_fmt(displayPos), style: timeStyle),
-            Text(_fmt(_duration), style: timeStyle),
+            Text(fmt(displayPos), style: timeStyle),
+            Text(fmt(_duration), style: timeStyle),
           ],
         ),
       ],

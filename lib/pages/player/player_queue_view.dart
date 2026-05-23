@@ -13,6 +13,8 @@ import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/player_header_card.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
+import 'package:sono/widgets/song_sheet.dart';
+import 'package:sono/utils/format_ms.dart';
 
 /// ==== Queue View ====
 ///
@@ -32,11 +34,13 @@ import 'package:sono/widgets/bouncy_tap.dart';
 /// but that's how it is...
 class PlayerQueueView extends StatefulWidget {
   final PlayerColors c;
+  final SonoDatabase db;
   final Animation<double>? slideAnimation;
   final VoidCallback onClose;
 
   const PlayerQueueView({
     required this.c,
+    required this.db,
     required this.onClose,
     this.slideAnimation,
     super.key,
@@ -255,6 +259,88 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     player.AudioService.instance.removeFromQueue(i);
   }
 
+  Future<void> _openRowMenu(Song song, int index) async {
+    final c = widget.c;
+
+    //resolve album name if any
+    String? albumName;
+    if (song.albumId != null) {
+      final album = await widget.db.getAlbumById(song.albumId!);
+      albumName = album?.title;
+    }
+    bool liked = await widget.db.getSongLiked(song.id);
+    if (!mounted || !context.mounted) return;
+    final isCurrent = index == _currentIndex;
+
+    final infoRows = <SongSheetInfoRow>[
+      SongSheetInfoRow(label: 'Title', value: song.title),
+      SongSheetInfoRow(label: 'Artist', value: song.displayArtist),
+      if (albumName != null) SongSheetInfoRow(label: 'Album', value: albumName),
+      if (song.genre != null)
+        SongSheetInfoRow(label: 'Genre', value: song.genre),
+      if (song.duration != null)
+        SongSheetInfoRow(label: 'Duration', value: fmtMs(song.duration!)),
+      if (song.releaseDate != null)
+        SongSheetInfoRow(
+          label: 'Released',
+          value: song.releaseDate!.toIso8601String().split('T').first,
+        ),
+      SongSheetInfoRow(label: 'Path', value: song.path),
+    ];
+
+    await SongSheet.show(
+      context: context,
+      type: SongSheetType.song,
+      coverPath: song.path,
+      title: song.title,
+      subtitle:
+          song.displayArtist ??
+          AppLocalizations.of(context).commonUnknownArtist,
+      background: c.background,
+      surface: c.surface,
+      accent: c.accent,
+      onBackground: c.onBackground,
+      onAccent: c.onAccent,
+      actionsBuilder: () => [
+        SongSheetAction(
+          icon: IconsSheet.playFilled,
+          label: AppLocalizations.of(context).playerTooltipPlay,
+          dismissOnTap: false,
+          onTap: () => _onTapRow(index),
+        ),
+        SongSheetAction(
+          icon: liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
+          label: liked
+              ? AppLocalizations.of(context).lyricsMenuLiked
+              : AppLocalizations.of(context).lyricsMenuLike,
+          dismissOnTap: false,
+          onTap: () async {
+            liked = !liked;
+            await widget.db.setSongLiked(song.id, liked);
+          },
+        ),
+        SongSheetAction(
+          icon: IconsSheet.addToPlaylistOutlined,
+          label: 'Add to playlist',
+          onTap: () {},
+        ),
+        SongSheetAction(
+          icon: IconsSheet.profileOutlined,
+          label: 'Go to artist',
+          onTap: () {},
+        ),
+        if (!isCurrent)
+          SongSheetAction(
+            icon: IconsSheet.deleteOutlined,
+            label: 'Remove from queue',
+            tint: c.accent,
+            onTap: () => _onRemove(index),
+          ),
+      ],
+      infoRows: infoRows,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = widget.c;
@@ -314,6 +400,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
                           rowHeight: _rowHeight,
                           onTap: () => _onTapRow(i),
                           onRemove: () => _onRemove(i),
+                          onMenu: () => _openRowMenu(song, i),
                         ),
                       );
                     },
@@ -457,6 +544,7 @@ class _QueueRow extends StatelessWidget {
   final double rowHeight;
   final VoidCallback onTap;
   final VoidCallback onRemove;
+  final VoidCallback onMenu;
 
   const _QueueRow({
     required this.c,
@@ -466,6 +554,7 @@ class _QueueRow extends StatelessWidget {
     required this.rowHeight,
     required this.onTap,
     required this.onRemove,
+    required this.onMenu,
   });
 
   @override
@@ -547,7 +636,6 @@ class _QueueRow extends StatelessWidget {
             ),
           ),
           //3-dot menu
-          //TODO: add op, no-op for now
           SizedBox(
             width: 40,
             height: rowHeight,
@@ -557,9 +645,7 @@ class _QueueRow extends StatelessWidget {
                 size: 18,
                 color: c.onBackground.withValues(alpha: 0.5),
               ),
-              onPressed: () {
-                //will open row options bottom sheet later
-              },
+              onPressed: onMenu,
               padding: EdgeInsets.zero,
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
+import 'package:sono/l10n/localizations.dart';
 //widgets
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/pages/player/player_top_bar.dart';
@@ -12,9 +13,12 @@ import 'package:sono/pages/player/player_title_row.dart';
 import 'package:sono/pages/player/player_progress_bar.dart';
 import 'package:sono/pages/player/player_controls.dart';
 import 'package:sono/pages/player/player_secondary_controls.dart';
+import 'package:sono/widgets/song_sheet.dart';
 //views
 import 'package:sono/pages/player/player_queue_view.dart';
 import 'package:sono/pages/player/player_lyrics_view.dart';
+//utils
+import 'package:sono/utils/format_ms.dart';
 
 /// ==== WIP ====
 /// Fullscreen player is work in progress
@@ -181,6 +185,63 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     setState(() => _subView = _SubView.none);
   }
 
+  Future<void> _openTopBarMenu() async {
+    final song = player.AudioService.instance.currentSong;
+    if (song == null) return;
+    final c = _colors;
+
+    //resolve album name if any
+    String? albumName;
+    if (song.albumId != null) {
+      final album = await widget.db.getAlbumById(song.albumId!);
+      albumName = album?.title;
+    }
+    if (!mounted || !context.mounted) return;
+
+    final infoRows = <SongSheetInfoRow>[
+      SongSheetInfoRow(label: 'Title', value: song.title),
+      SongSheetInfoRow(label: 'Artist', value: song.displayArtist),
+      if (albumName != null) SongSheetInfoRow(label: 'Album', value: albumName),
+      if (song.genre != null)
+        SongSheetInfoRow(label: 'Genre', value: song.genre),
+      if (song.duration != null)
+        SongSheetInfoRow(label: 'Duration', value: fmtMs(song.duration!)),
+      if (song.releaseDate != null)
+        SongSheetInfoRow(
+          label: 'Released',
+          value: song.releaseDate!.toIso8601String().split('T').first,
+        ),
+      SongSheetInfoRow(label: 'Path', value: song.path),
+    ];
+
+    bool liked = _liked;
+
+    await SongSheet.show(
+      context: context,
+      type: SongSheetType.song,
+      coverPath: song.path,
+      title: song.title,
+      subtitle:
+          song.displayArtist ??
+          AppLocalizations.of(context).commonUnknownArtist,
+      background: c.background,
+      surface: c.surface,
+      accent: c.accent,
+      onBackground: c.onBackground,
+      onAccent: c.onAccent,
+      actionsBuilder: () => SongSheet.defaultsForSong(
+        liked: liked,
+        onLike: () async {
+          liked = !liked;
+          await widget.db.setSongLiked(song.id, liked);
+          if (mounted) setState(() => _liked = _liked);
+        },
+        //TODO: album/artist nav + add to playlist are stubs for now
+      ),
+      infoRows: infoRows,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<PlayerColors>(
@@ -207,9 +268,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
                         TopBar(
                           c: c,
                           onCollapse: () => Navigator.maybePop(context),
-                          onMore: () {
-                            //later: open options bottom sheet
-                          },
+                          onMore: _openTopBarMenu,
                         ),
                         const SizedBox(height: 42),
                         CoverCarousel(c: c),
@@ -240,6 +299,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
                         position: _queueSlide,
                         child: PlayerQueueView(
                           c: c,
+                          db: widget.db,
                           slideAnimation: _queueCtrl,
                           onClose: _closeSubView,
                         ),
