@@ -21,7 +21,7 @@ class SonoHomeActions extends StatelessWidget {
         Expanded(
           child: _ActionButton(
             icon: IconsSheet.shuffleOutlined,
-            label: l.homeActionShuffleAll,
+            label: l.commonShuffleAll,
             filled: false,
             onTap: onShuffleAll,
           ),

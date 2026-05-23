@@ -304,15 +304,15 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
       actionsBuilder: () => [
         SongSheetAction(
           icon: IconsSheet.playFilled,
-          label: AppLocalizations.of(context).playerTooltipPlay,
+          label: AppLocalizations.of(context).commonPlay,
           dismissOnTap: false,
           onTap: () => _onTapRow(index),
         ),
         SongSheetAction(
           icon: liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
           label: liked
-              ? AppLocalizations.of(context).lyricsMenuLiked
-              : AppLocalizations.of(context).lyricsMenuLike,
+              ? AppLocalizations.of(context).commonLiked
+              : AppLocalizations.of(context).commonLike,
           dismissOnTap: false,
           onTap: () async {
             liked = !liked;
@@ -735,7 +735,7 @@ class _QueueActions extends StatelessWidget {
                 background: c.accent,
                 foreground: c.onAccent,
                 onTap: audio.playOrPause,
-                tooltip: playing ? l.playerTooltipPause : l.playerTooltipPlay,
+                tooltip: playing ? l.commonPause : l.commonPlay,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(smallRadius),
                   bottomLeft: Radius.circular(smallRadius),
@@ -854,7 +854,7 @@ class _QueuePill extends StatelessWidget {
             onTap: () {
               //will open playlist picker later
             },
-            tooltip: l.queueTooltipAddToPlaylist,
+            tooltip: l.commonAddToPlaylist,
             size: 26,
           ),
         ],

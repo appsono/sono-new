@@ -453,7 +453,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
             icon: audio.shuffle
                 ? IconsSheet.shuffleFilled
                 : IconsSheet.shuffleOutlined,
-            label: l.lyricsMenuShuffle,
+            label: l.commonShuffle,
             subtitle: audio.shuffle
                 ? l.playerTooltipShuffleOn
                 : l.playerTooltipShuffleOff,
@@ -462,15 +462,15 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
           ),
           BottomSheetAction(
             icon: repeatIcon,
-            label: l.lyricsMenuRepeat,
+            label: l.commonRepeat,
             subtitle: repeatLabel,
             dismissOnTap: false,
             onTap: () => audio.cycleRepeat(),
           ),
           BottomSheetAction(
             icon: _liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
-            label: _liked ? l.lyricsMenuLiked : l.lyricsMenuLike,
-            subtitle: _liked ? l.lyricsMenuLiked : l.lyricsMenuLike,
+            label: _liked ? l.commonLiked : l.commonLike,
+            subtitle: _liked ? l.commonLiked : l.commonLike,
             dismissOnTap: false,
             onTap: () => _setLiked(!_liked),
           ),
@@ -1123,8 +1123,8 @@ class _LyricsBottomActions extends StatelessWidget {
                     foreground: c.onAccent,
                     onTap: audio.playOrPause,
                     tooltip: playing
-                        ? l.playerTooltipPause
-                        : l.playerTooltipPlay,
+                        ? l.commonPause
+                        : l.commonPlay,
                     height: rowHeight,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(smallRadius),
