@@ -133,5 +133,15 @@
     "lyricsMenuLiked": "aimé",
     "lyricsTooltipBackToPlayer": "Retour au lecteur",
     "lyricsTooltiplMore": "Plus",
-    "authSignIn": "Se connecter"
+    "authSignIn": "Se connecter",
+    "settingsSupportKofi": "soutenez-moi",
+    "settingsContributors": "Contributeurs",
+    "contributorsTitle": "Contributeurs",
+    "@contributorsTitle": {
+        "description": "Title of the contributors bottom sheet"
+    },
+    "contributorsCodeSection": "Code",
+    "contributorsTranslatorSection": "Traductions",
+    "contributorsLoading": "Chargement…",
+    "contributorsLoadFailed": "Impossible de charger les contributeurs :/"
 }
