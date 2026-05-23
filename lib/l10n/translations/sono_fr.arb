@@ -143,5 +143,6 @@
     "contributorsCodeSection": "Code",
     "contributorsTranslatorSection": "Traductions",
     "contributorsLoading": "Chargement…",
-    "contributorsLoadFailed": "Impossible de charger les contributeurs :/"
+    "contributorsLoadFailed": "Impossible de charger les contributeurs :/",
+    "contributorsMaintainer": "Responsable de la maintenance"
 }
