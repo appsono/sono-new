@@ -23,5 +23,126 @@
     "homeHeaderNewsAndUpdates": "Uudised ja uuendused",
     "homeHeaderSettings": "Seadistused",
     "homeSectionRecentlyAdded": "Hiljuti lisatud",
-    "homeSectionAlbums": "Albumid"
+    "homeSectionAlbums": "Albumid",
+    "homeSectionArtists": "Esitajad",
+    "playerNowPlaying": "Hetkel esitamisel",
+    "@playerNowPlaying": {
+        "description": "Used in the player top bar and on the queue view's collapse button."
+    },
+    "playerOriginAllSongs": "Kõik lood",
+    "@playerOriginAllSongs": {
+        "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
+    },
+    "playerTooltipPlay": "Esita",
+    "playerTooltipPause": "Peata esitus",
+    "playerTooltipSkipNext": "Järgmine",
+    "playerTooltipShuffleOn": "Lood on segamisel",
+    "@playerTooltipShuffleOn": {
+        "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
+    },
+    "playerTooltipShuffleOff": "Lugude segamine pole kasutusel",
+    "@playerTooltipShuffleOff": {
+        "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
+    },
+    "playerTooltipRepeatOff": "Lugude kordus pole kasutusel",
+    "@playerTooltipRepeatOff": {
+        "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
+    },
+    "playerTooltipRepeatAll": "Kõik lood kuuluvad kordamisele",
+    "playerTooltipRepeatOne": "Üks lugu kuulub kordamisele",
+    "playerTooltipOpenQueue": "Ava esitusjärjekord",
+    "playerTooltipOpenLyrics": "Ava laulusõnad",
+    "queueLabelUpNext": "Järgmisena esitamisel",
+    "queueTooltipAddToPlaylist": "Lisa esitusloendisse",
+    "@queueTooltipAddToPlaylist": {
+        "description": "Tooltip on the add-to-playlist button in the queue view."
+    },
+    "lyricsEmptyNoneFound": "Laulusõnu ei leidunud :(",
+    "settingsSupportKofi": "Toeta arendajat",
+    "settingsContributors": "Kaasautorid",
+    "contributorsTitle": "Kaasautorid",
+    "@contributorsTitle": {
+        "description": "Title of the contributors bottom sheet"
+    },
+    "contributorsMaintainer": "Hooldaja",
+    "contributorsCodeSection": "Lähtekood",
+    "contributorsTranslatorSection": "Tõlked",
+    "contributorsLoading": "Laadin andmeid…",
+    "contributorsLoadFailed": "Kaasautorite laadimine ei õnnestunud :/",
+    "homeFallbackPhrase4": "tere tulemast tagasi :D",
+    "lyricsEmptyInstrumental": "Instrumentaalpala",
+    "lyricsEmptyNoneInVersion": "Selles versioonis pole laulusõnu :/",
+    "lyricsPillSynced": "Sünkroonis",
+    "lyricsPillStatic": "Staatilised",
+    "lyricsProviderCredit": "Laulusõnad on pärit teenusest lrclib.net",
+    "lyricsMenuTitle": "Laulusõnad ja taasesitus",
+    "lyricsMenuSectionLyrics": "Laulusõnad",
+    "lyricsMenuSectionPlayback": "Taasesitus",
+    "lyricsMenuAdjustSync": "Kohenda sünkroonimist",
+    "lyricsMenuAdjustSyncSubtitleZero": "Nihuta loo laulusõnade ajastamist",
+    "lyricsMenuAdjustSyncSubtitleOffset": "Hetkel {offset}",
+    "@lyricsMenuAdjustSyncSubtitleOffset": {
+        "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
+        "placeholders": {
+            "offset": {
+                "type": "String",
+                "example": "+2s"
+            }
+        }
+    },
+    "lyricsMenuResetSaved": "Lähtesta salvestatud laulusõnad",
+    "lyricsMenuResetSavedSubtitle": "Kustuta puhverdatud sisu ja laadi laulusõnad teenusest uuesti",
+    "lyricsMenuShuffle": "Sega",
+    "lyricsMenuRepeat": "Korda",
+    "lyricsMenuRepeatOff": "Väljas",
+    "@lyricsMenuRepeatOff": {
+        "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+    },
+    "lyricsMenuRepeatAll": "Korda kõik",
+    "lyricsMenuRepeatOne": "Korda ühte",
+    "lyricsMenuLike": "Märgi meeldivaks",
+    "lyricsMenuLiked": "Märkisid meeldivaks",
+    "lyricsTooltipBackToPlayer": "Tagasi pleieri juurde",
+    "lyricsTooltiplMore": "Veel",
+    "authSignIn": "Logi sisse",
+    "homeGreetingMorning": "Hommikust",
+    "@homeGreetingMorning": {
+        "description": "Greeting shown roughly 06:00–11:00"
+    },
+    "homeGreetingEarlyBird": "Küll sa oled varajane",
+    "@homeGreetingEarlyBird": {
+        "description": "Greeting shown roughly 04:00–06:00"
+    },
+    "homeGreetingMidday": "Keskpäevast",
+    "@homeGreetingMidday": {
+        "description": "Greeting shown roughly 11:00–14:00"
+    },
+    "homeGreetingAfternoon": "Tere pärastlõunat",
+    "@homeGreetingAfternoon": {
+        "description": "Greeting shown roughly 14:00–17:00"
+    },
+    "homeGreetingEvening": "Tere õhtut",
+    "@homeGreetingEvening": {
+        "description": "Greeting shown roughly 17:00–20:00"
+    },
+    "homeGreetingNight": "Kena ööd",
+    "@homeGreetingNight": {
+        "description": "Greeting shown roughly 20:00–24:00"
+    },
+    "homeGreetingLate": "Hei, uuuunine",
+    "@homeGreetingLate": {
+        "description": "Greeting shown roughly 00:00–04:00"
+    },
+    "homeFallbackPhrase2": "naudi kuulamist!",
+    "homeFallbackPhrase1": "jäta seda, mis sul pooleli oli",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
+    "homeFallbackPhrase3": "ei tea, mis täna plaanis on?",
+    "homeFallbackPhrase7": "oh jahh >:D",
+    "homeFallbackPhrase9": "kes a oled?!",
+    "homeFallbackPhrase10": "sisesta oma kasutajanimi..",
+    "homeFallbackPhrase8": "mnjah :3",
+    "homeFallbackPhrase5": "t- tagasi!",
+    "homeFallbackPhrase6": "kuis kulgeb?"
 }
