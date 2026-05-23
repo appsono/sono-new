@@ -71,7 +71,12 @@ mathis
 
 ```
 
-Originally announced on the [Discord server](https://discord.sono.wtf).
+Originally announced on the [Discord server](https://discord.gg/48fvsUCNwu).
+
+## Official Communities
+
+Discord: [https://discord.gg/48fvsUCNwu](https://discord.gg/48fvsUCNwu)
+Nerimity: [https://nerimity.com/i/sono](https://nerimity.com/i/sono)
 
 ## Star History
 

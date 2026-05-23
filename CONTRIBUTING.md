@@ -116,4 +116,4 @@ If you're new to the codebase, `lib/widgets/` is the safest place to start. It's
 
 ## Questions
 
-Open an issue or join the [Discord](https://discord.sono.wtf) if you want to talk something through first.
+Open an issue or join one of out community servers ([Discord](https://discord.gg/48fvsUCNwu), [Nerimity](https://nerimity.com/i/sono)) if you want to talk something through first.
