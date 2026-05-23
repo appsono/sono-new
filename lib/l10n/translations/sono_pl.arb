@@ -15,10 +15,20 @@
             }
         }
     },
+    "commonPlay": "Odtwórz",
+    "commonPause": "Pauza",
+    "commonShuffle": "Losowo",
+    "commonShuffleAll": "Odtwórz losowo",
+    "commonRepeat": "Powtórz",
+    "commonLike": "Polub",
+    "commonLiked": "Polubiono",
+    "commonAddToPlaylist": "Dodaj do playlistę",
+    "@commonAddToPlaylist": {
+        "description": "Tooltip on the add-to-playlist button in the queue view."
+    },
     "navHome": "Start",
     "navLibrary": "Biblioteka",
     "navSearch": "Wyszukaj",
-    "homeActionShuffleAll": "Odtwórz losowo",
     "homeActionCreatePlaylist": "Stwórz Playliste",
     "homeHeaderNewsAndUpdates": "Wiadomości i Uaktualnienia",
     "homeHeaderSettings": "Ustawienia",
@@ -26,37 +36,34 @@
     "homeSectionAlbums": "Albumy",
     "homeSectionArtists": "Artyści",
     "homeGreetingEarlyBird": "Wow, Ranny Ptaszek",
+    "homeGreetingMorning": "Dzień Dobry",
+    "homeGreetingMidday": "Południe",
+    "homeGreetingAfternoon": "Popołudnie",
+    "homeGreetingEvening": "Wieczór",
+    "homeGreetingNight": "Dobranoc",
+    "homeGreetingLate": "Hej idź spać",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
-    "homeGreetingMorning": "Dzień Dobry",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
-    "homeGreetingMidday": "Południe",
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
-    "homeGreetingAfternoon": "Popołudnie",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
-    "homeGreetingEvening": "Wieczór",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
-    "homeGreetingNight": "Dobranoc",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
-    "homeGreetingLate": "Hej idź spać",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
     "homeFallbackPhrase1": "baw się dobrze robiąc cokolwiek",
-    "@homeFallbackPhrase1": {
-        "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
-    },
     "homeFallbackPhrase2": "miłego słuchania!",
     "homeFallbackPhrase3": "co się dzieje dzisiaj?",
     "homeFallbackPhrase4": "witaj ponownie :D",
@@ -66,6 +73,9 @@
     "homeFallbackPhrase8": "mweh :3",
     "homeFallbackPhrase9": "kim jesteś?!",
     "homeFallbackPhrase10": "ustaw nazwe użytkownika..",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
     "playerNowPlaying": "Teraz Odtwarzane",
     "@playerNowPlaying": {
         "description": "Used in the player top bar and on the queue view's collapse button."
@@ -74,30 +84,24 @@
     "@playerOriginAllSongs": {
         "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
     },
-    "playerTooltipPlay": "Odtwórz",
-    "playerTooltipPause": "Pauza",
     "playerTooltipSkipNext": "Następny",
     "playerTooltipShuffleOn": "Mieszanie piosenek",
+    "playerTooltipShuffleOff": "Odtwarzanie losowe wyłączone",
     "@playerTooltipShuffleOn": {
         "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
     },
-    "playerTooltipShuffleOff": "Odtwarzanie losowe wyłączone",
     "@playerTooltipShuffleOff": {
         "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
     },
     "playerTooltipRepeatOff": "Powtórzenie wyłączone",
+    "playerTooltipRepeatAll": "Powtórz wszystkie",
+    "playerTooltipRepeatOne": "Powtórz raz",
     "@playerTooltipRepeatOff": {
         "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
     },
-    "playerTooltipRepeatAll": "Powtórz wszystkie",
-    "playerTooltipRepeatOne": "Powtórz raz",
     "playerTooltipOpenQueue": "Otwórz kolejkę",
     "playerTooltipOpenLyrics": "Otwórz tekst",
     "queueLabelUpNext": "Następne",
-    "queueTooltipAddToPlaylist": "Dodaj do playlistę",
-    "@queueTooltipAddToPlaylist": {
-        "description": "Tooltip on the add-to-playlist button in the queue view."
-    },
     "lyricsEmptyNoneFound": "Nie znaleziono tekstu :(",
     "lyricsEmptyInstrumental": "Instrumental",
     "lyricsEmptyNoneInVersion": "Brak tekstu na tą wersję :/",
@@ -121,16 +125,12 @@
     },
     "lyricsMenuResetSaved": "Zresetuj zapisany tekst",
     "lyricsMenuResetSavedSubtitle": "Wyczyść pamięć podręczną i ponownie pobierz teksty piosenek",
-    "lyricsMenuShuffle": "Losowo",
-    "lyricsMenuRepeat": "Powtórz",
     "lyricsMenuRepeatOff": "Wyłączony",
+    "lyricsMenuRepeatAll": "Powtórz wszystko",
+    "lyricsMenuRepeatOne": "Powtarzaj jeden",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
-    "lyricsMenuRepeatAll": "Powtórz wszystko",
-    "lyricsMenuRepeatOne": "Powtarzaj jeden",
-    "lyricsMenuLike": "Polub",
-    "lyricsMenuLiked": "Polubiono",
     "lyricsTooltipBackToPlayer": "Spowrotem do odtwarzacza",
     "lyricsTooltiplMore": "Więcej",
     "authSignIn": "Zaloguj się"

@@ -15,10 +15,20 @@
             }
         }
     },
+    "commonPlay": "Граць",
+    "commonPause": "Паўза",
+    "commonShuffle": "Перамяшаць",
+    "commonShuffleAll": "Перамяшаць усе",
+    "commonRepeat": "Паўтараць",
+    "commonLike": "Упадабаць",
+    "commonLiked": "Упадабана",
+    "commonAddToPlaylist": "Дадаць да плэй-лісту",
+    "@commonAddToPlaylist": {
+        "description": "Tooltip on the add-to-playlist button in the queue view."
+    },
     "navHome": "Галоўная",
     "navLibrary": "Бібліятэка",
     "navSearch": "Пошук",
-    "homeActionShuffleAll": "Перамяшаць усе",
     "homeActionCreatePlaylist": "Новы плэй-ліст",
     "homeHeaderNewsAndUpdates": "Навіны і абнаўленьні",
     "homeHeaderSettings": "Налады",
@@ -26,37 +36,34 @@
     "homeSectionAlbums": "Альбомы",
     "homeSectionArtists": "Выканаўцы",
     "homeGreetingEarlyBird": "Ого, раньняя птушка",
+    "homeGreetingMorning": "Добрага ранку",
+    "homeGreetingMidday": "Добрага дню",
+    "homeGreetingAfternoon": "Добрага позьняга дню",
+    "homeGreetingEvening": "Добрага вечару",
+    "homeGreetingNight": "Добрае ночы",
+    "homeGreetingLate": "Ідзі спаць",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
-    "homeGreetingMorning": "Добрага ранку",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
-    "homeGreetingMidday": "Добрага дню",
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
-    "homeGreetingAfternoon": "Добрага позьняга дню",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
-    "homeGreetingEvening": "Добрага вечару",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
-    "homeGreetingNight": "Добрае ночы",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
-    "homeGreetingLate": "Ідзі спаць",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
     "homeFallbackPhrase1": "весяліся, табе гэта да твару",
-    "@homeFallbackPhrase1": {
-        "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
-    },
     "homeFallbackPhrase2": "нацешся музыкай!",
     "homeFallbackPhrase3": "што ў нас на сёньня?",
     "homeFallbackPhrase4": "ізноў вітаю :D",
@@ -66,6 +73,9 @@
     "homeFallbackPhrase8": "хіхі :3",
     "homeFallbackPhrase9": "ты хто такі?!",
     "homeFallbackPhrase10": "задайце ймя карыстача..",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
     "playerNowPlaying": "Зараз грае",
     "@playerNowPlaying": {
         "description": "Used in the player top bar and on the queue view's collapse button."
@@ -74,30 +84,24 @@
     "@playerOriginAllSongs": {
         "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
     },
-    "playerTooltipPlay": "Граць",
-    "playerTooltipPause": "Паўза",
     "playerTooltipSkipNext": "Наступная",
     "playerTooltipShuffleOn": "Песьні ўпярэмешку",
+    "playerTooltipShuffleOff": "Перамешваньне выключана",
     "@playerTooltipShuffleOn": {
         "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
     },
-    "playerTooltipShuffleOff": "Перамешваньне выключана",
     "@playerTooltipShuffleOff": {
         "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
     },
     "playerTooltipRepeatOff": "Паўтор выключаны",
+    "playerTooltipRepeatAll": "Паўтор усяго",
+    "playerTooltipRepeatOne": "Паўтор адной",
     "@playerTooltipRepeatOff": {
         "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
     },
-    "playerTooltipRepeatAll": "Паўтор усяго",
-    "playerTooltipRepeatOne": "Паўтор адной",
     "playerTooltipOpenQueue": "Адкрыць чаргу",
     "playerTooltipOpenLyrics": "Адкрыць тэкст",
     "queueLabelUpNext": "Наступная песьня",
-    "queueTooltipAddToPlaylist": "Дадаць да плэй-лісту",
-    "@queueTooltipAddToPlaylist": {
-        "description": "Tooltip on the add-to-playlist button in the queue view."
-    },
     "lyricsEmptyNoneFound": "Тэксту ня знойдзена :(",
     "lyricsEmptyInstrumental": "Інструмэнтальная",
     "lyricsEmptyNoneInVersion": "У гэтае вэрсіі няма тэксту :/",
@@ -121,16 +125,12 @@
     },
     "lyricsMenuResetSaved": "Скінуць захаваны тэкст",
     "lyricsMenuResetSavedSubtitle": "Ачысціць кэш і паўторна загрузіць тэкст",
-    "lyricsMenuShuffle": "Перамяшаць",
-    "lyricsMenuRepeat": "Паўтараць",
     "lyricsMenuRepeatOff": "Выключана",
+    "lyricsMenuRepeatAll": "Паўтараць усё",
+    "lyricsMenuRepeatOne": "Паўтараць адну",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
-    "lyricsMenuRepeatAll": "Паўтараць усё",
-    "lyricsMenuRepeatOne": "Паўтараць адну",
-    "lyricsMenuLike": "Упадабаць",
-    "lyricsMenuLiked": "Упадабана",
     "lyricsTooltipBackToPlayer": "Вярнуцца да прайгравальніка",
     "lyricsTooltiplMore": "Яшчэ",
     "authSignIn": "Увайсьці",
@@ -140,9 +140,9 @@
     "@contributorsTitle": {
         "description": "Title of the contributors bottom sheet"
     },
+    "contributorsMaintainer": "Аўтар",
     "contributorsCodeSection": "Распрацоўка",
     "contributorsTranslatorSection": "Пераклады",
     "contributorsLoading": "Загрузка…",
-    "contributorsLoadFailed": "Не ўдалося загрузіць удзельнікаў :/",
-    "contributorsMaintainer": "Аўтар"
+    "contributorsLoadFailed": "Не ўдалося загрузіць удзельнікаў :/"
 }

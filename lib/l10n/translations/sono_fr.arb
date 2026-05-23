@@ -15,10 +15,20 @@
             }
         }
     },
+    "commonPlay": "Jouer",
+    "commonPause": "Pause",
+    "commonShuffle": "Mélanger",
+    "commonShuffleAll": "Mélanger tout",
+    "commonRepeat": "Répéter",
+    "commonLike": "j'aime",
+    "commonLiked": "aimé",
+    "commonAddToPlaylist": "Ajouter à la playlist",
+    "@commonAddToPlaylist": {
+        "description": "Tooltip on the add-to-playlist button in the queue view."
+    },
     "navHome": "Maison",
     "navLibrary": "Bibliothèque",
     "navSearch": "Rechercher",
-    "homeActionShuffleAll": "Mélanger tout",
     "homeActionCreatePlaylist": "Créer une playlist",
     "homeHeaderNewsAndUpdates": "Actualités et mises à jour",
     "homeHeaderSettings": "Paramètres",
@@ -26,37 +36,34 @@
     "homeSectionAlbums": "Albums",
     "homeSectionArtists": "Artistes",
     "homeGreetingEarlyBird": "Waouh, lève-tôt",
+    "homeGreetingMorning": "Matin",
+    "homeGreetingMidday": "Midi",
+    "homeGreetingAfternoon": "Après-midi",
+    "homeGreetingEvening": "Soir",
+    "homeGreetingNight": "Nuit",
+    "homeGreetingLate": "Heyyy dors",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
-    "homeGreetingMorning": "Matin",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
-    "homeGreetingMidday": "Midi",
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
-    "homeGreetingAfternoon": "Après-midi",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
-    "homeGreetingEvening": "Soir",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
-    "homeGreetingNight": "Nuit",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
-    "homeGreetingLate": "Heyyy dors",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
     "homeFallbackPhrase1": "Amuse-toi à faire ce que tu veux",
-    "@homeFallbackPhrase1": {
-        "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
-    },
     "homeFallbackPhrase2": "Bonne écoute !",
     "homeFallbackPhrase3": "Qu'est-ce qui est au programme aujourd'hui ?",
     "homeFallbackPhrase4": "Bienvenue à nouveau :D",
@@ -66,6 +73,9 @@
     "homeFallbackPhrase8": "mweh :3",
     "homeFallbackPhrase9": "qui es-tu?!",
     "homeFallbackPhrase10": "Choisissez votre nom d'utilisateur...",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
     "playerNowPlaying": "Lecture en cours",
     "@playerNowPlaying": {
         "description": "Used in the player top bar and on the queue view's collapse button."
@@ -74,30 +84,24 @@
     "@playerOriginAllSongs": {
         "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
     },
-    "playerTooltipPlay": "Jouer",
-    "playerTooltipPause": "Pause",
     "playerTooltipSkipNext": "Suivant",
     "playerTooltipShuffleOn": "Chansons aléatoires",
+    "playerTooltipShuffleOff": "pas de melange",
     "@playerTooltipShuffleOn": {
         "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
     },
-    "playerTooltipShuffleOff": "pas de melange",
     "@playerTooltipShuffleOff": {
         "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
     },
     "playerTooltipRepeatOff": "boucle désactivé",
+    "playerTooltipRepeatAll": "Répète tout",
+    "playerTooltipRepeatOne": "Répète une fois",
     "@playerTooltipRepeatOff": {
         "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
     },
-    "playerTooltipRepeatAll": "Répète tout",
-    "playerTooltipRepeatOne": "Répète une fois",
     "playerTooltipOpenQueue": "File d'attente ouverte",
     "playerTooltipOpenLyrics": "Voir paroles",
     "queueLabelUpNext": "À suivre",
-    "queueTooltipAddToPlaylist": "Ajouter à la playlist",
-    "@queueTooltipAddToPlaylist": {
-        "description": "Tooltip on the add-to-playlist button in the queue view."
-    },
     "lyricsEmptyNoneFound": "Paroles introuvables :(",
     "lyricsEmptyInstrumental": "Instruments",
     "lyricsEmptyNoneInVersion": "Pas de paroles dans cette version :/",
@@ -121,16 +125,12 @@
     },
     "lyricsMenuResetSaved": "Réinitialiser les paroles enregistrées",
     "lyricsMenuResetSavedSubtitle": "Effacer le cache et récupérer à nouveau les paroles",
-    "lyricsMenuShuffle": "Mélanger",
-    "lyricsMenuRepeat": "Répéter",
     "lyricsMenuRepeatOff": "Désactivé",
+    "lyricsMenuRepeatAll": "Répéter tout",
+    "lyricsMenuRepeatOne": "Répéter un",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
-    "lyricsMenuRepeatAll": "Répéter tout",
-    "lyricsMenuRepeatOne": "Répéter un",
-    "lyricsMenuLike": "j'aime",
-    "lyricsMenuLiked": "aimé",
     "lyricsTooltipBackToPlayer": "Retour au lecteur",
     "lyricsTooltiplMore": "Plus",
     "authSignIn": "Se connecter",
@@ -140,9 +140,9 @@
     "@contributorsTitle": {
         "description": "Title of the contributors bottom sheet"
     },
+    "contributorsMaintainer": "Responsable de la maintenance",
     "contributorsCodeSection": "Code",
     "contributorsTranslatorSection": "Traductions",
     "contributorsLoading": "Chargement…",
-    "contributorsLoadFailed": "Impossible de charger les contributeurs :/",
-    "contributorsMaintainer": "Responsable de la maintenance"
+    "contributorsLoadFailed": "Impossible de charger les contributeurs :/"
 }

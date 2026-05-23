@@ -14,11 +14,110 @@
     }
   },
 
+  "commonPlay": "Play",
+  "@commonPlay": {
+    "description": "Play action. Button label and tooltip across the player, mini player, queue view, and media sheets. Imperative verb form."
+  },
+  "commonPause": "Pause",
+  "@commonPause": {
+    "description": "Pause action. Used in the same contexts as commonPlay."
+  },
+  "commonShuffle": "Shuffle",
+  "@commonShuffle": {
+    "description": "Shuffle playback action label. Used as button label in the lyrics menu, song sheets, and elsewhere. Imperative verb form. Not the ongoing state, which is playerTooltipShuffleOn."
+  },
+  "commonShuffleAll": "Shuffle all",
+  "@commonShuffleAll": {
+    "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form."
+  },
+  "commonRepeat": "Repeat",
+  "@commonRepeat": {
+    "description": "Repeat playback action label. Imperative form."
+  },
+
+  "commonLike": "Like",
+  "@commonLike": {
+    "description": "Like a song. Imperative verb. Used in the lyrics menu, song sheet action card, and elsewhere. After-state is commonLiked."
+  },
+  "commonLiked": "Liked",
+  "@commonLiked": {
+    "description": "State label shown after a song has been liked. Past participle or adjective form, not imperative."
+  },
+  "commonFavorite": "Favorite",
+  "@commonSave": {
+    "description": "Favortie an album or artist. Imperative verb. After-state is commonFavorited."
+  },
+  "commonFavorited": "Favorited",
+  "@commonSaved": {
+    "description": "State label shown after an album or artist has been favorited."
+  },
+
+  "commonShare": "Share",
+  "@commonShare": {
+    "description": "Share action. Imperative verb."
+  },
+  "commonPlayAll": "Play all",
+  "@commonPlayAll": {
+    "description": "Play all songs from an artist, album, or section. Imperative form."
+  },
+  "commonPlayNext": "Play next",
+  "@commonPlayNext": {
+    "description": "Queue a song to play right after the current one. Imperative form."
+  },
+  "commonAddToQueue": "Add to queue",
+  "@commonAddToQueue": {
+    "description": "Append to the end of the playback queue. Imperative form."
+  },
+  "commonAddToPlaylist": "Add to playlist",
+  "@commonAddToPlaylist": {
+    "description": "Add a song or album to a user playlist. Imperative form. Used as button label and tooltip."
+  },
+  "commonRemoveFromQueue": "Remove from queue",
+  "@commonRemoveFromQueue": {
+    "description": "Remove a song from the playback queue. Imperative form."
+  },
+  "commonGoToAlbum": "Go to album",
+  "@commonGoToAlbum": {
+    "description": "Navigate to the album page. Imperative form."
+  },
+  "commonGoToArtist": "Go to artist",
+  "@commonGoToArtist": {
+    "description": "Navigate to the artist page. Imperative form."
+  },
+
+  "commonTitle": "Title",
+  "@commonTitle": {
+    "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
+  },
+  "commonArtist": "Artist",
+  "@commonArtist": {
+    "description": "Noun label for the artist metadata field. Shown in info/details views."
+  },
+  "commonAlbum": "Album",
+  "@commonAlbum": {
+    "description": "Noun label for the album metadata field. Shown in info/details views."
+  },
+  "commonGenre": "Genre",
+  "@commonGenre": {
+    "description": "Noun label for the genre metadata field. Shown in info/details views."
+  },
+  "commonDuration": "Duration",
+  "@commonDuration": {
+    "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
+  },
+  "commonReleased": "Released",
+  "@commonReleased": {
+    "description": "Label for the release date metadata field. Past participle form."
+  },
+  "commonPath": "Path",
+  "@commonPath": {
+    "description": "Label for the filesystem path metadata field."
+  },
+
   "navHome": "Home",
   "navLibrary": "Library",
   "navSearch": "Search",
 
-  "homeActionShuffleAll": "Shuffle all",
   "homeActionCreatePlaylist": "Create Playlist",
   "homeHeaderNewsAndUpdates": "News & Updates",
   "homeHeaderSettings": "Settings",
@@ -53,7 +152,7 @@
   "homeFallbackPhrase9": "who are you?!",
   "homeFallbackPhrase10": "set your username..",
   "@homeFallbackPhrase1": {
-    "description": "Random subtitle shown next to the greeting when no Discord username is set. Keep these casual/playful; match the tone, not the literal words."
+    "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
   },
 
   "playerNowPlaying": "Now Playing",
@@ -65,8 +164,6 @@
     "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
   },
 
-  "playerTooltipPlay": "Play",
-  "playerTooltipPause": "Pause",
   "playerTooltipSkipNext": "Next",
 
   "playerTooltipShuffleOn": "Shuffling songs",
@@ -89,10 +186,6 @@
   "playerTooltipOpenLyrics": "Open Lyrics",
 
   "queueLabelUpNext": "Up Next",
-  "queueTooltipAddToPlaylist": "Add to playlist",
-  "@queueTooltipAddToPlaylist": {
-    "description": "Tooltip on the add-to-playlist button in the queue view."
-  },
 
   "lyricsEmptyNoneFound": "No lyrics found :(",
   "lyricsEmptyInstrumental": "Instrumental",
@@ -115,19 +208,36 @@
   },
   "lyricsMenuResetSaved": "Reset saved lyrics",
   "lyricsMenuResetSavedSubtitle": "Clear cached and re-fetch lyrics",
-  "lyricsMenuShuffle": "Shuffle",
-  "lyricsMenuRepeat": "Repeat",
   "lyricsMenuRepeatOff": "Off",
   "lyricsMenuRepeatAll": "Repeat all",
   "lyricsMenuRepeatOne": "Repeat one",
-  "lyricsMenuLike": "Like",
-  "lyricsMenuLiked": "Liked",
   "@lyricsMenuRepeatOff": {
     "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
   },
 
   "lyricsTooltipBackToPlayer": "Back to player",
   "lyricsTooltiplMore": "More",
+
+  "songSheetTabOptions": "Options",
+  "@songSheetTabOptions": {
+    "description": "Bottom toggle on the media options sheet. Switches to the actions grid."
+  },
+  "songSheetTabInfo": "Info",
+  "@songSheetTabInfo": {
+    "description": "Bottom toggle on the media options sheet. Switches to the metadata view."
+  },
+  "songSheetEmptyActions": "No actions available",
+  "@songSheetEmptyActions": {
+    "description": "Shown when the song sheet has no actions to display."
+  },
+  "songSheetEmptyInfo": "No info available",
+  "@songSheetEmptyInfo": {
+    "description": "Shown when the song sheet has no metadata rows."
+  },
+  "songSheetUnknownValue": "unknown",
+  "@songSheetUnknownValue": {
+    "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+  },
 
   "authSignIn": "Sign in",
 
