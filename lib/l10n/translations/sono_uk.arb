@@ -5,7 +5,7 @@
     },
     "commonUnknown": "Невідомо",
     "commonUnknownArtist": "Невідомий виконавець",
-    "commonSongsCount": "{count, plural, =0{немає пісень} one{\n{count} пісня} few{\n{count} пісні} other{\n{count} пісень}}",
+    "commonSongsCount": "{count, plural, =0{немає пісень} one{{count} пісня} few{{count} пісні} other{{count} пісень}}",
     "@commonSongsCount": {
         "description": "Number of songs for an artist/album/playlist",
         "placeholders": {
