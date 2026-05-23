@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
@@ -145,6 +146,7 @@ class SongSheet extends StatefulWidget {
   // ]
 
   static List<SongSheetAction> defaultsForSong({
+    required AppLocalizations l,
     bool liked = false,
     VoidCallback? onLike,
     VoidCallback? onPlayNext,
@@ -155,38 +157,39 @@ class SongSheet extends StatefulWidget {
   }) => [
     SongSheetAction(
       icon: liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
-      label: liked ? 'Liked' : 'Like',
+      label: liked ? l.commonLiked : l.commonLike,
       dismissOnTap: false,
       onTap: onLike ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.queueOutlined,
-      label: 'Play next',
+      label: l.commonPlayNext,
       onTap: onPlayNext ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.addToPlaylistOutlined,
-      label: 'Add to playlist',
+      label: l.commonAddToPlaylist,
       onTap: onAddToPlaylist ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.libraryOutlined, // TODO: Add album icon
-      label: 'Go to album',
+      label: l.commonGoToAlbum,
       onTap: onGoToAlbum ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.profileOutlined, //TODO: Add artist icon
-      label: 'Go to artist',
+      label: l.commonGoToArtist,
       onTap: onGoToArtist ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.shareOutlined,
-      label: 'Share',
+      label: l.commonShare,
       onTap: () {},
     ),
   ];
 
   static List<SongSheetAction> defaultsForAlbum({
+    required AppLocalizations l,
     bool liked = false,
     VoidCallback? onPlay,
     VoidCallback? onShuffle,
@@ -196,35 +199,36 @@ class SongSheet extends StatefulWidget {
   }) => [
     SongSheetAction(
       icon: IconsSheet.playFilled,
-      label: 'Play',
+      label: l.commonPlay,
       onTap: onPlay ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.shuffleOutlined,
-      label: 'Shuffle',
+      label: l.commonShuffle,
       onTap: onAddToQueue ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.queueOutlined,
-      label: 'Add to queue',
+      label: l.commonAddToQueue,
       onTap: onAddToQueue ?? () {},
     ),
     SongSheetAction(
       icon: liked
           ? IconsSheet.heartFilled
           : IconsSheet.heartOutlined, // TODO: Add Favorite album icon
-      label: liked ? 'Favorited' : 'Favorite',
+      label: liked ? l.commonFavorited : l.commonFavorite,
       dismissOnTap: false,
       onTap: onLike ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.profileOutlined, // TODO: add artist icon
-      label: 'Go to artist',
+      label: l.commonGoToArtist,
       onTap: onGoToArtist ?? () {},
     ),
   ];
 
   static List<SongSheetAction> defaultsForArtist({
+    required AppLocalizations l,
     bool liked = false,
     VoidCallback? onPlay,
     VoidCallback? onShuffle,
@@ -232,19 +236,19 @@ class SongSheet extends StatefulWidget {
   }) => [
     SongSheetAction(
       icon: IconsSheet.playFilled,
-      label: 'Play all',
+      label: l.commonPlayAll,
       onTap: onPlay ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.shuffleOutlined,
-      label: 'Shuffle all',
+      label: l.commonShuffleAll,
       onTap: onShuffle ?? () {},
     ),
     SongSheetAction(
       icon: liked
           ? IconsSheet.heartFilled
           : IconsSheet.heartOutlined, // TODO: Add Favorite artist icon
-      label: liked ? 'Favorited' : 'Favorite',
+      label: liked ? l.commonFavorited : l.commonFavorite,
       dismissOnTap: false,
       onTap: onLike ?? () {},
     ),
@@ -263,10 +267,11 @@ class _SongSheetState extends State<SongSheet> {
 
   List<SongSheetAction> _resolveAction() {
     if (widget.actionsBuilder != null) return widget.actionsBuilder!();
+    final l = AppLocalizations.of(context);
     return switch (widget.type) {
-      SongSheetType.song => SongSheet.defaultsForSong(),
-      SongSheetType.album => SongSheet.defaultsForAlbum(),
-      SongSheetType.artist => SongSheet.defaultsForArtist(),
+      SongSheetType.song => SongSheet.defaultsForSong(l: l),
+      SongSheetType.album => SongSheet.defaultsForAlbum(l: l),
+      SongSheetType.artist => SongSheet.defaultsForArtist(l: l),
     };
   }
 
@@ -475,7 +480,7 @@ class _OptionsBody extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Text(
-            'No actions available',
+            AppLocalizations.of(context).songSheetEmptyActions,
             style: TextStyle(
               fontFamily: SonoFonts.primary,
               fontSize: 13,
@@ -574,7 +579,7 @@ class _InfoBody extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Text(
-            'No metadata info available',
+            AppLocalizations.of(context).songSheetEmptyInfo,
             style: TextStyle(
               fontFamily: SonoFonts.primary,
               fontSize: 13,
@@ -609,6 +614,7 @@ class _InfoCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasValue = row.value != null && row.value!.isNotEmpty;
+    final unknown = AppLocalizations.of(context).songSheetUnknownValue;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
@@ -631,7 +637,7 @@ class _InfoCell extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            hasValue ? row.value! : 'unknown',
+            hasValue ? row.value! : unknown,
             style: TextStyle(
               fontFamily: SonoFonts.primary,
               fontSize: 14,
@@ -666,6 +672,7 @@ class _PageToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
@@ -676,7 +683,7 @@ class _PageToggle extends StatelessWidget {
         children: [
           Expanded(
             child: _Segment(
-              label: 'Options',
+              label: l.songSheetTabOptions,
               active: page == _SheetPage.options,
               accent: accent,
               onBackground: onBackground,
@@ -687,7 +694,7 @@ class _PageToggle extends StatelessWidget {
           const SizedBox(width: 4),
           Expanded(
             child: _Segment(
-              label: 'Info',
+              label: l.songSheetTabInfo,
               active: page == _SheetPage.info,
               accent: accent,
               onBackground: onBackground,

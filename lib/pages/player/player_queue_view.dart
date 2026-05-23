@@ -261,6 +261,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
 
   Future<void> _openRowMenu(Song song, int index) async {
     final c = widget.c;
+    final l = AppLocalizations.of(context);
 
     //resolve album name if any
     String? albumName;
@@ -273,19 +274,20 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     final isCurrent = index == _currentIndex;
 
     final infoRows = <SongSheetInfoRow>[
-      SongSheetInfoRow(label: 'Title', value: song.title),
-      SongSheetInfoRow(label: 'Artist', value: song.displayArtist),
-      if (albumName != null) SongSheetInfoRow(label: 'Album', value: albumName),
+      SongSheetInfoRow(label: l.commonTitle, value: song.title),
+      SongSheetInfoRow(label: l.commonArtist, value: song.displayArtist),
+      if (albumName != null)
+        SongSheetInfoRow(label: l.commonAlbum, value: albumName),
       if (song.genre != null)
-        SongSheetInfoRow(label: 'Genre', value: song.genre),
+        SongSheetInfoRow(label: l.commonGenre, value: song.genre),
       if (song.duration != null)
-        SongSheetInfoRow(label: 'Duration', value: fmtMs(song.duration!)),
+        SongSheetInfoRow(label: l.commonDuration, value: fmtMs(song.duration!)),
       if (song.releaseDate != null)
         SongSheetInfoRow(
-          label: 'Released',
+          label: l.commonReleased,
           value: song.releaseDate!.toIso8601String().split('T').first,
         ),
-      SongSheetInfoRow(label: 'Path', value: song.path),
+      SongSheetInfoRow(label: l.commonPath, value: song.path),
     ];
 
     await SongSheet.show(
@@ -293,9 +295,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
       type: SongSheetType.song,
       coverPath: song.path,
       title: song.title,
-      subtitle:
-          song.displayArtist ??
-          AppLocalizations.of(context).commonUnknownArtist,
+      subtitle: song.displayArtist ?? l.commonUnknownArtist,
       background: c.background,
       surface: c.surface,
       accent: c.accent,
@@ -304,15 +304,13 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
       actionsBuilder: () => [
         SongSheetAction(
           icon: IconsSheet.playFilled,
-          label: AppLocalizations.of(context).commonPlay,
+          label: l.commonPlay,
           dismissOnTap: false,
           onTap: () => _onTapRow(index),
         ),
         SongSheetAction(
           icon: liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
-          label: liked
-              ? AppLocalizations.of(context).commonLiked
-              : AppLocalizations.of(context).commonLike,
+          label: liked ? l.commonLiked : l.commonLike,
           dismissOnTap: false,
           onTap: () async {
             liked = !liked;
@@ -321,18 +319,18 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
         ),
         SongSheetAction(
           icon: IconsSheet.addToPlaylistOutlined,
-          label: 'Add to playlist',
+          label: l.commonAddToPlaylist,
           onTap: () {},
         ),
         SongSheetAction(
           icon: IconsSheet.profileOutlined,
-          label: 'Go to artist',
+          label: l.commonGoToArtist,
           onTap: () {},
         ),
         if (!isCurrent)
           SongSheetAction(
             icon: IconsSheet.deleteOutlined,
-            label: 'Remove from queue',
+            label: l.commonRemoveFromQueue,
             tint: c.accent,
             onTap: () => _onRemove(index),
           ),

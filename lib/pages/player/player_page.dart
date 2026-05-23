@@ -189,6 +189,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     final song = player.AudioService.instance.currentSong;
     if (song == null) return;
     final c = _colors;
+    final l = AppLocalizations.of(context);
 
     //resolve album name if any
     String? albumName;
@@ -199,19 +200,20 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     if (!mounted || !context.mounted) return;
 
     final infoRows = <SongSheetInfoRow>[
-      SongSheetInfoRow(label: 'Title', value: song.title),
-      SongSheetInfoRow(label: 'Artist', value: song.displayArtist),
-      if (albumName != null) SongSheetInfoRow(label: 'Album', value: albumName),
+      SongSheetInfoRow(label: l.commonTitle, value: song.title),
+      SongSheetInfoRow(label: l.commonArtist, value: song.displayArtist),
+      if (albumName != null)
+        SongSheetInfoRow(label: l.commonAlbum, value: albumName),
       if (song.genre != null)
-        SongSheetInfoRow(label: 'Genre', value: song.genre),
+        SongSheetInfoRow(label: l.commonGenre, value: song.genre),
       if (song.duration != null)
-        SongSheetInfoRow(label: 'Duration', value: fmtMs(song.duration!)),
+        SongSheetInfoRow(label: l.commonDuration, value: fmtMs(song.duration!)),
       if (song.releaseDate != null)
         SongSheetInfoRow(
-          label: 'Released',
+          label: l.commonReleased,
           value: song.releaseDate!.toIso8601String().split('T').first,
         ),
-      SongSheetInfoRow(label: 'Path', value: song.path),
+      SongSheetInfoRow(label: l.commonPath, value: song.path),
     ];
 
     bool liked = _liked;
@@ -221,15 +223,14 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
       type: SongSheetType.song,
       coverPath: song.path,
       title: song.title,
-      subtitle:
-          song.displayArtist ??
-          AppLocalizations.of(context).commonUnknownArtist,
+      subtitle: song.displayArtist ?? l.commonUnknownArtist,
       background: c.background,
       surface: c.surface,
       accent: c.accent,
       onBackground: c.onBackground,
       onAccent: c.onAccent,
       actionsBuilder: () => SongSheet.defaultsForSong(
+        l: l,
         liked: liked,
         onLike: () async {
           liked = !liked;
