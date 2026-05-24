@@ -45,8 +45,10 @@ dart run build_runner build --delete-conflicting-outputs
 lib/
 ├── db/          # Drift database schema and generated code
 ├── helper/      # Small utility functions
+├── l10n/        # Localization and translations 
 ├── pages/       # App pages (home, settings, auth, etc.)
-├── services/    # Audio engine, scanner, Discord RPC, update checker
+├── services/    # Audio engine, scanner, Discord RPC, etc.
+├── utils/       # Reused utils across mutiple files 
 ├── theme/       # Tokens, icons, theme config
 └── widgets/     # Reusable UI components
 ```
