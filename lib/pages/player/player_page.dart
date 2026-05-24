@@ -20,9 +20,6 @@ import 'package:sono/pages/player/player_lyrics_view.dart';
 //utils
 import 'package:sono/utils/format_ms.dart';
 
-/// ==== WIP ====
-/// Fullscreen player is work in progress
-
 enum _SubView { none, queue, lyrics }
 
 class _PlayerColorsTween extends Tween<PlayerColors> {
@@ -45,10 +42,15 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     with TickerProviderStateMixin {
   PlayerColors _colors = PlayerColors.fallback;
   PlayerColors _prevColors = PlayerColors.fallback;
+  late final ValueNotifier<PlayerColors> _colorsNotifer = ValueNotifier(
+    PlayerColors.fallback,
+  );
   bool _liked = false;
 
   StreamSubscription<Song?>? _songSub;
   int? _lastSongId;
+
+  SongSheetController? _sheetController;
 
   late final AnimationController _queueCtrl;
   late final Animation<Offset> _queueSlide;
@@ -109,6 +111,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
   @override
   void dispose() {
     _songSub?.cancel();
+    _colorsNotifer.dispose();
     _queueCtrl.dispose();
     _lyricsCtrl.dispose();
     super.dispose();
@@ -124,8 +127,13 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
         .then((liked) {
           if (!mounted || song.id != _lastSongId) return;
           setState(() => _liked = liked);
+          _sheetController?.ping();
         })
         .catchError((_) {});
+
+    if (_sheetController != null) {
+      unawaited(_syncSheetContent(song));
+    }
 
     try {
       final bytes = await SonoQuery.getCover(song.path);
@@ -140,20 +148,74 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
         _prevColors = _colors;
         _colors = newColors;
       });
+      _colorsNotifer.value = newColors;
     } catch (_) {
       if (!mounted || song.id != _lastSongId) return;
       setState(() {
         _prevColors = _colors;
         _colors = PlayerColors.fallback;
       });
+      _colorsNotifer.value = PlayerColors.fallback;
     }
   }
+
+  /// Syncs content of open sheet with current song
+  Future<void> _syncSheetContent(Song song) async {
+    if (!mounted) return;
+    final l = AppLocalizations.of(context);
+
+    String? albumName;
+    if (song.albumId != null) {
+      try {
+        final album = await widget.db.getAlbumById(song.albumId!);
+        albumName = album?.title;
+      } catch (_) {}
+    }
+    if (!mounted) return;
+
+    _sheetController?.update(
+      coverPath: song.path,
+      title: song.title,
+      subtitle: song.displayArtist ?? l.commonUnknownArtist,
+      infoRows: _buildInfoRows(song, albumName, l),
+      actionsBuilder: () {
+        final defaults = SongSheet.defaultsForSong(
+          l: l,
+          liked: _liked,
+          onLike: _toggleLiked,
+        );
+        return [defaults.first, ...defaults.skip(2)];
+      },
+    );
+  }
+
+  List<SongSheetInfoRow> _buildInfoRows(
+    Song song,
+    String? albumName,
+    AppLocalizations l,
+  ) => [
+    SongSheetInfoRow(label: l.commonTitle, value: song.title),
+    SongSheetInfoRow(label: l.commonArtist, value: song.displayArtist),
+    if (albumName != null)
+      SongSheetInfoRow(label: l.commonAlbum, value: albumName),
+    if (song.genre != null)
+      SongSheetInfoRow(label: l.commonGenre, value: song.genre),
+    if (song.duration != null)
+      SongSheetInfoRow(label: l.commonDuration, value: fmtMs(song.duration!)),
+    if (song.releaseDate != null)
+      SongSheetInfoRow(
+        label: l.commonReleased,
+        value: song.releaseDate!.toIso8601String().split('T').first,
+      ),
+    SongSheetInfoRow(label: l.commonPath, value: song.path),
+  ];
 
   Future<void> _toggleLiked() async {
     final id = _lastSongId;
     if (id == null) return;
     final next = !_liked;
     setState(() => _liked = next);
+    _sheetController?.ping();
     await widget.db.setSongLiked(id, next);
   }
 
@@ -199,24 +261,26 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     }
     if (!mounted || !context.mounted) return;
 
-    final infoRows = <SongSheetInfoRow>[
-      SongSheetInfoRow(label: l.commonTitle, value: song.title),
-      SongSheetInfoRow(label: l.commonArtist, value: song.displayArtist),
-      if (albumName != null)
-        SongSheetInfoRow(label: l.commonAlbum, value: albumName),
-      if (song.genre != null)
-        SongSheetInfoRow(label: l.commonGenre, value: song.genre),
-      if (song.duration != null)
-        SongSheetInfoRow(label: l.commonDuration, value: fmtMs(song.duration!)),
-      if (song.releaseDate != null)
-        SongSheetInfoRow(
-          label: l.commonReleased,
-          value: song.releaseDate!.toIso8601String().split('T').first,
-        ),
-      SongSheetInfoRow(label: l.commonPath, value: song.path),
-    ];
-
-    bool liked = _liked;
+    _sheetController = SongSheetController(
+      colorsNotifier: _colorsNotifer,
+      coverPath: song.path,
+      title: song.title,
+      subtitle: song.displayArtist ?? l.commonUnknownArtist,
+      background: c.background,
+      surface: c.surface,
+      accent: c.accent,
+      onBackground: c.onBackground,
+      onAccent: c.onAccent,
+      actionsBuilder: () {
+        final defaults = SongSheet.defaultsForSong(
+          l: l,
+          liked: _liked,
+          onLike: _toggleLiked,
+        );
+        return [defaults.first, ...defaults.skip(2)];
+      },
+      infoRows: _buildInfoRows(song, albumName, l),
+    );
 
     await SongSheet.show(
       context: context,
@@ -229,18 +293,11 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
       accent: c.accent,
       onBackground: c.onBackground,
       onAccent: c.onAccent,
-      actionsBuilder: () => SongSheet.defaultsForSong(
-        l: l,
-        liked: liked,
-        onLike: () async {
-          liked = !liked;
-          await widget.db.setSongLiked(song.id, liked);
-          if (mounted) setState(() => _liked = _liked);
-        },
-        //TODO: album/artist nav + add to playlist are stubs for now
-      ),
-      infoRows: infoRows,
+      controller: _sheetController,
+      infoRows: _buildInfoRows(song, albumName, l),
     );
+
+    _sheetController = null; //sheet dismissed
   }
 
   @override

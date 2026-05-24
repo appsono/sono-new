@@ -302,12 +302,21 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
       onBackground: c.onBackground,
       onAccent: c.onAccent,
       actionsBuilder: () => [
-        SongSheetAction(
-          icon: IconsSheet.playFilled,
-          label: l.commonPlay,
-          dismissOnTap: false,
-          onTap: () => _onTapRow(index),
-        ),
+        if (isCurrent && player.AudioService.instance.isPlaying)
+          SongSheetAction(
+            icon: IconsSheet.pauseFilled,
+            label: l.commonPause,
+            dismissOnTap: false,
+            onTap: () => player.AudioService.instance.pause(),
+          )
+        else
+          SongSheetAction(
+            icon: IconsSheet.playFilled,
+            label: l.commonPlay,
+            dismissOnTap: false,
+            onTap: () => _onTapRow(index),
+          ),
+
         SongSheetAction(
           icon: liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
           label: liked ? l.commonLiked : l.commonLike,
@@ -323,7 +332,12 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
           onTap: () {},
         ),
         SongSheetAction(
-          icon: IconsSheet.profileOutlined,
+          icon: IconsSheet.libraryOutlined, // TODO: Add album icon
+          label: l.commonGoToAlbum,
+          onTap: () {},
+        ),
+        SongSheetAction(
+          icon: IconsSheet.profileOutlined, // TODO: Add artist icon
           label: l.commonGoToArtist,
           onTap: () {},
         ),

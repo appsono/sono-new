@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:sono/l10n/localizations.dart';
+import 'package:sono/pages/player/player_colors.dart';
 
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
@@ -30,6 +31,95 @@ import 'package:sono/widgets/cover_art.dart';
 enum SongSheetType { song, album, artist }
 
 enum _SheetPage { options, info }
+
+class SongSheetController extends ChangeNotifier {
+  final ValueNotifier<PlayerColors>? colorsNotifier;
+  String coverPath;
+  String title;
+  String subtitle;
+  Color background;
+  Color surface;
+  Color accent;
+  Color onBackground;
+  Color onAccent;
+  List<SongSheetAction> Function()? actionsBuilder;
+  List<SongSheetInfoRow> infoRows;
+
+  SongSheetController({
+    this.colorsNotifier,
+    required this.coverPath,
+    required this.title,
+    required this.subtitle,
+    required this.background,
+    required this.surface,
+    required this.accent,
+    required this.onBackground,
+    required this.onAccent,
+    this.actionsBuilder,
+    List<SongSheetInfoRow>? infoRows,
+  }) : infoRows = infoRows ?? const [];
+
+  void update({
+    String? coverPath,
+    String? title,
+    String? subtitle,
+    Color? background,
+    Color? surface,
+    Color? accent,
+    Color? onBackground,
+    Color? onAccent,
+    List<SongSheetAction> Function()? actionsBuilder,
+    List<SongSheetInfoRow>? infoRows,
+  }) {
+    var changed = false;
+    if (coverPath != null && coverPath != this.coverPath) {
+      this.coverPath = coverPath;
+      changed = true;
+    }
+    if (title != null && title != this.title) {
+      this.title = title;
+      changed = true;
+    }
+    if (subtitle != null && subtitle != this.subtitle) {
+      this.subtitle = subtitle;
+      changed = true;
+    }
+    if (background != null && background != this.background) {
+      this.background = background;
+      changed = true;
+    }
+    if (surface != null && surface != this.surface) {
+      this.surface = surface;
+      changed = true;
+    }
+    if (accent != null && accent != this.accent) {
+      this.accent = accent;
+      changed = true;
+    }
+    if (onBackground != null && onBackground != this.onBackground) {
+      this.onBackground = onBackground;
+      changed = true;
+    }
+    if (onAccent != null && onAccent != this.onAccent) {
+      this.onAccent = onAccent;
+      changed = true;
+    }
+    if (actionsBuilder != null && actionsBuilder != this.actionsBuilder) {
+      this.actionsBuilder = actionsBuilder;
+      changed = true;
+    }
+    if (infoRows != null && infoRows != this.infoRows) {
+      this.infoRows = infoRows;
+      changed = true;
+    }
+    if (changed) notifyListeners();
+  }
+
+  /// Forces rebuild without changing data
+  /// Use when actionsBuilder closure captures external state
+  /// that changes outside the controller
+  void ping() => notifyListeners();
+}
 
 // ==== data classes ====
 
@@ -79,6 +169,8 @@ class SongSheet extends StatefulWidget {
   final Color onBackground;
   final Color onAccent;
 
+  final SongSheetController? controller;
+
   const SongSheet({
     required this.type,
     required this.coverPath,
@@ -92,6 +184,7 @@ class SongSheet extends StatefulWidget {
     this.coverBytes,
     this.actionsBuilder,
     this.infoRows,
+    this.controller,
     super.key,
   });
 
@@ -110,26 +203,32 @@ class SongSheet extends StatefulWidget {
     Uint8List? coverBytes,
     List<SongSheetAction> Function()? actionsBuilder,
     List<SongSheetInfoRow>? infoRows,
+    SongSheetController? controller,
   }) {
     return showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withValues(alpha: 0.4),
       isScrollControlled: true,
-      builder: (_) => SongSheet(
-        type: type,
-        coverPath: coverPath,
-        coverBytes: coverBytes,
-        title: title,
-        subtitle: subtitle,
-        actionsBuilder: actionsBuilder,
-        infoRows: infoRows,
-        background: background,
-        surface: surface,
-        accent: accent,
-        onBackground: onBackground,
-        onAccent: onAccent,
-      ),
+      builder: (modalContext) {
+        return Builder(
+          builder: (_) => SongSheet(
+            type: type,
+            coverPath: coverPath,
+            coverBytes: coverBytes,
+            title: title,
+            subtitle: subtitle,
+            actionsBuilder: actionsBuilder,
+            infoRows: infoRows,
+            background: background,
+            surface: surface,
+            accent: accent,
+            onBackground: onBackground,
+            onAccent: onAccent,
+            controller: controller,
+          ),
+        );
+      },
     );
   }
 
@@ -258,15 +357,17 @@ class SongSheet extends StatefulWidget {
   State<SongSheet> createState() => _SongSheetState();
 }
 
-class _SongSheetState extends State<SongSheet> {
+class _SongSheetState extends State<SongSheet>
+    with SingleTickerProviderStateMixin {
   _SheetPage _page = _SheetPage.options;
 
   void _refresh() {
     if (mounted) setState(() {});
   }
 
-  List<SongSheetAction> _resolveAction() {
-    if (widget.actionsBuilder != null) return widget.actionsBuilder!();
+  List<SongSheetAction> _resolveAction(SongSheetController? c) {
+    final builder = c?.actionsBuilder ?? widget.actionsBuilder;
+    if (builder != null) return builder();
     final l = AppLocalizations.of(context);
     return switch (widget.type) {
       SongSheetType.song => SongSheet.defaultsForSong(l: l),
@@ -277,9 +378,47 @@ class _SongSheetState extends State<SongSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final c = widget.controller;
+    final colorsNotifier = c?.colorsNotifier;
+
+    if (c != null && colorsNotifier != null) {
+      return ListenableBuilder(
+        listenable: c,
+        builder: (ctx, _) => ValueListenableBuilder<PlayerColors>(
+          valueListenable: colorsNotifier,
+          builder: (ctx2, colors, _) => _buildSheet(ctx2, c, colors),
+        ),
+      );
+    }
+
+    if (c != null) {
+      return ListenableBuilder(
+        listenable: c,
+        builder: (ctx, _) => _buildSheet(ctx, c, null),
+      );
+    }
+
+    return _buildSheet(context, null, null);
+  }
+
+  Widget _buildSheet(
+    BuildContext context,
+    SongSheetController? c,
+    PlayerColors? liveColors,
+  ) {
+    final bg = liveColors?.background ?? c?.background ?? widget.background;
+    final surface = liveColors?.surface ?? c?.surface ?? widget.surface;
+    final accent = liveColors?.accent ?? c?.accent ?? widget.accent;
+    final onBg =
+        liveColors?.onBackground ?? c?.onBackground ?? widget.onBackground;
+    final onAccent = liveColors?.onAccent ?? c?.onAccent ?? widget.onAccent;
+    final coverPath = c?.coverPath ?? widget.coverPath;
+    final title = c?.title ?? widget.title;
+    final subtitle = c?.subtitle ?? widget.subtitle;
+    final rows = c?.infoRows ?? widget.infoRows ?? const <SongSheetInfoRow>[];
+    final actions = _resolveAction(c);
+
     final maxHeight = MediaQuery.sizeOf(context).height * 0.85;
-    final actions = _resolveAction();
-    final rows = widget.infoRows ?? const <SongSheetInfoRow>[];
 
     return SafeArea(
       top: false,
@@ -289,11 +428,9 @@ class _SongSheetState extends State<SongSheet> {
           padding: const EdgeInsets.all(12),
           child: Container(
             decoration: BoxDecoration(
-              color: widget.background,
+              color: bg,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: widget.onBackground.withValues(alpha: 0.06),
-              ),
+              border: Border.all(color: onBg.withValues(alpha: 0.06)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.25),
@@ -304,77 +441,99 @@ class _SongSheetState extends State<SongSheet> {
             ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // ==== drag handle ====
-                  Center(
-                    child: Container(
-                      width: 36,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: widget.onBackground.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(2),
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOutCubic,
+                alignment: Alignment.topCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // ==== drag handle ====
+                    Center(
+                      child: Container(
+                        width: 36,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: onBg.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                  // ==== header ====
-                  _Header(
-                    coverPath: widget.coverPath,
-                    coverBytes: widget.coverBytes,
-                    title: widget.title,
-                    subtitle: widget.subtitle,
-                    type: widget.type,
-                    fg: widget.onBackground,
-                  ),
-                  const SizedBox(height: 16),
-                  // ==== body ====
-                  Flexible(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 220),
-                      switchInCurve: Curves.easeOutCubic,
-                      switchOutCurve: Curves.easeInCubic,
-                      layoutBuilder: (current, previous) => Stack(
-                        alignment: Alignment.topCenter,
-                        children: [...previous, ?current],
-                      ),
-                      child: _page == _SheetPage.options
-                          ? _OptionsBody(
-                              key: const ValueKey('options'),
-                              actions: actions,
-                              surface: widget.surface,
-                              onBackground: widget.onBackground,
-                              afterTap: (a) {
-                                a.onTap();
-                                if (a.dismissOnTap) {
-                                  Navigator.of(context).maybePop();
-                                } else {
-                                  _refresh();
-                                }
-                              },
-                            )
-                          : _InfoBody(
-                              key: const ValueKey('info'),
-                              rows: rows,
-                              surface: widget.surface,
-                              onBackground: widget.onBackground,
-                            ),
+                    // ==== header ====
+                    _Header(
+                      coverPath: coverPath,
+                      coverBytes: widget.coverBytes,
+                      title: title,
+                      subtitle: subtitle,
+                      type: widget.type,
+                      fg: onBg,
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  // ==== bottom toggle ====
-                  _PageToggle(
-                    page: _page,
-                    surface: widget.surface,
-                    accent: widget.accent,
-                    onBackground: widget.onBackground,
-                    onAccent: widget.onAccent,
-                    onChange: (p) => setState(() => _page = p),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+
+                    // ==== body ====
+                    Flexible(
+                      child: AnimatedSize(
+                        duration: const Duration(milliseconds: 180),
+                        curve: Curves.easeInOutCubic,
+                        alignment: Alignment.topCenter,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 140),
+                          switchInCurve: Curves.easeOutCubic,
+                          switchOutCurve: Curves.easeInCubic,
+                          layoutBuilder:
+                              (
+                                Widget? currentChild,
+                                List<Widget> previousChildren,
+                              ) {
+                                return Stack(
+                                  children: <Widget>[
+                                    if (previousChildren.isNotEmpty)
+                                      Positioned.fill(
+                                        child: previousChildren.last,
+                                      ),
+                                    ?currentChild,
+                                  ],
+                                );
+                              },
+                          child: _page == _SheetPage.options
+                              ? _OptionsBody(
+                                  key: const ValueKey('options'),
+                                  actions: actions,
+                                  surface: surface,
+                                  onBackground: onBg,
+                                  afterTap: (a) {
+                                    a.onTap();
+                                    if (a.dismissOnTap) {
+                                      Navigator.of(context).maybePop();
+                                    } else {
+                                      _refresh();
+                                    }
+                                  },
+                                )
+                              : _InfoBody(
+                                  key: const ValueKey('info'),
+                                  rows: rows,
+                                  surface: surface,
+                                  onBackground: onBg,
+                                ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // ==== bottom toggle ====
+                    _PageToggle(
+                      page: _page,
+                      surface: surface,
+                      accent: accent,
+                      onBackground: onBg,
+                      onAccent: onAccent,
+                      onChange: (p) => setState(() => _page = p),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -490,21 +649,26 @@ class _OptionsBody extends StatelessWidget {
         ),
       );
     }
-    return GridView.builder(
-      shrinkWrap: true,
+    return SingleChildScrollView(
       padding: EdgeInsets.zero,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-        childAspectRatio: 1.0,
-      ),
-      itemCount: actions.length,
-      itemBuilder: (_, i) => _ActionCell(
-        action: actions[i],
-        surface: surface,
-        onBackground: onBackground,
-        onTap: () => afterTap(actions[i]),
+      physics: const ClampingScrollPhysics(),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: 1.0,
+        ),
+        itemCount: actions.length,
+        itemBuilder: (_, i) => _ActionCell(
+          action: actions[i],
+          surface: surface,
+          onBackground: onBackground,
+          onTap: () => afterTap(actions[i]),
+        ),
       ),
     );
   }
@@ -591,6 +755,7 @@ class _InfoBody extends StatelessWidget {
     }
     return ListView.separated(
       shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
       padding: EdgeInsets.zero,
       itemCount: rows.length,
       separatorBuilder: (_, _) => const SizedBox(height: 8),
