@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:sono/l10n/localizations.dart';
-import 'package:sono/pages/player/player_colors.dart';
+import 'package:share_plus/share_plus.dart';
 
+import 'package:sono/l10n/localizations.dart';
+
+import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
@@ -253,6 +255,7 @@ class SongSheet extends StatefulWidget {
     VoidCallback? onAddToPlaylist,
     VoidCallback? onGoToAlbum,
     VoidCallback? onGoToArtist,
+    String? sharePath,
   }) => [
     SongSheetAction(
       icon: liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
@@ -283,7 +286,10 @@ class SongSheet extends StatefulWidget {
     SongSheetAction(
       icon: IconsSheet.shareOutlined,
       label: l.commonShare,
-      onTap: () {},
+      onTap: sharePath != null
+          ? () =>
+                SharePlus.instance.share(ShareParams(files: [XFile(sharePath)]))
+          : () {},
     ),
   ];
 

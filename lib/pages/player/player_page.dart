@@ -183,6 +183,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
           l: l,
           liked: _liked,
           onLike: _toggleLiked,
+          sharePath: song.path,
         );
         return [defaults.first, ...defaults.skip(2)];
       },
@@ -276,6 +277,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
           l: l,
           liked: _liked,
           onLike: _toggleLiked,
+          sharePath: song.path,
         );
         return [defaults.first, ...defaults.skip(2)];
       },

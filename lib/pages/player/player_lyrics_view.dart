@@ -1122,9 +1122,7 @@ class _LyricsBottomActions extends StatelessWidget {
                     background: c.accent,
                     foreground: c.onAccent,
                     onTap: audio.playOrPause,
-                    tooltip: playing
-                        ? l.commonPause
-                        : l.commonPlay,
+                    tooltip: playing ? l.commonPause : l.commonPlay,
                     height: rowHeight,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(smallRadius),
