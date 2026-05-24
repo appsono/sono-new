@@ -45,7 +45,7 @@
 
 ### Phase 4
 
-- Create Fullscreen player and it's widgets
+- ~~Create Fullscreen player and it's widgets~~ **DONE**
 
 ### Phase 5
 
