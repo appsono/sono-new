@@ -20,8 +20,8 @@
     "commonShuffle": "Shuffle",
     "commonShuffleAll": "Alles shufflen",
     "commonRepeat": "Wiederholen",
-    "commonLike": "Like",
-    "commonLiked": "Liked",
+    "commonLike": "Liken",
+    "commonLiked": "Geliked",
     "commonAddToPlaylist": "Zu Playlist hinzufügen",
     "@commonAddToPlaylist": {
         "description": "Tooltip on the add-to-playlist button in the queue view."
@@ -36,34 +36,37 @@
     "homeSectionAlbums": "Alben",
     "homeSectionArtists": "Künstler",
     "homeGreetingEarlyBird": "Wow Frühaufsteher",
-    "homeGreetingMorning": "Morgen",
-    "homeGreetingMidday": "Mittag",
-    "homeGreetingAfternoon": "Guten Tag",
-    "homeGreetingEvening": "Abend",
-    "homeGreetingNight": "Noch da",
-    "homeGreetingLate": "Heyyy schlaf",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
+    "homeGreetingMorning": "Morgen",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
+    "homeGreetingMidday": "Mittag",
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
+    "homeGreetingAfternoon": "Guten Tag",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
+    "homeGreetingEvening": "Abend",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
+    "homeGreetingNight": "Noch da",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
+    "homeGreetingLate": "Heyyy schlaf",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
     "homeFallbackPhrase1": "hab spaß mit was auch immer",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no Discord is set. Keep these casual/playful; match the tone, not the literal words."
+    },
     "homeFallbackPhrase2": "viel spaß beim hören!",
     "homeFallbackPhrase3": "was ist es heute?",
     "homeFallbackPhrase4": "willkommen zurück :D",
@@ -73,9 +76,6 @@
     "homeFallbackPhrase8": "mweh :3",
     "homeFallbackPhrase9": "wer bist du?!",
     "homeFallbackPhrase10": "setzt deinen username..",
-    "@homeFallbackPhrase1": {
-        "description": "Random subtitle shown next to the greeting when no Discord is set. Keep these casual/playful; match the tone, not the literal words."
-    },
     "playerNowPlaying": "Jetzt läuft",
     "@playerNowPlaying": {
         "description": "Used in the player top bar and on the queue view's collapse button."
@@ -86,19 +86,19 @@
     },
     "playerTooltipSkipNext": "Nächster Song",
     "playerTooltipShuffleOn": "Songs werden geshuffelt",
-    "playerTooltipShuffleOff": "Shuffle ist aus",
     "@playerTooltipShuffleOn": {
         "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
     },
+    "playerTooltipShuffleOff": "Shuffle ist aus",
     "@playerTooltipShuffleOff": {
         "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
     },
     "playerTooltipRepeatOff": "Widerholt nichts",
-    "playerTooltipRepeatAll": "Wiederholt alle",
-    "playerTooltipRepeatOne": "Widerholt diesen",
     "@playerTooltipRepeatOff": {
         "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
     },
+    "playerTooltipRepeatAll": "Wiederholt alle",
+    "playerTooltipRepeatOne": "Widerholt diesen",
     "playerTooltipOpenQueue": "Queue öffnen",
     "playerTooltipOpenLyrics": "Lyrics öffnen",
     "queueLabelUpNext": "Als Nächstes",
@@ -126,11 +126,11 @@
     "lyricsMenuResetSaved": "Lösche gespeicherte Lyrics",
     "lyricsMenuResetSavedSubtitle": "Lösche gecachte und erneut suchen",
     "lyricsMenuRepeatOff": "Aus",
-    "lyricsMenuRepeatAll": "Widerhole alle",
-    "lyricsMenuRepeatOne": "Widerhole diesen",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
+    "lyricsMenuRepeatAll": "Widerhole alle",
+    "lyricsMenuRepeatOne": "Widerhole diesen",
     "lyricsTooltipBackToPlayer": "Zurück zum Player",
     "lyricsTooltiplMore": "Mehr",
     "authSignIn": "Einloggen",
@@ -144,5 +144,83 @@
     "contributorsCodeSection": "Code",
     "contributorsTranslatorSection": "Übersetzungen",
     "contributorsLoading": "Lade…",
-    "contributorsLoadFailed": "Konnte Mitwirkende nicht laden :/"
+    "contributorsLoadFailed": "Konnte Mitwirkende nicht laden :/",
+    "commonFavorite": "Favorisieren",
+    "commonFavorited": "Favorit",
+    "commonShare": "Teilen",
+    "@commonShare": {
+        "description": "Share action. Imperative verb."
+    },
+    "commonPlayAll": "Alle spielen",
+    "@commonPlayAll": {
+        "description": "Play all songs from an artist, album, or section. Imperative form."
+    },
+    "commonPlayNext": "Als nächstes",
+    "@commonPlayNext": {
+        "description": "Queue a song to play right after the current one. Imperative form."
+    },
+    "commonAddToQueue": "Zu Queue hinzufügen",
+    "@commonAddToQueue": {
+        "description": "Append to the end of the playback queue. Imperative form."
+    },
+    "commonRemoveFromQueue": "Von Queue entfernen",
+    "@commonRemoveFromQueue": {
+        "description": "Remove a song from the playback queue. Imperative form."
+    },
+    "commonGoToAlbum": "Zum Album",
+    "@commonGoToAlbum": {
+        "description": "Navigate to the album page. Imperative form."
+    },
+    "commonGoToArtist": "Zum Künstler",
+    "@commonGoToArtist": {
+        "description": "Navigate to the artist page. Imperative form."
+    },
+    "commonTitle": "Titel",
+    "@commonTitle": {
+        "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
+    },
+    "commonArtist": "Künstler",
+    "@commonArtist": {
+        "description": "Noun label for the artist metadata field. Shown in info/details views."
+    },
+    "commonAlbum": "Album",
+    "@commonAlbum": {
+        "description": "Noun label for the album metadata field. Shown in info/details views."
+    },
+    "commonGenre": "Genre",
+    "@commonGenre": {
+        "description": "Noun label for the genre metadata field. Shown in info/details views."
+    },
+    "commonDuration": "Dauer",
+    "@commonDuration": {
+        "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
+    },
+    "commonReleased": "Veröffentlicht",
+    "@commonReleased": {
+        "description": "Label for the release date metadata field. Past participle form."
+    },
+    "commonPath": "Pfad",
+    "@commonPath": {
+        "description": "Label for the filesystem path metadata field."
+    },
+    "songSheetTabOptions": "Optionen",
+    "@songSheetTabOptions": {
+        "description": "Bottom toggle on the media options sheet. Switches to the actions grid."
+    },
+    "songSheetTabInfo": "Info",
+    "@songSheetTabInfo": {
+        "description": "Bottom toggle on the media options sheet. Switches to the metadata view."
+    },
+    "songSheetEmptyActions": "Keine Aktionen verfügbar",
+    "@songSheetEmptyActions": {
+        "description": "Shown when the song sheet has no actions to display."
+    },
+    "songSheetEmptyInfo": "Keine Info verfügbar",
+    "@songSheetEmptyInfo": {
+        "description": "Shown when the song sheet has no metadata rows."
+    },
+    "songSheetUnknownValue": "unbekannt",
+    "@songSheetUnknownValue": {
+        "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+    }
 }
