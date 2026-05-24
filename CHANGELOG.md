@@ -1,10 +1,39 @@
 # Changelog
 
+## [0.5.0+3](https://github.com/appsono/sono-new/compare/v0.4.91+2...v0.5.0+3) (2026-05-24)
+
+### Features
+
+* Added Song Sheet widget
+* Added Song sharing support
+* Added new common/shared localization strings
+
+### Fixes
+
+* Fixed liked state not syncing across lyrics and queue views
+* Fixed spinning cover jumping when looping
+* Fixed bottom navigation label clipping with long translations
+* Fixed icon alignment issues (home_outlines & home_filled)
+* Replaces three dots with proper ellipses
+
+### Docs
+
+* Updated contribution documentation with new folder structure
+* Added communities section and updated Discord link
+
+### Translation
+
+* [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into Belarusian and Belarusian (be_TARASK) (78%)
+* [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (78%)
+* [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into French (78%)
+* [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (78%)
+* [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (78%)
+
 ## [0.4.91+2](https://github.com/appsono/sono-new/compare/v0.4.9+2...v0.4.91+2) (2026-05-22)
 
 ### Translation
 
-* [Sasha Galzko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
+* [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
 * [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
 * [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
 
@@ -24,7 +53,7 @@
 
 ### Translation
 
-* [Sasha Galzko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (89%) and Belarusian (be_TARASK) (89%)
+* [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (89%) and Belarusian (be_TARASK) (89%)
 * [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into French (89%)
 * [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (89%)
 * [prlz](https://hosted.weblate.org/user/prlz/) translated Sono into Polish (89%)
