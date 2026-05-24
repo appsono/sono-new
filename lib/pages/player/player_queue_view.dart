@@ -37,12 +37,16 @@ class PlayerQueueView extends StatefulWidget {
   final SonoDatabase db;
   final Animation<double>? slideAnimation;
   final VoidCallback onClose;
+  final bool liked;
+  final VoidCallback onToggleLike;
 
   const PlayerQueueView({
     required this.c,
     required this.db,
     required this.onClose,
     this.slideAnimation,
+    required this.liked,
+    required this.onToggleLike,
     super.key,
   });
 
@@ -269,9 +273,13 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
       final album = await widget.db.getAlbumById(song.albumId!);
       albumName = album?.title;
     }
-    bool liked = await widget.db.getSongLiked(song.id);
-    if (!mounted || !context.mounted) return;
+
     final isCurrent = index == _currentIndex;
+    bool? liked;
+    if (!isCurrent) {
+      liked = await widget.db.getSongLiked(song.id);
+    }
+    if (!mounted || !context.mounted) return;
 
     final infoRows = <SongSheetInfoRow>[
       SongSheetInfoRow(label: l.commonTitle, value: song.title),
@@ -316,16 +324,26 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
             dismissOnTap: false,
             onTap: () => _onTapRow(index),
           ),
+        if (isCurrent)
+          SongSheetAction(
+            icon: widget.liked
+                ? IconsSheet.heartFilled
+                : IconsSheet.heartOutlined,
+            label: widget.liked ? l.commonLiked : l.commonLike,
+            dismissOnTap: false,
+            onTap: widget.onToggleLike,
+          )
+        else
+          SongSheetAction(
+            icon: liked! ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
+            label: liked! ? l.commonLiked : l.commonLike,
+            dismissOnTap: false,
+            onTap: () async {
+              liked = !liked!;
+              await widget.db.setSongLiked(song.id, liked!);
+            },
+          ),
 
-        SongSheetAction(
-          icon: liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
-          label: liked ? l.commonLiked : l.commonLike,
-          dismissOnTap: false,
-          onTap: () async {
-            liked = !liked;
-            await widget.db.setSongLiked(song.id, liked);
-          },
-        ),
         SongSheetAction(
           icon: IconsSheet.addToPlaylistOutlined,
           label: l.commonAddToPlaylist,

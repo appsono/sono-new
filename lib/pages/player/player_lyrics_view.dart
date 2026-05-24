@@ -33,11 +33,15 @@ class PlayerLyricsView extends StatefulWidget {
   final SonoDatabase db;
   final Animation<double>? slideAnimation;
   final VoidCallback onClose;
+  final bool liked;
+  final VoidCallback onToggleLike;
 
   const PlayerLyricsView({
     required this.c,
     required this.db,
     required this.onClose,
+    required this.liked,
+    required this.onToggleLike,
     this.slideAnimation,
     super.key,
   });
@@ -78,9 +82,6 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
   bool _syncAdjustOpen = false; // true = swap row 2 to sync-offset controls
 
-  //cached liked state
-  bool _liked = false;
-
   //header swipe down accumulator
   double _dragAccum = 0;
 
@@ -99,8 +100,6 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
     //initial preload of whatever is already queued
     _preloadUpcoming(audio.queue);
-
-    _loadLiked();
 
     _songSub = audio.currentSongStream.listen((s) {
       if (!mounted) return;
@@ -139,22 +138,6 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     final v = d.velocity.pixelsPerSecond.dy;
     if (_dragAccum > 80 || v > 300) widget.onClose();
     _dragAccum = 0;
-  }
-
-  // ==== liked methods ====
-  Future<void> _loadLiked() async {
-    final song = _song;
-    if (song == null) return;
-    final liked = await widget.db.getSongLiked(song.id);
-    if (!mounted) return;
-    setState(() => _liked = liked);
-  }
-
-  Future<void> _setLiked(bool v) async {
-    final song = _song;
-    if (song == null) return;
-    setState(() => _liked = v);
-    await widget.db.setSongLiked(song.id, v);
   }
 
   /// ==== JSON helpers ====
@@ -468,11 +451,13 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
             onTap: () => audio.cycleRepeat(),
           ),
           BottomSheetAction(
-            icon: _liked ? IconsSheet.heartFilled : IconsSheet.heartOutlined,
-            label: _liked ? l.commonLiked : l.commonLike,
-            subtitle: _liked ? l.commonLiked : l.commonLike,
+            icon: widget.liked
+                ? IconsSheet.heartFilled
+                : IconsSheet.heartOutlined,
+            label: widget.liked ? l.commonLiked : l.commonLike,
+            subtitle: widget.liked ? l.commonLiked : l.commonLike,
             dismissOnTap: false,
-            onTap: () => _setLiked(!_liked),
+            onTap: widget.onToggleLike,
           ),
         ];
       },
