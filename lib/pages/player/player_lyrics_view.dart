@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:sono/l10n/localizations.dart';
 
@@ -372,6 +373,13 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     _handlePositon(_position);
   }
 
+  void _seekToLine(int i) {
+    if (i < 0 || i >= _lines.length) return;
+    final target = _lines[i].timestamp - Duration(milliseconds: _syncOffsetMs);
+    final clamped = target < Duration.zero ? Duration.zero : target;
+    player.AudioService.instance.seek(clamped);
+  }
+
   void _openSyncAdjust() => setState(() => _syncAdjustOpen = true);
   void _closeSyncAdjust() => setState(() => _syncAdjustOpen = false);
 
@@ -482,7 +490,8 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       _currentLineIndex = newIndex;
       _isInIdleGap = newIdle;
     });
-    if (indexChanged) _scrollToCurrentLine();
+    //only autoscroll if line in viewport
+    if (indexChanged && _isLineInViewport(newIndex)) _scrollToCurrentLine();
   }
 
   bool _computeIdle(Duration p, int currentIndex) {
@@ -519,6 +528,27 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       }
     }
     return ans;
+  }
+
+  bool _isLineInViewport(int index) {
+    if (!_lyricsScroll.hasClients) return false;
+    if (index < 0 || index >= _lineKeys.length) return false;
+
+    final ctx = _lineKeys[index].currentContext;
+    if (ctx == null) return false;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null || !box.attached) return false;
+
+    final viewport = RenderAbstractViewport.maybeOf(box);
+    if (viewport == null) return false;
+
+    final boxTop = viewport.getOffsetToReveal(box, 0.0).offset;
+    final boxBottom = boxTop + box.size.height;
+    final pos = _lyricsScroll.position;
+    final viewTop = pos.pixels;
+    final viewBottom = viewTop + pos.viewportDimension;
+
+    return boxBottom > viewTop && boxTop < viewBottom;
   }
 
   void _scrollToCurrentLine() {
@@ -701,6 +731,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
                   currentIndex: _currentLineIndex,
                   isInIdleGap: _isInIdleGap,
                   scrollController: _lyricsScroll,
+                  onLineTap: _seekToLine,
                 )
               : _PlainLyricsView(
                   c: c,
@@ -775,6 +806,7 @@ class _SyncedLyricsList extends StatelessWidget {
   final int currentIndex;
   final bool isInIdleGap;
   final ScrollController scrollController;
+  final ValueChanged<int> onLineTap;
 
   const _SyncedLyricsList({
     required this.c,
@@ -783,6 +815,7 @@ class _SyncedLyricsList extends StatelessWidget {
     required this.currentIndex,
     required this.isInIdleGap,
     required this.scrollController,
+    required this.onLineTap,
   });
 
   @override
@@ -801,6 +834,7 @@ class _SyncedLyricsList extends StatelessWidget {
           nextLine: i + 1 < lines.length ? lines[i + 1] : null,
           isCurrent: i == currentIndex,
           showIdle: isCurrent && isInIdleGap,
+          onTap: () => onLineTap(i),
         );
       },
     );
@@ -813,6 +847,7 @@ class _LyricsRow extends StatelessWidget {
   final LyricsLine? nextLine;
   final bool isCurrent;
   final bool showIdle;
+  final VoidCallback onTap;
 
   const _LyricsRow({
     super.key,
@@ -821,6 +856,7 @@ class _LyricsRow extends StatelessWidget {
     required this.nextLine,
     required this.isCurrent,
     required this.showIdle,
+    required this.onTap,
   });
 
   @override
@@ -842,34 +878,38 @@ class _LyricsRow extends StatelessWidget {
       child: Text(text, textAlign: TextAlign.left),
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            textWidget,
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOutCubic,
-              height: showIdle && nextLine != null ? 11 : 0,
-              child: AnimatedOpacity(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              textWidget,
+              AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOutCubic,
-                opacity: showIdle && nextLine != null ? 1.0 : 0.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: _IdleGapBar(
-                    c: c,
-                    start: line.timestamp,
-                    end: nextLine?.timestamp ?? Duration.zero,
+                height: showIdle && nextLine != null ? 11 : 0,
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  opacity: showIdle && nextLine != null ? 1.0 : 0.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: _IdleGapBar(
+                      c: c,
+                      start: line.timestamp,
+                      end: nextLine?.timestamp ?? Duration.zero,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
