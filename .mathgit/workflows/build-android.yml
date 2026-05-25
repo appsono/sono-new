@@ -7,19 +7,6 @@ jobs:
     env:
       PUB_CACHE: /workspace/.pub-cache
     steps:
-      - name: Check version changed
-        run: |
-          CURRENT=$(grep '^version:' pubspec.yaml | awk '{print $2}')
-          OLD=$(git show HEAD~1:pubspec.yaml 2>/dev/null | grep '^version:' | awk '{print $2}' || true)
-
-          echo "old=$OLD"
-          echo "current=$CURRENT"
-
-          if [ "$CURRENT" = "$OLD" ] || [ -z "$CURRENT" ]; then
-            echo "Version unchanged; skipping release build."
-            exit 0
-          fi
-
       - name: Dependencies
         run: flutter pub get
 
