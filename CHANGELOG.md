@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.5.1+3](https://github.com/appsono/sono-new/compare/v0.5.0+2...v0.5.1+3) (2026-05-25)
+
+### Features
+
+* Lyrics lines are now tappable and seek to that part of the song
+* Lyrics auto-scroll only follows the active line when it's already in view
+* Lyrics provider credit moved to the end of the scroll area instead of being pinned
+
+### Fixes
+
+* Fixed missing translation percentage for Belarusian (be_TARASK) in the language picker
+
+### Translation
+
+* [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (84%)
+* [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
+* [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+* [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
+
 ## [0.5.0+3](https://github.com/appsono/sono-new/compare/v0.4.91+2...v0.5.0+3) (2026-05-24)
 
 ### Features
@@ -13,7 +32,7 @@
 * Fixed liked state not syncing across lyrics and queue views
 * Fixed spinning cover jumping when looping
 * Fixed bottom navigation label clipping with long translations
-* Fixed icon alignment issues (home_outlines & home_filled)
+* Fixed icon alignment issues (home_outlined & home_filled)
 * Replaces three dots with proper ellipses
 
 ### Docs
@@ -23,7 +42,7 @@
 
 ### Translation
 
-* [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into Belarusian and Belarusian (be_TARASK) (78%)
+* [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into Belarusian (78%) and Belarusian (be_TARASK) (78%)
 * [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (78%)
 * [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into French (78%)
 * [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (78%)
