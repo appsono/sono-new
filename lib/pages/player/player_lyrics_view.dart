@@ -104,7 +104,10 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
 
     _songSub = audio.currentSongStream.listen((s) {
       if (!mounted) return;
-      setState(() => _song = s);
+      setState(() {
+        _song = s;
+        _position = Duration.zero;
+      });
       _loadFor(s);
       _preloadUpcoming(audio.queue);
     });
