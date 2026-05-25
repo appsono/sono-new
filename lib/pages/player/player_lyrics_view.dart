@@ -1410,7 +1410,7 @@ class _NormalControlRow extends StatelessWidget {
               topLeft: Radius.circular(smallRadius),
               bottomLeft: Radius.circular(smallRadius),
               topRight: Radius.circular(smallRadius),
-              bottomRight: Radius.circular(smallRadius),
+              bottomRight: Radius.circular(bigRadius),
             ),
           ),
         ),
