@@ -60,11 +60,14 @@ class LocaleService {
   /// Regenerate via:
   /// dart run scripts/compute_translation_progress.dart
   static double? completionFor(Locale locale) {
-    //try full code first (pt_BR), fall back to language only (pt)
-    final fullCode = locale.countryCode == null
-        ? locale.languageCode
-        : '${locale.languageCode}_${locale.countryCode}';
-    return translationProgress[fullCode] ??
+    //try most-specific code first, fall back to language only
+    String? fullCode;
+    if (locale.scriptCode != null) {
+      fullCode = '${locale.languageCode}_${locale.scriptCode!.toUpperCase()}';
+    } else if (locale.countryCode != null) {
+      fullCode = '${locale.languageCode}_${locale.countryCode}';
+    }
+    return (fullCode != null ? translationProgress[fullCode] : null) ??
         translationProgress[locale.languageCode];
   }
 
