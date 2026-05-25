@@ -4,7 +4,7 @@
 
 <p align="center">
 Welcome to this repository. It contains the full source code of the app.<br>
-This version of the app is new and currently in a very early stage.
+The app is new and currently in a very early stage.
 </p>
 
 <p align="center">
@@ -14,9 +14,9 @@ This version of the app is new and currently in a very early stage.
 
 ## What is Sono?
 
-Sono is yet another local music player, it's cross platform and NOT material design. Yes, I took inspiration from Material Design for the Fullscreen Player, but I just like extracting colors from stuff and make them bouncy. :]
+Sono is yet another local music player, it's cross platform and NOT material design. Yes, I took inspiration from Material Design for the Fullscreen Player, but I just like extracting colors from stuff and make them bouncy :]
 
-It is built with Flutter and and has all the features you need. Not yet, but soon. :D
+It is built with Flutter and and has all the features you need. Not yet, but soon :D
 
 ## Contributing
 
