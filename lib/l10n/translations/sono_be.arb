@@ -36,34 +36,37 @@
     "homeSectionAlbums": "Альбомы",
     "homeSectionArtists": "Выканаўцы",
     "homeGreetingEarlyBird": "Ого, ранняя птушка",
-    "homeGreetingMorning": "Добрага ранку",
-    "homeGreetingMidday": "Добрага дня",
-    "homeGreetingAfternoon": "Добрага позняга дня",
-    "homeGreetingEvening": "Добрага вечару",
-    "homeGreetingNight": "Добрай ночы",
-    "homeGreetingLate": "Ідзі спаць",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
+    "homeGreetingMorning": "Добрага ранку",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
+    "homeGreetingMidday": "Добрага дня",
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
+    "homeGreetingAfternoon": "Добрага позняга дня",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
+    "homeGreetingEvening": "Добрага вечару",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
+    "homeGreetingNight": "Добрай ночы",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
+    "homeGreetingLate": "Ідзі спаць",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
     "homeFallbackPhrase1": "весяліся, табе гэта да твару",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
     "homeFallbackPhrase2": "нацешся музыкай!",
     "homeFallbackPhrase3": "што ў нас на сёння?",
     "homeFallbackPhrase4": "ізноў вітаю :D",
@@ -73,9 +76,6 @@
     "homeFallbackPhrase8": "хіхі :3",
     "homeFallbackPhrase9": "ты хто такі?!",
     "homeFallbackPhrase10": "задайце імя карыстальніка..",
-    "@homeFallbackPhrase1": {
-        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
-    },
     "playerNowPlaying": "Зараз грае",
     "@playerNowPlaying": {
         "description": "Used in the player top bar and on the queue view's collapse button."
@@ -86,19 +86,19 @@
     },
     "playerTooltipSkipNext": "Наступная",
     "playerTooltipShuffleOn": "Песні ўперамешку",
-    "playerTooltipShuffleOff": "Перамешванне выключана",
     "@playerTooltipShuffleOn": {
         "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
     },
+    "playerTooltipShuffleOff": "Перамешванне выключана",
     "@playerTooltipShuffleOff": {
         "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
     },
     "playerTooltipRepeatOff": "Паўтор выключаны",
-    "playerTooltipRepeatAll": "Паўтор усяго",
-    "playerTooltipRepeatOne": "Паўтор адной",
     "@playerTooltipRepeatOff": {
         "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
     },
+    "playerTooltipRepeatAll": "Паўтор усяго",
+    "playerTooltipRepeatOne": "Паўтор адной",
     "playerTooltipOpenQueue": "Адкрыць чаргу",
     "playerTooltipOpenLyrics": "Адкрыць тэкст",
     "queueLabelUpNext": "Наступная песня",
@@ -126,11 +126,11 @@
     "lyricsMenuResetSaved": "Скінуць захаваны тэкст",
     "lyricsMenuResetSavedSubtitle": "Ачысціць кэш і паўторна загрузіць тэкст",
     "lyricsMenuRepeatOff": "Выключана",
-    "lyricsMenuRepeatAll": "Паўтараць усё",
-    "lyricsMenuRepeatOne": "Паўтараць адну",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
+    "lyricsMenuRepeatAll": "Паўтараць усё",
+    "lyricsMenuRepeatOne": "Паўтараць адну",
     "lyricsTooltipBackToPlayer": "Вярнуцца да прайгравальніка",
     "lyricsTooltiplMore": "Яшчэ",
     "authSignIn": "Увайсці",
@@ -144,5 +144,83 @@
     "contributorsCodeSection": "Распрацоўка",
     "contributorsTranslatorSection": "Пераклады",
     "contributorsLoading": "Загрузка…",
-    "contributorsLoadFailed": "Не ўдалося загрузіць удзельнікаў :/"
+    "contributorsLoadFailed": "Не ўдалося загрузіць удзельнікаў :/",
+    "commonFavorite": "Дадаць у абранае",
+    "commonFavorited": "Дадана ў абранае",
+    "commonShare": "Абагуліць",
+    "@commonShare": {
+        "description": "Share action. Imperative verb."
+    },
+    "commonPlayAll": "Прайграць усё",
+    "@commonPlayAll": {
+        "description": "Play all songs from an artist, album, or section. Imperative form."
+    },
+    "commonPlayNext": "Прайграць наступнай",
+    "@commonPlayNext": {
+        "description": "Queue a song to play right after the current one. Imperative form."
+    },
+    "commonAddToQueue": "Дадаць у чаргу",
+    "@commonAddToQueue": {
+        "description": "Append to the end of the playback queue. Imperative form."
+    },
+    "commonRemoveFromQueue": "Выдаліць з чаргі",
+    "@commonRemoveFromQueue": {
+        "description": "Remove a song from the playback queue. Imperative form."
+    },
+    "commonGoToAlbum": "Перайсці да альбому",
+    "@commonGoToAlbum": {
+        "description": "Navigate to the album page. Imperative form."
+    },
+    "commonGoToArtist": "Перайсці да выканаўцы",
+    "@commonGoToArtist": {
+        "description": "Navigate to the artist page. Imperative form."
+    },
+    "commonTitle": "Назва",
+    "@commonTitle": {
+        "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
+    },
+    "commonArtist": "Выканаўца",
+    "@commonArtist": {
+        "description": "Noun label for the artist metadata field. Shown in info/details views."
+    },
+    "commonAlbum": "Альбом",
+    "@commonAlbum": {
+        "description": "Noun label for the album metadata field. Shown in info/details views."
+    },
+    "commonGenre": "Жанр",
+    "@commonGenre": {
+        "description": "Noun label for the genre metadata field. Shown in info/details views."
+    },
+    "commonDuration": "Працягласць",
+    "@commonDuration": {
+        "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
+    },
+    "commonReleased": "Выпушчана",
+    "@commonReleased": {
+        "description": "Label for the release date metadata field. Past participle form."
+    },
+    "commonPath": "Шлях",
+    "@commonPath": {
+        "description": "Label for the filesystem path metadata field."
+    },
+    "songSheetTabOptions": "Параметры",
+    "@songSheetTabOptions": {
+        "description": "Bottom toggle on the media options sheet. Switches to the actions grid."
+    },
+    "songSheetTabInfo": "Звесткі",
+    "@songSheetTabInfo": {
+        "description": "Bottom toggle on the media options sheet. Switches to the metadata view."
+    },
+    "songSheetEmptyActions": "Няма даступных дзеянняў",
+    "@songSheetEmptyActions": {
+        "description": "Shown when the song sheet has no actions to display."
+    },
+    "songSheetEmptyInfo": "Няма даступных звестак",
+    "@songSheetEmptyInfo": {
+        "description": "Shown when the song sheet has no metadata rows."
+    },
+    "songSheetUnknownValue": "невядома",
+    "@songSheetUnknownValue": {
+        "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+    }
 }
