@@ -36,34 +36,37 @@
     "homeSectionAlbums": "Albumid",
     "homeSectionArtists": "Esitajad",
     "homeGreetingEarlyBird": "Küll sa oled varajane",
-    "homeGreetingMorning": "Hommikust",
-    "homeGreetingMidday": "Keskpäevast",
-    "homeGreetingAfternoon": "Tere pärastlõunat",
-    "homeGreetingEvening": "Tere õhtut",
-    "homeGreetingNight": "Kena ööd",
-    "homeGreetingLate": "Hei, uuuunine",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
+    "homeGreetingMorning": "Hommikust",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
+    "homeGreetingMidday": "Keskpäevast",
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
+    "homeGreetingAfternoon": "Tere pärastlõunat",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
+    "homeGreetingEvening": "Tere õhtut",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
+    "homeGreetingNight": "Kena ööd",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
+    "homeGreetingLate": "Hei, uuuunine",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
     "homeFallbackPhrase1": "jäta seda, mis sul pooleli oli",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
     "homeFallbackPhrase2": "naudi kuulamist!",
     "homeFallbackPhrase3": "ei tea, mis täna plaanis on?",
     "homeFallbackPhrase4": "tere tulemast tagasi :D",
@@ -73,9 +76,6 @@
     "homeFallbackPhrase8": "mnjah :3",
     "homeFallbackPhrase9": "kes a oled?!",
     "homeFallbackPhrase10": "sisesta oma kasutajanimi..",
-    "@homeFallbackPhrase1": {
-        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
-    },
     "playerNowPlaying": "Hetkel esitamisel",
     "@playerNowPlaying": {
         "description": "Used in the player top bar and on the queue view's collapse button."
@@ -86,19 +86,19 @@
     },
     "playerTooltipSkipNext": "Järgmine",
     "playerTooltipShuffleOn": "Lood on segamisel",
-    "playerTooltipShuffleOff": "Lugude segamine pole kasutusel",
     "@playerTooltipShuffleOn": {
         "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
     },
+    "playerTooltipShuffleOff": "Lugude segamine pole kasutusel",
     "@playerTooltipShuffleOff": {
         "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
     },
     "playerTooltipRepeatOff": "Lugude kordus pole kasutusel",
-    "playerTooltipRepeatAll": "Kõik lood kuuluvad kordamisele",
-    "playerTooltipRepeatOne": "Üks lugu kuulub kordamisele",
     "@playerTooltipRepeatOff": {
         "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
     },
+    "playerTooltipRepeatAll": "Kõik lood kuuluvad kordamisele",
+    "playerTooltipRepeatOne": "Üks lugu kuulub kordamisele",
     "playerTooltipOpenQueue": "Ava esitusjärjekord",
     "playerTooltipOpenLyrics": "Ava laulusõnad",
     "queueLabelUpNext": "Järgmisena esitamisel",
@@ -126,11 +126,11 @@
     "lyricsMenuResetSaved": "Lähtesta salvestatud laulusõnad",
     "lyricsMenuResetSavedSubtitle": "Kustuta puhverdatud sisu ja laadi laulusõnad teenusest uuesti",
     "lyricsMenuRepeatOff": "Väljas",
-    "lyricsMenuRepeatAll": "Korda kõik",
-    "lyricsMenuRepeatOne": "Korda ühte",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
+    "lyricsMenuRepeatAll": "Korda kõik",
+    "lyricsMenuRepeatOne": "Korda ühte",
     "lyricsTooltipBackToPlayer": "Tagasi pleieri juurde",
     "lyricsTooltiplMore": "Veel",
     "authSignIn": "Logi sisse",
@@ -144,5 +144,83 @@
     "contributorsCodeSection": "Lähtekood",
     "contributorsTranslatorSection": "Tõlked",
     "contributorsLoading": "Laadin andmeid…",
-    "contributorsLoadFailed": "Kaasautorite laadimine ei õnnestunud :/"
+    "contributorsLoadFailed": "Kaasautorite laadimine ei õnnestunud :/",
+    "commonFavorite": "Lemmik",
+    "commonFavorited": "Lemmikuks märgitud",
+    "commonShare": "Jaga",
+    "@commonShare": {
+        "description": "Share action. Imperative verb."
+    },
+    "commonPlayAll": "Esita kõik",
+    "@commonPlayAll": {
+        "description": "Play all songs from an artist, album, or section. Imperative form."
+    },
+    "commonPlayNext": "Esita järgmisena",
+    "@commonPlayNext": {
+        "description": "Queue a song to play right after the current one. Imperative form."
+    },
+    "commonAddToQueue": "Lisa esitusjärjekorda",
+    "@commonAddToQueue": {
+        "description": "Append to the end of the playback queue. Imperative form."
+    },
+    "commonRemoveFromQueue": "Eemalda esitusjärjekorrast",
+    "@commonRemoveFromQueue": {
+        "description": "Remove a song from the playback queue. Imperative form."
+    },
+    "commonGoToAlbum": "Vaata albumit",
+    "@commonGoToAlbum": {
+        "description": "Navigate to the album page. Imperative form."
+    },
+    "commonGoToArtist": "Vaata esitajat",
+    "@commonGoToArtist": {
+        "description": "Navigate to the artist page. Imperative form."
+    },
+    "commonTitle": "Pealkiri",
+    "@commonTitle": {
+        "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
+    },
+    "commonArtist": "Esitaja",
+    "@commonArtist": {
+        "description": "Noun label for the artist metadata field. Shown in info/details views."
+    },
+    "commonAlbum": "Album",
+    "@commonAlbum": {
+        "description": "Noun label for the album metadata field. Shown in info/details views."
+    },
+    "commonGenre": "Žanr",
+    "@commonGenre": {
+        "description": "Noun label for the genre metadata field. Shown in info/details views."
+    },
+    "commonDuration": "Kestus",
+    "@commonDuration": {
+        "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
+    },
+    "commonReleased": "Avaldatud",
+    "@commonReleased": {
+        "description": "Label for the release date metadata field. Past participle form."
+    },
+    "commonPath": "Asukoht",
+    "@commonPath": {
+        "description": "Label for the filesystem path metadata field."
+    },
+    "songSheetTabOptions": "Valikud",
+    "@songSheetTabOptions": {
+        "description": "Bottom toggle on the media options sheet. Switches to the actions grid."
+    },
+    "songSheetTabInfo": "Teave",
+    "@songSheetTabInfo": {
+        "description": "Bottom toggle on the media options sheet. Switches to the metadata view."
+    },
+    "songSheetEmptyActions": "Tegevusi ei leidu",
+    "@songSheetEmptyActions": {
+        "description": "Shown when the song sheet has no actions to display."
+    },
+    "songSheetEmptyInfo": "Teavet ei leidu",
+    "@songSheetEmptyInfo": {
+        "description": "Shown when the song sheet has no metadata rows."
+    },
+    "songSheetUnknownValue": "teadmata",
+    "@songSheetUnknownValue": {
+        "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+    }
 }
