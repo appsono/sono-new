@@ -739,7 +739,6 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
                   scrollController: _lyricsScroll,
                 ),
         ),
-        _ProviderCredit(c: c),
       ],
     );
   }
@@ -822,10 +821,11 @@ class _SyncedLyricsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: scrollController,
-      itemCount: lines.length,
+      itemCount: lines.length + 1,
       padding: const EdgeInsets.symmetric(vertical: 80),
       physics: const ClampingScrollPhysics(),
       itemBuilder: (cty, i) {
+        if (i == lines.length) return _ProviderCredit(c: c);
         final isCurrent = i == currentIndex;
         return _LyricsRow(
           key: lineKeys[i],
@@ -935,16 +935,22 @@ class _PlainLyricsView extends StatelessWidget {
     return SingleChildScrollView(
       controller: scrollController,
       padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Text(
-        text,
-        textAlign: TextAlign.left,
-        style: TextStyle(
-          fontFamily: SonoFonts.heading,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: c.onBackground.withValues(alpha: 0.7),
-          height: 1.6,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            text,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontFamily: SonoFonts.heading,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: c.onBackground.withValues(alpha: 0.7),
+              height: 1.6,
+            ),
+          ),
+          _ProviderCredit(c: c),
+        ],
       ),
     );
   }
