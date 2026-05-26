@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.3+3](https://github.com/appsono/sono-new/compare/v0.5.2+2...v0.5.3+3) (2026-05-26)
+
+### Features
+
+* Added new playlist and genre icons
+* Re-design favorite album icon pair
+
+### Fixes
+
+* Fixed audio stutter when the app was backgrounded with EQ enabled (the filter chain now skips bands at unity gain instead of running all 11 biquads every sample)
+* Fixed "Got to album" action in the queue song sheet using the artist icon
+* Fixed lyrics view not jumping to the current line when opening
+
 ## [0.5.2+3](https://github.com/appsono/sono-new/compare/v0.5.1+2...v0.5.2+3) (2026-05-26)
 
 ### Features

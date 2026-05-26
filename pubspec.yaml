@@ -2,7 +2,7 @@ name: sono
 description: "A fresh start for Sono"
 publish_to: 'none'
 
-version: 0.5.2+3
+version: 0.5.3+3
 
 environment:
   sdk: ^3.11.1
