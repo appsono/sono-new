@@ -158,5 +158,69 @@
     "commonPlayNext": "Прайграць наступнай",
     "@commonPlayNext": {
         "description": "Queue a song to play right after the current one. Imperative form."
+    },
+    "commonAddToQueue": "Дадаць да чаргі",
+    "@commonAddToQueue": {
+        "description": "Append to the end of the playback queue. Imperative form."
+    },
+    "commonRemoveFromQueue": "Выдаліць з чаргі",
+    "@commonRemoveFromQueue": {
+        "description": "Remove a song from the playback queue. Imperative form."
+    },
+    "commonGoToAlbum": "Перайсці да альбому",
+    "@commonGoToAlbum": {
+        "description": "Navigate to the album page. Imperative form."
+    },
+    "commonGoToArtist": "Перайсці да выканаўцы",
+    "@commonGoToArtist": {
+        "description": "Navigate to the artist page. Imperative form."
+    },
+    "commonTitle": "Назва",
+    "@commonTitle": {
+        "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
+    },
+    "commonArtist": "Выканаўца",
+    "@commonArtist": {
+        "description": "Noun label for the artist metadata field. Shown in info/details views."
+    },
+    "commonAlbum": "Альбом",
+    "@commonAlbum": {
+        "description": "Noun label for the album metadata field. Shown in info/details views."
+    },
+    "commonGenre": "Жанр",
+    "@commonGenre": {
+        "description": "Noun label for the genre metadata field. Shown in info/details views."
+    },
+    "commonDuration": "Працягласьць",
+    "@commonDuration": {
+        "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
+    },
+    "commonReleased": "Выпушчана",
+    "@commonReleased": {
+        "description": "Label for the release date metadata field. Past participle form."
+    },
+    "commonPath": "Шлях",
+    "@commonPath": {
+        "description": "Label for the filesystem path metadata field."
+    },
+    "songSheetTabOptions": "Парамэтры",
+    "@songSheetTabOptions": {
+        "description": "Bottom toggle on the media options sheet. Switches to the actions grid."
+    },
+    "songSheetTabInfo": "Зьвесткі",
+    "@songSheetTabInfo": {
+        "description": "Bottom toggle on the media options sheet. Switches to the metadata view."
+    },
+    "songSheetEmptyActions": "Няма даступных дзеяньняў",
+    "@songSheetEmptyActions": {
+        "description": "Shown when the song sheet has no actions to display."
+    },
+    "songSheetEmptyInfo": "Няма даступных зьвесткаў",
+    "@songSheetEmptyInfo": {
+        "description": "Shown when the song sheet has no metadata rows."
+    },
+    "songSheetUnknownValue": "невядома",
+    "@songSheetUnknownValue": {
+        "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
     }
 }
