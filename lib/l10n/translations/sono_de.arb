@@ -222,5 +222,41 @@
     "songSheetUnknownValue": "unbekannt",
     "@songSheetUnknownValue": {
         "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+    },
+    "libraryPageTitle": "Bibliothek",
+    "@libraryPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "libraryCardGenres": "Genres",
+    "@libraryCardGenres": {
+        "description": "Library page card label. Opens a list of genres."
+    },
+    "libraryCardPlaylists": "Playlisten",
+    "@libraryCardPlaylists": {
+        "description": "Library page card label. Opens user playlists."
+    },
+    "libraryCardLikedSongs": "Gelikte Songs",
+    "@libraryCardLikedSongs": {
+        "description": "Library page card label. Opens the list of songs the user has liked."
+    },
+    "libraryCardFavoriteAlbums": "Lieblingsalben",
+    "@libraryCardFavoriteAlbums": {
+        "description": "Library page card label. Opens the list of albums the user has favorited."
+    },
+    "libraryCardFavoriteArtists": "Lieblingskünstler",
+    "@libraryCardFavoriteArtists": {
+        "description": "Library page card label. Opens the list of artists the user has favorited."
+    },
+    "libraryCardArtists": "Künstler",
+    "@libraryCardArtists": {
+        "description": "Library page card label. Opens the full list of artists in the library."
+    },
+    "libraryCardSongs": "Songs",
+    "@libraryCardSongs": {
+        "description": "Library page card label. Opens the full list of songs in the library."
+    },
+    "libraryCardAlbums": "Alben",
+    "@libraryCardAlbums": {
+        "description": "Library page card label. Opens the full list of albums in the library."
     }
 }
