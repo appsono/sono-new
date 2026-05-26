@@ -2,19 +2,22 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/db/database.dart';
+
 import 'package:sono/pages/home/home_page.dart';
 import 'package:sono/pages/settings/settings_page.dart';
-import 'package:sono/pages/test/icons_test_page.dart';
+import 'package:sono/pages/library/library_page.dart';
+
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/services/scanner/scan_service.dart';
 import 'package:sono/services/update_service.dart';
 import 'package:sono/services/scanner/scan_settings.dart';
+
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/bottom_nav.dart';
 import 'package:sono/widgets/update_banner.dart';
-import 'package:sono_query/sono_query.dart' hide Song;
 
 class AppShell extends StatefulWidget {
   final SonoDatabase db;
@@ -93,7 +96,7 @@ class _AppShellState extends State<AppShell> {
                 db: widget.db,
                 onRescan: () => _checkPermissionAndScan(force: true),
               ),
-              IconsTestPage(),
+              LibraryPage(db: widget.db),
             ],
           ),
           if (_scanProgress != null)
