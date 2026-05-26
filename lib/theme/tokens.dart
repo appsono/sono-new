@@ -45,6 +45,16 @@ class SonoColors {
   final Color infoText;
   final Color infoBorder;
 
+  final Color accentBlue;
+  final Color accentTeal;
+  final Color accentAmber;
+  final Color accentGreen;
+  final Color accentPurple;
+  final Color accentOrange;
+  final Color accentLightBlue;
+  final Color accentRed;
+  final Color accentBrown;
+
   final Color scrollbarTrack;
   final Color scrollbarThumb;
   final Color scrollbarThumbHover;
@@ -81,6 +91,15 @@ class SonoColors {
     required this.infoBg,
     required this.infoText,
     required this.infoBorder,
+    required this.accentBlue,
+    required this.accentTeal,
+    required this.accentAmber,
+    required this.accentGreen,
+    required this.accentPurple,
+    required this.accentOrange,
+    required this.accentLightBlue,
+    required this.accentRed,
+    required this.accentBrown,
     required this.scrollbarTrack,
     required this.scrollbarThumb,
     required this.scrollbarThumbHover,
@@ -118,6 +137,15 @@ class SonoColors {
     infoBg: Color(0x1A0D6EFD),
     infoText: Color(0xFF4D9FF0),
     infoBorder: Color(0xFF7DB8F5),
+    accentBlue: Color(0xFF64B5F6), //blue.shade300
+    accentTeal: Color(0xFF4DB6AC), //teal.shade300
+    accentAmber: Color(0xFFFFCA28), //amber.shade400
+    accentGreen: Color(0xFF66BB6A), //green.shade400
+    accentPurple: Color(0xFFBA68C8), //purple.shade300
+    accentOrange: Color(0xFFFFA726), //orange.shade400
+    accentLightBlue: Color(0xFF4FC3F7), //lightBlue.shade300
+    accentRed: Color(0xFFE57373), //red.shade300
+    accentBrown: Color(0xFFA1887B), //brown.shade300
     scrollbarTrack: Color(0x33000000),
     scrollbarThumb: Color(0xFF444444),
     scrollbarThumbHover: Color(0xFF555555),
@@ -155,6 +183,15 @@ class SonoColors {
     infoBg: Color(0x1A0D6EFD),
     infoText: Color(0xFF1565C0),
     infoBorder: Color(0xFF42A5F5),
+    accentBlue: Color(0xFF1E88E5), //blue.shade600
+    accentTeal: Color(0xFF00897B), //teal.shade600
+    accentAmber: Color(0xFFFFB300), //amber.shade600
+    accentGreen: Color(0xFF43A047), //green.shade600
+    accentPurple: Color(0xFF8E24AA), //purple.shade600
+    accentOrange: Color(0xFFFB8C00), //orange.shade600
+    accentLightBlue: Color(0xFF039BE5), //lightBlue.shade600
+    accentRed: Color(0xFFE53935), //red.shade600
+    accentBrown: Color(0xFF6D4C41), //brown.shade600
     scrollbarTrack: Color(0x14000000),
     scrollbarThumb: Color(0xFFBBBBBB),
     scrollbarThumbHover: Color(0xFFA0A0A0),
