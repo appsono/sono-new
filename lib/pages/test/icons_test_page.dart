@@ -15,11 +15,13 @@ class _IconsTestPageState extends State<IconsTestPage> {
 
   static const List<_IconPair> _pairs = [
     _IconPair('add', IconsSheet.addOutlined, IconsSheet.addFilled),
+    _IconPair('album', IconsSheet.albumOutlined, IconsSheet.albumFilled),
     _IconPair(
       'addToPlaylist',
       IconsSheet.addToPlaylistOutlined,
       IconsSheet.addToPlaylistFilled,
     ),
+    _IconPair('artist', IconsSheet.artistOutlined, IconsSheet.artistFilled),
     _IconPair('back', IconsSheet.backOutlined, IconsSheet.backFilled),
     _IconPair('bell', IconsSheet.bellOutlined, IconsSheet.bellFilled),
     _IconPair('cast', IconsSheet.castOutlined, IconsSheet.castFilled),
@@ -45,8 +47,23 @@ class _IconsTestPageState extends State<IconsTestPage> {
       IconsSheet.equalizerOutlined,
       IconsSheet.equalizerFilled,
     ),
+    _IconPair(
+      'favoriteAlbum',
+      IconsSheet.favoriteAlbumOutlined,
+      IconsSheet.favoriteAlbumFilled,
+    ),
+    _IconPair(
+      'favoriteArtist',
+      IconsSheet.favoriteArtistOutlined,
+      IconsSheet.favoriteArtistFilled,
+    ),
     _IconPair('heart', IconsSheet.heartOutlined, IconsSheet.heartFilled),
     _IconPair('home', IconsSheet.homeOutlined, IconsSheet.homeFilled),
+    _IconPair(
+      'lastPlayed',
+      IconsSheet.lastPlayedOutlined,
+      IconsSheet.lastPlayedFilled,
+    ),
     _IconPair('library', IconsSheet.libraryOutlined, IconsSheet.libraryFilled),
     _IconPair('lyrics', IconsSheet.lyricsOutlined, IconsSheet.lyricsFilled),
     _IconPair(
@@ -87,6 +104,7 @@ class _IconsTestPageState extends State<IconsTestPage> {
       IconsSheet.skipPreviousOutlined,
       IconsSheet.skipPreviousFilled,
     ),
+    _IconPair('song', IconsSheet.songOutlined, IconsSheet.songFilled),
     _IconPair('sort', IconsSheet.sortOutlined, IconsSheet.sortFilled),
     _IconPair('volume', IconsSheet.volumeOutlined, IconsSheet.volumeFilled),
     _IconPair(
