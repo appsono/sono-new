@@ -130,7 +130,7 @@ class _LibraryPageState extends State<LibraryPage> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
                 child: SonoHeader(
-                  isHomePage: true,
+                  pageTitle: l.libraryPageTitle,
                   username: _profile?.username.isEmpty == true
                       ? null
                       : _profile?.username,
