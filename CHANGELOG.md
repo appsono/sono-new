@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.2+3](https://github.com/appsono/sono-new/compare/v0.5.1+2...v0.5.2+3) (2026-05-26)
+
+### Features
+
+* Added new album, artist, favorite album (no filled), favorite artist, last played, and song icons
+* Updated pages to use the new icons
+* All icons now use `currentColor` instead of hard-coded black value (i missed a few)
+
+### Fixes
+
+* Fixed lyrics view not resetting to the top when changing songs
+* Fixed lyrics bottom right radius using the wrong border radius value
+
 ## [0.5.1+3](https://github.com/appsono/sono-new/compare/v0.5.0+2...v0.5.1+3) (2026-05-25)
 
 ### Features
