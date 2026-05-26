@@ -13,6 +13,10 @@
 * Fixed "Got to album" action in the queue song sheet using the artist icon
 * Fixed lyrics view not jumping to the current line when opening
 
+### Translation
+
+* [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into Belarusian (be_TARASK) (100%)
+
 ## [0.5.2+3](https://github.com/appsono/sono-new/compare/v0.5.1+2...v0.5.2+3) (2026-05-26)
 
 ### Features
