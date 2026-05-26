@@ -234,25 +234,31 @@ class AudioEffectsService {
 
   /// Build full af string
   String _buildAfString() {
-    //if nothing active, return empty
-    final anyEqActive = _eqGains.any((g) => g.abs() > 0.01);
-    final bassActive = _bassBoost.abs() > 0.1;
-    if (!anyEqActive && !bassActive) return '';
+    const dbEps = 0.05;
+    final eqContributes = _eqEnabled && _eqGains.any((g) => g.abs() >= dbEps);
+    final bassContributes = _bassBoost.abs() >= dbEps;
+    if (!eqContributes && !bassContributes) return ''; //return null if disabled
 
-    final buf = StringBuffer('lavfi=[');
-    for (int i = 0; i < bandCount; i++) {
-      if (i > 0) buf.write(',');
-      final band = eqBands[i];
-      final gain = _eqEnabled ? _eqGains[i] : 0.0;
-      buf.write(
-        'equalizer@eq$i=f=${band.freq}:width_type=o:w=${band.width}:g=${gain.toStringAsFixed(1)}',
+    final filters = <String>[];
+
+    if (eqContributes) {
+      for (int i = 0; i < bandCount; i++) {
+        if (_eqGains[i].abs() < dbEps) continue;
+        final band = eqBands[i];
+        filters.add(
+          'equalizer@eq$i=f=${band.freq}:width_type=o:w=${band.width}:g=${_eqGains[i].toStringAsFixed(1)}',
+        );
+      }
+    }
+
+    if (bassContributes) {
+      filters.add(
+        'equalizer@bass=f=80:width_type=o:w=2.0:g=${_bassBoost.toStringAsFixed(1)}',
       );
     }
-    buf.write(
-      ',equalizer@bass=f=80:width_type=o:w=2.0:g=${_bassBoost.toStringAsFixed(1)}',
-    );
-    buf.write(']');
-    return buf.toString();
+
+    if (filters.isEmpty) return '';
+    return 'lavfi=[${filters.join(',')}]';
   }
 
   /// Resets all effects to default
