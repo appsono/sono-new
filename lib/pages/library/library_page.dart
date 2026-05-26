@@ -18,6 +18,8 @@ class _CardData {
   const _CardData(this.title, this.icon, this.iconColor, this.onTap);
 }
 
+typedef _Row = ({_CardData short, _CardData long, bool shortFirst});
+
 class LibraryPage extends StatefulWidget {
   final SonoDatabase db;
   const LibraryPage({required this.db, super.key});
@@ -29,65 +31,69 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
   Profile? _profile;
 
-  List<(_CardData, _CardData)> _cardRows(AppLocalizations l) {
+  List<_Row> _cardRows(AppLocalizations l) {
     final c = context.sono;
 
     return [
       (
-        _CardData(
-          l.libraryCardGenres,
-          IconsSheet.genreFilled,
-          c.accentAmber,
-          () {},
-        ),
-        _CardData(
+        short: _CardData(
           l.libraryCardPlaylists,
           IconsSheet.playlistFilled,
           c.accentBlue,
           () {},
         ),
-      ),
-      (
-        _CardData(
+        long: _CardData(
           l.libraryCardLikedSongs,
           IconsSheet.heartFilled,
           c.primary,
           () {},
         ),
-        _CardData(
-          l.libraryCardFavoriteAlbums,
-          IconsSheet.favoriteAlbumFilled,
-          c.accentPurple,
-          () {},
-        ),
+        shortFirst: true,
       ),
       (
-        _CardData(
-          l.libraryCardFavoriteArtists,
-          IconsSheet.favoriteArtistFilled,
-          c.accentRed,
-          () {},
-        ),
-        _CardData(
-          l.libraryCardArtists,
-          IconsSheet.artistFilled,
-          c.accentTeal,
-          () {},
-        ),
-      ),
-      (
-        _CardData(
-          l.libraryCardSongs,
-          IconsSheet.songFilled,
-          c.accentGreen,
-          () {},
-        ),
-        _CardData(
+        short: _CardData(
           l.libraryCardAlbums,
           IconsSheet.albumFilled,
           c.accentOrange,
           () {},
         ),
+        long: _CardData(
+          l.libraryCardFavoriteAlbums,
+          IconsSheet.favoriteAlbumFilled,
+          c.accentPurple,
+          () {},
+        ),
+        shortFirst: false,
+      ),
+      (
+        short: _CardData(
+          l.libraryCardArtists,
+          IconsSheet.artistFilled,
+          c.accentTeal,
+          () {},
+        ),
+        long: _CardData(
+          l.libraryCardFavoriteArtists,
+          IconsSheet.favoriteArtistFilled,
+          c.accentRed,
+          () {},
+        ),
+        shortFirst: true,
+      ),
+      (
+        short: _CardData(
+          l.libraryCardGenres,
+          IconsSheet.genreFilled,
+          c.accentAmber,
+          () {},
+        ),
+        long: _CardData(
+          l.libraryCardSongs,
+          IconsSheet.songFilled,
+          c.accentGreen,
+          () {},
+        ),
+        shortFirst: false,
       ),
     ];
   }
@@ -153,28 +159,31 @@ class _LibraryPageState extends State<LibraryPage> {
                 separatorBuilder: (_, _) => const SizedBox(height: 12),
                 itemCount: rows.length,
                 itemBuilder: (context, index) {
-                  final (short, long) = rows[index];
+                  final row = rows[index];
+
+                  final shortCard = SizedBox(
+                    width: SonoLibraryCards.shortWidth,
+                    child: SonoLibraryCards(
+                      title: row.short.title,
+                      icon: row.short.icon,
+                      iconColor: row.short.iconColor,
+                      onTap: row.short.onTap,
+                    ),
+                  );
+
+                  final longCard = Expanded(
+                    child: SonoLibraryCards(
+                      title: row.long.title,
+                      icon: row.long.icon,
+                      iconColor: row.long.iconColor,
+                      onTap: row.long.onTap,
+                    ),
+                  );
+
                   return Row(
-                    children: [
-                      SizedBox(
-                        width: SonoLibraryCards.shortWidth,
-                        child: SonoLibraryCards(
-                          title: short.title,
-                          icon: short.icon,
-                          iconColor: short.iconColor,
-                          onTap: short.onTap,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: SonoLibraryCards(
-                          title: long.title,
-                          icon: long.icon,
-                          iconColor: long.iconColor,
-                          onTap: long.onTap,
-                        ),
-                      ),
-                    ],
+                    children: row.shortFirst
+                        ? [shortCard, const SizedBox(width: 12), longCard]
+                        : [longCard, const SizedBox(width: 12), shortCard],
                   );
                 },
               ),
