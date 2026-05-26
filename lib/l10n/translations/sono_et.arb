@@ -222,5 +222,37 @@
     "songSheetUnknownValue": "teadmata",
     "@songSheetUnknownValue": {
         "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+    },
+    "libraryCardGenres": "Žanrid",
+    "@libraryCardGenres": {
+        "description": "Library page card label. Opens a list of genres."
+    },
+    "libraryCardPlaylists": "Esitusloendid",
+    "@libraryCardPlaylists": {
+        "description": "Library page card label. Opens user playlists."
+    },
+    "libraryCardLikedSongs": "Meeldivaks märgitud lood",
+    "@libraryCardLikedSongs": {
+        "description": "Library page card label. Opens the list of songs the user has liked."
+    },
+    "libraryCardFavoriteAlbums": "Lemmikalbumid",
+    "@libraryCardFavoriteAlbums": {
+        "description": "Library page card label. Opens the list of albums the user has favorited."
+    },
+    "libraryCardFavoriteArtists": "Lemmikesitajad",
+    "@libraryCardFavoriteArtists": {
+        "description": "Library page card label. Opens the list of artists the user has favorited."
+    },
+    "libraryCardArtists": "Esitajad",
+    "@libraryCardArtists": {
+        "description": "Library page card label. Opens the full list of artists in the library."
+    },
+    "libraryCardSongs": "Lood",
+    "@libraryCardSongs": {
+        "description": "Library page card label. Opens the full list of songs in the library."
+    },
+    "libraryCardAlbums": "Albumid",
+    "@libraryCardAlbums": {
+        "description": "Library page card label. Opens the full list of albums in the library."
     }
 }
