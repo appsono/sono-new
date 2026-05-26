@@ -274,12 +274,12 @@ class SongSheet extends StatefulWidget {
       onTap: onAddToPlaylist ?? () {},
     ),
     SongSheetAction(
-      icon: IconsSheet.libraryOutlined, // TODO: Add album icon
+      icon: IconsSheet.albumOutlined,
       label: l.commonGoToAlbum,
       onTap: onGoToAlbum ?? () {},
     ),
     SongSheetAction(
-      icon: IconsSheet.profileOutlined, //TODO: Add artist icon
+      icon: IconsSheet.artistOutlined,
       label: l.commonGoToArtist,
       onTap: onGoToArtist ?? () {},
     ),
@@ -320,13 +320,13 @@ class SongSheet extends StatefulWidget {
     SongSheetAction(
       icon: liked
           ? IconsSheet.heartFilled
-          : IconsSheet.heartOutlined, // TODO: Add Favorite album icon
+          : IconsSheet.favoriteAlbumOutlined, // TODO: Add Favorite album icon
       label: liked ? l.commonFavorited : l.commonFavorite,
       dismissOnTap: false,
       onTap: onLike ?? () {},
     ),
     SongSheetAction(
-      icon: IconsSheet.profileOutlined, // TODO: add artist icon
+      icon: IconsSheet.artistOutlined,
       label: l.commonGoToArtist,
       onTap: onGoToArtist ?? () {},
     ),
@@ -351,8 +351,8 @@ class SongSheet extends StatefulWidget {
     ),
     SongSheetAction(
       icon: liked
-          ? IconsSheet.heartFilled
-          : IconsSheet.heartOutlined, // TODO: Add Favorite artist icon
+          ? IconsSheet.favoriteAlbumFilled
+          : IconsSheet.favoriteArtistOutlined,
       label: liked ? l.commonFavorited : l.commonFavorite,
       dismissOnTap: false,
       onTap: onLike ?? () {},
