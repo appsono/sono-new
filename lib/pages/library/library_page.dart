@@ -1,3 +1,5 @@
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:flutter/material.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/library/library_cards.dart';
@@ -27,64 +29,68 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
   Profile? _profile;
 
-  List<(_CardData, _CardData)> get _cardRows => [
-    (
-      _CardData(
-        'Genres',
-        IconsSheet.libraryFilled,
-        context.sono.textPlaceholder,
-        () {},
+  List<(_CardData, _CardData)> _cardRows(AppLocalizations l) {
+    final c = context.sono;
+
+    return [
+      (
+        _CardData(
+          l.libraryCardGenres,
+          IconsSheet.genreFilled,
+          c.accentAmber,
+          () {},
+        ),
+        _CardData(
+          l.libraryCardPlaylists,
+          IconsSheet.playlistFilled,
+          c.accentBlue,
+          () {},
+        ),
       ),
-      _CardData(
-        'Playlists',
-        IconsSheet.addToPlaylistFilled,
-        context.sono.textPlaceholder,
-        () {},
+      (
+        _CardData(
+          l.libraryCardLikedSongs,
+          IconsSheet.heartFilled,
+          c.primary,
+          () {},
+        ),
+        _CardData(
+          l.libraryCardFavoriteAlbums,
+          IconsSheet.favoriteAlbumFilled,
+          c.accentPurple,
+          () {},
+        ),
       ),
-    ),
-    (
-      _CardData(
-        'Liked Songs',
-        IconsSheet.heartFilled,
-        context.sono.textPlaceholder,
-        () {},
+      (
+        _CardData(
+          l.libraryCardFavoriteArtists,
+          IconsSheet.favoriteArtistFilled,
+          c.accentRed,
+          () {},
+        ),
+        _CardData(
+          l.libraryCardArtists,
+          IconsSheet.artistFilled,
+          c.accentTeal,
+          () {},
+        ),
       ),
-      _CardData(
-        'Favorite Albums',
-        IconsSheet.heartFilled,
-        context.sono.textPlaceholder,
-        () {},
+      (
+        _CardData(
+          l.libraryCardSongs,
+          IconsSheet.songFilled,
+          c.accentGreen,
+          () {},
+        ),
+        _CardData(
+          l.libraryCardAlbums,
+          IconsSheet.albumFilled,
+          c.accentOrange,
+          () {},
+        ),
       ),
-    ),
-    (
-      _CardData(
-        'Favorite Artists',
-        IconsSheet.heartFilled,
-        context.sono.textPlaceholder,
-        () {},
-      ),
-      _CardData(
-        'Artists',
-        IconsSheet.profileFilled,
-        context.sono.textPlaceholder,
-        () {},
-      ),
-    ),
-    (
-      _CardData(
-        'Songs',
-        IconsSheet.libraryFilled,
-        context.sono.textPlaceholder,
-        () {},
-      ),
-      _CardData(
-        'Albums',
-        IconsSheet.libraryFilled,
-        context.sono.textPlaceholder,
-        () {},
-      ),
-    ),
-  ];
+    ];
+  }
 
   @override
   void initState() {
@@ -105,6 +111,9 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final rows = _cardRows(l);
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -142,25 +151,28 @@ class _LibraryPageState extends State<LibraryPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               sliver: SliverList.separated(
                 separatorBuilder: (_, _) => const SizedBox(height: 12),
-                itemCount: _cardRows.length,
+                itemCount: rows.length,
                 itemBuilder: (context, index) {
-                  final (short, long) = _cardRows[index];
+                  final (short, long) = rows[index];
                   return Row(
                     children: [
-                      SonoLibraryCards(
-                        title: short.title,
-                        icon: short.icon,
-                        iconColor: short.iconColor,
-                        type: CardType.short,
-                        onTap: short.onTap,
+                      SizedBox(
+                        width: SonoLibraryCards.shortWidth,
+                        child: SonoLibraryCards(
+                          title: short.title,
+                          icon: short.icon,
+                          iconColor: short.iconColor,
+                          onTap: short.onTap,
+                        ),
                       ),
                       const SizedBox(width: 12),
-                      SonoLibraryCards(
-                        title: long.title,
-                        icon: long.icon,
-                        iconColor: long.iconColor,
-                        type: CardType.long,
-                        onTap: long.onTap,
+                      Expanded(
+                        child: SonoLibraryCards(
+                          title: long.title,
+                          icon: long.icon,
+                          iconColor: long.iconColor,
+                          onTap: long.onTap,
+                        ),
                       ),
                     ],
                   );
