@@ -254,5 +254,9 @@
     "libraryCardAlbums": "Albumid",
     "@libraryCardAlbums": {
         "description": "Library page card label. Opens the full list of albums in the library."
+    },
+    "libraryPageTitle": "Muusikakogu",
+    "@libraryPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
     }
 }
