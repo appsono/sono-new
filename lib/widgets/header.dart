@@ -43,7 +43,7 @@ class SonoHeader extends StatelessWidget {
 
   const SonoHeader({
     required this.actions,
-    this.isHomePage = true,
+    this.isHomePage = false,
     this.pageTitle,
     this.avatar,
     this.username,
