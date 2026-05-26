@@ -57,6 +57,7 @@ class _IconsTestPageState extends State<IconsTestPage> {
       IconsSheet.favoriteArtistOutlined,
       IconsSheet.favoriteArtistFilled,
     ),
+    _IconPair('genre', IconsSheet.genreOutlined, IconsSheet.genreFilled),
     _IconPair('heart', IconsSheet.heartOutlined, IconsSheet.heartFilled),
     _IconPair('home', IconsSheet.homeOutlined, IconsSheet.homeFilled),
     _IconPair(
@@ -77,6 +78,11 @@ class _IconsTestPageState extends State<IconsTestPage> {
       'playbackSpeed',
       IconsSheet.playbackSpeedOutlined,
       IconsSheet.playbackSpeedFilled,
+    ),
+    _IconPair(
+      'playlist',
+      IconsSheet.playlistOutlined,
+      IconsSheet.playlistFilled,
     ),
     _IconPair('profile', IconsSheet.profileOutlined, IconsSheet.profileFilled),
     _IconPair('queue', IconsSheet.queueOutlined, IconsSheet.queueFilled),

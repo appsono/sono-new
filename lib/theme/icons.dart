@@ -71,12 +71,16 @@ abstract final class IconsSheet {
   static const String favoriteAlbumOutlined =
       'assets/app/icons/outlined/favorite_album_outlined.svg';
   static const String favoriteAlbumFilled =
-      'assets/app/icons/outlined/favorite_album_outlined.svg'; //TODO: make favorite album filled
+      'assets/app/icons/filled/favorite_album_filled.svg';
 
   static const String favoriteArtistOutlined =
       'assets/app/icons/outlined/favorite_artist_outlined.svg';
   static const String favoriteArtistFilled =
       'assets/app/icons/filled/favorite_artist_filled.svg';
+
+  static const String genreOutlined =
+      'assets/app/icons/outlined/genre_outlined.svg';
+  static const String genreFilled = 'assets/app/icons/filled/genre_filled.svg';
 
   static const String heartOutlined =
       'assets/app/icons/outlined/heart_outlined.svg';
@@ -118,6 +122,11 @@ abstract final class IconsSheet {
       'assets/app/icons/outlined/playback_speed_outlined.svg';
   static const String playbackSpeedFilled =
       'assets/app/icons/filled/playback_speed_filled.svg';
+
+  static const String playlistOutlined =
+      'assets/app/icons/outlined/playlist_outlined.svg';
+  static const String playlistFilled =
+      'assets/app/icons/filled/playlist_filled.svg';
 
   static const String profileOutlined =
       'assets/app/icons/outlined/profile_outlined.svg';
