@@ -155,6 +155,40 @@
     "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
   },
 
+
+  "libraryCardGenres": "Genres",
+  "@libraryCardGenres": {
+    "description": "Library page card label. Opens a list of genres."
+  },
+  "libraryCardPlaylists": "Playlists",
+  "@libraryCardPlaylists": {
+    "description": "Library page card label. Opens user playlists."
+  },
+  "libraryCardLikedSongs": "Liked Songs",
+  "@libraryCardLikedSongs": {
+    "description": "Library page card label. Opens the list of songs the user has liked."
+  },
+  "libraryCardFavoriteAlbums": "Favorite Albums",
+  "@libraryCardFavoriteAlbums": {
+    "description": "Library page card label. Opens the list of albums the user has favorited."
+  },
+  "libraryCardFavoriteArtists": "Favorite Artists",
+  "@libraryCardFavoriteArtists": {
+    "description": "Library page card label. Opens the list of artists the user has favorited."
+  },
+  "libraryCardArtists": "Artists",
+  "@libraryCardArtists": {
+    "description": "Library page card label. Opens the full list of artists in the library."
+  },
+  "libraryCardSongs": "Songs",
+  "@libraryCardSongs": {
+    "description": "Library page card label. Opens the full list of songs in the library."
+  },
+  "libraryCardAlbums": "Albums",
+  "@libraryCardAlbums": {
+    "description": "Library page card label. Opens the full list of albums in the library."
+  },
+
   "playerNowPlaying": "Now Playing",
   "@playerNowPlaying": {
     "description": "Used in the player top bar and on the queue view's collapse button."
