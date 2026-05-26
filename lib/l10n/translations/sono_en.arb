@@ -156,6 +156,10 @@
   },
 
 
+  "libraryPageTitle": "Library",
+  "@libraryPageTitle": {
+    "description": "Shown in the header next to the profile picture at the top of the page."
+  },
   "libraryCardGenres": "Genres",
   "@libraryCardGenres": {
     "description": "Library page card label. Opens a list of genres."
