@@ -350,7 +350,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
           onTap: () {},
         ),
         SongSheetAction(
-          icon: IconsSheet.artistOutlined,
+          icon: IconsSheet.albumOutlined,
           label: l.commonGoToAlbum,
           onTap: () {},
         ),
