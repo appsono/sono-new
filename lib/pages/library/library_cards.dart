@@ -48,8 +48,8 @@ class SonoLibraryCards extends StatelessWidget {
             const Spacer(),
             Text(
               title,
-              style: theme.textTheme.titleLarge,
-              maxLines: 1,
+              style: theme.textTheme.titleLarge?.copyWith(height: 1.1),
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             if (subtitle != null) ...[
