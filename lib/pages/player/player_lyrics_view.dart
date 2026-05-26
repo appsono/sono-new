@@ -120,15 +120,26 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       if (!mounted) return;
       _preloadUpcoming(queue);
     });
+
+    //jump to current line at the moment the slide-in fires
+    widget.slideAnimation?.addStatusListener(_onSlideStatus);
   }
 
   @override
   void dispose() {
+    widget.slideAnimation?.removeStatusListener(_onSlideStatus);
     _songSub?.cancel();
     _positionSub?.cancel();
     _queueSub?.cancel();
     _lyricsScroll.dispose();
     super.dispose();
+  }
+
+  void _onSlideStatus(AnimationStatus status) {
+    //fired when user opens view
+    //jump so they land on active line
+    if (status != AnimationStatus.forward) return;
+    _scrollToCurrentLine(animated: false);
   }
 
   // ==== swipe down dismiss ====
@@ -554,7 +565,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     return boxBottom > viewTop && boxTop < viewBottom;
   }
 
-  void _scrollToCurrentLine() {
+  void _scrollToCurrentLine({bool animated = true}) {
     if (!_lyricsScroll.hasClients) return;
     if (_currentLineIndex < 0) return;
     if (_lineKeys.isEmpty) return;
@@ -565,7 +576,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       Scrollable.ensureVisible(
         targetContext,
         alignment: 0.4,
-        duration: const Duration(milliseconds: 400),
+        duration: animated ? const Duration(milliseconds: 400) : Duration.zero,
         curve: Curves.easeOutCubic,
       );
     } else {
@@ -579,11 +590,15 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
         0.0,
         _lyricsScroll.position.maxScrollExtent,
       );
-      _lyricsScroll.animateTo(
-        clamped,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeOutCubic,
-      );
+      if (animated) {
+        _lyricsScroll.animateTo(
+          clamped,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOutCubic,
+        );
+      } else {
+        _lyricsScroll.jumpTo(clamped);
+      }
     }
   }
 
