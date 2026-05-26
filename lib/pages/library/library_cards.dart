@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/icons.dart';
-
-enum CardType { short, long }
+import 'package:sono/widgets/bouncy_tap.dart';
 
 class SonoLibraryCards extends StatelessWidget {
   final String title;
+  final String? subtitle;
   final String icon;
   final Color iconColor;
   final VoidCallback onTap;
-  final CardType type;
+
+  /// fixed card height
+  /// width is owned by parent (SizedBox for short, Expanded for long)
+  static const double height = 140;
+  static const double shortWidth = 140;
 
   const SonoLibraryCards({
     super.key,
@@ -19,23 +23,22 @@ class SonoLibraryCards extends StatelessWidget {
     required this.icon,
     required this.iconColor,
     required this.onTap,
-    required this.type,
+    this.subtitle,
   });
 
   @override
   Widget build(BuildContext context) {
-    final size = _getSize(context);
-    final colors = context.sono;
+    final c = context.sono;
+    final theme = Theme.of(context);
 
-    return GestureDetector(
+    return BouncyTap(
       onTap: onTap,
       child: Container(
-        width: size.width,
-        height: size.height,
+        height: height,
         decoration: BoxDecoration(
-          color: colors.bgContainer,
+          color: c.bgContainer,
           borderRadius: BorderRadius.circular(SonoSizes.borderRadius),
-          border: Border.all(color: colors.borderLight10),
+          border: Border.all(color: c.borderLight10),
         ),
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -45,26 +48,27 @@ class SonoLibraryCards extends StatelessWidget {
             const Spacer(),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: theme.textTheme.titleLarge,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
+            if (subtitle != null) ...[
+              const SizedBox(height: 2),
+              Text(
+                subtitle!,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: c.textSecondary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ],
         ),
       ),
     );
-  }
-
-  Size _getSize(BuildContext context) {
-    const double height = 140;
-    const double shortWidth = 140;
-    const double gap = 12;
-    final double screenWidth = MediaQuery.sizeOf(context).width;
-    final double longWidth = screenWidth - shortWidth - gap - 32;
-
-    return switch (type) {
-      CardType.short => const Size(shortWidth, height),
-      CardType.long => Size(longWidth, height),
-    };
   }
 }
