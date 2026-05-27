@@ -29,8 +29,6 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  Profile? _profile;
-
   List<_Row> _cardRows(AppLocalizations l) {
     final c = context.sono;
 
@@ -101,18 +99,11 @@ class _LibraryPageState extends State<LibraryPage> {
   @override
   void initState() {
     super.initState();
-    _load();
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> _load() async {
-    final profile = await widget.db.getProfile();
-    if (!mounted) return;
-    setState(() => _profile = profile);
   }
 
   @override
@@ -129,25 +120,34 @@ class _LibraryPageState extends State<LibraryPage> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                child: SonoHeader(
-                  pageTitle: l.libraryPageTitle,
-                  username: _profile?.username.isEmpty == true
-                      ? null
-                      : _profile?.username,
-                  avatar: _profile?.avatar,
-                  onProfileTap: () {},
-                  actions: [
-                    SonoHeaderAction(
-                      icon: IconsSheet.bellOutlined,
-                      tooltip: 'News & Updates',
-                      onTap: () {},
-                    ),
-                    SonoHeaderAction(
-                      icon: IconsSheet.settingsOutlined,
-                      tooltip: 'Settings',
-                      onTap: () {},
-                    ),
-                  ],
+                child: StreamBuilder<Profile?>(
+                  stream: widget.db.watchProfile(),
+                  builder: (context, snap) {
+                    final profile = snap.data;
+                    return SonoHeader(
+                      pageTitle: l.libraryPageTitle,
+                      avatar: profile?.avatar,
+                      onProfileTap: () {
+                        //will open sidebar later
+                      },
+                      actions: [
+                        SonoHeaderAction(
+                          icon: IconsSheet.bellOutlined,
+                          tooltip: l.homeHeaderNewsAndUpdates,
+                          onTap: () {
+                            //navigate to "changelog" page
+                          },
+                        ),
+                        SonoHeaderAction(
+                          icon: IconsSheet.settingsOutlined,
+                          tooltip: l.homeHeaderSettings,
+                          onTap: () {
+                            //navigate to settings page
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
