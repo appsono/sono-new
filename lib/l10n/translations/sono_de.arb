@@ -258,5 +258,17 @@
     "libraryCardAlbums": "Alben",
     "@libraryCardAlbums": {
         "description": "Library page card label. Opens the full list of albums in the library."
+    },
+    "libraryEmptySongs": "Noch keine Songs in deiner Bibliothek. :/",
+    "@libraryEmptySongs": {
+        "description": "Empty state on the Songs list page when no songs have been scanned."
+    },
+    "libraryEmptyAlbums": "Noch keine Alben in deiner Bibliothek. :/",
+    "@libraryEmptyAlbums": {
+        "description": "Empty state on the Albums list page when no albums have been scanned."
+    },
+    "libraryEmptyArtists": "Noch keine Künstler in deiner Bibliothek. :/",
+    "@libraryEmptyArtists": {
+        "description": "Empty state on the Artists list page when no artists have been scanned."
     }
 }
