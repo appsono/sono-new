@@ -69,8 +69,10 @@ class SonoHeader extends StatelessWidget {
               ? _TimeBasedGreeting(username: username)
               : _PageTitle(title: pageTitle ?? ''),
         ),
-        const SizedBox(width: 12),
-        _ActionPill(actions: actions),
+        if (actions.isNotEmpty) ...[
+          const SizedBox(width: 12),
+          _ActionPill(actions: actions),
+        ],
       ],
     );
   }
@@ -266,19 +268,14 @@ class _BackButton extends StatelessWidget {
     final c = context.sono;
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         width: _size,
         height: _size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: c.bgContainer,
-          border: Border.all(color: c.borderLight10, width: 2),
-        ),
         child: Center(
           child: IconsSheet.svg(
             IconsSheet.backOutlined,
             size: SonoSizes.iconMd,
-            color: c.textSecondary,
+            color: c.textPrimary,
           ),
         ),
       ),
@@ -294,6 +291,7 @@ class _ActionPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (actions.isEmpty) return const SizedBox.shrink();
     final colors = context.sono;
 
     return Container(
