@@ -8,6 +8,10 @@ import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/widgets/header.dart';
 
+import 'package:sono/pages/library/subpages/albums_page.dart';
+import 'package:sono/pages/library/subpages/artists_page.dart';
+import 'package:sono/pages/library/subpages/songs_page.dart';
+
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 
 class _CardData {
@@ -29,6 +33,10 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
+  void _push(Widget page) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+  }
+
   List<_Row> _cardRows(AppLocalizations l) {
     final c = context.sono;
 
@@ -53,7 +61,7 @@ class _LibraryPageState extends State<LibraryPage> {
           l.libraryCardAlbums,
           IconsSheet.albumFilled,
           c.accentOrange,
-          () {},
+          () => _push(AlbumsPage(db: widget.db)),
         ),
         long: _CardData(
           l.libraryCardFavoriteAlbums,
@@ -68,7 +76,7 @@ class _LibraryPageState extends State<LibraryPage> {
           l.libraryCardArtists,
           IconsSheet.artistFilled,
           c.accentTeal,
-          () {},
+          () => _push(ArtistsPage(db: widget.db)),
         ),
         long: _CardData(
           l.libraryCardFavoriteArtists,
@@ -89,7 +97,7 @@ class _LibraryPageState extends State<LibraryPage> {
           l.libraryCardSongs,
           IconsSheet.songFilled,
           c.accentGreen,
-          () {},
+          () => _push(SongsPage(db: widget.db)),
         ),
         shortFirst: false,
       ),
