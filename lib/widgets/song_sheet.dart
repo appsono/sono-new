@@ -318,9 +318,7 @@ class SongSheet extends StatefulWidget {
       onTap: onAddToQueue ?? () {},
     ),
     SongSheetAction(
-      icon: liked
-          ? IconsSheet.heartFilled
-          : IconsSheet.favoriteAlbumOutlined, // TODO: Add Favorite album icon
+      icon: liked ? IconsSheet.heartFilled : IconsSheet.favoriteAlbumOutlined,
       label: liked ? l.commonFavorited : l.commonFavorite,
       dismissOnTap: false,
       onTap: onLike ?? () {},
