@@ -35,19 +35,23 @@ class SonoHeaderAction {
 /// action pill renders [actions] as icon buttons in a rounded pill
 class SonoHeader extends StatelessWidget {
   final bool isHomePage;
+  final bool backButton;
   final String? pageTitle;
   final Uint8List? avatar;
   final String? username;
   final List<SonoHeaderAction> actions;
   final VoidCallback? onProfileTap;
+  final VoidCallback? onBackTap;
 
   const SonoHeader({
     required this.actions,
     this.isHomePage = false,
+    this.backButton = false,
     this.pageTitle,
     this.avatar,
     this.username,
     this.onProfileTap,
+    this.onBackTap,
     super.key,
   });
 
@@ -56,7 +60,9 @@ class SonoHeader extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _ProfileCircle(avatar: avatar, onTap: onProfileTap),
+        backButton
+            ? _BackButton(onTap: onBackTap)
+            : _ProfileCircle(avatar: avatar, onTap: onProfileTap),
         const SizedBox(width: 12),
         Expanded(
           child: isHomePage
@@ -242,6 +248,39 @@ class _PageTitle extends StatelessWidget {
         fontSize: 22,
         fontWeight: FontWeight.w700,
         color: colors.textPrimary,
+      ),
+    );
+  }
+}
+
+// ==== back button ====
+
+class _BackButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  static const double _size = _headerElementHeight;
+
+  const _BackButton({this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: _size,
+        height: _size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: c.bgContainer,
+          border: Border.all(color: c.borderLight10, width: 2),
+        ),
+        child: Center(
+          child: IconsSheet.svg(
+            IconsSheet.backOutlined,
+            size: SonoSizes.iconMd,
+            color: c.textSecondary,
+          ),
+        ),
       ),
     );
   }
