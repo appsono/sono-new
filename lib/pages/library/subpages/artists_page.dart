@@ -1,0 +1,114 @@
+import 'package:flutter/material.dart';
+
+import 'package:sono/l10n/localizations.dart';
+
+import 'package:sono/db/database.dart';
+import 'package:sono/theme/tokens.dart';
+import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/widgets/header.dart';
+import 'package:sono/widgets/list_row.dart';
+
+const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
+
+class ArtistsPage extends StatefulWidget {
+  final SonoDatabase db;
+  const ArtistsPage({required this.db, super.key});
+
+  @override
+  State<ArtistsPage> createState() => _ArtistsPageState();
+}
+
+class _ArtistsPageState extends State<ArtistsPage> {
+  List<Artist>? _artists;
+  Map<int, String>? _coverPaths;
+  Map<int, int>? _songCounts;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final artists = await widget.db.getAllArtists();
+
+    final coverPaths = <int, String>{};
+    final songCounts = <int, int>{};
+    for (final a in artists) {
+      final songs = await widget.db.getSongsByArtist(a.id);
+      songCounts[a.id] = songs.length;
+      if (songs.isNotEmpty) coverPaths[a.id] = songs.first.path;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _artists = artists;
+      _coverPaths = coverPaths;
+      _songCounts = songCounts;
+    });
+  }
+
+  void _openArtist(int artistId) {
+    //TODO: artist detail page not built yet
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final artists = _artists;
+
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [
+            // ==== header ====
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+                child: SonoHeader(
+                  backButton: true,
+                  pageTitle: l.libraryCardArtists,
+                  onBackTap: () => Navigator.of(context).pop(),
+                  actions: const [],
+                ),
+              ),
+            ),
+
+            // ==== body ====
+            if (artists == null)
+              const SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (artists.isEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: Text(l.libraryEmptyArtists)),
+              )
+            else
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                sliver: SliverList.builder(
+                  itemCount: artists.length,
+                  itemBuilder: (context, i) {
+                    final a = artists[i];
+                    return SonoListRow(
+                      coverPath: _coverPaths?[a.id] ?? '',
+                      coverShape: CoverShape.circle,
+                      title: a.name,
+                      subtitle: l.commonSongsCount(_songCounts?[a.id] ?? 0),
+                      onTap: () => _openArtist(a.id),
+                    );
+                  },
+                ),
+              ),
+
+            // ==== bottom clearance ====
+            SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+          ],
+        ),
+      ),
+    );
+  }
+}
