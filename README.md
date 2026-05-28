@@ -32,6 +32,7 @@ See [TODO](TODO.md) for current progress and planned work.
 ---
 
 ## Translations
+<a href="https://hosted.weblate.org/engage/sono/"><img src="https://hosted.weblate.org/widget/sono/sono-app/svg-badge.svg" alt="Translation status"></a>
 
 Sono is translated on [Weblate](https://hosted.weblate.org/projects/sono/). Everyone can contribute
 to translations.
