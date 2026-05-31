@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:sono_query/sono_query.dart' as sq;
@@ -57,21 +58,29 @@ class DiscordRpcService {
     final db = _db;
     if (db == null) return;
 
-    final legacyToken = await db.getSetting('discord.token');
-    if (legacyToken != null) {
-      await _secure.write(key: 'discord.token', value: legacyToken);
-      await db.removeSetting('discord.token');
-    }
-    final legacySession = await db.getSetting('discord.session_token');
-    if (legacySession != null) {
-      await _secure.write(key: 'discord.session_token', value: legacySession);
-      await db.removeSetting('discord.session_token');
-    }
+    try {
+      final legacyToken = await db.getSetting('discord.token');
+      if (legacyToken != null) {
+        await _secure.write(key: 'discord.token', value: legacyToken);
+        await db.removeSetting('discord.token');
+      }
+      final legacySession = await db.getSetting('discord.session_token');
+      if (legacySession != null) {
+        await _secure.write(key: 'discord.session_token', value: legacySession);
+        await db.removeSetting('discord.session_token');
+      }
 
-    _userToken = legacyToken ?? await _secure.read(key: 'discord.token');
-    _enabled = (await db.getSetting('discord.enabled')) == 'true';
-    _sessionToken =
-        legacySession ?? await _secure.read(key: 'discord.session_token');
+      _userToken = legacyToken ?? await _secure.read(key: 'discord.token');
+      _enabled = (await db.getSetting('discord.enabled')) == 'true';
+      _sessionToken =
+          legacySession ?? await _secure.read(key: 'discord.session_token');
+    } on PlatformException catch (e) {
+      debugPrint('Discord RPC: secure storage unavailable: $e');
+      _userToken = null;
+      _enabled = false;
+      _sessionToken = null;
+      return;
+    }
 
     if (_userToken != null && _enabled) {
       _start();

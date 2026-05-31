@@ -585,45 +585,47 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: 12),
 
         // ==== discord ====
-        const _SectionHeader(label: 'Discord RPC'),
-        const SizedBox(height: 12),
-        if (_discordLoading)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Center(child: CircularProgressIndicator()),
-          )
-        else if (_discordConnected) ...[
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(_discordUsername ?? 'Connected'),
-            trailing: TextButton(
-              onPressed: _discordLogout,
-              child: const Text('Disconnect'),
+        if (Platform.isAndroid || Platform.isIOS) ...[
+          const _SectionHeader(label: 'Discord RPC'),
+          const SizedBox(height: 12),
+          if (_discordLoading)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (_discordConnected) ...[
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(_discordUsername ?? 'Connected'),
+              trailing: TextButton(
+                onPressed: _discordLogout,
+                child: const Text('Disconnect'),
+              ),
             ),
-          ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Enabled'),
-            value: _discordEnabled,
-            onChanged: (val) async {
-              await DiscordRpcService.instance.setEnabled(val);
-              if (mounted) setState(() => _discordEnabled = val);
-            },
-          ),
-        ] else
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Connect Discord'),
-            subtitle: const Text('to show current song on discord.'),
-            trailing: FilledButton(
-              onPressed: _discordLogin,
-              child: const Text('Sign in'),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Enabled'),
+              value: _discordEnabled,
+              onChanged: (val) async {
+                await DiscordRpcService.instance.setEnabled(val);
+                if (mounted) setState(() => _discordEnabled = val);
+              },
             ),
-          ),
+          ] else
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Connect Discord'),
+              subtitle: const Text('to show current song on discord.'),
+              trailing: FilledButton(
+                onPressed: _discordLogin,
+                child: const Text('Sign in'),
+              ),
+            ),
 
-        const SizedBox(height: 32),
-        const Divider(),
-        const SizedBox(height: 12),
+          const SizedBox(height: 32),
+          const Divider(),
+          const SizedBox(height: 12),
+        ],
 
         // ==== updates checker ====
         const _SectionHeader(label: 'Updates'),
