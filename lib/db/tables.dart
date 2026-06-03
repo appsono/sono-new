@@ -8,6 +8,7 @@ class Artists extends Table {
 class Albums extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
+  TextColumn get displayTitle => text().nullable()();
   IntColumn get artistId => integer().references(Artists, #id)();
   BlobColumn get cover => blob().nullable()();
 

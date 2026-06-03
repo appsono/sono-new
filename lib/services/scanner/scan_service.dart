@@ -7,6 +7,37 @@ import 'package:sono/helper/artist_utils.dart';
 
 const int _chunkSize = 200;
 
+/// Controls how songs are grouped into albums during scan
+/// tag groups by album metadata tag
+/// folder groups every songs in same folder into one album
+enum AlbumGrouping { tag, folder }
+
+/// Parent folder path of a file or empty if none
+/// grouping identity in folder mode
+/// handles unix and windows separators
+String _folderPath(String filePath) {
+  final norm = filePath.replaceAll('\\', '/');
+  final lastSlash = norm.lastIndexOf('/');
+  return lastSlash <= 0 ? '' : norm.substring(0, lastSlash);
+}
+
+/// Folder basename used only as display fallback when song has no tag
+String _folderName(String filePath) {
+  final folder = _folderPath(filePath);
+  if (folder.isEmpty) return '';
+  final prevSlash = folder.lastIndexOf('/');
+  return prevSlash >= 0 ? folder.substring(prevSlash + 1) : folder;
+}
+
+/// Shown title for folder album: first tagged songs album tag
+/// else folder name
+String? _albumDisplay(sq.Song song) {
+  final tag = song.album;
+  if (tag != null && tag.isNotEmpty) return tag;
+  final name = _folderName(song.path);
+  return name.isNotEmpty ? name : null;
+}
+
 class ScanService {
   final SonoDatabase db;
 
@@ -15,12 +46,14 @@ class ScanService {
   /// Scans for songs on device and sync with the database
   ///
   /// [config] controls filtering and artist parsing.
+  /// [grouping] controls how songs are grouped into albums.
   /// [force] clears all songs before scanning (use after settings change).
   /// [onProgress] is called with live scan progres snapshots.
   /// [onError] is called for each file that fails metadata reading.
   /// The file is skipped and scanning continues.
   Future<void> scan({
     sq.ScanConfig config = sq.ScanConfig.none,
+    AlbumGrouping grouping = AlbumGrouping.tag,
     bool force = false,
     sq.ScanProgressCallback? onProgress,
     sq.ScanErrorCallback? onError,
@@ -32,6 +65,11 @@ class ScanService {
 
     Map<String, int> artistCache = await db.getArtistIdMap();
     Map<(String, int), int> albumCache = await db.getAlbumIdMap();
+    //in folder mode each title is a folder path with exactly one row
+    //so the (title, artistId) cache collapses to folder path -> id cache
+    Map<String, int> folderCache = grouping == AlbumGrouping.folder
+        ? {for (final e in albumCache.entries) e.key.$1: e.value}
+        : <String, int>{};
 
     await for (final song in sq.SonoQuery.getSongsStream(
       config: config,
@@ -47,18 +85,28 @@ class ScanService {
             newSongsChunk,
             artistCache,
             albumCache,
+            folderCache,
+            grouping,
           );
           artistCache = caches.$1;
           albumCache = caches.$2;
+          folderCache = caches.$3;
           newSongsChunk.clear();
         }
       }
     }
 
     if (newSongsChunk.isNotEmpty) {
-      final caches = await _flushChunk(newSongsChunk, artistCache, albumCache);
+      final caches = await _flushChunk(
+        newSongsChunk,
+        artistCache,
+        albumCache,
+        folderCache,
+        grouping,
+      );
       artistCache = caches.$1;
       albumCache = caches.$2;
+      folderCache = caches.$3;
       newSongsChunk.clear();
     }
 
@@ -69,10 +117,13 @@ class ScanService {
     await db.removeOrphanedArtists();
   }
 
-  Future<(Map<String, int>, Map<(String, int), int>)> _flushChunk(
+  Future<(Map<String, int>, Map<(String, int), int>, Map<String, int>)>
+  _flushChunk(
     List<sq.Song> chunk,
     Map<String, int> artistCache,
     Map<(String, int), int> albumCache,
+    Map<String, int> folderCache,
+    AlbumGrouping grouping,
   ) async {
     final artistNames = <String>{};
     for (final song in chunk) {
@@ -95,22 +146,50 @@ class ScanService {
       artistCache = {...artistCache, ...newIds};
     }
 
-    final albumKeys = <(String, int)>{};
-    for (final song in chunk) {
-      if (song.album != null && song.album!.isNotEmpty) {
+    if (grouping == AlbumGrouping.folder) {
+      //one album per folder. first song with a resolvable artist seeds
+      //the row (artist_id must be non-null); every other song in that
+      //folder whatever artist reuses same album
+      final newFolders = <String, (int artistId, String? display)>{};
+      for (final song in chunk) {
+        final folder = _folderPath(song.path);
+        if (folder.isEmpty) continue;
+        if (folderCache.containsKey(folder) || newFolders.containsKey(folder)) {
+          continue;
+        }
         final artistName = getMainArtistFromSong(song) ?? song.artist;
-        if (artistName != null && artistCache.containsKey(artistName)) {
-          albumKeys.add((song.album!, artistCache[artistName]!));
+        final aid = artistName != null ? artistCache[artistName] : null;
+        if (aid == null) continue;
+        newFolders[folder] = (aid, _albumDisplay(song));
+      }
+      if (newFolders.isNotEmpty) {
+        final keys = <(String, int)>{};
+        final displays = <(String, int), String>{};
+        newFolders.forEach((folder, v) {
+          keys.add((folder, v.$1));
+          if (v.$2 != null) displays[(folder, v.$1)] = v.$2!;
+        });
+        final ids = await db.ensureAlbumsExist(keys, displayTitles: displays);
+        ids.forEach((k, id) => folderCache[k.$1] = id);
+      }
+    } else {
+      final albumKeys = <(String, int)>{};
+      for (final song in chunk) {
+        if (song.album != null && song.album!.isNotEmpty) {
+          final artistName = getMainArtistFromSong(song) ?? song.artist;
+          if (artistName != null && artistCache.containsKey(artistName)) {
+            albumKeys.add((song.album!, artistCache[artistName]!));
+          }
         }
       }
-    }
 
-    final newAlbums = albumKeys
-        .where((k) => !albumCache.containsKey(k))
-        .toSet();
-    if (newAlbums.isNotEmpty) {
-      final newIds = await db.ensureAlbumsExist(newAlbums);
-      albumCache = {...albumCache, ...newIds};
+      final newAlbums = albumKeys
+          .where((k) => !albumCache.containsKey(k))
+          .toSet();
+      if (newAlbums.isNotEmpty) {
+        final newIds = await db.ensureAlbumsExist(newAlbums);
+        albumCache = {...albumCache, ...newIds};
+      }
     }
 
     final toInsert = <SongsCompanion>[];
@@ -119,7 +198,10 @@ class ScanService {
       final mainArtistId = mainArtist != null ? artistCache[mainArtist] : null;
 
       int? albumId;
-      if (song.album != null && mainArtistId != null) {
+      if (grouping == AlbumGrouping.folder) {
+        final folder = _folderPath(song.path);
+        if (folder.isNotEmpty) albumId = folderCache[folder];
+      } else if (song.album != null && mainArtistId != null) {
         albumId = albumCache[(song.album!, mainArtistId)];
       }
 
@@ -156,7 +238,7 @@ class ScanService {
       batch.insertAll(db.songs, toInsert);
     });
 
-    return (artistCache, albumCache);
+    return (artistCache, albumCache, folderCache);
   }
 
   static void _defaultOnError(String path, Object error) {

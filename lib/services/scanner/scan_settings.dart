@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:sono/db/database.dart';
 import 'package:sono_query/sono_query.dart';
+import 'package:sono/services/scanner/scan_service.dart';
 
 /// Persists scan config in settings key-value table
 ///
@@ -17,6 +18,7 @@ class ScanSettings {
   ScanSettings(this.db);
 
   // ==== keys ====
+  static const _kAlbumGrouping = 'library.albumGrouping';
   static const _kExcludedPaths = 'scan.excludedPaths';
   static const _kAdditionalPaths = 'scan.additionalPaths';
   static const _kMinDurationMs = 'scan.minDurationMs';
@@ -99,4 +101,17 @@ class ScanSettings {
       return [];
     }
   }
+
+  /// Loads album grouping mode, defaults to tag
+  Future<AlbumGrouping> loadAlbumGrouping() async {
+    final all = await db.getAllSettings();
+    return all[_kAlbumGrouping] == 'folder'
+        ? AlbumGrouping.folder
+        : AlbumGrouping.tag;
+  }
+
+  Future<void> saveAlbumGrouping(AlbumGrouping grouping) => db.setSetting(
+    _kAlbumGrouping,
+    grouping == AlbumGrouping.folder ? 'folder' : 'tag',
+  );
 }

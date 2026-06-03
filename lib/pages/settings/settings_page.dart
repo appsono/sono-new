@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:sono/services/scanner/scan_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:file_picker/file_picker.dart';
@@ -42,6 +43,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   ScanConfig? _config;
+  AlbumGrouping _grouping = AlbumGrouping.tag;
   final _excludedPathCtrl = TextEditingController();
   final _additionalPathCtrl = TextEditingController();
   final _artistCtrl = TextEditingController();
@@ -83,13 +85,25 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _load() async {
     final c = await ScanSettings(widget.db).load();
+    final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
     _minDurationCtrl.text = c.minDuration?.inSeconds.toString() ?? '';
-    if (mounted) setState(() => _config = c);
+    if (mounted) {
+      setState(() {
+        _config = c;
+        _grouping = grouping;
+      });
+    }
   }
 
   Future<void> _save(ScanConfig c) async {
     await ScanSettings(widget.db).save(c);
     if (mounted) setState(() => _config = c);
+    widget.onRescan?.call();
+  }
+
+  Future<void> _saveGrouping(AlbumGrouping g) async {
+    await ScanSettings(widget.db).saveAlbumGrouping(g);
+    if (mounted) setState(() => _grouping = g);
     widget.onRescan?.call();
   }
 
@@ -416,6 +430,16 @@ class _SettingsPageState extends State<SettingsPage> {
         // ==== library / scan ====
         const _SectionHeader(label: 'Library'),
         const SizedBox(height: 12),
+
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('group albums by folder'),
+          subtitle: const Text('use song folder instead of album tag'),
+          value: _grouping == AlbumGrouping.folder,
+          onChanged: (on) =>
+              _saveGrouping(on ? AlbumGrouping.folder : AlbumGrouping.tag),
+        ),
+        const SizedBox(height: 16),
 
         //min dur
         Row(

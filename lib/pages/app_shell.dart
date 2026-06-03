@@ -72,8 +72,10 @@ class _AppShellState extends State<AppShell> {
       if (!status.isGranted) return;
     }
     final config = await ScanSettings(widget.db).load();
+    final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
     await ScanService(widget.db).scan(
       config: config,
+      grouping: grouping,
       force: force,
       onProgress: (progress) {
         if (mounted) setState(() => _scanProgress = progress);

@@ -17,7 +17,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -53,8 +53,11 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 9) {
         await m.createTable(lyricsCache);
       }
+      if (from < 10) {
+        await m.addColumn(albums, albums.displayTitle);
+      }
       //future migrations go here:
-      // if (from < 10) { .. }
+      // if (from < 11) { .. }
     },
   );
 
@@ -123,8 +126,9 @@ class SonoDatabase extends _$SonoDatabase {
   }
 
   Future<Map<(String, int), int>> ensureAlbumsExist(
-    Set<(String, int)> albumKeys,
-  ) async {
+    Set<(String, int)> albumKeys, {
+    Map<(String, int), String>? displayTitles,
+  }) async {
     if (albumKeys.isEmpty) return {};
     await batch((b) {
       b.insertAll(
@@ -134,6 +138,7 @@ class SonoDatabase extends _$SonoDatabase {
               (k) => AlbumsCompanion.insert(
                 title: k.$1,
                 artistId: k.$2,
+                displayTitle: Value(displayTitles?[k]),
                 cover: const Value(null),
               ),
             )
@@ -165,25 +170,23 @@ class SonoDatabase extends _$SonoDatabase {
       (select(albums)..where((a) => a.id.equals(id))).getSingleOrNull();
 
   Future<List<AlbumWithArtistViewData>> getAllAlbumsWithArtists() async {
-    final query = selectOnly(albumWithArtistView)
-      ..addColumns([
-        albumWithArtistView.id,
-        albumWithArtistView.title,
-        albumWithArtistView.artistId,
-        albumWithArtistView.artistName,
-      ]);
-    final rows = await query.get();
-    return rows
-        .map(
-          (row) => AlbumWithArtistViewData(
-            id: row.read(albumWithArtistView.id)!,
-            title: row.read(albumWithArtistView.title)!,
-            artistId: row.read(albumWithArtistView.artistId)!,
-            cover: null, //loaded on demand
-            artistName: row.read(albumWithArtistView.artistName),
-          ),
-        )
-        .toList();
+    final rows = await (select(albums).join([
+      leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+    ])).get();
+    return rows.map((row) {
+      final a = row.readTable(albums);
+      final ar = row.readTableOrNull(artists);
+      final shown = (a.displayTitle != null && a.displayTitle!.isNotEmpty)
+          ? a.displayTitle!
+          : a.title;
+      return AlbumWithArtistViewData(
+        id: a.id,
+        title: shown,
+        artistId: a.artistId,
+        cover: null, //loaded on demand
+        artistName: ar?.name,
+      );
+    }).toList();
   }
 
   /// Fetch as single albums cover on demand

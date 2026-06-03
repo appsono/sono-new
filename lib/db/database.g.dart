@@ -217,6 +217,17 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _displayTitleMeta = const VerificationMeta(
+    'displayTitle',
+  );
+  @override
+  late final GeneratedColumn<String> displayTitle = GeneratedColumn<String>(
+    'display_title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _artistIdMeta = const VerificationMeta(
     'artistId',
   );
@@ -241,7 +252,13 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, title, artistId, cover];
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    displayTitle,
+    artistId,
+    cover,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -264,6 +281,15 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
       );
     } else if (isInserting) {
       context.missing(_titleMeta);
+    }
+    if (data.containsKey('display_title')) {
+      context.handle(
+        _displayTitleMeta,
+        displayTitle.isAcceptableOrUnknown(
+          data['display_title']!,
+          _displayTitleMeta,
+        ),
+      );
     }
     if (data.containsKey('artist_id')) {
       context.handle(
@@ -300,6 +326,10 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
+      displayTitle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}display_title'],
+      ),
       artistId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}artist_id'],
@@ -320,11 +350,13 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
 class Album extends DataClass implements Insertable<Album> {
   final int id;
   final String title;
+  final String? displayTitle;
   final int artistId;
   final Uint8List? cover;
   const Album({
     required this.id,
     required this.title,
+    this.displayTitle,
     required this.artistId,
     this.cover,
   });
@@ -333,6 +365,9 @@ class Album extends DataClass implements Insertable<Album> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
+    if (!nullToAbsent || displayTitle != null) {
+      map['display_title'] = Variable<String>(displayTitle);
+    }
     map['artist_id'] = Variable<int>(artistId);
     if (!nullToAbsent || cover != null) {
       map['cover'] = Variable<Uint8List>(cover);
@@ -344,6 +379,9 @@ class Album extends DataClass implements Insertable<Album> {
     return AlbumsCompanion(
       id: Value(id),
       title: Value(title),
+      displayTitle: displayTitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(displayTitle),
       artistId: Value(artistId),
       cover: cover == null && nullToAbsent
           ? const Value.absent()
@@ -359,6 +397,7 @@ class Album extends DataClass implements Insertable<Album> {
     return Album(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
+      displayTitle: serializer.fromJson<String?>(json['displayTitle']),
       artistId: serializer.fromJson<int>(json['artistId']),
       cover: serializer.fromJson<Uint8List?>(json['cover']),
     );
@@ -369,6 +408,7 @@ class Album extends DataClass implements Insertable<Album> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
+      'displayTitle': serializer.toJson<String?>(displayTitle),
       'artistId': serializer.toJson<int>(artistId),
       'cover': serializer.toJson<Uint8List?>(cover),
     };
@@ -377,11 +417,13 @@ class Album extends DataClass implements Insertable<Album> {
   Album copyWith({
     int? id,
     String? title,
+    Value<String?> displayTitle = const Value.absent(),
     int? artistId,
     Value<Uint8List?> cover = const Value.absent(),
   }) => Album(
     id: id ?? this.id,
     title: title ?? this.title,
+    displayTitle: displayTitle.present ? displayTitle.value : this.displayTitle,
     artistId: artistId ?? this.artistId,
     cover: cover.present ? cover.value : this.cover,
   );
@@ -389,6 +431,9 @@ class Album extends DataClass implements Insertable<Album> {
     return Album(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
+      displayTitle: data.displayTitle.present
+          ? data.displayTitle.value
+          : this.displayTitle,
       artistId: data.artistId.present ? data.artistId.value : this.artistId,
       cover: data.cover.present ? data.cover.value : this.cover,
     );
@@ -399,6 +444,7 @@ class Album extends DataClass implements Insertable<Album> {
     return (StringBuffer('Album(')
           ..write('id: $id, ')
           ..write('title: $title, ')
+          ..write('displayTitle: $displayTitle, ')
           ..write('artistId: $artistId, ')
           ..write('cover: $cover')
           ..write(')'))
@@ -406,14 +452,20 @@ class Album extends DataClass implements Insertable<Album> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, title, artistId, $driftBlobEquality.hash(cover));
+  int get hashCode => Object.hash(
+    id,
+    title,
+    displayTitle,
+    artistId,
+    $driftBlobEquality.hash(cover),
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Album &&
           other.id == this.id &&
           other.title == this.title &&
+          other.displayTitle == this.displayTitle &&
           other.artistId == this.artistId &&
           $driftBlobEquality.equals(other.cover, this.cover));
 }
@@ -421,17 +473,20 @@ class Album extends DataClass implements Insertable<Album> {
 class AlbumsCompanion extends UpdateCompanion<Album> {
   final Value<int> id;
   final Value<String> title;
+  final Value<String?> displayTitle;
   final Value<int> artistId;
   final Value<Uint8List?> cover;
   const AlbumsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
+    this.displayTitle = const Value.absent(),
     this.artistId = const Value.absent(),
     this.cover = const Value.absent(),
   });
   AlbumsCompanion.insert({
     this.id = const Value.absent(),
     required String title,
+    this.displayTitle = const Value.absent(),
     required int artistId,
     this.cover = const Value.absent(),
   }) : title = Value(title),
@@ -439,12 +494,14 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   static Insertable<Album> custom({
     Expression<int>? id,
     Expression<String>? title,
+    Expression<String>? displayTitle,
     Expression<int>? artistId,
     Expression<Uint8List>? cover,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
+      if (displayTitle != null) 'display_title': displayTitle,
       if (artistId != null) 'artist_id': artistId,
       if (cover != null) 'cover': cover,
     });
@@ -453,12 +510,14 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   AlbumsCompanion copyWith({
     Value<int>? id,
     Value<String>? title,
+    Value<String?>? displayTitle,
     Value<int>? artistId,
     Value<Uint8List?>? cover,
   }) {
     return AlbumsCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
+      displayTitle: displayTitle ?? this.displayTitle,
       artistId: artistId ?? this.artistId,
       cover: cover ?? this.cover,
     );
@@ -472,6 +531,9 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
+    }
+    if (displayTitle.present) {
+      map['display_title'] = Variable<String>(displayTitle.value);
     }
     if (artistId.present) {
       map['artist_id'] = Variable<int>(artistId.value);
@@ -487,6 +549,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     return (StringBuffer('AlbumsCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
+          ..write('displayTitle: $displayTitle, ')
           ..write('artistId: $artistId, ')
           ..write('cover: $cover')
           ..write(')'))
@@ -2803,6 +2866,7 @@ typedef $$AlbumsTableCreateCompanionBuilder =
     AlbumsCompanion Function({
       Value<int> id,
       required String title,
+      Value<String?> displayTitle,
       required int artistId,
       Value<Uint8List?> cover,
     });
@@ -2810,6 +2874,7 @@ typedef $$AlbumsTableUpdateCompanionBuilder =
     AlbumsCompanion Function({
       Value<int> id,
       Value<String> title,
+      Value<String?> displayTitle,
       Value<int> artistId,
       Value<Uint8List?> cover,
     });
@@ -2871,6 +2936,11 @@ class $$AlbumsTableFilterComposer
 
   ColumnFilters<String> get title => $composableBuilder(
     column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get displayTitle => $composableBuilder(
+    column: $table.displayTitle,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2947,6 +3017,11 @@ class $$AlbumsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get displayTitle => $composableBuilder(
+    column: $table.displayTitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<Uint8List> get cover => $composableBuilder(
     column: $table.cover,
     builder: (column) => ColumnOrderings(column),
@@ -2990,6 +3065,11 @@ class $$AlbumsTableAnnotationComposer
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get displayTitle => $composableBuilder(
+    column: $table.displayTitle,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<Uint8List> get cover =>
       $composableBuilder(column: $table.cover, builder: (column) => column);
@@ -3073,11 +3153,13 @@ class $$AlbumsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
+                Value<String?> displayTitle = const Value.absent(),
                 Value<int> artistId = const Value.absent(),
                 Value<Uint8List?> cover = const Value.absent(),
               }) => AlbumsCompanion(
                 id: id,
                 title: title,
+                displayTitle: displayTitle,
                 artistId: artistId,
                 cover: cover,
               ),
@@ -3085,11 +3167,13 @@ class $$AlbumsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String title,
+                Value<String?> displayTitle = const Value.absent(),
                 required int artistId,
                 Value<Uint8List?> cover = const Value.absent(),
               }) => AlbumsCompanion.insert(
                 id: id,
                 title: title,
+                displayTitle: displayTitle,
                 artistId: artistId,
                 cover: cover,
               ),
