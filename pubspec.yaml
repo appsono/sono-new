@@ -25,6 +25,8 @@ dependencies:
   media_kit: ^1.2.6
   media_kit_libs_audio: ^1.0.7
   audio_service: ^0.18.18
+  audio_service_mpris: ^0.2.1 #linux MPRIS2 media session
+  smtc_windows: ^1.1.0 #windows system media transport controls
 
   # db stuff
   drift: ^2.32.0
@@ -34,7 +36,7 @@ dependencies:
   audio_session: ^0.2.2
   rxdart: ^0.28.0
 
-  # other stuff  
+  # other stuff
   flutter_dotenv: ^6.0.0
   flutter_inappwebview: ^6.1.5
   flutter_svg: ^2.2.4
