@@ -35,9 +35,11 @@ void main() async {
   await sono.AudioService.instance.init();
   audioHandler = await AudioService.init(
     builder: () => SonoAudioHandler(db),
-    config: const AudioServiceConfig(
+    config: AudioServiceConfig(
       androidNotificationChannelId: 'wtf.sono.audio',
-      androidNotificationChannelName: 'Now Playing',
+      androidNotificationChannelName: Platform.isAndroid
+          ? 'Now Playing'
+          : 'Sono',
       androidStopForegroundOnPause: false,
       androidShowNotificationBadge: true,
       androidNotificationClickStartsActivity: true,
