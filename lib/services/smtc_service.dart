@@ -64,13 +64,15 @@ class SmtcService {
     final pos = audio.position.inMilliseconds;
     final end = audio.duration.inMilliseconds;
     if (end <= 0) return;
-    _smtc?.updateTimeline(PlaybackTimeline(
-      startTimeMs: 0,
-      endTimeMs: end,
-      positionMs: pos.clamp(0, end),
-      minSeekTimeMs: 0,
-      maxSeekTimeMs: end,
-    ));
+    _smtc?.updateTimeline(
+      PlaybackTimeline(
+        startTimeMs: 0,
+        endTimeMs: end,
+        positionMs: pos.clamp(0, end),
+        minSeekTimeMs: 0,
+        maxSeekTimeMs: end,
+      ),
+    );
   }
 
   void _onButton(PressedButton button) {
@@ -105,8 +107,9 @@ class SmtcService {
     String? thumbnailUri;
     try {
       _tempDirPath ??= (await getTemporaryDirectory()).path;
-      final bytes = await sq.SonoQuery.getCover(song.path)
-          .timeout(const Duration(seconds: 2), onTimeout: () => null);
+      final bytes = await sq.SonoQuery.getCover(
+        song.path,
+      ).timeout(const Duration(seconds: 2), onTimeout: () => null);
       if (token != _updateToken) return;
       if (bytes != null && bytes.isNotEmpty) {
         _coverCounter++;
@@ -130,11 +133,13 @@ class SmtcService {
 
     if (token != _updateToken) return;
 
-    _smtc?.updateMetadata(MusicMetadata(
-      title: song.title,
-      artist: artistName ?? 'Unknown artist',
-      thumbnail: thumbnailUri,
-    ));
+    _smtc?.updateMetadata(
+      MusicMetadata(
+        title: song.title,
+        artist: artistName ?? 'Unknown artist',
+        thumbnail: thumbnailUri,
+      ),
+    );
   }
 
   void dispose() {
