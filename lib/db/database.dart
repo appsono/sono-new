@@ -17,7 +17,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -69,8 +69,16 @@ class SonoDatabase extends _$SonoDatabase {
         await m.drop(songWithArtistView);
         await m.create(songWithArtistView);
       }
+      if (from < 13) {
+        await m.addColumn(albums, albums.favoritedAt);
+        await m.addColumn(artists, artists.favoritedAt);
+
+        //AlbumWithArtistView now selects favoritedAt, recreate it
+        await m.drop(albumWithArtistView);
+        await m.create(albumWithArtistView);
+      }
       //future migrations go here:
-      // if (from < 13) { .. }
+      // if (from < 14) { .. }
     },
   );
 
@@ -115,6 +123,28 @@ class SonoDatabase extends _$SonoDatabase {
     await customStatement(
       'DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artist_id FROM songs WHERE artist_id IS NOT NULL)',
     );
+  }
+
+  Future<bool> getArtistFavorited(int id) async {
+    final row =
+        await (selectOnly(artists)
+              ..addColumns([artists.favoritedAt])
+              ..where(artists.id.equals(id)))
+            .getSingleOrNull();
+    return row?.read(artists.favoritedAt) != null;
+  }
+
+  Future<void> setArtistFavorited(int id, bool favorited) async {
+    await (update(artists)..where((a) => a.id.equals(id))).write(
+      ArtistsCompanion(favoritedAt: Value(favorited ? DateTime.now() : null)),
+    );
+  }
+
+  Future<List<Artist>> getFavoritedArtists() {
+    return (select(artists)
+          ..where((a) => a.favoritedAt.isNotNull())
+          ..orderBy([(a) => OrderingTerm.desc(a.favoritedAt)]))
+        .get();
   }
 
   /// ==== Albums ====
@@ -214,6 +244,28 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<List<Album>> getAlbumsByArtist(int artistId) =>
       (select(albums)..where((a) => a.artistId.equals(artistId))).get();
+
+  Future<bool> getAlbumFavorited(int id) async {
+    final row =
+        await (selectOnly(albums)
+              ..addColumns([albums.favoritedAt])
+              ..where(albums.id.equals(id)))
+            .getSingleOrNull();
+    return row?.read(albums.favoritedAt) != null;
+  }
+
+  Future<void> setAlbumFavorited(int id, bool favorited) async {
+    await (update(albums)..where((a) => a.id.equals(id))).write(
+      AlbumsCompanion(favoritedAt: Value(favorited ? DateTime.now() : null)),
+    );
+  }
+
+  Future<List<AlbumWithArtistViewData>> getFavoriteAlbumsWithArtists() {
+    return (select(albumWithArtistView)
+          ..where((a) => a.favoritedAt.isNotNull())
+          ..orderBy([(a) => OrderingTerm.desc(a.favoritedAt)]))
+        .get();
+  }
 
   /// Remove albums that have no songs referencing them
   Future<void> removeOrphanedAlbums() async {

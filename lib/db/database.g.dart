@@ -31,8 +31,19 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
+  static const VerificationMeta _favoritedAtMeta = const VerificationMeta(
+    'favoritedAt',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, name];
+  late final GeneratedColumn<DateTime> favoritedAt = GeneratedColumn<DateTime>(
+    'favorited_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, favoritedAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -56,6 +67,15 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('favorited_at')) {
+      context.handle(
+        _favoritedAtMeta,
+        favoritedAt.isAcceptableOrUnknown(
+          data['favorited_at']!,
+          _favoritedAtMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -73,6 +93,10 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      favoritedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}favorited_at'],
+      ),
     );
   }
 
@@ -85,17 +109,27 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
 class Artist extends DataClass implements Insertable<Artist> {
   final int id;
   final String name;
-  const Artist({required this.id, required this.name});
+  final DateTime? favoritedAt;
+  const Artist({required this.id, required this.name, this.favoritedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
+    if (!nullToAbsent || favoritedAt != null) {
+      map['favorited_at'] = Variable<DateTime>(favoritedAt);
+    }
     return map;
   }
 
   ArtistsCompanion toCompanion(bool nullToAbsent) {
-    return ArtistsCompanion(id: Value(id), name: Value(name));
+    return ArtistsCompanion(
+      id: Value(id),
+      name: Value(name),
+      favoritedAt: favoritedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(favoritedAt),
+    );
   }
 
   factory Artist.fromJson(
@@ -106,6 +140,7 @@ class Artist extends DataClass implements Insertable<Artist> {
     return Artist(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      favoritedAt: serializer.fromJson<DateTime?>(json['favoritedAt']),
     );
   }
   @override
@@ -114,15 +149,26 @@ class Artist extends DataClass implements Insertable<Artist> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'favoritedAt': serializer.toJson<DateTime?>(favoritedAt),
     };
   }
 
-  Artist copyWith({int? id, String? name}) =>
-      Artist(id: id ?? this.id, name: name ?? this.name);
+  Artist copyWith({
+    int? id,
+    String? name,
+    Value<DateTime?> favoritedAt = const Value.absent(),
+  }) => Artist(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    favoritedAt: favoritedAt.present ? favoritedAt.value : this.favoritedAt,
+  );
   Artist copyWithCompanion(ArtistsCompanion data) {
     return Artist(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      favoritedAt: data.favoritedAt.present
+          ? data.favoritedAt.value
+          : this.favoritedAt,
     );
   }
 
@@ -130,42 +176,59 @@ class Artist extends DataClass implements Insertable<Artist> {
   String toString() {
     return (StringBuffer('Artist(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('favoritedAt: $favoritedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name);
+  int get hashCode => Object.hash(id, name, favoritedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Artist && other.id == this.id && other.name == this.name);
+      (other is Artist &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.favoritedAt == this.favoritedAt);
 }
 
 class ArtistsCompanion extends UpdateCompanion<Artist> {
   final Value<int> id;
   final Value<String> name;
+  final Value<DateTime?> favoritedAt;
   const ArtistsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.favoritedAt = const Value.absent(),
   });
   ArtistsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
+    this.favoritedAt = const Value.absent(),
   }) : name = Value(name);
   static Insertable<Artist> custom({
     Expression<int>? id,
     Expression<String>? name,
+    Expression<DateTime>? favoritedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (favoritedAt != null) 'favorited_at': favoritedAt,
     });
   }
 
-  ArtistsCompanion copyWith({Value<int>? id, Value<String>? name}) {
-    return ArtistsCompanion(id: id ?? this.id, name: name ?? this.name);
+  ArtistsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<DateTime?>? favoritedAt,
+  }) {
+    return ArtistsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      favoritedAt: favoritedAt ?? this.favoritedAt,
+    );
   }
 
   @override
@@ -177,6 +240,9 @@ class ArtistsCompanion extends UpdateCompanion<Artist> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (favoritedAt.present) {
+      map['favorited_at'] = Variable<DateTime>(favoritedAt.value);
+    }
     return map;
   }
 
@@ -184,7 +250,8 @@ class ArtistsCompanion extends UpdateCompanion<Artist> {
   String toString() {
     return (StringBuffer('ArtistsCompanion(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('favoritedAt: $favoritedAt')
           ..write(')'))
         .toString();
   }
@@ -251,6 +318,17 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
     type: DriftSqlType.blob,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _favoritedAtMeta = const VerificationMeta(
+    'favoritedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> favoritedAt = GeneratedColumn<DateTime>(
+    'favorited_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -258,6 +336,7 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
     displayTitle,
     artistId,
     cover,
+    favoritedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -305,6 +384,15 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
         cover.isAcceptableOrUnknown(data['cover']!, _coverMeta),
       );
     }
+    if (data.containsKey('favorited_at')) {
+      context.handle(
+        _favoritedAtMeta,
+        favoritedAt.isAcceptableOrUnknown(
+          data['favorited_at']!,
+          _favoritedAtMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -338,6 +426,10 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
         DriftSqlType.blob,
         data['${effectivePrefix}cover'],
       ),
+      favoritedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}favorited_at'],
+      ),
     );
   }
 
@@ -353,12 +445,14 @@ class Album extends DataClass implements Insertable<Album> {
   final String? displayTitle;
   final int artistId;
   final Uint8List? cover;
+  final DateTime? favoritedAt;
   const Album({
     required this.id,
     required this.title,
     this.displayTitle,
     required this.artistId,
     this.cover,
+    this.favoritedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -371,6 +465,9 @@ class Album extends DataClass implements Insertable<Album> {
     map['artist_id'] = Variable<int>(artistId);
     if (!nullToAbsent || cover != null) {
       map['cover'] = Variable<Uint8List>(cover);
+    }
+    if (!nullToAbsent || favoritedAt != null) {
+      map['favorited_at'] = Variable<DateTime>(favoritedAt);
     }
     return map;
   }
@@ -386,6 +483,9 @@ class Album extends DataClass implements Insertable<Album> {
       cover: cover == null && nullToAbsent
           ? const Value.absent()
           : Value(cover),
+      favoritedAt: favoritedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(favoritedAt),
     );
   }
 
@@ -400,6 +500,7 @@ class Album extends DataClass implements Insertable<Album> {
       displayTitle: serializer.fromJson<String?>(json['displayTitle']),
       artistId: serializer.fromJson<int>(json['artistId']),
       cover: serializer.fromJson<Uint8List?>(json['cover']),
+      favoritedAt: serializer.fromJson<DateTime?>(json['favoritedAt']),
     );
   }
   @override
@@ -411,6 +512,7 @@ class Album extends DataClass implements Insertable<Album> {
       'displayTitle': serializer.toJson<String?>(displayTitle),
       'artistId': serializer.toJson<int>(artistId),
       'cover': serializer.toJson<Uint8List?>(cover),
+      'favoritedAt': serializer.toJson<DateTime?>(favoritedAt),
     };
   }
 
@@ -420,12 +522,14 @@ class Album extends DataClass implements Insertable<Album> {
     Value<String?> displayTitle = const Value.absent(),
     int? artistId,
     Value<Uint8List?> cover = const Value.absent(),
+    Value<DateTime?> favoritedAt = const Value.absent(),
   }) => Album(
     id: id ?? this.id,
     title: title ?? this.title,
     displayTitle: displayTitle.present ? displayTitle.value : this.displayTitle,
     artistId: artistId ?? this.artistId,
     cover: cover.present ? cover.value : this.cover,
+    favoritedAt: favoritedAt.present ? favoritedAt.value : this.favoritedAt,
   );
   Album copyWithCompanion(AlbumsCompanion data) {
     return Album(
@@ -436,6 +540,9 @@ class Album extends DataClass implements Insertable<Album> {
           : this.displayTitle,
       artistId: data.artistId.present ? data.artistId.value : this.artistId,
       cover: data.cover.present ? data.cover.value : this.cover,
+      favoritedAt: data.favoritedAt.present
+          ? data.favoritedAt.value
+          : this.favoritedAt,
     );
   }
 
@@ -446,7 +553,8 @@ class Album extends DataClass implements Insertable<Album> {
           ..write('title: $title, ')
           ..write('displayTitle: $displayTitle, ')
           ..write('artistId: $artistId, ')
-          ..write('cover: $cover')
+          ..write('cover: $cover, ')
+          ..write('favoritedAt: $favoritedAt')
           ..write(')'))
         .toString();
   }
@@ -458,6 +566,7 @@ class Album extends DataClass implements Insertable<Album> {
     displayTitle,
     artistId,
     $driftBlobEquality.hash(cover),
+    favoritedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -467,7 +576,8 @@ class Album extends DataClass implements Insertable<Album> {
           other.title == this.title &&
           other.displayTitle == this.displayTitle &&
           other.artistId == this.artistId &&
-          $driftBlobEquality.equals(other.cover, this.cover));
+          $driftBlobEquality.equals(other.cover, this.cover) &&
+          other.favoritedAt == this.favoritedAt);
 }
 
 class AlbumsCompanion extends UpdateCompanion<Album> {
@@ -476,12 +586,14 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   final Value<String?> displayTitle;
   final Value<int> artistId;
   final Value<Uint8List?> cover;
+  final Value<DateTime?> favoritedAt;
   const AlbumsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.displayTitle = const Value.absent(),
     this.artistId = const Value.absent(),
     this.cover = const Value.absent(),
+    this.favoritedAt = const Value.absent(),
   });
   AlbumsCompanion.insert({
     this.id = const Value.absent(),
@@ -489,6 +601,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     this.displayTitle = const Value.absent(),
     required int artistId,
     this.cover = const Value.absent(),
+    this.favoritedAt = const Value.absent(),
   }) : title = Value(title),
        artistId = Value(artistId);
   static Insertable<Album> custom({
@@ -497,6 +610,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     Expression<String>? displayTitle,
     Expression<int>? artistId,
     Expression<Uint8List>? cover,
+    Expression<DateTime>? favoritedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -504,6 +618,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
       if (displayTitle != null) 'display_title': displayTitle,
       if (artistId != null) 'artist_id': artistId,
       if (cover != null) 'cover': cover,
+      if (favoritedAt != null) 'favorited_at': favoritedAt,
     });
   }
 
@@ -513,6 +628,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     Value<String?>? displayTitle,
     Value<int>? artistId,
     Value<Uint8List?>? cover,
+    Value<DateTime?>? favoritedAt,
   }) {
     return AlbumsCompanion(
       id: id ?? this.id,
@@ -520,6 +636,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
       displayTitle: displayTitle ?? this.displayTitle,
       artistId: artistId ?? this.artistId,
       cover: cover ?? this.cover,
+      favoritedAt: favoritedAt ?? this.favoritedAt,
     );
   }
 
@@ -541,6 +658,9 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     if (cover.present) {
       map['cover'] = Variable<Uint8List>(cover.value);
     }
+    if (favoritedAt.present) {
+      map['favorited_at'] = Variable<DateTime>(favoritedAt.value);
+    }
     return map;
   }
 
@@ -551,7 +671,8 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
           ..write('title: $title, ')
           ..write('displayTitle: $displayTitle, ')
           ..write('artistId: $artistId, ')
-          ..write('cover: $cover')
+          ..write('cover: $cover, ')
+          ..write('favoritedAt: $favoritedAt')
           ..write(')'))
         .toString();
   }
@@ -2371,12 +2492,14 @@ class AlbumWithArtistViewData extends DataClass {
   final String title;
   final int artistId;
   final Uint8List? cover;
+  final DateTime? favoritedAt;
   final String? artistName;
   const AlbumWithArtistViewData({
     required this.id,
     required this.title,
     required this.artistId,
     this.cover,
+    this.favoritedAt,
     this.artistName,
   });
   factory AlbumWithArtistViewData.fromJson(
@@ -2389,6 +2512,7 @@ class AlbumWithArtistViewData extends DataClass {
       title: serializer.fromJson<String>(json['title']),
       artistId: serializer.fromJson<int>(json['artistId']),
       cover: serializer.fromJson<Uint8List?>(json['cover']),
+      favoritedAt: serializer.fromJson<DateTime?>(json['favoritedAt']),
       artistName: serializer.fromJson<String?>(json['artistName']),
     );
   }
@@ -2400,6 +2524,7 @@ class AlbumWithArtistViewData extends DataClass {
       'title': serializer.toJson<String>(title),
       'artistId': serializer.toJson<int>(artistId),
       'cover': serializer.toJson<Uint8List?>(cover),
+      'favoritedAt': serializer.toJson<DateTime?>(favoritedAt),
       'artistName': serializer.toJson<String?>(artistName),
     };
   }
@@ -2409,12 +2534,14 @@ class AlbumWithArtistViewData extends DataClass {
     String? title,
     int? artistId,
     Value<Uint8List?> cover = const Value.absent(),
+    Value<DateTime?> favoritedAt = const Value.absent(),
     Value<String?> artistName = const Value.absent(),
   }) => AlbumWithArtistViewData(
     id: id ?? this.id,
     title: title ?? this.title,
     artistId: artistId ?? this.artistId,
     cover: cover.present ? cover.value : this.cover,
+    favoritedAt: favoritedAt.present ? favoritedAt.value : this.favoritedAt,
     artistName: artistName.present ? artistName.value : this.artistName,
   );
   @override
@@ -2424,6 +2551,7 @@ class AlbumWithArtistViewData extends DataClass {
           ..write('title: $title, ')
           ..write('artistId: $artistId, ')
           ..write('cover: $cover, ')
+          ..write('favoritedAt: $favoritedAt, ')
           ..write('artistName: $artistName')
           ..write(')'))
         .toString();
@@ -2435,6 +2563,7 @@ class AlbumWithArtistViewData extends DataClass {
     title,
     artistId,
     $driftBlobEquality.hash(cover),
+    favoritedAt,
     artistName,
   );
   @override
@@ -2445,6 +2574,7 @@ class AlbumWithArtistViewData extends DataClass {
           other.title == this.title &&
           other.artistId == this.artistId &&
           $driftBlobEquality.equals(other.cover, this.cover) &&
+          other.favoritedAt == this.favoritedAt &&
           other.artistName == this.artistName);
 }
 
@@ -2463,6 +2593,7 @@ class $AlbumWithArtistViewView
     title,
     artistId,
     cover,
+    favoritedAt,
     artistName,
   ];
   @override
@@ -2495,6 +2626,10 @@ class $AlbumWithArtistViewView
       cover: attachedDatabase.typeMapping.read(
         DriftSqlType.blob,
         data['${effectivePrefix}cover'],
+      ),
+      favoritedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}favorited_at'],
       ),
       artistName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -2530,6 +2665,13 @@ class $AlbumWithArtistViewView
     true,
     generatedAs: GeneratedAs(albums.cover, false),
     type: DriftSqlType.blob,
+  );
+  late final GeneratedColumn<DateTime> favoritedAt = GeneratedColumn<DateTime>(
+    'favorited_at',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(albums.favoritedAt, false),
+    type: DriftSqlType.dateTime,
   );
   late final GeneratedColumn<String> artistName = GeneratedColumn<String>(
     'artist_name',
@@ -2582,9 +2724,17 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
 }
 
 typedef $$ArtistsTableCreateCompanionBuilder =
-    ArtistsCompanion Function({Value<int> id, required String name});
+    ArtistsCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<DateTime?> favoritedAt,
+    });
 typedef $$ArtistsTableUpdateCompanionBuilder =
-    ArtistsCompanion Function({Value<int> id, Value<String> name});
+    ArtistsCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<DateTime?> favoritedAt,
+    });
 
 final class $$ArtistsTableReferences
     extends BaseReferences<_$SonoDatabase, $ArtistsTable, Artist> {
@@ -2645,6 +2795,11 @@ class $$ArtistsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get favoritedAt => $composableBuilder(
+    column: $table.favoritedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2717,6 +2872,11 @@ class $$ArtistsTableOrderingComposer
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get favoritedAt => $composableBuilder(
+    column: $table.favoritedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ArtistsTableAnnotationComposer
@@ -2733,6 +2893,11 @@ class $$ArtistsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get favoritedAt => $composableBuilder(
+    column: $table.favoritedAt,
+    builder: (column) => column,
+  );
 
   Expression<T> albumsRefs<T extends Object>(
     Expression<T> Function($$AlbumsTableAnnotationComposer a) f,
@@ -2815,10 +2980,22 @@ class $$ArtistsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-              }) => ArtistsCompanion(id: id, name: name),
+                Value<DateTime?> favoritedAt = const Value.absent(),
+              }) => ArtistsCompanion(
+                id: id,
+                name: name,
+                favoritedAt: favoritedAt,
+              ),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String name}) =>
-                  ArtistsCompanion.insert(id: id, name: name),
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<DateTime?> favoritedAt = const Value.absent(),
+              }) => ArtistsCompanion.insert(
+                id: id,
+                name: name,
+                favoritedAt: favoritedAt,
+              ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -2889,6 +3066,7 @@ typedef $$AlbumsTableCreateCompanionBuilder =
       Value<String?> displayTitle,
       required int artistId,
       Value<Uint8List?> cover,
+      Value<DateTime?> favoritedAt,
     });
 typedef $$AlbumsTableUpdateCompanionBuilder =
     AlbumsCompanion Function({
@@ -2897,6 +3075,7 @@ typedef $$AlbumsTableUpdateCompanionBuilder =
       Value<String?> displayTitle,
       Value<int> artistId,
       Value<Uint8List?> cover,
+      Value<DateTime?> favoritedAt,
     });
 
 final class $$AlbumsTableReferences
@@ -2966,6 +3145,11 @@ class $$AlbumsTableFilterComposer
 
   ColumnFilters<Uint8List> get cover => $composableBuilder(
     column: $table.cover,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get favoritedAt => $composableBuilder(
+    column: $table.favoritedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3047,6 +3231,11 @@ class $$AlbumsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get favoritedAt => $composableBuilder(
+    column: $table.favoritedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$ArtistsTableOrderingComposer get artistId {
     final $$ArtistsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -3093,6 +3282,11 @@ class $$AlbumsTableAnnotationComposer
 
   GeneratedColumn<Uint8List> get cover =>
       $composableBuilder(column: $table.cover, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get favoritedAt => $composableBuilder(
+    column: $table.favoritedAt,
+    builder: (column) => column,
+  );
 
   $$ArtistsTableAnnotationComposer get artistId {
     final $$ArtistsTableAnnotationComposer composer = $composerBuilder(
@@ -3176,12 +3370,14 @@ class $$AlbumsTableTableManager
                 Value<String?> displayTitle = const Value.absent(),
                 Value<int> artistId = const Value.absent(),
                 Value<Uint8List?> cover = const Value.absent(),
+                Value<DateTime?> favoritedAt = const Value.absent(),
               }) => AlbumsCompanion(
                 id: id,
                 title: title,
                 displayTitle: displayTitle,
                 artistId: artistId,
                 cover: cover,
+                favoritedAt: favoritedAt,
               ),
           createCompanionCallback:
               ({
@@ -3190,12 +3386,14 @@ class $$AlbumsTableTableManager
                 Value<String?> displayTitle = const Value.absent(),
                 required int artistId,
                 Value<Uint8List?> cover = const Value.absent(),
+                Value<DateTime?> favoritedAt = const Value.absent(),
               }) => AlbumsCompanion.insert(
                 id: id,
                 title: title,
                 displayTitle: displayTitle,
                 artistId: artistId,
                 cover: cover,
+                favoritedAt: favoritedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(

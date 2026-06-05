@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 class Artists extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().unique()();
+  DateTimeColumn get favoritedAt => dateTime().nullable()();
 }
 
 class Albums extends Table {
@@ -11,6 +12,7 @@ class Albums extends Table {
   TextColumn get displayTitle => text().nullable()();
   IntColumn get artistId => integer().references(Artists, #id)();
   BlobColumn get cover => blob().nullable()();
+  DateTimeColumn get favoritedAt => dateTime().nullable()();
 
   @override
   List<Set<Column>> get uniqueKeys => [
@@ -90,6 +92,7 @@ abstract class AlbumWithArtistView extends View {
         albums.title,
         albums.artistId,
         albums.cover,
+        albums.favoritedAt,
         artistName,
       ]).from(albums).join([
         leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
