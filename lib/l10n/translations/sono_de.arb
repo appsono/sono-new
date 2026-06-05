@@ -270,5 +270,9 @@
     "libraryEmptyArtists": "Noch keine Künstler in deiner Bibliothek. :/",
     "@libraryEmptyArtists": {
         "description": "Empty state on the Artists list page when no artists have been scanned."
+    },
+    "libraryEmptyLikedSongs": "Du hast bisher keine Songs geliked. Geh und like ein paar",
+    "@libraryEmptyLikedSongs": {
+        "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
     }
 }
