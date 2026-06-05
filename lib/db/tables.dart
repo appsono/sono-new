@@ -109,3 +109,22 @@ class Profiles extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+/// Playlists
+class Playlists extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get description => text().nullable()();
+  TextColumn get coverPath => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+}
+
+class PlaylistSongs extends Table {
+  IntColumn get playlistId => integer().references(Playlists, #id)();
+  IntColumn get songId => integer().references(Songs, #id)();
+  IntColumn get position => integer()();
+  DateTimeColumn get addedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {playlistId, songId};
+}

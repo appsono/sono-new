@@ -9,7 +9,16 @@ import 'package:sono/db/tables.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [Artists, Albums, Songs, LyricsCache, Settings, Profiles],
+  tables: [
+    Artists,
+    Albums,
+    Songs,
+    LyricsCache,
+    Settings,
+    Profiles,
+    Playlists,
+    PlaylistSongs,
+  ],
   views: [SongWithArtistView, AlbumWithArtistView],
 )
 class SonoDatabase extends _$SonoDatabase {
@@ -17,7 +26,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -77,8 +86,12 @@ class SonoDatabase extends _$SonoDatabase {
         await m.drop(albumWithArtistView);
         await m.create(albumWithArtistView);
       }
+      if (from < 14) {
+        await m.createTable(playlists);
+        await m.createTable(playlistSongs);
+      }
       //future migrations go here:
-      // if (from < 14) { .. }
+      // if (from < 15) { .. }
     },
   );
 
@@ -438,6 +451,185 @@ class SonoDatabase extends _$SonoDatabase {
         ),
       );
     }
+  }
+
+  /// ==== Playlists ====
+  Future<List<Playlist>> getAllPlayists() => (select(
+    playlists,
+  )..orderBy([(p) => OrderingTerm.desc(p.createdAt)])).get();
+
+  Future<Playlist?> getPlaylistById(int id) =>
+      (select(playlists)..where((p) => p.id.equals(id))).getSingleOrNull();
+
+  Future<int> createPlaylist({
+    required String name,
+    String? description,
+    String? coverPath,
+  }) => into(playlists).insert(
+    PlaylistsCompanion.insert(
+      name: name,
+      description: Value(description),
+      coverPath: Value(coverPath),
+      createdAt: DateTime.now(),
+    ),
+  );
+
+  Future<void> updatePlaylist(
+    int id, {
+    String? name,
+    Value<String?> description = const Value.absent(),
+    Value<String?> coverPath = const Value.absent(),
+  }) async {
+    await (update(playlists)..where((p) => p.id.equals(id))).write(
+      PlaylistsCompanion(
+        name: name != null ? Value(name) : const Value.absent(),
+        description: description,
+        coverPath: coverPath,
+      ),
+    );
+  }
+
+  Future<void> deletePlaylist(int id) async {
+    await (delete(playlistSongs)..where((ps) => ps.playlistId.equals(id))).go();
+    await (delete(playlists)..where((p) => p.id.equals(id))).go();
+  }
+
+  /// Append a song to end of playlist
+  /// Returns false if song already in playlist
+  Future<bool> addSongToPlaylist(int playlistId, int songId) async {
+    final maxRow =
+        await (selectOnly(playlistSongs)
+              ..addColumns([playlistSongs.position.max()])
+              ..where(playlistSongs.playlistId.equals(playlistId)))
+            .getSingle();
+    final maxPos = maxRow.read(playlistSongs.position.max());
+    final next = (maxPos ?? -1) + 1;
+
+    try {
+      await into(playlistSongs).insert(
+        PlaylistSongsCompanion.insert(
+          playlistId: playlistId,
+          songId: songId,
+          position: next,
+          addedAt: DateTime.now(),
+        ),
+      );
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> removeSongFromPlaylist(int playlistId, int songId) async {
+    await (delete(playlistSongs)..where(
+          (ps) => ps.playlistId.equals(playlistId) & ps.songId.equals(songId),
+        ))
+        .go();
+    await _compactPlaylistPositions(playlistId);
+  }
+
+  /// Rewrite positions to be contiguous 0..n-1 in current order
+  Future<void> _compactPlaylistPositions(int playlistId) async {
+    final rows =
+        await (select(playlistSongs)
+              ..where((ps) => ps.playlistId.equals(playlistId))
+              ..orderBy([(ps) => OrderingTerm.asc(ps.position)]))
+            .get();
+    await batch((b) {
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].position == i) continue;
+        b.update(
+          playlistSongs,
+          PlaylistSongsCompanion(position: Value(i)),
+          where: (ps) =>
+              ps.playlistId.equals(playlistId) &
+              ps.songId.equals(rows[i].songId),
+        );
+      }
+    });
+  }
+
+  /// Replace song order in playlist with given list of songIds
+  /// Caller is responsible for passing complete current set
+  Future<void> reorderPlaylistSongs(
+    int playlistId,
+    List<int> orderedSongIds,
+  ) async {
+    await batch((b) {
+      for (var i = 0; i < orderedSongIds.length; i++) {
+        b.update(
+          playlistSongs,
+          PlaylistSongsCompanion(position: Value(i)),
+          where: (ps) =>
+              ps.playlistId.equals(playlistId) &
+              ps.songId.equals(orderedSongIds[i]),
+        );
+      }
+    });
+  }
+
+  Future<List<Song>> getPlaylistSongs(int playlistId) async {
+    final query =
+        select(
+            playlistSongs,
+          ).join([innerJoin(songs, songs.id.equalsExp(playlistSongs.songId))])
+          ..where(playlistSongs.playlistId.equals(playlistId))
+          ..orderBy([OrderingTerm.asc(playlistSongs.position)]);
+    final rows = await query.get();
+    return rows.map((r) => r.readTable(songs)).toList();
+  }
+
+  Future<List<SongWithArtistViewData>> getPlaylistSongsWithArtists(
+    int playlistId,
+  ) async {
+    final query =
+        select(playlistSongs).join([
+            innerJoin(songs, songs.id.equalsExp(playlistSongs.songId)),
+            leftOuterJoin(artists, artists.id.equalsExp(songs.artistId)),
+          ])
+          ..where(playlistSongs.playlistId.equals(playlistId))
+          ..orderBy([OrderingTerm.asc(playlistSongs.position)]);
+    final rows = await query.get();
+    return rows.map((r) {
+      final s = r.readTable(songs);
+      final ar = r.readTableOrNull(artists);
+      return SongWithArtistViewData(
+        id: s.id,
+        path: s.path,
+        title: s.title,
+        duration: s.duration,
+        genre: s.genre,
+        releaseDate: s.releaseDate,
+        albumId: s.albumId,
+        displayArtist: s.displayArtist,
+        likedAt: s.likedAt,
+        artistName: ar?.name,
+      );
+    }).toList();
+  }
+
+  /// First N song paths in playlist
+  /// (used for mosaic cover rendering)
+  Future<List<String>> getFirstNPlaylistSongPaths(int playlistId, int n) async {
+    final query =
+        (select(
+            playlistSongs,
+          ).join([innerJoin(songs, songs.id.equalsExp(playlistSongs.songId))])
+          ..where(playlistSongs.playlistId.equals(playlistId))
+          ..orderBy([OrderingTerm.asc(playlistSongs.position)])
+          ..limit(n));
+    final rows = await query.get();
+    return rows.map((r) => r.readTable(songs).path).toList();
+  }
+
+  Future<int> getPlaylistSongCount(int playlistId) async {
+    final countExp = playlistSongs.songId.count();
+    final row =
+        await (selectOnly(playlistSongs)
+              ..addColumns([countExp])
+              ..where(playlistSongs.playlistId.equals(playlistId)))
+            .getSingle();
+    return row.read(countExp) ?? 0;
   }
 }
 
