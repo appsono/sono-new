@@ -2067,6 +2067,7 @@ class SongWithArtistViewData extends DataClass {
   final int? albumId;
   final int? artistId;
   final String? displayArtist;
+  final DateTime? likedAt;
   final String? artistName;
   const SongWithArtistViewData({
     required this.id,
@@ -2078,6 +2079,7 @@ class SongWithArtistViewData extends DataClass {
     this.albumId,
     this.artistId,
     this.displayArtist,
+    this.likedAt,
     this.artistName,
   });
   factory SongWithArtistViewData.fromJson(
@@ -2095,6 +2097,7 @@ class SongWithArtistViewData extends DataClass {
       albumId: serializer.fromJson<int?>(json['albumId']),
       artistId: serializer.fromJson<int?>(json['artistId']),
       displayArtist: serializer.fromJson<String?>(json['displayArtist']),
+      likedAt: serializer.fromJson<DateTime?>(json['likedAt']),
       artistName: serializer.fromJson<String?>(json['artistName']),
     );
   }
@@ -2111,6 +2114,7 @@ class SongWithArtistViewData extends DataClass {
       'albumId': serializer.toJson<int?>(albumId),
       'artistId': serializer.toJson<int?>(artistId),
       'displayArtist': serializer.toJson<String?>(displayArtist),
+      'likedAt': serializer.toJson<DateTime?>(likedAt),
       'artistName': serializer.toJson<String?>(artistName),
     };
   }
@@ -2125,6 +2129,7 @@ class SongWithArtistViewData extends DataClass {
     Value<int?> albumId = const Value.absent(),
     Value<int?> artistId = const Value.absent(),
     Value<String?> displayArtist = const Value.absent(),
+    Value<DateTime?> likedAt = const Value.absent(),
     Value<String?> artistName = const Value.absent(),
   }) => SongWithArtistViewData(
     id: id ?? this.id,
@@ -2138,6 +2143,7 @@ class SongWithArtistViewData extends DataClass {
     displayArtist: displayArtist.present
         ? displayArtist.value
         : this.displayArtist,
+    likedAt: likedAt.present ? likedAt.value : this.likedAt,
     artistName: artistName.present ? artistName.value : this.artistName,
   );
   @override
@@ -2152,6 +2158,7 @@ class SongWithArtistViewData extends DataClass {
           ..write('albumId: $albumId, ')
           ..write('artistId: $artistId, ')
           ..write('displayArtist: $displayArtist, ')
+          ..write('likedAt: $likedAt, ')
           ..write('artistName: $artistName')
           ..write(')'))
         .toString();
@@ -2168,6 +2175,7 @@ class SongWithArtistViewData extends DataClass {
     albumId,
     artistId,
     displayArtist,
+    likedAt,
     artistName,
   );
   @override
@@ -2183,6 +2191,7 @@ class SongWithArtistViewData extends DataClass {
           other.albumId == this.albumId &&
           other.artistId == this.artistId &&
           other.displayArtist == this.displayArtist &&
+          other.likedAt == this.likedAt &&
           other.artistName == this.artistName);
 }
 
@@ -2206,6 +2215,7 @@ class $SongWithArtistViewView
     albumId,
     artistId,
     displayArtist,
+    likedAt,
     artistName,
   ];
   @override
@@ -2255,6 +2265,10 @@ class $SongWithArtistViewView
       displayArtist: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}display_artist'],
+      ),
+      likedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}liked_at'],
       ),
       artistName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -2325,6 +2339,13 @@ class $SongWithArtistViewView
     true,
     generatedAs: GeneratedAs(songs.displayArtist, false),
     type: DriftSqlType.string,
+  );
+  late final GeneratedColumn<DateTime> likedAt = GeneratedColumn<DateTime>(
+    'liked_at',
+    aliasedName,
+    true,
+    generatedAs: GeneratedAs(songs.likedAt, false),
+    type: DriftSqlType.dateTime,
   );
   late final GeneratedColumn<String> artistName = GeneratedColumn<String>(
     'artist_name',

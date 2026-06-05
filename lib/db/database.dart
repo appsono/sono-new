@@ -283,6 +283,13 @@ class SonoDatabase extends _$SonoDatabase {
         .get();
   }
 
+  Future<List<SongWithArtistViewData>> getLikedSongsWithArtists() {
+    return (select(songWithArtistView)
+          ..where((s) => s.likedAt.isNotNull())
+          ..orderBy([(s) => OrderingTerm.desc(s.likedAt)]))
+        .get();
+  }
+
   Future<void> removeDeletedSongs(Set<String> currentPaths) async {
     await (delete(songs)..where((s) => s.path.isNotIn(currentPaths))).go();
   }

@@ -70,6 +70,7 @@ abstract class SongWithArtistView extends View {
         songs.albumId,
         songs.artistId,
         songs.displayArtist,
+        songs.likedAt,
         artistName,
       ]).from(songs).join([
         leftOuterJoin(artists, artists.id.equalsExp(songs.artistId)),
