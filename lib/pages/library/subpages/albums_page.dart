@@ -65,57 +65,51 @@ class _AlbumsPageState extends State<AlbumsPage> {
     final albums = _albums;
 
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            // ==== header ====
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                child: SonoHeader(
-                  backButton: true,
-                  pageTitle: l.libraryCardAlbums,
-                  onBackTap: () => Navigator.of(context).pop(),
-                  actions: const [],
-                ),
+      body: CustomScrollView(
+        slivers: [
+          // ==== header ====
+          SonoStickyHeader(
+            child: SonoHeader(
+              backButton: true,
+              pageTitle: l.libraryCardAlbums,
+              onBackTap: () => Navigator.of(context).pop(),
+              actions: const [],
+            ),
+          ),
+
+          // ==== body ====
+          if (albums == null)
+            const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (albums.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: Text(l.libraryEmptyAlbums)),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              sliver: SliverList.separated(
+                separatorBuilder: (_, _) => const SizedBox(height: 8),
+                itemCount: albums.length,
+                itemBuilder: (context, i) {
+                  final a = albums[i];
+                  return SonoListRow(
+                    coverPath: _coverPaths?[a.id] ?? '',
+                    title: a.title,
+                    subtitle: a.artistName ?? l.commonUnknownArtist,
+                    //TODO: tap plays album for now; later opens album detail page
+                    onTap: () => _playAlbum(a),
+                  );
+                },
               ),
             ),
 
-            // ==== body ====
-            if (albums == null)
-              const SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: CircularProgressIndicator()),
-              )
-            else if (albums.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: Text(l.libraryEmptyAlbums)),
-              )
-            else
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                sliver: SliverList.separated(
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemCount: albums.length,
-                  itemBuilder: (context, i) {
-                    final a = albums[i];
-                    return SonoListRow(
-                      coverPath: _coverPaths?[a.id] ?? '',
-                      title: a.title,
-                      subtitle: a.artistName ?? l.commonUnknownArtist,
-                      //TODO: tap plays album for now; later opens album detail page
-                      onTap: () => _playAlbum(a),
-                    );
-                  },
-                ),
-              ),
-
-            // ==== bottom clearance ====
-            SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
-          ],
-        ),
+          // ==== bottom clearance ====
+          SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+        ],
       ),
     );
   }

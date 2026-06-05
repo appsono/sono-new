@@ -83,140 +83,134 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            // ==== header ====
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                child: StreamBuilder<Profile?>(
-                  stream: widget.db.watchProfile(),
-                  builder: (context, snap) {
-                    final profile = snap.data;
-                    final username = (profile?.username.isEmpty ?? true)
-                        ? null
-                        : profile!.username;
-                    return SonoHeader(
-                      isHomePage: true,
-                      username: username,
-                      avatar: profile?.avatar,
-                      onProfileTap: () {
-                        //will open sidebar later
+      body: CustomScrollView(
+        slivers: [
+          // ==== header ====
+          StreamBuilder<Profile?>(
+            stream: widget.db.watchProfile(),
+            builder: (context, snap) {
+              final profile = snap.data;
+              final username = (profile?.username.isEmpty ?? true)
+                  ? null
+                  : profile!.username;
+              return SonoStickyHeader(
+                child: SonoHeader(
+                  isHomePage: true,
+                  username: username,
+                  avatar: profile?.avatar,
+                  onProfileTap: () {
+                    //will open sidebar later
+                  },
+                  actions: [
+                    SonoHeaderAction(
+                      icon: IconsSheet.bellOutlined,
+                      tooltip: l.homeHeaderNewsAndUpdates,
+                      onTap: () {
+                        //navigate to "changelog" page
                       },
-                      actions: [
-                        SonoHeaderAction(
-                          icon: IconsSheet.bellOutlined,
-                          tooltip: l.homeHeaderNewsAndUpdates,
-                          onTap: () {
-                            //navigate to "changelog" page
-                          },
-                        ),
-                        SonoHeaderAction(
-                          icon: IconsSheet.settingsOutlined,
-                          tooltip: l.homeHeaderSettings,
-                          onTap: () {
-                            //navigate to settings page
-                          },
-                        ),
-                      ],
-                    );
-                  },
+                    ),
+                    SonoHeaderAction(
+                      icon: IconsSheet.settingsOutlined,
+                      tooltip: l.homeHeaderSettings,
+                      onTap: () {
+                        //navigate to settings page
+                      },
+                    ),
+                  ],
                 ),
+              );
+            },
+          ),
+
+          // ==== actions ====
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+              child: SonoHomeActions(
+                onShuffleAll: () {
+                  final songs = _songs;
+                  if (songs == null || songs.isEmpty) return;
+                  final queue = songs
+                      .map(
+                        (s) => Song(
+                          id: s.id,
+                          path: s.path,
+                          title: s.title,
+                          duration: s.duration,
+                          genre: s.genre,
+                          releaseDate: s.releaseDate,
+                          albumId: s.albumId,
+                          artistId: s.artistId,
+                          displayArtist: s.displayArtist,
+                        ),
+                      )
+                      .toList();
+                  queue.shuffle();
+                  AudioService.instance.play(
+                    queue,
+                    0,
+                    origin: QueueOrigin.allSongs,
+                  );
+                  //AudioService.instance.setShuffle(true);
+                },
+                onCreatePlaylist: () {
+                  //later
+                },
               ),
             ),
+          ),
 
-            // ==== actions ====
+          // ==== recently added ====
+          if (_songs!.isNotEmpty)
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-                child: SonoHomeActions(
-                  onShuffleAll: () {
-                    final songs = _songs;
-                    if (songs == null || songs.isEmpty) return;
-                    final queue = songs
-                        .map(
-                          (s) => Song(
-                            id: s.id,
-                            path: s.path,
-                            title: s.title,
-                            duration: s.duration,
-                            genre: s.genre,
-                            releaseDate: s.releaseDate,
-                            albumId: s.albumId,
-                            artistId: s.artistId,
-                            displayArtist: s.displayArtist,
-                          ),
-                        )
-                        .toList();
-                    queue.shuffle();
-                    AudioService.instance.play(
-                      queue,
-                      0,
-                      origin: QueueOrigin.allSongs,
-                    );
-                    //AudioService.instance.setShuffle(true);
-                  },
-                  onCreatePlaylist: () {
-                    //later
-                  },
-                ),
-              ),
+              child: _RecentlyAdded(songs: _songs!, onPlay: _playQueue),
             ),
 
-            // ==== recently added ====
-            if (_songs!.isNotEmpty)
-              SliverToBoxAdapter(
-                child: _RecentlyAdded(songs: _songs!, onPlay: _playQueue),
+          // ==== albums ====
+          if (_albums != null && _albums!.isNotEmpty) ...[
+            SliverToBoxAdapter(child: SizedBox(height: 24)),
+            SliverToBoxAdapter(
+              child: SonoSection(
+                title: l.homeSectionAlbums,
+                titleStyle: const TextStyle(fontSize: 20),
+                onSeeAll: () {},
+                itemExtent: 168,
+                children: _albums!.map((a) {
+                  return _AlbumCard(album: a, db: widget.db);
+                }).toList(),
               ),
-
-            // ==== albums ====
-            if (_albums != null && _albums!.isNotEmpty) ...[
-              SliverToBoxAdapter(child: SizedBox(height: 24)),
-              SliverToBoxAdapter(
-                child: SonoSection(
-                  title: l.homeSectionAlbums,
-                  titleStyle: const TextStyle(fontSize: 20),
-                  onSeeAll: () {},
-                  itemExtent: 168,
-                  children: _albums!.map((a) {
-                    return _AlbumCard(album: a, db: widget.db);
-                  }).toList(),
-                ),
-              ),
-            ],
-
-            // ==== artists ====
-            if (_artists != null && _artists!.isNotEmpty) ...[
-              SliverToBoxAdapter(child: SizedBox(height: 24)),
-              SliverToBoxAdapter(
-                child: SonoSection(
-                  title: l.homeSectionArtists,
-                  titleStyle: const TextStyle(fontSize: 20),
-                  onSeeAll: () {},
-                  itemExtent: 168,
-                  children: _artists!.map((a) {
-                    final count = _artistSongCounts?[a.name] ?? 0;
-                    return SonoMediaCard(
-                      path: _artistCoverPaths?[a.id] ?? '',
-                      title: a.name,
-                      subtitle: l.commonSongsCount(count),
-                      bordered: true,
-                      shape: CoverShape.circle,
-                      titleStyle: Theme.of(
-                        context,
-                      ).textTheme.headlineSmall?.copyWith(fontSize: 13),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-
-            // ==== bottom clearance ====
-            SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+            ),
           ],
-        ),
+
+          // ==== artists ====
+          if (_artists != null && _artists!.isNotEmpty) ...[
+            SliverToBoxAdapter(child: SizedBox(height: 24)),
+            SliverToBoxAdapter(
+              child: SonoSection(
+                title: l.homeSectionArtists,
+                titleStyle: const TextStyle(fontSize: 20),
+                onSeeAll: () {},
+                itemExtent: 168,
+                children: _artists!.map((a) {
+                  final count = _artistSongCounts?[a.name] ?? 0;
+                  return SonoMediaCard(
+                    path: _artistCoverPaths?[a.id] ?? '',
+                    title: a.name,
+                    subtitle: l.commonSongsCount(count),
+                    bordered: true,
+                    shape: CoverShape.circle,
+                    titleStyle: Theme.of(
+                      context,
+                    ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+
+          // ==== bottom clearance ====
+          SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+        ],
       ),
     );
   }

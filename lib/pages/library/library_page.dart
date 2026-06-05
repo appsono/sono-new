@@ -120,87 +120,81 @@ class _LibraryPageState extends State<LibraryPage> {
     final rows = _cardRows(l);
 
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            // ==== header ====
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                child: StreamBuilder<Profile?>(
-                  stream: widget.db.watchProfile(),
-                  builder: (context, snap) {
-                    final profile = snap.data;
-                    return SonoHeader(
-                      pageTitle: l.libraryPageTitle,
-                      avatar: profile?.avatar,
-                      onProfileTap: () {
-                        //will open sidebar later
-                      },
-                      actions: [
-                        SonoHeaderAction(
-                          icon: IconsSheet.bellOutlined,
-                          tooltip: l.homeHeaderNewsAndUpdates,
-                          onTap: () {
-                            //navigate to "changelog" page
-                          },
-                        ),
-                        SonoHeaderAction(
-                          icon: IconsSheet.settingsOutlined,
-                          tooltip: l.homeHeaderSettings,
-                          onTap: () {
-                            //navigate to settings page
-                          },
-                        ),
-                      ],
-                    );
+      body: CustomScrollView(
+        slivers: [
+          // ==== header ====
+          StreamBuilder<Profile?>(
+            stream: widget.db.watchProfile(),
+            builder: (context, snap) {
+              final profile = snap.data;
+              return SonoStickyHeader(
+                child: SonoHeader(
+                  pageTitle: l.libraryPageTitle,
+                  avatar: profile?.avatar,
+                  onProfileTap: () {
+                    //will open sidebar later
                   },
+                  actions: [
+                    SonoHeaderAction(
+                      icon: IconsSheet.bellOutlined,
+                      tooltip: l.homeHeaderNewsAndUpdates,
+                      onTap: () {
+                        //navigate to "changelog" page
+                      },
+                    ),
+                    SonoHeaderAction(
+                      icon: IconsSheet.settingsOutlined,
+                      tooltip: l.homeHeaderSettings,
+                      onTap: () {
+                        //navigate to settings page
+                      },
+                    ),
+                  ],
                 ),
-              ),
+              );
+            },
+          ),
+
+          // ==== cards ====
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverList.separated(
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              itemCount: rows.length,
+              itemBuilder: (context, index) {
+                final row = rows[index];
+
+                final shortCard = SizedBox(
+                  width: SonoLibraryCards.shortWidth,
+                  child: SonoLibraryCards(
+                    title: row.short.title,
+                    icon: row.short.icon,
+                    iconColor: row.short.iconColor,
+                    onTap: row.short.onTap,
+                  ),
+                );
+
+                final longCard = Expanded(
+                  child: SonoLibraryCards(
+                    title: row.long.title,
+                    icon: row.long.icon,
+                    iconColor: row.long.iconColor,
+                    onTap: row.long.onTap,
+                  ),
+                );
+
+                return Row(
+                  children: row.shortFirst
+                      ? [shortCard, const SizedBox(width: 12), longCard]
+                      : [longCard, const SizedBox(width: 12), shortCard],
+                );
+              },
             ),
+          ),
 
-            // ==== cards ====
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              sliver: SliverList.separated(
-                separatorBuilder: (_, _) => const SizedBox(height: 12),
-                itemCount: rows.length,
-                itemBuilder: (context, index) {
-                  final row = rows[index];
-
-                  final shortCard = SizedBox(
-                    width: SonoLibraryCards.shortWidth,
-                    child: SonoLibraryCards(
-                      title: row.short.title,
-                      icon: row.short.icon,
-                      iconColor: row.short.iconColor,
-                      onTap: row.short.onTap,
-                    ),
-                  );
-
-                  final longCard = Expanded(
-                    child: SonoLibraryCards(
-                      title: row.long.title,
-                      icon: row.long.icon,
-                      iconColor: row.long.iconColor,
-                      onTap: row.long.onTap,
-                    ),
-                  );
-
-                  return Row(
-                    children: row.shortFirst
-                        ? [shortCard, const SizedBox(width: 12), longCard]
-                        : [longCard, const SizedBox(width: 12), shortCard],
-                  );
-                },
-              ),
-            ),
-
-            // ==== bottom clearance ====
-            SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
-          ],
-        ),
+          // ==== bottom clearance ====
+          SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+        ],
       ),
     );
   }

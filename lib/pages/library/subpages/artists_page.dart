@@ -58,57 +58,51 @@ class _ArtistsPageState extends State<ArtistsPage> {
     final artists = _artists;
 
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            // ==== header ====
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                child: SonoHeader(
-                  backButton: true,
-                  pageTitle: l.libraryCardArtists,
-                  onBackTap: () => Navigator.of(context).pop(),
-                  actions: const [],
-                ),
+      body: CustomScrollView(
+        slivers: [
+          // ==== header ====
+          SonoStickyHeader(
+            child: SonoHeader(
+              backButton: true,
+              pageTitle: l.libraryCardArtists,
+              onBackTap: () => Navigator.of(context).pop(),
+              actions: const [],
+            ),
+          ),
+
+          // ==== body ====
+          if (artists == null)
+            const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (artists.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: Text(l.libraryEmptyArtists)),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              sliver: SliverList.separated(
+                separatorBuilder: (_, _) => const SizedBox(height: 8),
+                itemCount: artists.length,
+                itemBuilder: (context, i) {
+                  final a = artists[i];
+                  return SonoListRow(
+                    coverPath: _coverPaths?[a.id] ?? '',
+                    coverShape: CoverShape.circle,
+                    title: a.name,
+                    subtitle: l.commonSongsCount(_songCounts?[a.id] ?? 0),
+                    onTap: () => _openArtist(a.id),
+                  );
+                },
               ),
             ),
 
-            // ==== body ====
-            if (artists == null)
-              const SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: CircularProgressIndicator()),
-              )
-            else if (artists.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: Text(l.libraryEmptyArtists)),
-              )
-            else
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                sliver: SliverList.separated(
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemCount: artists.length,
-                  itemBuilder: (context, i) {
-                    final a = artists[i];
-                    return SonoListRow(
-                      coverPath: _coverPaths?[a.id] ?? '',
-                      coverShape: CoverShape.circle,
-                      title: a.name,
-                      subtitle: l.commonSongsCount(_songCounts?[a.id] ?? 0),
-                      onTap: () => _openArtist(a.id),
-                    );
-                  },
-                ),
-              ),
-
-            // ==== bottom clearance ====
-            SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
-          ],
-        ),
+          // ==== bottom clearance ====
+          SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+        ],
       ),
     );
   }

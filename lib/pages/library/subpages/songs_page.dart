@@ -60,59 +60,53 @@ class _SongsPageState extends State<SongsPage> {
     final songs = _songs;
 
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            // ==== header ====
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                child: SonoHeader(
-                  backButton: true,
-                  pageTitle: l.libraryCardSongs,
-                  onBackTap: () => Navigator.of(context).pop(),
-                  actions: const [],
-                ),
+      body: CustomScrollView(
+        slivers: [
+          // ==== header ====
+          SonoStickyHeader(
+            child: SonoHeader(
+              backButton: true,
+              pageTitle: l.libraryCardSongs,
+              onBackTap: () => Navigator.of(context).pop(),
+              actions: const [],
+            ),
+          ),
+
+          // ==== body ====
+          if (songs == null)
+            const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (songs.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: Text(l.libraryEmptySongs)),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              sliver: SliverList.separated(
+                separatorBuilder: (_, _) => const SizedBox(height: 8),
+                itemCount: songs.length,
+                itemBuilder: (context, i) {
+                  final s = songs[i];
+                  return SonoListRow(
+                    coverPath: s.path,
+                    title: s.title,
+                    subtitle:
+                        s.displayArtist ??
+                        s.artistName ??
+                        l.commonUnknownArtist,
+                    onTap: () => _play(i),
+                  );
+                },
               ),
             ),
 
-            // ==== body ====
-            if (songs == null)
-              const SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: CircularProgressIndicator()),
-              )
-            else if (songs.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: Text(l.libraryEmptySongs)),
-              )
-            else
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                sliver: SliverList.separated(
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemCount: songs.length,
-                  itemBuilder: (context, i) {
-                    final s = songs[i];
-                    return SonoListRow(
-                      coverPath: s.path,
-                      title: s.title,
-                      subtitle:
-                          s.displayArtist ??
-                          s.artistName ??
-                          l.commonUnknownArtist,
-                      onTap: () => _play(i),
-                    );
-                  },
-                ),
-              ),
-
-            // ==== bottom clearance ====
-            SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
-          ],
-        ),
+          // ==== bottom clearance ====
+          SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+        ],
       ),
     );
   }
