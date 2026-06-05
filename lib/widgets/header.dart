@@ -273,7 +273,7 @@ class _BackButton extends StatelessWidget {
         height: _size,
         child: Center(
           child: IconsSheet.svg(
-            IconsSheet.backOutlined,
+            IconsSheet.backFilled,
             size: SonoSizes.iconMd,
             color: c.textPrimary,
           ),
