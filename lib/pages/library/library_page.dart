@@ -10,7 +10,9 @@ import 'package:sono/widgets/header.dart';
 
 import 'package:sono/pages/library/subpages/liked_songs_page.dart';
 import 'package:sono/pages/library/subpages/albums_page.dart';
+import 'package:sono/pages/library/subpages/favorite_albums_page.dart';
 import 'package:sono/pages/library/subpages/artists_page.dart';
+import 'package:sono/pages/library/subpages/favorite_artists_page.dart';
 import 'package:sono/pages/library/subpages/songs_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
@@ -68,7 +70,7 @@ class _LibraryPageState extends State<LibraryPage> {
           l.libraryCardFavoriteAlbums,
           IconsSheet.favoriteAlbumFilled,
           c.accentPurple,
-          () {},
+          () => _push(FavoriteAlbumsPage(db: widget.db)),
         ),
         shortFirst: false,
       ),
@@ -83,7 +85,7 @@ class _LibraryPageState extends State<LibraryPage> {
           l.libraryCardFavoriteArtists,
           IconsSheet.favoriteArtistFilled,
           c.accentRed,
-          () {},
+          () => _push(FavoriteArtistsPage(db: widget.db)),
         ),
         shortFirst: true,
       ),
