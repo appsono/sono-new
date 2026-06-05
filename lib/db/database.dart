@@ -17,7 +17,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -47,17 +47,26 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 7) {
         await m.addColumn(songs, songs.discNumber);
       }
-      if (from < 8) {
-        await m.addColumn(songs, songs.liked);
-      }
+      // REPLACED WITH liked_at (migration 11)
+      // if (from < 8) {
+      //   await m.addColumn(songs, songs.likedAt);
+      // }
       if (from < 9) {
         await m.createTable(lyricsCache);
       }
       if (from < 10) {
         await m.addColumn(albums, albums.displayTitle);
       }
+      if (from < 11) {
+        await m.addColumn(songs, songs.likedAt);
+        await customStatement('UPDATE songs SET liked_at = ? WHERE liked = 1', [
+          DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        ]);
+        //drop old column
+        await customStatement('ALTER TABLE songs DROP COLUMN liked');
+      }
       //future migrations go here:
-      // if (from < 11) { .. }
+      // if (from < 12) { .. }
     },
   );
 
@@ -255,16 +264,23 @@ class SonoDatabase extends _$SonoDatabase {
   Future<bool> getSongLiked(int id) async {
     final row =
         await (selectOnly(songs)
-              ..addColumns([songs.liked])
+              ..addColumns([songs.likedAt])
               ..where(songs.id.equals(id)))
             .getSingleOrNull();
-    return row?.read(songs.liked) ?? false;
+    return row?.read(songs.likedAt) != null;
   }
 
   Future<void> setSongLiked(int id, bool liked) async {
     await (update(songs)..where((s) => s.id.equals(id))).write(
-      SongsCompanion(liked: Value(liked)),
+      SongsCompanion(likedAt: Value(liked ? DateTime.now() : null)),
     );
+  }
+
+  Future<List<Song>> getLikedSongs() async {
+    return (select(songs)
+          ..where((s) => s.likedAt.isNotNull())
+          ..orderBy([(s) => OrderingTerm.desc(s.likedAt)]))
+        .get();
   }
 
   Future<void> removeDeletedSongs(Set<String> currentPaths) async {

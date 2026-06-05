@@ -30,7 +30,7 @@ class Songs extends Table {
   IntColumn get albumId => integer().nullable().references(Albums, #id)();
   IntColumn get artistId => integer().nullable().references(Artists, #id)();
   TextColumn get displayArtist => text().nullable()();
-  BoolColumn get liked => boolean().nullable()();
+  DateTimeColumn get likedAt => dateTime().nullable()();
 }
 
 class LyricsCache extends Table {

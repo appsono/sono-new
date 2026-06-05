@@ -686,17 +686,16 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _likedMeta = const VerificationMeta('liked');
+  static const VerificationMeta _likedAtMeta = const VerificationMeta(
+    'likedAt',
+  );
   @override
-  late final GeneratedColumn<bool> liked = GeneratedColumn<bool>(
-    'liked',
+  late final GeneratedColumn<DateTime> likedAt = GeneratedColumn<DateTime>(
+    'liked_at',
     aliasedName,
     true,
-    type: DriftSqlType.bool,
+    type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("liked" IN (0, 1))',
-    ),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -711,7 +710,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     albumId,
     artistId,
     displayArtist,
-    liked,
+    likedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -801,10 +800,10 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         ),
       );
     }
-    if (data.containsKey('liked')) {
+    if (data.containsKey('liked_at')) {
       context.handle(
-        _likedMeta,
-        liked.isAcceptableOrUnknown(data['liked']!, _likedMeta),
+        _likedAtMeta,
+        likedAt.isAcceptableOrUnknown(data['liked_at']!, _likedAtMeta),
       );
     }
     return context;
@@ -860,9 +859,9 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         DriftSqlType.string,
         data['${effectivePrefix}display_artist'],
       ),
-      liked: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}liked'],
+      likedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}liked_at'],
       ),
     );
   }
@@ -885,7 +884,7 @@ class Song extends DataClass implements Insertable<Song> {
   final int? albumId;
   final int? artistId;
   final String? displayArtist;
-  final bool? liked;
+  final DateTime? likedAt;
   const Song({
     required this.id,
     required this.path,
@@ -898,7 +897,7 @@ class Song extends DataClass implements Insertable<Song> {
     this.albumId,
     this.artistId,
     this.displayArtist,
-    this.liked,
+    this.likedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -930,8 +929,8 @@ class Song extends DataClass implements Insertable<Song> {
     if (!nullToAbsent || displayArtist != null) {
       map['display_artist'] = Variable<String>(displayArtist);
     }
-    if (!nullToAbsent || liked != null) {
-      map['liked'] = Variable<bool>(liked);
+    if (!nullToAbsent || likedAt != null) {
+      map['liked_at'] = Variable<DateTime>(likedAt);
     }
     return map;
   }
@@ -965,9 +964,9 @@ class Song extends DataClass implements Insertable<Song> {
       displayArtist: displayArtist == null && nullToAbsent
           ? const Value.absent()
           : Value(displayArtist),
-      liked: liked == null && nullToAbsent
+      likedAt: likedAt == null && nullToAbsent
           ? const Value.absent()
-          : Value(liked),
+          : Value(likedAt),
     );
   }
 
@@ -988,7 +987,7 @@ class Song extends DataClass implements Insertable<Song> {
       albumId: serializer.fromJson<int?>(json['albumId']),
       artistId: serializer.fromJson<int?>(json['artistId']),
       displayArtist: serializer.fromJson<String?>(json['displayArtist']),
-      liked: serializer.fromJson<bool?>(json['liked']),
+      likedAt: serializer.fromJson<DateTime?>(json['likedAt']),
     );
   }
   @override
@@ -1006,7 +1005,7 @@ class Song extends DataClass implements Insertable<Song> {
       'albumId': serializer.toJson<int?>(albumId),
       'artistId': serializer.toJson<int?>(artistId),
       'displayArtist': serializer.toJson<String?>(displayArtist),
-      'liked': serializer.toJson<bool?>(liked),
+      'likedAt': serializer.toJson<DateTime?>(likedAt),
     };
   }
 
@@ -1022,7 +1021,7 @@ class Song extends DataClass implements Insertable<Song> {
     Value<int?> albumId = const Value.absent(),
     Value<int?> artistId = const Value.absent(),
     Value<String?> displayArtist = const Value.absent(),
-    Value<bool?> liked = const Value.absent(),
+    Value<DateTime?> likedAt = const Value.absent(),
   }) => Song(
     id: id ?? this.id,
     path: path ?? this.path,
@@ -1037,7 +1036,7 @@ class Song extends DataClass implements Insertable<Song> {
     displayArtist: displayArtist.present
         ? displayArtist.value
         : this.displayArtist,
-    liked: liked.present ? liked.value : this.liked,
+    likedAt: likedAt.present ? likedAt.value : this.likedAt,
   );
   Song copyWithCompanion(SongsCompanion data) {
     return Song(
@@ -1060,7 +1059,7 @@ class Song extends DataClass implements Insertable<Song> {
       displayArtist: data.displayArtist.present
           ? data.displayArtist.value
           : this.displayArtist,
-      liked: data.liked.present ? data.liked.value : this.liked,
+      likedAt: data.likedAt.present ? data.likedAt.value : this.likedAt,
     );
   }
 
@@ -1078,7 +1077,7 @@ class Song extends DataClass implements Insertable<Song> {
           ..write('albumId: $albumId, ')
           ..write('artistId: $artistId, ')
           ..write('displayArtist: $displayArtist, ')
-          ..write('liked: $liked')
+          ..write('likedAt: $likedAt')
           ..write(')'))
         .toString();
   }
@@ -1096,7 +1095,7 @@ class Song extends DataClass implements Insertable<Song> {
     albumId,
     artistId,
     displayArtist,
-    liked,
+    likedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -1113,7 +1112,7 @@ class Song extends DataClass implements Insertable<Song> {
           other.albumId == this.albumId &&
           other.artistId == this.artistId &&
           other.displayArtist == this.displayArtist &&
-          other.liked == this.liked);
+          other.likedAt == this.likedAt);
 }
 
 class SongsCompanion extends UpdateCompanion<Song> {
@@ -1128,7 +1127,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
   final Value<int?> albumId;
   final Value<int?> artistId;
   final Value<String?> displayArtist;
-  final Value<bool?> liked;
+  final Value<DateTime?> likedAt;
   const SongsCompanion({
     this.id = const Value.absent(),
     this.path = const Value.absent(),
@@ -1141,7 +1140,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.albumId = const Value.absent(),
     this.artistId = const Value.absent(),
     this.displayArtist = const Value.absent(),
-    this.liked = const Value.absent(),
+    this.likedAt = const Value.absent(),
   });
   SongsCompanion.insert({
     this.id = const Value.absent(),
@@ -1155,7 +1154,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.albumId = const Value.absent(),
     this.artistId = const Value.absent(),
     this.displayArtist = const Value.absent(),
-    this.liked = const Value.absent(),
+    this.likedAt = const Value.absent(),
   }) : path = Value(path),
        title = Value(title);
   static Insertable<Song> custom({
@@ -1170,7 +1169,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Expression<int>? albumId,
     Expression<int>? artistId,
     Expression<String>? displayArtist,
-    Expression<bool>? liked,
+    Expression<DateTime>? likedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1184,7 +1183,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       if (albumId != null) 'album_id': albumId,
       if (artistId != null) 'artist_id': artistId,
       if (displayArtist != null) 'display_artist': displayArtist,
-      if (liked != null) 'liked': liked,
+      if (likedAt != null) 'liked_at': likedAt,
     });
   }
 
@@ -1200,7 +1199,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Value<int?>? albumId,
     Value<int?>? artistId,
     Value<String?>? displayArtist,
-    Value<bool?>? liked,
+    Value<DateTime?>? likedAt,
   }) {
     return SongsCompanion(
       id: id ?? this.id,
@@ -1214,7 +1213,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       albumId: albumId ?? this.albumId,
       artistId: artistId ?? this.artistId,
       displayArtist: displayArtist ?? this.displayArtist,
-      liked: liked ?? this.liked,
+      likedAt: likedAt ?? this.likedAt,
     );
   }
 
@@ -1254,8 +1253,8 @@ class SongsCompanion extends UpdateCompanion<Song> {
     if (displayArtist.present) {
       map['display_artist'] = Variable<String>(displayArtist.value);
     }
-    if (liked.present) {
-      map['liked'] = Variable<bool>(liked.value);
+    if (likedAt.present) {
+      map['liked_at'] = Variable<DateTime>(likedAt.value);
     }
     return map;
   }
@@ -1274,7 +1273,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
           ..write('albumId: $albumId, ')
           ..write('artistId: $artistId, ')
           ..write('displayArtist: $displayArtist, ')
-          ..write('liked: $liked')
+          ..write('likedAt: $likedAt')
           ..write(')'))
         .toString();
   }
@@ -3268,7 +3267,7 @@ typedef $$SongsTableCreateCompanionBuilder =
       Value<int?> albumId,
       Value<int?> artistId,
       Value<String?> displayArtist,
-      Value<bool?> liked,
+      Value<DateTime?> likedAt,
     });
 typedef $$SongsTableUpdateCompanionBuilder =
     SongsCompanion Function({
@@ -3283,7 +3282,7 @@ typedef $$SongsTableUpdateCompanionBuilder =
       Value<int?> albumId,
       Value<int?> artistId,
       Value<String?> displayArtist,
-      Value<bool?> liked,
+      Value<DateTime?> likedAt,
     });
 
 final class $$SongsTableReferences
@@ -3397,8 +3396,8 @@ class $$SongsTableFilterComposer extends Composer<_$SonoDatabase, $SongsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get liked => $composableBuilder(
-    column: $table.liked,
+  ColumnFilters<DateTime> get likedAt => $composableBuilder(
+    column: $table.likedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3528,8 +3527,8 @@ class $$SongsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get liked => $composableBuilder(
-    column: $table.liked,
+  ColumnOrderings<DateTime> get likedAt => $composableBuilder(
+    column: $table.likedAt,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -3624,8 +3623,8 @@ class $$SongsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<bool> get liked =>
-      $composableBuilder(column: $table.liked, builder: (column) => column);
+  GeneratedColumn<DateTime> get likedAt =>
+      $composableBuilder(column: $table.likedAt, builder: (column) => column);
 
   $$AlbumsTableAnnotationComposer get albumId {
     final $$AlbumsTableAnnotationComposer composer = $composerBuilder(
@@ -3742,7 +3741,7 @@ class $$SongsTableTableManager
                 Value<int?> albumId = const Value.absent(),
                 Value<int?> artistId = const Value.absent(),
                 Value<String?> displayArtist = const Value.absent(),
-                Value<bool?> liked = const Value.absent(),
+                Value<DateTime?> likedAt = const Value.absent(),
               }) => SongsCompanion(
                 id: id,
                 path: path,
@@ -3755,7 +3754,7 @@ class $$SongsTableTableManager
                 albumId: albumId,
                 artistId: artistId,
                 displayArtist: displayArtist,
-                liked: liked,
+                likedAt: likedAt,
               ),
           createCompanionCallback:
               ({
@@ -3770,7 +3769,7 @@ class $$SongsTableTableManager
                 Value<int?> albumId = const Value.absent(),
                 Value<int?> artistId = const Value.absent(),
                 Value<String?> displayArtist = const Value.absent(),
-                Value<bool?> liked = const Value.absent(),
+                Value<DateTime?> likedAt = const Value.absent(),
               }) => SongsCompanion.insert(
                 id: id,
                 path: path,
@@ -3783,7 +3782,7 @@ class $$SongsTableTableManager
                 albumId: albumId,
                 artistId: artistId,
                 displayArtist: displayArtist,
-                liked: liked,
+                likedAt: likedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
