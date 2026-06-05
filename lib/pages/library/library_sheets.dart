@@ -90,9 +90,11 @@ class LibrarySheets {
 
     final songs = await db.getSongsByAlbum(album.id);
     final coverPath = songs.isNotEmpty ? songs.first.path : '';
+    final favorited0 = await db.getAlbumFavorited(album.id);
     if (!context.mounted) return;
 
     final c = context.sono;
+    var favorited = favorited0;
 
     void play() {
       if (songs.isEmpty) return;
@@ -136,8 +138,16 @@ class LibrarySheets {
         SongSheetInfoRow(label: l.commonAlbum, value: album.title),
         SongSheetInfoRow(label: l.commonAlbum, value: album.artistName),
       ],
-      actionsBuilder: () =>
-          SongSheet.defaultsForAlbum(l: l, onPlay: play, onShuffle: shuffle),
+      actionsBuilder: () => SongSheet.defaultsForAlbum(
+        l: l,
+        onPlay: play,
+        onShuffle: shuffle,
+        liked: favorited,
+        onLike: () async {
+          favorited = !favorited;
+          await db.setAlbumFavorited(album.id, favorited);
+        },
+      ),
     );
   }
 
@@ -151,9 +161,11 @@ class LibrarySheets {
 
     final songs = await db.getSongsByArtist(artist.id);
     final coverPath = songs.isNotEmpty ? songs.first.path : '';
+    final favorited0 = await db.getArtistFavorited(artist.id);
     if (!context.mounted) return;
 
     final c = context.sono;
+    var favorited = favorited0;
 
     void playAll() {
       if (songs.isEmpty) return;
@@ -198,6 +210,11 @@ class LibrarySheets {
         l: l,
         onPlay: playAll,
         onShuffle: shuffleAll,
+        liked: favorited,
+        onLike: () async {
+          favorited = !favorited;
+          await db.setArtistFavorited(artist.id, favorited);
+        },
       ),
     );
   }
