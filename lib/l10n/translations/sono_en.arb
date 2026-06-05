@@ -44,11 +44,11 @@
     "description": "State label shown after a song has been liked. Past participle or adjective form, not imperative."
   },
   "commonFavorite": "Favorite",
-  "@commonSave": {
+  "@commonFavorite": {
     "description": "Favortie an album or artist. Imperative verb. After-state is commonFavorited."
   },
   "commonFavorited": "Favorited",
-  "@commonSaved": {
+  "@commonFavorited": {
     "description": "State label shown after an album or artist has been favorited."
   },
 
