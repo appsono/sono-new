@@ -18,8 +18,8 @@ class SonoListRow extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
 
-  static const double height = 64;
-  static const double coverSize = 48;
+  static const double height = 74;
+  static const double coverSize = 56;
 
   const SonoListRow({
     required this.coverPath,
@@ -38,7 +38,12 @@ class SonoListRow extends StatelessWidget {
 
     final content = Container(
       height: height,
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.fromLTRB(9, 9, 12, 9),
+      decoration: BoxDecoration(
+        color: c.bgContainer,
+        borderRadius: BorderRadius.circular(SonoSizes.borderRadiusLg),
+        border: Border.all(color: c.borderLight10),
+      ),
       child: Row(
         children: [
           SonoCoverArt(
@@ -47,7 +52,7 @@ class SonoListRow extends StatelessWidget {
             shape: coverShape,
             bordered: true,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +64,7 @@ class SonoListRow extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: SonoFonts.heading,
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: c.textPrimary,
                   ),
@@ -72,7 +77,7 @@ class SonoListRow extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontFamily: SonoFonts.primary,
-                      fontSize: 12,
+                      fontSize: 13,
                       color: c.textSecondary,
                     ),
                   ),

@@ -89,7 +89,8 @@ class _ArtistsPageState extends State<ArtistsPage> {
             else
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                sliver: SliverList.builder(
+                sliver: SliverList.separated(
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemCount: artists.length,
                   itemBuilder: (context, i) {
                     final a = artists[i];

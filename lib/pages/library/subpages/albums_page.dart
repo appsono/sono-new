@@ -96,7 +96,8 @@ class _AlbumsPageState extends State<AlbumsPage> {
             else
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                sliver: SliverList.builder(
+                sliver: SliverList.separated(
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemCount: albums.length,
                   itemBuilder: (context, i) {
                     final a = albums[i];

@@ -91,7 +91,8 @@ class _SongsPageState extends State<SongsPage> {
             else
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                sliver: SliverList.builder(
+                sliver: SliverList.separated(
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemCount: songs.length,
                   itemBuilder: (context, i) {
                     final s = songs[i];
