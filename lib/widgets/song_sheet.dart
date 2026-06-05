@@ -318,7 +318,9 @@ class SongSheet extends StatefulWidget {
       onTap: onAddToQueue ?? () {},
     ),
     SongSheetAction(
-      icon: liked ? IconsSheet.heartFilled : IconsSheet.favoriteAlbumOutlined,
+      icon: liked
+          ? IconsSheet.favoriteAlbumFilled
+          : IconsSheet.favoriteAlbumOutlined,
       label: liked ? l.commonFavorited : l.commonFavorite,
       dismissOnTap: false,
       onTap: onLike ?? () {},
@@ -349,7 +351,7 @@ class SongSheet extends StatefulWidget {
     ),
     SongSheetAction(
       icon: liked
-          ? IconsSheet.favoriteAlbumFilled
+          ? IconsSheet.favoriteArtistFilled
           : IconsSheet.favoriteArtistOutlined,
       label: liked ? l.commonFavorited : l.commonFavorite,
       dismissOnTap: false,
