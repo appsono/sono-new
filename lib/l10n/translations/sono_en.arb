@@ -193,15 +193,19 @@
     "description": "Library page card label. Opens the full list of albums in the library."
   },
 
-  "libraryEmptySongs": "No songs in your library yet. :/",
+  "libraryEmptyLikedSongs": "You haven't liked any songs yet. Go and like some",
+  "@libraryEmptyLikedSongs": {
+    "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
+  },
+  "libraryEmptySongs": "No songs in your library yet :/",
   "@libraryEmptySongs": {
     "description": "Empty state on the Songs list page when no songs have been scanned."
   },
-  "libraryEmptyAlbums": "No albums in your library yet. :/",
+  "libraryEmptyAlbums": "No albums in your library yet :/",
   "@libraryEmptyAlbums": {
     "description": "Empty state on the Albums list page when no albums have been scanned."
   },
-  "libraryEmptyArtists": "No artists in your library yet. :/",
+  "libraryEmptyArtists": "No artists in your library yet :/",
   "@libraryEmptyArtists": {
     "description": "Empty state on the Artists list page when no artists have been scanned."
   },
