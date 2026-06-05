@@ -7,9 +7,10 @@ import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/list_row.dart';
+import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/pages/library/library_sheets.dart';
 
-const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
+const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class AlbumsPage extends StatefulWidget {
   final SonoDatabase db;
@@ -72,52 +73,61 @@ class _AlbumsPageState extends State<AlbumsPage> {
     final albums = _albums;
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // ==== header ====
-          SonoStickyHeader(
-            child: SonoHeader(
-              backButton: true,
-              pageTitle: l.libraryCardAlbums,
-              onBackTap: () => Navigator.of(context).pop(),
-              actions: const [],
-            ),
-          ),
-
-          // ==== body ====
-          if (albums == null)
-            const SliverFillRemaining(
-              hasScrollBody: false,
-              child: Center(child: CircularProgressIndicator()),
-            )
-          else if (albums.isEmpty)
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Center(child: Text(l.libraryEmptyAlbums)),
-            )
-          else
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              sliver: SliverList.separated(
-                separatorBuilder: (_, _) => const SizedBox(height: 8),
-                itemCount: albums.length,
-                itemBuilder: (context, i) {
-                  final a = albums[i];
-                  return SonoListRow(
-                    coverPath: _coverPaths?[a.id] ?? '',
-                    title: a.title,
-                    subtitle: a.artistName ?? l.commonUnknownArtist,
-                    //TODO: tap plays album for now; later opens album detail page
-                    onTap: () => _playAlbum(a),
-                    onLongPress: () => _openSheet(a),
-                    onMore: () => _openSheet(a),
-                  );
-                },
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              // ==== header ====
+              SonoStickyHeader(
+                child: SonoHeader(
+                  backButton: true,
+                  pageTitle: l.libraryCardAlbums,
+                  onBackTap: () => Navigator.of(context).pop(),
+                  actions: const [],
+                ),
               ),
-            ),
 
-          // ==== bottom clearance ====
-          SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+              // ==== body ====
+              if (albums == null)
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (albums.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: Text(l.libraryEmptyAlbums)),
+                )
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  sliver: SliverList.separated(
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
+                    itemCount: albums.length,
+                    itemBuilder: (context, i) {
+                      final a = albums[i];
+                      return SonoListRow(
+                        coverPath: _coverPaths?[a.id] ?? '',
+                        title: a.title,
+                        subtitle: a.artistName ?? l.commonUnknownArtist,
+                        //TODO: tap plays album for now; later opens album detail page
+                        onTap: () => _playAlbum(a),
+                        onLongPress: () => _openSheet(a),
+                        onMore: () => _openSheet(a),
+                      );
+                    },
+                  ),
+                ),
+              // ==== bottom clearance ====
+              SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+            ],
+          ),
+          Positioned(
+            left: 12,
+            right: 12,
+            bottom: 22,
+            child: SonoMiniPlayer(db: widget.db, navBarVisible: false),
+          ),
         ],
       ),
     );
