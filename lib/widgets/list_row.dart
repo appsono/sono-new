@@ -4,6 +4,7 @@ import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/theme/icons.dart';
 
 /// One-line library row: cover, title, optional subtitle, optional trailing
 ///
@@ -17,6 +18,7 @@ class SonoListRow extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
+  final VoidCallback? onMore;
 
   static const double height = 74;
   static const double coverSize = 56;
@@ -29,6 +31,7 @@ class SonoListRow extends StatelessWidget {
     this.subtitle,
     this.trailing,
     this.onLongPress,
+    this.onMore,
     super.key,
   });
 
@@ -85,7 +88,13 @@ class SonoListRow extends StatelessWidget {
               ],
             ),
           ),
-          if (trailing != null) ...[const SizedBox(width: 8), trailing!],
+          if (onMore != null) ...[
+            const SizedBox(width: 4),
+            _MoreButton(onTap: onMore!),
+          ] else if (trailing != null) ...[
+            const SizedBox(width: 8),
+            trailing!,
+          ],
         ],
       ),
     );
@@ -97,6 +106,32 @@ class SonoListRow extends StatelessWidget {
       onLongPress: onLongPress,
       behavior: HitTestBehavior.opaque,
       child: tappable,
+    );
+  }
+}
+
+// ==== more button ====
+class _MoreButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const _MoreButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: 40,
+        height: SonoListRow.height,
+        child: Center(
+          child: IconsSheet.svg(
+            IconsSheet.moreOptionsVeticalFilled,
+            size: SonoSizes.iconMd,
+            color: c.textSecondary,
+          ),
+        ),
+      ),
     );
   }
 }
