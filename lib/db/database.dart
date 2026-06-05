@@ -260,11 +260,28 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
-  Future<List<AlbumWithArtistViewData>> getFavoriteAlbumsWithArtists() {
-    return (select(albumWithArtistView)
-          ..where((a) => a.favoritedAt.isNotNull())
-          ..orderBy([(a) => OrderingTerm.desc(a.favoritedAt)]))
-        .get();
+  Future<List<AlbumWithArtistViewData>> getFavoriteAlbumsWithArtists() async {
+    final rows =
+        await (select(albums).join([
+                leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+              ])
+              ..where(albums.favoritedAt.isNotNull())
+              ..orderBy([OrderingTerm.desc(albums.favoritedAt)]))
+            .get();
+    return rows.map((row) {
+      final a = row.readTable(albums);
+      final ar = row.readTableOrNull(artists);
+      final shown = (a.displayTitle != null && a.displayTitle!.isNotEmpty)
+          ? a.displayTitle!
+          : a.title;
+      return AlbumWithArtistViewData(
+        id: a.id,
+        title: shown,
+        artistId: a.artistId,
+        cover: null, //loaded on demand
+        artistName: ar?.name,
+      );
+    }).toList();
   }
 
   /// Remove albums that have no songs referencing them
