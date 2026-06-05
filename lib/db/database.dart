@@ -17,7 +17,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -65,8 +65,12 @@ class SonoDatabase extends _$SonoDatabase {
         //drop old column
         await customStatement('ALTER TABLE songs DROP COLUMN liked');
       }
+      if (from < 12) {
+        await m.drop(songWithArtistView);
+        await m.create(songWithArtistView);
+      }
       //future migrations go here:
-      // if (from < 12) { .. }
+      // if (from < 13) { .. }
     },
   );
 
