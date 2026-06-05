@@ -125,10 +125,24 @@ class _MoreButton extends StatelessWidget {
         width: 40,
         height: SonoListRow.height,
         child: Center(
-          child: IconsSheet.svg(
-            IconsSheet.moreOptionsVeticalFilled,
-            size: SonoSizes.iconMd,
-            color: c.textSecondary,
+          child: SizedBox(
+            width: 32,
+            height: 32,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: c.bgSurfaceHover,
+              ),
+              child: Center(
+                child: SizedBox.square(
+                  dimension: 20,
+                  child: IconsSheet.svg(
+                    IconsSheet.moreOptionsVeticalFilled,
+                    color: c.textSecondary,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
