@@ -197,11 +197,11 @@
   "@libraryEmptyLikedSongs": {
     "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
   },
-  "libraryEmptyFavoriteAlbums": "No favorite albums yet. :/",
+  "libraryEmptyFavoriteAlbums": "No favorite albums yet :/",
     "@libraryEmptyFavoriteAlbums": {
     "description": "Empty state on the Favorite Albums list page when the user has not favorited any albums."
   },
-  "libraryEmptyFavoriteArtists": "No favorite artists yet. :/",
+  "libraryEmptyFavoriteArtists": "No favorite artists yet :/",
     "@libraryEmptyFavoriteArtists": {
     "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
   },
