@@ -7,6 +7,7 @@ import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/list_row.dart';
+import 'package:sono/pages/library/library_sheets.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 
@@ -54,6 +55,9 @@ class _SongsPageState extends State<SongsPage> {
     AudioService.instance.play(queue, index, origin: QueueOrigin.allSongs);
   }
 
+  Future<void> _openSheet(SongWithArtistViewData song) =>
+      LibrarySheets.openForSong(context: context, db: widget.db, song: song);
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -99,6 +103,8 @@ class _SongsPageState extends State<SongsPage> {
                         s.artistName ??
                         l.commonUnknownArtist,
                     onTap: () => _play(i),
+                    onLongPress: () => _openSheet(s),
+                    onMore: () => _openSheet(s),
                   );
                 },
               ),

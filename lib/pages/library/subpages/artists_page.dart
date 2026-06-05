@@ -7,6 +7,7 @@ import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/list_row.dart';
+import 'package:sono/pages/library/library_sheets.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 
@@ -52,6 +53,12 @@ class _ArtistsPageState extends State<ArtistsPage> {
     //TODO: artist detail page not built yet
   }
 
+  Future<void> _openSheet(Artist artist) => LibrarySheets.openForArtist(
+    context: context,
+    db: widget.db,
+    artist: artist,
+  );
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -95,6 +102,8 @@ class _ArtistsPageState extends State<ArtistsPage> {
                     title: a.name,
                     subtitle: l.commonSongsCount(_songCounts?[a.id] ?? 0),
                     onTap: () => _openArtist(a.id),
+                    onLongPress: () => _openSheet(a),
+                    onMore: () => _openSheet(a),
                   );
                 },
               ),
