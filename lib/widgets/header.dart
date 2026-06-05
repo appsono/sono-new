@@ -323,3 +323,89 @@ class _ActionPill extends StatelessWidget {
     );
   }
 }
+
+/// ==== sticky header wrapper ====
+
+/// Pinned sliver header. Gains background and rouded bottom corners
+/// once contend scrolls beneath it
+class SonoStickyHeader extends StatelessWidget {
+  final Widget child;
+  final double height;
+
+  const SonoStickyHeader({required this.child, this.height = 68, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final topInset = MediaQuery.paddingOf(context).top;
+    final colors = context.sono;
+
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: _StickyHeaderDelegate(
+        child: child,
+        totalHeight: height + topInset,
+        topInset: topInset,
+        background: context.sono.bgContainer,
+        borderColor: colors.borderLight10,
+      ),
+    );
+  }
+}
+
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  final double totalHeight;
+  final double topInset;
+  final Color background;
+  final Color borderColor;
+
+  const _StickyHeaderDelegate({
+    required this.child,
+    required this.totalHeight,
+    required this.topInset,
+    required this.background,
+    required this.borderColor,
+  });
+
+  @override
+  double get minExtent => totalHeight;
+
+  @override
+  double get maxExtent => totalHeight;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final scrolled = shrinkOffset > 0 || overlapsContent;
+    final t = scrolled ? 1.0 : 0.0;
+
+    return AnimatedContainer(
+      height: totalHeight,
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOut,
+      decoration: BoxDecoration(
+        color: background.withValues(alpha: t),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(SonoSizes.borderRadiusLg * t),
+          bottomRight: Radius.circular(SonoSizes.borderRadiusLg * t),
+        ),
+        border: Border.all(
+          color: borderColor.withValues(alpha: borderColor.a * t),
+        ),
+      ),
+      padding: EdgeInsets.fromLTRB(16, 5 + topInset, 16, 5),
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _StickyHeaderDelegate old) =>
+      old.child != child ||
+      old.totalHeight != totalHeight ||
+      old.totalHeight != topInset ||
+      old.background != background ||
+      old.borderColor != borderColor;
+}
