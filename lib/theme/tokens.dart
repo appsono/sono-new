@@ -216,7 +216,7 @@ abstract final class SonoGradients {
 
 abstract final class SonoSizes {
   static const double headerHeight = 64;
-  static const double playerHeight = 90;
+  static const double playerHeight = 70;
   static const double sidebarWidth = 240;
 
   static const double borderRadius = 12;
