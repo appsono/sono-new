@@ -31,6 +31,9 @@ class _AlbumsPageState extends State<AlbumsPage> {
 
   Future<void> _load() async {
     final albums = await widget.db.getAllAlbumsWithArtists();
+    albums.sort(
+      (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+    );
 
     //first-song path per album for cover extraction
     final coverPaths = <int, String>{};

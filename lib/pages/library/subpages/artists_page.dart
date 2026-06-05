@@ -32,6 +32,9 @@ class _ArtistsPageState extends State<ArtistsPage> {
 
   Future<void> _load() async {
     final artists = await widget.db.getAllArtists();
+    artists.sort(
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+    );
 
     final coverPaths = <int, String>{};
     final songCounts = <int, int>{};

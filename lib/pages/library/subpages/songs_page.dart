@@ -30,6 +30,9 @@ class _SongsPageState extends State<SongsPage> {
 
   Future<void> _load() async {
     final songs = await widget.db.getAllSongsWithArtists();
+    songs.sort(
+      (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+    );
     if (!mounted) return;
     setState(() => _songs = songs);
   }
