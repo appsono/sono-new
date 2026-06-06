@@ -274,5 +274,121 @@
     "libraryEmptyLikedSongs": "Sa pole veel ühtegi lugu meeldivaks märkinud. Tee seda nüüd mõne looga",
     "@libraryEmptyLikedSongs": {
         "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
+    },
+    "commonDurationLong": "{hours} t {minutes} min",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "{minutes} min",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonMoreOptions": "Lisavalikud",
+    "@commonMoreOptions": {
+        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
+    },
+    "commonCreatePlaylist": "Loo esitusloend",
+    "@commonCreatePlaylist": {
+        "description": "Button and action label for creating a new playlist."
+    },
+    "commonRename": "Muuda nime",
+    "@commonRename": {
+        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
+    },
+    "commonDelete": "Kustuta",
+    "@commonDelete": {
+        "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+    },
+    "commonCancel": "Katkesta",
+    "@commonCancel": {
+        "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+    },
+    "commonSave": "Salvesta",
+    "@commonSave": {
+        "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+    },
+    "commonUndo": "Võta tegevus tagasi",
+    "@commonUndo": {
+        "description": "Undo action on a snackbar to reverse the last action."
+    },
+    "commonRemoveFromPlaylist": "Eemalda esitusloendist",
+    "@commonRemoveFromPlaylist": {
+        "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
+    },
+    "libraryEmptyPlaylists": "Ühtegi esitusloendit veel pole :/",
+    "@libraryEmptyPlaylists": {
+        "description": "Empty state on the Playlists list page when the user has not created any playlists."
+    },
+    "libraryEmptyFavoriteAlbums": "Ühtegi albumit veel pole :/",
+    "@libraryEmptyFavoriteAlbums": {
+        "description": "Empty state on the Favorite Albums list page when the user has not favorited any albums."
+    },
+    "libraryEmptyFavoriteArtists": "Ühtegi lemmikesitajat veel pole :/",
+    "@libraryEmptyFavoriteArtists": {
+        "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
+    },
+    "playlistNameLabel": "Nimi",
+    "@playlistNameLabel": {
+        "description": "Placeholder text for the playlist name field in the create playlist modal."
+    },
+    "playlistDescriptionLabel": "Kirjeldus (kui tahad lisada)",
+    "@playlistDescriptionLabel": {
+        "description": "Placeholder text for the optional playlist description field in the create playlist modal."
+    },
+    "playlistDefaultName": "Uus esitusloend",
+    "@playlistDefaultName": {
+        "description": "Fallback name applied when the user creates a playlist without entering one."
+    },
+    "playlistRenameTitle": "Muuda esitusloendi nime",
+    "@playlistRenameTitle": {
+        "description": "Title of the rename playlist modal."
+    },
+    "playlistDeleteTitle": "Kas kustutad „{name}“ esitusloendi?",
+    "@playlistDeleteTitle": {
+        "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistEmpty": "See esitusloend on tühi… no kahju küll",
+    "@playlistEmpty": {
+        "description": "Empty state shown on a playlist detail page when no songs have been added yet."
+    },
+    "playlistActionReorder": "Muuda lugude järjestust",
+    "@playlistActionReorder": {
+        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
+    },
+    "playlistAdded": "Lisatud „{name}“ esitusloendisse",
+    "@playlistAdded": {
+        "description": "Snackbar shown after a song has been added to a playlist via the picker.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistAlreadyContains": "Juba on „{name}“ esitusloendis olemas",
+    "@playlistAlreadyContains": {
+        "description": "Snackbar shown when the user tries to add a song to a playlist that already contains it.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
     }
 }
