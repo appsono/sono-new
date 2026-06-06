@@ -245,6 +245,8 @@ class _PageTitle extends StatelessWidget {
     final colors = context.sono;
     return Text(
       title,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         fontFamily: SonoFonts.heading,
         fontSize: 22,
