@@ -68,7 +68,6 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final c = context.sono;
     final playlists = _playlists;
 
     return Scaffold(
