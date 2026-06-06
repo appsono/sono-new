@@ -779,7 +779,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES albums (id)',
+      'REFERENCES albums (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _artistIdMeta = const VerificationMeta(
@@ -793,7 +793,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES artists (id)',
+      'REFERENCES artists (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _displayArtistMeta = const VerificationMeta(
@@ -1415,7 +1415,7 @@ class $LyricsCacheTable extends LyricsCache
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES songs (id)',
+      'REFERENCES songs (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _versionsJsonMeta = const VerificationMeta(
@@ -2552,7 +2552,7 @@ class $PlaylistSongsTable extends PlaylistSongs
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES playlists (id)',
+      'REFERENCES playlists (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _songIdMeta = const VerificationMeta('songId');
@@ -2564,7 +2564,7 @@ class $PlaylistSongsTable extends PlaylistSongs
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES songs (id)',
+      'REFERENCES songs (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _positionMeta = const VerificationMeta(
@@ -3403,6 +3403,44 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
     songWithArtistView,
     albumWithArtistView,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'albums',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('songs', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'artists',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('songs', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'songs',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('lyrics_cache', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'playlists',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('playlist_songs', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'songs',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('playlist_songs', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$ArtistsTableCreateCompanionBuilder =

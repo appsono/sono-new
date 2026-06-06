@@ -93,6 +93,9 @@ class SonoDatabase extends _$SonoDatabase {
       //future migrations go here:
       // if (from < 15) { .. }
     },
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
   );
 
   /// ==== Artists ====

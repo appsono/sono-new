@@ -29,14 +29,23 @@ class Songs extends Table {
   IntColumn get discNumber => integer().nullable()();
   TextColumn get genre => text().nullable()();
   DateTimeColumn get releaseDate => dateTime().nullable()();
-  IntColumn get albumId => integer().nullable().references(Albums, #id)();
-  IntColumn get artistId => integer().nullable().references(Artists, #id)();
+  IntColumn get albumId => integer().nullable().references(
+    Albums,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
+  IntColumn get artistId => integer().nullable().references(
+    Artists,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
   TextColumn get displayArtist => text().nullable()();
   DateTimeColumn get likedAt => dateTime().nullable()();
 }
 
 class LyricsCache extends Table {
-  IntColumn get songId => integer().references(Songs, #id)();
+  IntColumn get songId =>
+      integer().references(Songs, #id, onDelete: KeyAction.cascade)();
   TextColumn get versionsJson => text()();
   IntColumn get selectedIndex => integer().withDefault(const Constant(0))();
   DateTimeColumn get fetchedAt => dateTime()();
@@ -120,8 +129,10 @@ class Playlists extends Table {
 }
 
 class PlaylistSongs extends Table {
-  IntColumn get playlistId => integer().references(Playlists, #id)();
-  IntColumn get songId => integer().references(Songs, #id)();
+  IntColumn get playlistId =>
+      integer().references(Playlists, #id, onDelete: KeyAction.cascade)();
+  IntColumn get songId =>
+      integer().references(Songs, #id, onDelete: KeyAction.cascade)();
   IntColumn get position => integer()();
   DateTimeColumn get addedAt => dateTime()();
 
