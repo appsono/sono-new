@@ -85,18 +85,39 @@ class SonoPlaylistCover extends StatelessWidget {
         width: size,
         height: size,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                _MosaicCell(path: songPaths[0], size: cell, icon: fallbackIcon),
-                _MosaicCell(path: songPaths[1], size: cell, icon: fallbackIcon),
-              ],
+            Expanded(
+              child: Row(
+                children: [
+                  _MosaicCell(
+                    path: songPaths[0],
+                    size: cell,
+                    icon: fallbackIcon,
+                  ),
+                  _MosaicCell(
+                    path: songPaths[1],
+                    size: cell,
+                    icon: fallbackIcon,
+                  ),
+                ],
+              ),
             ),
-            Row(
-              children: [
-                _MosaicCell(path: songPaths[2], size: cell, icon: fallbackIcon),
-                _MosaicCell(path: songPaths[3], size: cell, icon: fallbackIcon),
-              ],
+            Expanded(
+              child: Row(
+                children: [
+                  _MosaicCell(
+                    path: songPaths[2],
+                    size: cell,
+                    icon: fallbackIcon,
+                  ),
+                  _MosaicCell(
+                    path: songPaths[3],
+                    size: cell,
+                    icon: fallbackIcon,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
