@@ -13,6 +13,21 @@
       "count": { "type": "int", "format": "compact" }
     }
   },
+  "commonDurationLong": "{hours}h {minutes}m",
+  "@commonDurationLong": {
+    "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "commonDurationShort": "{minutes}m",
+  "@commonDurationShort": {
+    "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
 
   "commonPlay": "Play",
   "@commonPlay": {
@@ -265,6 +280,10 @@
     "placeholders": {
       "name": { "type": "String" }
     }
+  },
+  "playlistEmpty": "This playlist is empty.",
+  "@playlistEmpty": {
+    "description": "Empty state shown on a playlist detail page when no songs have been added yet."
   },
 
 
