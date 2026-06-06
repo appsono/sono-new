@@ -12,6 +12,7 @@ import 'package:sono/widgets/list_row.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/playlist_cover.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
+import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
@@ -57,8 +58,14 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
     if (mounted) _load();
   }
 
-  void _openPlaylist(int playlistId) {
-    //TODO: playlist detail page not built yet
+  void _openPlaylist(int playlistId) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            PlaylistDetailPage(db: widget.db, playlistId: playlistId),
+      ),
+    );
+    if (mounted) _load();
   }
 
   void _openSheet(Playlist playlist) async {
