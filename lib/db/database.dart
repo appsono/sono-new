@@ -26,7 +26,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -90,8 +90,16 @@ class SonoDatabase extends _$SonoDatabase {
         await m.createTable(playlists);
         await m.createTable(playlistSongs);
       }
+      if (from < 15) {
+        await customStatement(
+          'DELETE FROM playlist_songs WHERE song_id NOT IN (SELECT id FROM songs)',
+        );
+        await customStatement(
+          'DELETE FROM lyrics_cache WHERE song_id NOT IN (SELECT id FROM songs)',
+        );
+      }
       //future migrations go here:
-      // if (from < 15) { .. }
+      // if (from < 16) { .. }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
