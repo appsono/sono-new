@@ -18,11 +18,11 @@ class PlaylistSheets {
   PlaylistSheets._();
 
   // ==== create ====
-  static Future<void> openCreate({
+  static Future<int?> openCreate({
     required BuildContext context,
     required SonoDatabase db,
   }) {
-    return showModalBottomSheet(
+    return showModalBottomSheet<int>(
       context: context,
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withValues(alpha: 0.4),
@@ -105,6 +105,22 @@ class PlaylistSheets {
       ),
     );
   }
+
+  // ==== add to playlist (picker) ====
+  static Future<void> openAddToPlaylist({
+    required BuildContext context,
+    required SonoDatabase db,
+    required int songId,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      isScrollControlled: true,
+      builder: (_) =>
+          _AddToPlaylistSheet(db: db, songId: songId, outerContext: context),
+    );
+  }
 }
 
 // ==== create ====
@@ -133,8 +149,8 @@ class _CreatePlaylistSheetState extends State<_CreatePlaylistSheet> {
         ? l.playlistDefaultName
         : _nameCtrl.text.trim();
     final desc = _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim();
-    await widget.db.createPlaylist(name: name, description: desc);
-    if (mounted) Navigator.of(context).maybePop();
+    final id = await widget.db.createPlaylist(name: name, description: desc);
+    if (mounted) Navigator.of(context).maybePop(id);
   }
 
   @override
@@ -337,6 +353,129 @@ class _DeletePlaylistSheet extends StatelessWidget {
           dismissOnTap: false,
           onTap: () => _confirm(context),
         ),
+      ],
+    );
+  }
+}
+
+// ==== add-to-playlist picker ====
+class _AddToPlaylistSheet extends StatefulWidget {
+  final SonoDatabase db;
+  final int songId;
+  final BuildContext outerContext;
+
+  const _AddToPlaylistSheet({
+    required this.db,
+    required this.songId,
+    required this.outerContext,
+  });
+
+  @override
+  State<_AddToPlaylistSheet> createState() => _AddToPlaylistSheetState();
+}
+
+class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
+  List<Playlist>? _playlists;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final playlists = await widget.db.getAllPlayists();
+    if (!mounted) return;
+    setState(() => _playlists = playlists);
+  }
+
+  Future<void> _addToExisting(Playlist playlist) async {
+    final added = await widget.db.addSongToPlaylist(playlist.id, widget.songId);
+    if (!mounted) return;
+    Navigator.of(context).maybePop();
+
+    if (!widget.outerContext.mounted) return;
+    final l = AppLocalizations.of(widget.outerContext);
+    if (added) {
+      ScaffoldMessenger.of(widget.outerContext).showSnackBar(
+        SnackBar(
+          content: Text(l.playlistAdded(playlist.name)),
+          action: SnackBarAction(
+            label: l.commonUndo,
+            onPressed: () async {
+              await widget.db.removeSongFromPlaylist(
+                playlist.id,
+                widget.songId,
+              );
+            },
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(widget.outerContext).showSnackBar(
+        SnackBar(content: Text(l.playlistAlreadyContains(playlist.name))),
+      );
+    }
+  }
+
+  Future<void> _createAndAdd() async {
+    //closer picker first so create moal opens better
+    Navigator.of(context).maybePop();
+
+    if (!widget.outerContext.mounted) return;
+    final newId = await PlaylistSheets.openCreate(
+      context: widget.outerContext,
+      db: widget.db,
+    );
+    if (newId == null || !widget.outerContext.mounted) return;
+
+    await widget.db.addSongToPlaylist(newId, widget.songId);
+    final playlist = await widget.db.getPlaylistById(newId);
+
+    if (!widget.outerContext.mounted || playlist == null) return;
+    final l = AppLocalizations.of(widget.outerContext);
+    ScaffoldMessenger.of(widget.outerContext).showSnackBar(
+      SnackBar(
+        content: Text(l.playlistAdded(playlist.name)),
+        action: SnackBarAction(
+          label: l.commonUndo,
+          onPressed: () async {
+            await widget.db.removeSongFromPlaylist(newId, widget.songId);
+          },
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final c = context.sono;
+    final playlists = _playlists;
+
+    return BottomModalSheet(
+      title: l.commonAddToPlaylist,
+      background: c.bgContainer,
+      surface: c.bgSurface,
+      accent: c.primary,
+      onBackground: c.textPrimary,
+      onAccent: c.textLight,
+      itemsBuilder: () => [
+        BottomSheetAction(
+          icon: IconsSheet.addOutlined,
+          label: l.commonCreatePlaylist,
+          dismissOnTap: false,
+          onTap: _createAndAdd,
+        ),
+        const BottomSheetDivider(),
+        if (playlists != null)
+          for (final p in playlists)
+            BottomSheetAction(
+              icon: IconsSheet.addToPlaylistFilled,
+              label: p.name,
+              dismissOnTap: false,
+              onTap: () => _addToExisting(p),
+            ),
       ],
     );
   }
