@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:sono/main.dart';
 import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
@@ -376,15 +377,17 @@ class _AddToPlaylistSheet extends StatefulWidget {
 
 class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
   List<Playlist>? _playlists;
+  late final ScaffoldMessengerState _messenger;
 
   @override
   void initState() {
     super.initState();
+    _messenger = SonoApp.messengerKey.currentState!;
     _load();
   }
 
   Future<void> _load() async {
-    final playlists = await widget.db.getAllPlayists();
+    final playlists = await widget.db.getAllPlaylists();
     if (!mounted) return;
     setState(() => _playlists = playlists);
   }
@@ -397,8 +400,9 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
     if (!widget.outerContext.mounted) return;
     final l = AppLocalizations.of(widget.outerContext);
     if (added) {
-      ScaffoldMessenger.of(widget.outerContext).showSnackBar(
+      _messenger.showSnackBar(
         SnackBar(
+          duration: const Duration(seconds: 4),
           content: Text(l.playlistAdded(playlist.name)),
           action: SnackBarAction(
             label: l.commonUndo,
@@ -412,8 +416,11 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
         ),
       );
     } else {
-      ScaffoldMessenger.of(widget.outerContext).showSnackBar(
-        SnackBar(content: Text(l.playlistAlreadyContains(playlist.name))),
+      _messenger.showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 4),
+          content: Text(l.playlistAlreadyContains(playlist.name)),
+        ),
       );
     }
   }
@@ -421,8 +428,8 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
   Future<void> _createAndAdd() async {
     //closer picker first so create moal opens better
     Navigator.of(context).maybePop();
-
     if (!widget.outerContext.mounted) return;
+
     final newId = await PlaylistSheets.openCreate(
       context: widget.outerContext,
       db: widget.db,
@@ -434,8 +441,9 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
 
     if (!widget.outerContext.mounted || playlist == null) return;
     final l = AppLocalizations.of(widget.outerContext);
-    ScaffoldMessenger.of(widget.outerContext).showSnackBar(
+    _messenger.showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 4),
         content: Text(l.playlistAdded(playlist.name)),
         action: SnackBarAction(
           label: l.commonUndo,

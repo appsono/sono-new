@@ -81,6 +81,8 @@ class SonoApp extends StatefulWidget {
   /// Global toggle
   static final themeNotifier = ValueNotifier<SonoColors>(SonoColors.dark);
 
+  static final messengerKey = GlobalKey<ScaffoldMessengerState>();
+
   static void toggleTheme() {
     themeNotifier.value = themeNotifier.value == SonoColors.dark
         ? SonoColors.light
@@ -118,6 +120,7 @@ class _SonoAppState extends State<SonoApp> {
           valueListenable: LocaleService.notifier,
           builder: (_, locale, _) {
             return MaterialApp(
+              scaffoldMessengerKey: SonoApp.messengerKey,
               theme: buildSonoTheme(colors),
               locale: locale,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
