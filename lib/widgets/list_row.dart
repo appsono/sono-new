@@ -90,7 +90,7 @@ class SonoListRow extends StatelessWidget {
           ),
           if (onMore != null) ...[
             const SizedBox(width: 4),
-            _MoreButton(onTap: onMore!),
+            SonoListRowMoreButton(onTap: onMore!),
           ] else if (trailing != null) ...[
             const SizedBox(width: 8),
             trailing!,
@@ -111,9 +111,9 @@ class SonoListRow extends StatelessWidget {
 }
 
 // ==== more button ====
-class _MoreButton extends StatelessWidget {
+class SonoListRowMoreButton extends StatelessWidget {
   final VoidCallback onTap;
-  const _MoreButton({required this.onTap});
+  const SonoListRowMoreButton({required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
