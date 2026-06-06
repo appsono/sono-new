@@ -8,6 +8,8 @@ import 'package:sono/theme/theme.dart';
 import 'package:sono/utils/format_ms.dart';
 import 'package:sono/widgets/song_sheet.dart';
 
+import 'package:sono/pages/library/playlist_sheets.dart';
+
 /// Opens appropriate SongSheet for library item
 ///
 /// handles:
@@ -75,6 +77,11 @@ class LibrarySheets {
           liked = !liked;
           await db.setSongLiked(song.id, liked);
         },
+        onAddToPlaylist: () => PlaylistSheets.openAddToPlaylist(
+          context: context,
+          db: db,
+          songId: song.id,
+        ),
         sharePath: song.path,
       ),
     );
