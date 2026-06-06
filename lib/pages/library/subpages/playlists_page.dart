@@ -61,8 +61,15 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
     //TODO: playlist detail page not built yet
   }
 
-  void _openSheet(Playlist playlist) {
-    //TODO: playlist sheet (rename, delete) not built yet
+  void _openSheet(Playlist playlist) async {
+    await PlaylistSheets.openForPlaylist(
+      context: context,
+      db: widget.db,
+      playlist: playlist,
+      onChanged: () {
+        if (mounted) _load();
+      },
+    );
   }
 
   @override
