@@ -67,6 +67,10 @@
     "description": "State label shown after an album or artist has been favorited."
   },
 
+  "commonMoreOptions": "More options",
+  "@commonMoreOptions": {
+    "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
+  },
   "commonShare": "Share",
   "@commonShare": {
     "description": "Share action. Imperative verb."
@@ -284,6 +288,10 @@
   "playlistEmpty": "This playlist is empty...sadly",
   "@playlistEmpty": {
     "description": "Empty state shown on a playlist detail page when no songs have been added yet."
+  },
+  "playlistActionReorder": "Reorder songs",
+  "@playlistActionReorder": {
+    "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
   },
 
 
