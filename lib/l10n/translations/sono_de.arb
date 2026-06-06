@@ -356,5 +356,35 @@
     "playlistEmpty": "Diese Playlist ist leer…leider",
     "@playlistEmpty": {
         "description": "Empty state shown on a playlist detail page when no songs have been added yet."
+    },
+    "commonMoreOptions": "Mehr Optionen",
+    "@commonMoreOptions": {
+        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
+    },
+    "commonUndo": "Rückgängig",
+    "@commonUndo": {
+        "description": "Undo action on a snackbar to reverse the last action."
+    },
+    "playlistActionReorder": "Songs neu anordnen",
+    "@playlistActionReorder": {
+        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
+    },
+    "playlistAdded": "Zu „{name}“ hinzugefügt",
+    "@playlistAdded": {
+        "description": "Snackbar shown after a song has been added to a playlist via the picker.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistAlreadyContains": "Bereits in „{name}“",
+    "@playlistAlreadyContains": {
+        "description": "Snackbar shown when the user tries to add a song to a playlist that already contains it.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
     }
 }
