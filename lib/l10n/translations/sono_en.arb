@@ -281,7 +281,7 @@
       "name": { "type": "String" }
     }
   },
-  "playlistEmpty": "This playlist is empty.",
+  "playlistEmpty": "This playlist is empty...sadly",
   "@playlistEmpty": {
     "description": "Empty state shown on a playlist detail page when no songs have been added yet."
   },
