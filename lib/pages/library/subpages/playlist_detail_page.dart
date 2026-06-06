@@ -133,11 +133,11 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
   }
 
   Future<void> _openSongSheet(SongWithArtistViewData song) {
-    //TODO: pass playlistContext once LibrarySheets.openForSong supports it
     return LibrarySheets.openForSong(
       context: context,
       db: widget.db,
       song: song,
+      playlistContext: (playlistId: widget.playlistId, onRemoved: _load),
     );
   }
 

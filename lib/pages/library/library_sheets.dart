@@ -4,6 +4,7 @@ import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart';
+import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/utils/format_ms.dart';
 import 'package:sono/widgets/song_sheet.dart';
@@ -25,6 +26,7 @@ class LibrarySheets {
     required BuildContext context,
     required SonoDatabase db,
     required SongWithArtistViewData song,
+    ({int playlistId, VoidCallback onRemoved})? playlistContext,
   }) async {
     final l = AppLocalizations.of(context);
 
@@ -70,25 +72,43 @@ class LibrarySheets {
       onBackground: c.textPrimary,
       onAccent: c.textLight,
       infoRows: infoRows,
-      actionsBuilder: () => SongSheet.defaultsForSong(
-        l: l,
-        liked: liked,
-        onLike: () async {
-          liked = !liked;
-          await db.setSongLiked(song.id, liked);
-        },
-        onAddToPlaylist: () {
-          Future.microtask(() {
-            if (!context.mounted) return;
-            PlaylistSheets.openAddToPlaylist(
-              context: context,
-              db: db,
-              songId: song.id,
-            );
-          });
-        },
-        sharePath: song.path,
-      ),
+      actionsBuilder: () {
+        final actions = SongSheet.defaultsForSong(
+          l: l,
+          liked: liked,
+          onLike: () async {
+            liked = !liked;
+            await db.setSongLiked(song.id, liked);
+          },
+          onAddToPlaylist: () {
+            Future.microtask(() {
+              if (!context.mounted) return;
+              PlaylistSheets.openAddToPlaylist(
+                context: context,
+                db: db,
+                songId: song.id,
+              );
+            });
+          },
+          sharePath: song.path,
+        );
+
+        if (playlistContext != null) {
+          final pc = playlistContext;
+          actions.add(
+            SongSheetAction(
+              icon: IconsSheet.deleteOutlined,
+              label: l.commonRemoveFromPlaylist,
+              tint: c.errorText,
+              onTap: () async {
+                await db.removeSongFromPlaylist(pc.playlistId, song.id);
+                pc.onRemoved();
+              },
+            ),
+          );
+        }
+        return actions;
+      },
     );
   }
 
