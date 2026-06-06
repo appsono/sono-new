@@ -39,6 +39,10 @@ abstract final class IconsSheet {
       'assets/app/icons/outlined/cast_outlined.svg';
   static const String castFilled = 'assets/app/icons/filled/cast_filled.svg';
 
+  static const String checkOutlined =
+      'assets/app/icons/outlined/check_outlined.svg';
+  static const String checkFilled = 'assets/app/icons/filled/check_filled.svg';
+
   static const String closeOutlined =
       'assets/app/icons/outlined/close_outlined.svg';
   static const String closeFilled = 'assets/app/icons/filled/close_filled.svg';
@@ -62,6 +66,10 @@ abstract final class IconsSheet {
       'assets/app/icons/outlined/drag_handler_outlined.svg';
   static const String dragHandlerFilled =
       'assets/app/icons/filled/drag_handler_filled.svg';
+
+  static const String editOutlined =
+      'assets/app/icons/outlined/edit_outlined.svg';
+  static const String editFilled = 'assets/app/icons/filled/edit_filled.svg';
 
   static const String equalizerOutlined =
       'assets/app/icons/outlined/equalizer_outlined.svg';
