@@ -40,6 +40,7 @@ class BottomSheetAction extends BottomSheetItem {
   final VoidCallback onTap;
   final Color? tint;
   final bool dismissOnTap;
+  final bool prominent;
 
   const BottomSheetAction({
     required this.icon,
@@ -48,6 +49,7 @@ class BottomSheetAction extends BottomSheetItem {
     this.subtitle,
     this.tint,
     this.dismissOnTap = true,
+    this.prominent = false,
   });
 }
 
@@ -203,72 +205,75 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
     final items = widget.itemsBuilder();
     final maxHeight = MediaQuery.sizeOf(context).height * 0.85;
 
-    return SafeArea(
-      top: false,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: maxHeight),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Container(
-            decoration: BoxDecoration(
-              color: widget.background,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: widget.onBackground.withValues(alpha: 0.06),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.25),
-                  blurRadius: 24,
-                  offset: const Offset(0, -4),
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: SafeArea(
+        top: false,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: maxHeight),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Container(
+              decoration: BoxDecoration(
+                color: widget.background,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: widget.onBackground.withValues(alpha: 0.06),
                 ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  //drag handle
-                  Center(
-                    child: Container(
-                      width: 36,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: muted,
-                        borderRadius: BorderRadius.circular(2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.25),
+                    blurRadius: 24,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    //drag handle
+                    Center(
+                      child: Container(
+                        width: 36,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: muted,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
-                  ),
-                  if (widget.title != null) ...[
-                    const SizedBox(height: 14),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        widget.title!,
-                        style: TextStyle(
-                          fontFamily: SonoFonts.heading,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: widget.onBackground,
+                    if (widget.title != null) ...[
+                      const SizedBox(height: 14),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          widget.title!,
+                          style: TextStyle(
+                            fontFamily: SonoFonts.heading,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: widget.onBackground,
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 4),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            for (final item in items) _render(item, muted),
+                          ],
                         ),
                       ),
                     ),
                   ],
-                  const SizedBox(height: 4),
-                  Flexible(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          for (final item in items) _render(item, muted),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -303,6 +308,8 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
         item: item,
         bg: widget.surface,
         fg: widget.onBackground,
+        prominentBg: widget.onBackground,
+        prominentFg: widget.background,
         muted: muted,
         onAfterTap: () {
           if (item.dismissOnTap) {
@@ -351,6 +358,8 @@ class _Action extends StatelessWidget {
   final BottomSheetAction item;
   final Color bg;
   final Color fg;
+  final Color prominentBg;
+  final Color prominentFg;
   final Color muted;
   final VoidCallback onAfterTap;
 
@@ -358,13 +367,19 @@ class _Action extends StatelessWidget {
     required this.item,
     required this.bg,
     required this.fg,
+    required this.prominentBg,
+    required this.prominentFg,
     required this.muted,
     required this.onAfterTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final tint = item.tint ?? fg;
+    final isProminent = item.prominent;
+    final rowBg = isProminent ? prominentBg : bg;
+    final rowFg = isProminent ? prominentFg : fg;
+    final iconTint = isProminent ? prominentFg : (item.tint ?? fg);
+    final subtitleColor = isProminent ? rowFg.withValues(alpha: 0.7) : muted;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
       child: BouncyTap(
@@ -375,12 +390,12 @@ class _Action extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
-            color: bg,
+            color: rowBg,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(
             children: [
-              IconsSheet.svg(item.icon, size: 20, color: tint),
+              IconsSheet.svg(item.icon, size: 20, color: iconTint),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -393,7 +408,7 @@ class _Action extends StatelessWidget {
                         fontFamily: SonoFonts.primary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: tint,
+                        color: iconTint,
                       ),
                     ),
                     if (item.subtitle != null) ...[
@@ -404,7 +419,7 @@ class _Action extends StatelessWidget {
                           fontFamily: SonoFonts.primary,
                           fontSize: 11,
                           fontWeight: FontWeight.w400,
-                          color: muted,
+                          color: subtitleColor,
                         ),
                       ),
                     ],
