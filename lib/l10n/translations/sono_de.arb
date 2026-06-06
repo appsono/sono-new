@@ -17,7 +17,7 @@
     },
     "commonPlay": "Spielen",
     "commonPause": "Pausieren",
-    "commonShuffle": "Shuffle",
+    "commonShuffle": "Shufflen",
     "commonShuffleAll": "Alles shufflen",
     "commonRepeat": "Wiederholen",
     "commonLike": "Liken",
@@ -259,16 +259,136 @@
     "@libraryCardAlbums": {
         "description": "Library page card label. Opens the full list of albums in the library."
     },
-    "libraryEmptySongs": "Noch keine Songs in deiner Bibliothek. :/",
+    "libraryEmptySongs": "Noch keine Songs in deiner Bibliothek :/",
     "@libraryEmptySongs": {
         "description": "Empty state on the Songs list page when no songs have been scanned."
     },
-    "libraryEmptyAlbums": "Noch keine Alben in deiner Bibliothek. :/",
+    "libraryEmptyAlbums": "Noch keine Alben in deiner Bibliothek :/",
     "@libraryEmptyAlbums": {
         "description": "Empty state on the Albums list page when no albums have been scanned."
     },
-    "libraryEmptyArtists": "Noch keine Künstler in deiner Bibliothek. :/",
+    "libraryEmptyArtists": "Noch keine Künstler in deiner Bibliothek :/",
     "@libraryEmptyArtists": {
         "description": "Empty state on the Artists list page when no artists have been scanned."
+    },
+    "libraryEmptyLikedSongs": "Du hast bisher keine Songs geliked. Geh und like ein paar",
+    "@libraryEmptyLikedSongs": {
+        "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
+    },
+    "libraryEmptyFavoriteAlbums": "Noch keine Lieblingsalben :/",
+    "@libraryEmptyFavoriteAlbums": {
+        "description": "Empty state on the Favorite Albums list page when the user has not favorited any albums."
+    },
+    "libraryEmptyFavoriteArtists": "Noch keine Lieblingskünstler :/",
+    "@libraryEmptyFavoriteArtists": {
+        "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
+    },
+    "commonDurationLong": "{hours}h {minutes}min",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "{minutes}min",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonCreatePlaylist": "Playlist erstellen",
+    "@commonCreatePlaylist": {
+        "description": "Button and action label for creating a new playlist."
+    },
+    "commonRename": "Umbenennen",
+    "@commonRename": {
+        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
+    },
+    "commonDelete": "Löschen",
+    "@commonDelete": {
+        "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+    },
+    "commonCancel": "Abbrechen",
+    "@commonCancel": {
+        "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+    },
+    "commonSave": "Speichern",
+    "@commonSave": {
+        "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+    },
+    "libraryEmptyPlaylists": "Noch keine Playlists :/",
+    "@libraryEmptyPlaylists": {
+        "description": "Empty state on the Playlists list page when the user has not created any playlists."
+    },
+    "playlistNameLabel": "Name",
+    "@playlistNameLabel": {
+        "description": "Placeholder text for the playlist name field in the create playlist modal."
+    },
+    "playlistDescriptionLabel": "Beschreibung (optional)",
+    "@playlistDescriptionLabel": {
+        "description": "Placeholder text for the optional playlist description field in the create playlist modal."
+    },
+    "playlistDefaultName": "Neue Playlist",
+    "@playlistDefaultName": {
+        "description": "Fallback name applied when the user creates a playlist without entering one."
+    },
+    "playlistRenameTitle": "Playlist umbenennen",
+    "@playlistRenameTitle": {
+        "description": "Title of the rename playlist modal."
+    },
+    "playlistDeleteTitle": "\"{name}\" löschen?",
+    "@playlistDeleteTitle": {
+        "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistEmpty": "Diese Playlist ist leer…leider",
+    "@playlistEmpty": {
+        "description": "Empty state shown on a playlist detail page when no songs have been added yet."
+    },
+    "commonMoreOptions": "Mehr Optionen",
+    "@commonMoreOptions": {
+        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
+    },
+    "commonUndo": "Rückgängig",
+    "@commonUndo": {
+        "description": "Undo action on a snackbar to reverse the last action."
+    },
+    "playlistActionReorder": "Songs neu anordnen",
+    "@playlistActionReorder": {
+        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
+    },
+    "playlistAdded": "Zu „{name}“ hinzugefügt",
+    "@playlistAdded": {
+        "description": "Snackbar shown after a song has been added to a playlist via the picker.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistAlreadyContains": "Bereits in „{name}“",
+    "@playlistAlreadyContains": {
+        "description": "Snackbar shown when the user tries to add a song to a playlist that already contains it.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "commonRemoveFromPlaylist": "Aus Playlist entfernen",
+    "@commonRemoveFromPlaylist": {
+        "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
     }
 }
