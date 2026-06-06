@@ -77,11 +77,16 @@ class LibrarySheets {
           liked = !liked;
           await db.setSongLiked(song.id, liked);
         },
-        onAddToPlaylist: () => PlaylistSheets.openAddToPlaylist(
-          context: context,
-          db: db,
-          songId: song.id,
-        ),
+        onAddToPlaylist: () {
+          Future.microtask(() {
+            if (!context.mounted) return;
+            PlaylistSheets.openAddToPlaylist(
+              context: context,
+              db: db,
+              songId: song.id,
+            );
+          });
+        },
         sharePath: song.path,
       ),
     );

@@ -278,11 +278,17 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
           l: l,
           liked: _liked,
           onLike: _toggleLiked,
-          onAddToPlaylist: () => PlaylistSheets.openAddToPlaylist(
-            context: context,
-            db: widget.db,
-            songId: song.id,
-          ),
+          onAddToPlaylist: () {
+            Future.microtask(() {
+              if (!context.mounted) return;
+              final ctx = context;
+              PlaylistSheets.openAddToPlaylist(
+                context: ctx,
+                db: widget.db,
+                songId: song.id,
+              );
+            });
+          },
           sharePath: song.path,
         );
         return [defaults.first, ...defaults.skip(2)];

@@ -348,11 +348,17 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
         SongSheetAction(
           icon: IconsSheet.addToPlaylistOutlined,
           label: l.commonAddToPlaylist,
-          onTap: () => PlaylistSheets.openAddToPlaylist(
-            context: context,
-            db: widget.db,
-            songId: song.id,
-          ),
+          onTap: () {
+            Future.microtask(() {
+              if (!context.mounted) return;
+              final ctx = context;
+              PlaylistSheets.openAddToPlaylist(
+                context: ctx,
+                db: widget.db,
+                songId: song.id,
+              );
+            });
+          },
         ),
         SongSheetAction(
           icon: IconsSheet.albumOutlined,
