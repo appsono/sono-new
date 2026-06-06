@@ -386,5 +386,9 @@
                 "type": "String"
             }
         }
+    },
+    "commonRemoveFromPlaylist": "Aus Playlist entfernen",
+    "@commonRemoveFromPlaylist": {
+        "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
     }
 }
