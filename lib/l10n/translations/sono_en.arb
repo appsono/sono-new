@@ -118,6 +118,23 @@
     "description": "Label for the filesystem path metadata field."
   },
 
+  "commonRename": "Rename",
+  "@commonRename": {
+    "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
+  },
+  "commonDelete": "Delete",
+  "@commonDelete": {
+    "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+  },
+  "commonCancel": "Cancel",
+  "@commonCancel": {
+    "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+  },
+  "commonSave": "Save",
+  "@commonSave": {
+    "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+  },
+
   "navHome": "Home",
   "navLibrary": "Library",
   "navSearch": "Search",
@@ -238,6 +255,17 @@
   "@playlistDefaultName": {
     "description": "Fallback name applied when the user creates a playlist without entering one."
   },
+  "playlistRenameTitle": "Rename playlist",
+  "@playlistRenameTitle": {
+    "description": "Title of the rename playlist modal."
+  },
+  "playlistDeleteTitle": "Delete \"{name}\"?",
+  "@playlistDeleteTitle": {
+    "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
 
 
   "playerNowPlaying": "Now Playing",
