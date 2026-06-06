@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
@@ -41,6 +42,7 @@ class BottomSheetAction extends BottomSheetItem {
   final Color? tint;
   final bool dismissOnTap;
   final bool prominent;
+  final bool destructive;
 
   const BottomSheetAction({
     required this.icon,
@@ -50,6 +52,7 @@ class BottomSheetAction extends BottomSheetItem {
     this.tint,
     this.dismissOnTap = true,
     this.prominent = false,
+    this.destructive = false,
   });
 }
 
@@ -375,11 +378,26 @@ class _Action extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.sono;
+    final isDestructive = item.destructive;
     final isProminent = item.prominent;
-    final rowBg = isProminent ? prominentBg : bg;
-    final rowFg = isProminent ? prominentFg : fg;
-    final iconTint = isProminent ? prominentFg : (item.tint ?? fg);
-    final subtitleColor = isProminent ? rowFg.withValues(alpha: 0.7) : muted;
+
+    final Color rowBg;
+    final Color rowFg;
+    if (isDestructive) {
+      rowBg = c.errorBg;
+      rowFg = c.errorText;
+    } else if (isProminent) {
+      rowBg = prominentBg;
+      rowFg = prominentFg;
+    } else {
+      rowBg = bg;
+      rowFg = item.tint ?? fg;
+    }
+    final subtitleColor = (isDestructive || isProminent)
+        ? rowFg.withValues(alpha: 0.7)
+        : muted;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
       child: BouncyTap(
@@ -395,7 +413,7 @@ class _Action extends StatelessWidget {
           ),
           child: Row(
             children: [
-              IconsSheet.svg(item.icon, size: 20, color: iconTint),
+              IconsSheet.svg(item.icon, size: 20, color: rowFg),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -408,7 +426,7 @@ class _Action extends StatelessWidget {
                         fontFamily: SonoFonts.primary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: iconTint,
+                        color: rowFg,
                       ),
                     ),
                     if (item.subtitle != null) ...[
