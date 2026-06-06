@@ -113,6 +113,32 @@ class BottomSheetContributor extends BottomSheetItem {
   });
 }
 
+/// icon + label + text field
+/// caller owns controller so values persist across modal rebuilds
+class BottomSheetTextField extends BottomSheetItem {
+  final String? icon;
+  final String label;
+  final TextEditingController controller;
+  final int? maxLines;
+  final int? maxLength;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onChanged;
+  final VoidCallback? onSubmitted;
+  final bool autofocus;
+
+  const BottomSheetTextField({
+    required this.label,
+    required this.controller,
+    this.icon,
+    this.maxLines = 1,
+    this.maxLength,
+    this.textInputAction,
+    this.onChanged,
+    this.onSubmitted,
+    this.autofocus = false,
+  });
+}
+
 class BottomModalSheet extends StatefulWidget {
   /// builder invoked on every rebuild so items see fresh state
   final List<BottomSheetItem> Function() itemsBuilder;
@@ -308,6 +334,13 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
         fg: widget.onBackground,
         muted: muted,
         onAfterTap: () => Navigator.of(context).maybePop(),
+      ),
+      BottomSheetTextField() => _TextFieldRow(
+        item: item,
+        bg: widget.surface,
+        fg: widget.onBackground,
+        muted: muted,
+        onAfterChange: _refresh,
       ),
     };
   }
@@ -712,6 +745,76 @@ class _ContributorRow extends StatelessWidget {
           fontSize: 14,
           fontWeight: FontWeight.w700,
           color: fg,
+        ),
+      ),
+    );
+  }
+}
+
+// ==== text field row ====
+class _TextFieldRow extends StatelessWidget {
+  final BottomSheetTextField item;
+  final Color bg;
+  final Color fg;
+  final Color muted;
+  final VoidCallback onAfterChange;
+
+  const _TextFieldRow({
+    required this.item,
+    required this.bg,
+    required this.fg,
+    required this.muted,
+    required this.onAfterChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(SonoSizes.borderRadiusSm),
+        ),
+        child: Row(
+          children: [
+            if (item.icon != null) ...[
+              IconsSheet.svg(item.icon!, size: 20, color: fg),
+              const SizedBox(width: 12),
+            ],
+            Expanded(
+              child: TextField(
+                controller: item.controller,
+                maxLines: item.maxLines,
+                maxLength: item.maxLength,
+                textInputAction: item.textInputAction,
+                autofocus: item.autofocus,
+                onChanged: (v) {
+                  item.onChanged?.call(v);
+                  onAfterChange();
+                },
+                onSubmitted: (_) => item.onSubmitted?.call(),
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 15,
+                  color: fg,
+                ),
+                decoration: InputDecoration(
+                  hintText: item.label,
+                  hintStyle: TextStyle(
+                    fontFamily: SonoFonts.primary,
+                    fontSize: 15,
+                    color: muted,
+                  ),
+                  border: InputBorder.none,
+                  isDense: true,
+                  counterText: '',
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
