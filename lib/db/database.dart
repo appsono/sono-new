@@ -454,7 +454,7 @@ class SonoDatabase extends _$SonoDatabase {
   }
 
   /// ==== Playlists ====
-  Future<List<Playlist>> getAllPlayists() => (select(
+  Future<List<Playlist>> getAllPlaylists() => (select(
     playlists,
   )..orderBy([(p) => OrderingTerm.desc(p.createdAt)])).get();
 

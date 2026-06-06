@@ -36,7 +36,7 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
   }
 
   Future<void> _load() async {
-    final playlists = await widget.db.getAllPlayists();
+    final playlists = await widget.db.getAllPlaylists();
 
     final songCounts = <int, int>{};
     final coverPaths = <int, List<String>>{};
