@@ -265,7 +265,7 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
 
 
   "playerNowPlaying": "Now Playing",
