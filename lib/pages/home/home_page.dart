@@ -4,6 +4,8 @@ import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/home/home_actions.dart';
+import 'package:sono/pages/library/playlist_sheets.dart';
+import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
@@ -153,8 +155,19 @@ class _HomePageState extends State<HomePage> {
                   );
                   //AudioService.instance.setShuffle(true);
                 },
-                onCreatePlaylist: () {
-                  //later
+                onCreatePlaylist: () async {
+                  final newId = await PlaylistSheets.openCreate(
+                    context: context,
+                    db: widget.db,
+                  );
+                  if (newId == null || !context.mounted) return;
+                  //jump straight into new playlist after creation
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          PlaylistDetailPage(db: widget.db, playlistId: newId),
+                    ),
+                  );
                 },
               ),
             ),
