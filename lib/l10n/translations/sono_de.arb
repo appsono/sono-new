@@ -17,7 +17,7 @@
     },
     "commonPlay": "Spielen",
     "commonPause": "Pausieren",
-    "commonShuffle": "Shuffle",
+    "commonShuffle": "Shufflen",
     "commonShuffleAll": "Alles shufflen",
     "commonRepeat": "Wiederholen",
     "commonLike": "Liken",
@@ -282,5 +282,79 @@
     "libraryEmptyFavoriteArtists": "Noch keine Lieblingskünstler :/",
     "@libraryEmptyFavoriteArtists": {
         "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
+    },
+    "commonDurationLong": "{hours}h {minutes}min",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "{minutes}min",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonCreatePlaylist": "Playlist erstellen",
+    "@commonCreatePlaylist": {
+        "description": "Button and action label for creating a new playlist."
+    },
+    "commonRename": "Umbenennen",
+    "@commonRename": {
+        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
+    },
+    "commonDelete": "Löschen",
+    "@commonDelete": {
+        "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+    },
+    "commonCancel": "Abbrechen",
+    "@commonCancel": {
+        "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+    },
+    "commonSave": "Speichern",
+    "@commonSave": {
+        "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+    },
+    "libraryEmptyPlaylists": "Noch keine Playlists :/",
+    "@libraryEmptyPlaylists": {
+        "description": "Empty state on the Playlists list page when the user has not created any playlists."
+    },
+    "playlistNameLabel": "Name",
+    "@playlistNameLabel": {
+        "description": "Placeholder text for the playlist name field in the create playlist modal."
+    },
+    "playlistDescriptionLabel": "Beschreibung (optional)",
+    "@playlistDescriptionLabel": {
+        "description": "Placeholder text for the optional playlist description field in the create playlist modal."
+    },
+    "playlistDefaultName": "Neue Playlist",
+    "@playlistDefaultName": {
+        "description": "Fallback name applied when the user creates a playlist without entering one."
+    },
+    "playlistRenameTitle": "Playlist umbenennen",
+    "@playlistRenameTitle": {
+        "description": "Title of the rename playlist modal."
+    },
+    "playlistDeleteTitle": "\"{name}\" löschen?",
+    "@playlistDeleteTitle": {
+        "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistEmpty": "Diese Playlist ist leer…leider",
+    "@playlistEmpty": {
+        "description": "Empty state shown on a playlist detail page when no songs have been added yet."
     }
 }
