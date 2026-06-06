@@ -224,9 +224,18 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   }
 
   Future<List<LrclibTrack>> _searchLyrics(Song song, String? albumName) async {
+    //resolve usable artist name: displayArtist first, then artists table
+    var artistName = song.displayArtist ?? '';
+    if (artistName.isEmpty && song.artistId != null) {
+      final artist = await widget.db.getArtistById(song.artistId!);
+      artistName = artist?.name ?? '';
+    }
+    debugPrint(
+      'lyrics search: track="${song.title}" artist="$artistName" album="$albumName"',
+    );
     final results = await LrclibService.instance.search(
       trackName: song.title,
-      artistName: song.displayArtist ?? '',
+      artistName: artistName,
       albumName: albumName,
     );
     results.sort((a, b) {
@@ -254,7 +263,9 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     if (song.albumId != null) {
       final album = await widget.db.getAlbumById(song.albumId!);
       if (seq != _loadSeq || !mounted) return;
-      albumName = album?.title;
+      albumName = (album?.displayTitle?.isNotEmpty ?? false)
+          ? album!.displayTitle
+          : album?.title;
     }
 
     final results = await _searchLyrics(song, albumName);
@@ -629,7 +640,9 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       String? albumName;
       if (song.albumId != null) {
         final album = await widget.db.getAlbumById(song.albumId!);
-        albumName = album?.title;
+        albumName = (album?.displayTitle?.isNotEmpty ?? false)
+            ? album!.displayTitle
+            : album?.title;
       }
 
       if (_song?.id == song.id || _loadedSongId == song.id) {
