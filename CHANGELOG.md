@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.6.0+4](https://github.com/appsono/sono-new/compare/v0.5.3+3...v0.6.0+3) (2026-06-06)
+
+### Features
+
+* Added the Library tab with subpages for Songs, Albums, Artists, Liked Songs, Favorite Albums, and Favorite Artists
+* Added Playlists: create, rename, delete, reorder songs, add to playlist from any song sheet, remove from playlist
+* Added playlist detail page with full-width cover, scroll-driven header, and reorder mode
+* Added playlist mosaic cover (2x2 from the first 4 songs) for playlists without a custom cover
+* Added folder-based album grouping as a settings toggle
+* Added desktop OS media controls (Linux MPRIS, Windows SMTC)
+* Added text field rows, keyboard-aware padding, and destructive and prominent action styles to the bottom modal sheet
+* Sticky page header now only reveals its background when content scrolls underneath
+
+### Fixes
+
+* Fixed lyrics search using the folder path instead of the album's display title when folder-based album grouping is enabled
+* Fixed snackbars staying on screen forever instead of auto-dismissing
+* Fixed long playlist names wrapping to two lines in the page header
+* Fixed playlist 2x2 cover overflowing by a couple of pixels
+* Fixed a race between the song sheet closing and the add-to-playlist picker opening that could trigger a willPop assertion
+* Fixed Discord RPC and secure storage erroring out on Linux
+* Reduced mini player height from 90 to 70 px
+
+### Translation
+
+* [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+* [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (83%)
+* [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (80%)
+
 ## [0.5.3+3](https://github.com/appsono/sono-new/compare/v0.5.2+2...v0.5.3+3) (2026-05-26)
 
 ### Features
