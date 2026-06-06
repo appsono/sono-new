@@ -8,6 +8,7 @@ import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/widgets/header.dart';
 
+import 'package:sono/pages/library/subpages/playlists_page.dart';
 import 'package:sono/pages/library/subpages/liked_songs_page.dart';
 import 'package:sono/pages/library/subpages/albums_page.dart';
 import 'package:sono/pages/library/subpages/favorite_albums_page.dart';
@@ -49,7 +50,7 @@ class _LibraryPageState extends State<LibraryPage> {
           l.libraryCardPlaylists,
           IconsSheet.playlistFilled,
           c.accentBlue,
-          () {},
+          () => _push(PlaylistsPage(db: widget.db)),
         ),
         long: _CardData(
           l.libraryCardLikedSongs,
