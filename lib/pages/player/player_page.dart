@@ -14,9 +14,10 @@ import 'package:sono/pages/player/player_progress_bar.dart';
 import 'package:sono/pages/player/player_controls.dart';
 import 'package:sono/pages/player/player_secondary_controls.dart';
 import 'package:sono/widgets/song_sheet.dart';
-//views
+//views/pages
 import 'package:sono/pages/player/player_queue_view.dart';
 import 'package:sono/pages/player/player_lyrics_view.dart';
+import 'package:sono/pages/library/playlist_sheets.dart';
 //utils
 import 'package:sono/utils/format_ms.dart';
 
@@ -277,6 +278,11 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
           l: l,
           liked: _liked,
           onLike: _toggleLiked,
+          onAddToPlaylist: () => PlaylistSheets.openAddToPlaylist(
+            context: context,
+            db: widget.db,
+            songId: song.id,
+          ),
           sharePath: song.path,
         );
         return [defaults.first, ...defaults.skip(2)];

@@ -7,6 +7,7 @@ import 'package:sono/utils/queue_origin_label.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/player/player_colors.dart';
+import 'package:sono/pages/library/playlist_sheets.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
@@ -347,7 +348,11 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
         SongSheetAction(
           icon: IconsSheet.addToPlaylistOutlined,
           label: l.commonAddToPlaylist,
-          onTap: () {},
+          onTap: () => PlaylistSheets.openAddToPlaylist(
+            context: context,
+            db: widget.db,
+            songId: song.id,
+          ),
         ),
         SongSheetAction(
           icon: IconsSheet.albumOutlined,
