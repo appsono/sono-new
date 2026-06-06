@@ -72,6 +72,10 @@
   "@commonAddToPlaylist": {
     "description": "Add a song or album to a user playlist. Imperative form. Used as button label and tooltip."
   },
+  "commonCreatePlaylist": "Create playlist",
+  "@commonCreatePlaylist": {
+    "description": "Button and action label for creating a new playlist."
+  },
   "commonRemoveFromQueue": "Remove from queue",
   "@commonRemoveFromQueue": {
     "description": "Remove a song from the playback queue. Imperative form."
@@ -193,6 +197,10 @@
     "description": "Library page card label. Opens the full list of albums in the library."
   },
 
+  "libraryEmptyPlaylists": "No playlists yet :/",
+  "@libraryEmptyPlaylists": {
+    "description": "Empty state on the Playlists list page when the user has not created any playlists."
+  },
   "libraryEmptyLikedSongs": "You haven't liked any songs yet. Go and like some",
   "@libraryEmptyLikedSongs": {
     "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
@@ -216,6 +224,19 @@
   "libraryEmptyArtists": "No artists in your library yet :/",
   "@libraryEmptyArtists": {
     "description": "Empty state on the Artists list page when no artists have been scanned."
+  },
+
+  "playlistNameLabel": "Name",
+  "@playlistNameLabel": {
+    "description": "Placeholder text for the playlist name field in the create playlist modal."
+  },
+  "playlistDescriptionLabel": "Description (optional)",
+  "@playlistDescriptionLabel": {
+    "description": "Placeholder text for the optional playlist description field in the create playlist modal."
+  },
+  "playlistDefaultName": "New Playlist",
+  "@playlistDefaultName": {
+    "description": "Fallback name applied when the user creates a playlist without entering one."
   },
 
 
