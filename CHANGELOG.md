@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.6.1+4](https://github.com/appsono/sono-new/compare/v0.6.0+4...v0.6.1+4) (2026-06-06)
+
+### Fixes
+
+* Fixed manual rescans (via the rescan button in settings) wiping song likes and emptying playlists. Songs now stay in the database during a regroup and only their album link is recalculated.
+* Database now enforces its own relationships: deleting a song automatically cleans up playlist entries and cached lyrics. Dangling rows left by the previous bug are cleaned up on first launch.
+
+### Translation
+
+* [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
+
 ## [0.6.0+4](https://github.com/appsono/sono-new/compare/v0.5.3+3...v0.6.0+3) (2026-06-06)
 
 ### Features
