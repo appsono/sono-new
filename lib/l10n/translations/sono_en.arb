@@ -320,6 +320,27 @@
     }
   },
 
+  "albumTypeAlbum": "Album",
+  "@albumTypeAlbum": {
+    "description": "Type label for a standard album shown on the artist detail page."
+  },
+  "albumTypeEp": "EP",
+  "@albumTypeEp": {
+    "description": "Type label for an EP (extended play) album shown on the artist detail page."
+  },
+  "albumTypeSingle": "Single",
+  "@albumTypeSingle": {
+    "description": "Type label for a single-track release shown on the artist detail page."
+  },
+  "albumTypeCompilation": "Compilation",
+  "@albumTypeCompilation": {
+    "description": "Type label for a compilation album (3+ distinct contributing artists) shown on the artist detail page."
+  },
+  "albumTypeCollaboration": "Collaboration",
+  "@albumTypeCollaboration": {
+    "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
+  },
+
 
   "playerNowPlaying": "Now Playing",
   "@playerNowPlaying": {
