@@ -308,6 +308,69 @@ class SonoDatabase extends _$SonoDatabase {
     }).toList();
   }
 
+  /// Albums by an artist with aggregate metadata for artist detail grid
+  /// Sorted newest release first; undated albums last
+  Future<
+    List<
+      ({
+        int id,
+        String title,
+        String? displayTitle,
+        int songCount,
+        int distinctArtistCount,
+        int totalDurationMs,
+        DateTime? firstReleaseDate,
+        String firstPath,
+      })
+    >
+  >
+  getArtistAlbumsWithMetadata(int artistId) async {
+    final songCountExp = songs.id.count();
+    final distinctArtistExp = songs.artistId.count(distinct: true);
+    final totalDurationExp = songs.duration.sum();
+    final firstReleaseExp = songs.releaseDate.min();
+    final firstPathExp = songs.path.min();
+
+    final query =
+        selectOnly(
+            albums,
+          ).join([leftOuterJoin(songs, songs.albumId.equalsExp(albums.id))])
+          ..addColumns([
+            albums.id,
+            albums.title,
+            albums.displayTitle,
+            songCountExp,
+            distinctArtistExp,
+            totalDurationExp,
+            firstReleaseExp,
+            firstPathExp,
+          ])
+          ..where(albums.artistId.equals(artistId))
+          ..groupBy([albums.id])
+          ..orderBy([
+            OrderingTerm(
+              expression: firstReleaseExp,
+              mode: OrderingMode.desc,
+              nulls: NullsOrder.last,
+            ),
+            OrderingTerm(expression: albums.title),
+          ]);
+
+    final rows = await query.get();
+    return rows.map((row) {
+      return (
+        id: row.read(albums.id)!,
+        title: row.read(albums.title)!,
+        displayTitle: row.read(albums.displayTitle),
+        songCount: row.read(songCountExp) ?? 0,
+        distinctArtistCount: row.read(distinctArtistExp) ?? 0,
+        totalDurationMs: row.read(totalDurationExp) ?? 0,
+        firstReleaseDate: row.read(firstReleaseExp),
+        firstPath: row.read(firstPathExp) ?? '',
+      );
+    }).toList();
+  }
+
   /// Remove albums that have no songs referencing them
   Future<void> removeOrphanedAlbums() async {
     await customStatement(
@@ -349,6 +412,44 @@ class SonoDatabase extends _$SonoDatabase {
               ),
             ]))
           .get();
+
+  Future<List<SongWithArtistViewData>> getSongsByAlbumWithArtists(
+    int albumId,
+  ) async {
+    final rows =
+        await (select(songs).join([
+                leftOuterJoin(artists, artists.id.equalsExp(songs.artistId)),
+              ])
+              ..where(songs.albumId.equals(albumId))
+              ..orderBy([
+                OrderingTerm(
+                  expression: songs.discNumber,
+                  nulls: NullsOrder.last,
+                ),
+                OrderingTerm(
+                  expression: songs.trackNumber,
+                  nulls: NullsOrder.last,
+                ),
+              ]))
+            .get();
+    return rows.map((row) {
+      final s = row.readTable(songs);
+      final a = row.readTableOrNull(artists);
+      return SongWithArtistViewData(
+        id: s.id,
+        path: s.path,
+        title: s.title,
+        duration: s.duration,
+        genre: s.genre,
+        releaseDate: s.releaseDate,
+        albumId: s.albumId,
+        artistId: s.artistId,
+        displayArtist: s.displayArtist,
+        likedAt: s.likedAt,
+        artistName: a?.name,
+      );
+    }).toList();
+  }
 
   Future<List<Song>> getSongsByArtist(int artistId) =>
       (select(songs)..where((s) => s.artistId.equals(artistId))).get();
