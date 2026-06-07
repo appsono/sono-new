@@ -168,12 +168,15 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     setState(() => _favorited = favorited);
   }
 
-  void _openAlbum(int albumId) {
-    Navigator.of(context).push(
+  void _openAlbum(int albumId) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => AlbumDetailPage(db: widget.db, albumId: albumId),
       ),
     );
+
+    if (!mounted) return;
+    await _reloadAlbums();
   }
 
   // ==== build ====
