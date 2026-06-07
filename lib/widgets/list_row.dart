@@ -16,6 +16,7 @@ class SonoListRow extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? trailing;
+  final Widget? leading;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
   final VoidCallback? onMore;
@@ -30,6 +31,7 @@ class SonoListRow extends StatelessWidget {
     this.coverShape = CoverShape.rounded,
     this.subtitle,
     this.trailing,
+    this.leading,
     this.onLongPress,
     this.onMore,
     super.key,
@@ -49,12 +51,13 @@ class SonoListRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SonoCoverArt(
-            path: coverPath,
-            size: coverSize,
-            shape: coverShape,
-            bordered: true,
-          ),
+          leading ??
+              SonoCoverArt(
+                path: coverPath,
+                size: coverSize,
+                shape: coverShape,
+                bordered: true,
+              ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
