@@ -64,13 +64,13 @@ class ScanService {
     }
     final existingPaths = await db.getAllSongPaths();
     final allPaths = <String>{};
-    final newSongsChunk = <sq.Song>[];
+    final pendingChunk = <sq.Song>[];
 
     Map<String, int> artistCache = await db.getArtistIdMap();
-    Map<(String, int), int> albumCache = await db.getAlbumIdMap();
-    //in folder mode each title is a folder path with exactly one row
-    //so the (title, artistId) cache collapses to folder path -> id cache
-    Map<String, int> folderCache = grouping == AlbumGrouping.folder
+    Map<(String, int), int> albumCache = force
+        ? <(String, int), int>{}
+        : await db.getAlbumIdMap();
+    Map<String, int> folderCache = (!force && grouping == AlbumGrouping.folder)
         ? {for (final e in albumCache.entries) e.key.$1: e.value}
         : <String, int>{};
 
@@ -80,37 +80,45 @@ class ScanService {
       onError: onError ?? _defaultOnError,
     )) {
       allPaths.add(song.path);
-      if (!existingPaths.contains(song.path)) {
-        newSongsChunk.add(song);
 
-        if (newSongsChunk.length >= _chunkSize) {
+      /// on force, every songs goes through chunk processing
+      /// regardless of wheter it already exists (need to recompute
+      /// its album_id and artist_id for new grouping)
+      if (force || !existingPaths.contains(song.path)) {
+        pendingChunk.add(song);
+
+        if (pendingChunk.length >= _chunkSize) {
           final caches = await _flushChunk(
-            newSongsChunk,
+            pendingChunk,
             artistCache,
             albumCache,
             folderCache,
             grouping,
+            existingPaths,
+            force,
           );
           artistCache = caches.$1;
           albumCache = caches.$2;
           folderCache = caches.$3;
-          newSongsChunk.clear();
+          pendingChunk.clear();
         }
       }
     }
 
-    if (newSongsChunk.isNotEmpty) {
+    if (pendingChunk.isNotEmpty) {
       final caches = await _flushChunk(
-        newSongsChunk,
+        pendingChunk,
         artistCache,
         albumCache,
         folderCache,
         grouping,
+        existingPaths,
+        force,
       );
       artistCache = caches.$1;
       albumCache = caches.$2;
       folderCache = caches.$3;
-      newSongsChunk.clear();
+      pendingChunk.clear();
     }
 
     if (!force) {
@@ -127,6 +135,8 @@ class ScanService {
     Map<(String, int), int> albumCache,
     Map<String, int> folderCache,
     AlbumGrouping grouping,
+    Set<String> existingPaths,
+    bool force,
   ) async {
     final artistNames = <String>{};
     for (final song in chunk) {
@@ -195,7 +205,12 @@ class ScanService {
       }
     }
 
+    //split into inserts (new songs) and updates (exisiting songs
+    //being re-grouped)
     final toInsert = <SongsCompanion>[];
+    final toUpdate =
+        <({String path, int? albumId, int? artistId, String? displayArtist})>[];
+
     for (final song in chunk) {
       final mainArtist = getMainArtistFromSong(song) ?? song.artist;
       final mainArtistId = mainArtist != null ? artistCache[mainArtist] : null;
@@ -208,37 +223,62 @@ class ScanService {
         albumId = albumCache[(song.album!, mainArtistId)];
       }
 
-      final rawTrack = song.trackNumber;
-      final int? discNumber;
-      final int? trackNumber;
-      if (rawTrack != null && rawTrack >= 1000) {
-        discNumber = rawTrack ~/ 1000;
-        trackNumber = rawTrack % 1000;
-      } else {
-        discNumber = null;
-        trackNumber = rawTrack;
-      }
+      final displayArtistStr = song.artists.isNotEmpty
+          ? song.artists.join(', ')
+          : song.artist;
 
-      toInsert.add(
-        SongsCompanion.insert(
+      if (force && existingPaths.contains(song.path)) {
+        //regroup: only album_id/artist_id/displayArtist can change
+        toUpdate.add((
           path: song.path,
-          title: song.title,
-          duration: Value(song.duration?.inMilliseconds),
-          trackNumber: Value(trackNumber),
-          discNumber: Value(discNumber),
-          genre: Value(song.genre),
-          releaseDate: Value(song.releaseDate),
-          albumId: Value(albumId),
-          artistId: Value(mainArtistId),
-          displayArtist: Value(
-            song.artists.isNotEmpty ? song.artists.join(', ') : song.artist,
+          albumId: albumId,
+          artistId: mainArtistId,
+          displayArtist: displayArtistStr,
+        ));
+      } else {
+        final rawTrack = song.trackNumber;
+        final int? discNumber;
+        final int? trackNumber;
+        if (rawTrack != null && rawTrack >= 1000) {
+          discNumber = rawTrack ~/ 1000;
+          trackNumber = rawTrack % 1000;
+        } else {
+          discNumber = null;
+          trackNumber = rawTrack;
+        }
+
+        toInsert.add(
+          SongsCompanion.insert(
+            path: song.path,
+            title: song.title,
+            duration: Value(song.duration?.inMilliseconds),
+            trackNumber: Value(trackNumber),
+            discNumber: Value(discNumber),
+            genre: Value(song.genre),
+            releaseDate: Value(song.releaseDate),
+            albumId: Value(albumId),
+            artistId: Value(mainArtistId),
+            displayArtist: Value(displayArtistStr),
           ),
-        ),
-      );
+        );
+      }
     }
 
     await db.batch((batch) {
-      batch.insertAll(db.songs, toInsert);
+      if (toInsert.isNotEmpty) {
+        batch.insertAll(db.songs, toInsert);
+      }
+      for (final u in toUpdate) {
+        batch.update(
+          db.songs,
+          SongsCompanion(
+            albumId: Value(u.albumId),
+            artistId: Value(u.artistId),
+            displayArtist: Value(u.displayArtist),
+          ),
+          where: (s) => s.path.equals(u.path),
+        );
+      }
     });
 
     return (artistCache, albumCache, folderCache);

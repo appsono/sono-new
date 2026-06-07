@@ -378,6 +378,10 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
+  Future<void> detachAllSongsFromAlbums() async {
+    await customStatement('UPDATE songs SET album_id = NULL');
+  }
+
   Future<void> clearAllAlbums() => delete(albums).go();
 
   /// ==== Songs ====
@@ -526,10 +530,6 @@ class SonoDatabase extends _$SonoDatabase {
   }
 
   Future<void> clearAllSongs() => delete(songs).go();
-
-  Future<void> detachAllSongsFromAlbums() async {
-    await customStatement('UPDATE songs SET album_id = NULL');
-  }
 
   /// ==== Lyrics Cache ====
   Future<void> cacheLyrics(
