@@ -389,6 +389,37 @@ class SonoDatabase extends _$SonoDatabase {
         .get();
   }
 
+  /// Distinct genres present in library with song counts and representative
+  /// path for cover rendering (sorted ABC...>)
+  Future<List<({String genre, int count, String firstPath})>>
+  getAllGenresWithCounts() async {
+    final countExp = songs.id.count();
+    final firstPathExp = songs.path.min();
+    final rows =
+        await (selectOnly(songs)
+              ..addColumns([songs.genre, countExp, firstPathExp])
+              ..where(songs.genre.isNotNull())
+              ..groupBy([songs.genre])
+              ..orderBy([OrderingTerm(expression: songs.genre)]))
+            .get();
+    return rows.map((r) {
+      return (
+        genre: r.read(songs.genre)!,
+        count: r.read(countExp) ?? 0,
+        firstPath: r.read(firstPathExp) ?? '',
+      );
+    }).toList();
+  }
+
+  Future<List<SongWithArtistViewData>> getSongsByGenreWithArtists(
+    String genre,
+  ) {
+    return (select(songWithArtistView)
+          ..where((s) => s.genre.equals(genre))
+          ..orderBy([(s) => OrderingTerm.asc(s.title)]))
+        .get();
+  }
+
   Future<void> removeDeletedSongs(Set<String> currentPaths) async {
     await (delete(songs)..where((s) => s.path.isNotIn(currentPaths))).go();
   }
