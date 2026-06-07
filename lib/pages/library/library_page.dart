@@ -15,6 +15,7 @@ import 'package:sono/pages/library/subpages/favorite_albums_page.dart';
 import 'package:sono/pages/library/subpages/artists_page.dart';
 import 'package:sono/pages/library/subpages/favorite_artists_page.dart';
 import 'package:sono/pages/library/subpages/songs_page.dart';
+import 'package:sono/pages/library/subpages/genres_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 
@@ -95,7 +96,7 @@ class _LibraryPageState extends State<LibraryPage> {
           l.libraryCardGenres,
           IconsSheet.genreFilled,
           c.accentAmber,
-          () {},
+          () => _push(GenresPage(db: widget.db)),
         ),
         long: _CardData(
           l.libraryCardSongs,
