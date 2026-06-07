@@ -28,6 +28,7 @@ class LocaleService {
     Locale('de'),
     Locale('et'),
     Locale('fr'),
+    Locale('kk'),
     Locale('pl'),
     Locale('uk'),
   ];
@@ -45,6 +46,7 @@ class LocaleService {
       'de' => 'Deutsch',
       'et' => 'Eesti',
       'fr' => 'Français',
+      'kk' => 'Қазақша',
       'pl' => 'Polski',
       'uk' => 'Українська',
       _ => locale.toLanguageTag(),
