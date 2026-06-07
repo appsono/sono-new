@@ -269,6 +269,10 @@
   "@libraryEmptyArtists": {
     "description": "Empty state on the Artists list page when no artists have been scanned."
   },
+  "libraryEmptyGenres": "No genres have arrived yet :/",
+  "@libraryEmptyGenres": {
+    "description": "Empty state on the Genres list page when no songs have a genre tag."
+  },
 
   "playlistNameLabel": "Name",
   "@playlistNameLabel": {
