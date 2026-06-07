@@ -58,6 +58,7 @@ class LibrarySheets {
           label: l.commonReleased,
           value: song.releaseDate!.toIso8601String().split('T').first,
         ),
+      SongSheetInfoRow(label: l.commonPath, value: song.path),
     ];
 
     await SongSheet.show(
@@ -169,6 +170,11 @@ class LibrarySheets {
       infoRows: [
         SongSheetInfoRow(label: l.commonAlbum, value: album.title),
         SongSheetInfoRow(label: l.commonArtist, value: album.artistName),
+        if (songs.isNotEmpty)
+          SongSheetInfoRow(
+            label: l.commonPath,
+            value: _folderOf(songs.first.path),
+          ),
       ],
       actionsBuilder: () => SongSheet.defaultsForAlbum(
         l: l,
@@ -237,7 +243,14 @@ class LibrarySheets {
       accent: c.primary,
       onBackground: c.textPrimary,
       onAccent: c.textPrimary,
-      infoRows: [SongSheetInfoRow(label: l.commonArtist, value: artist.name)],
+      infoRows: [
+        SongSheetInfoRow(label: l.commonArtist, value: artist.name),
+        if (songs.isNotEmpty)
+          SongSheetInfoRow(
+            label: l.commonPath,
+            value: _commonFolder(songs.map((s) => s.path)),
+          ),
+      ],
       actionsBuilder: () => SongSheet.defaultsForArtist(
         l: l,
         onPlay: playAll,
@@ -250,4 +263,28 @@ class LibrarySheets {
       ),
     );
   }
+}
+
+// ==== path helpers ====
+String _folderOf(String filePath) {
+  final norm = filePath.replaceAll('\\', '/');
+  final i = norm.lastIndexOf('/');
+  return i <= 0 ? '' : norm.substring(0, i);
+}
+
+/// Longest common parent folder across [paths]
+/// empty if none share one
+String _commonFolder(Iterable<String> paths) {
+  final folders = paths.map(_folderOf).where((f) => f.isNotEmpty).toList();
+  if (folders.isEmpty) return '';
+  if (folders.length == 1) return folders.first;
+  var prefix = folders.first;
+  for (final f in folders.skip(1)) {
+    while (!f.startsWith(prefix)) {
+      final i = prefix.lastIndexOf('/');
+      if (i <= 0) return '';
+      prefix = prefix.substring(0, i);
+    }
+  }
+  return prefix;
 }
