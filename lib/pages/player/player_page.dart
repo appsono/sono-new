@@ -171,7 +171,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     if (song.albumId != null) {
       try {
         final album = await widget.db.getAlbumById(song.albumId!);
-        albumName = album?.title;
+        albumName = album?.shownTitle;
       } catch (_) {}
     }
     if (!mounted) return;
@@ -276,7 +276,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     final album = song.albumId != null
         ? await widget.db.getAlbumById(song.albumId!)
         : null;
-    String? albumName = album?.title;
+    String? albumName = album?.shownTitle;
 
     if (!mounted || !context.mounted) return;
 

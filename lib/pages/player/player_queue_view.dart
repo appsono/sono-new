@@ -274,7 +274,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     final album = song.albumId != null
         ? await widget.db.getAlbumById(song.albumId!)
         : null;
-    String? albumName = album?.title;
+    String? albumName = album?.shownTitle;
 
     final isCurrent = index == _currentIndex;
     bool? liked;

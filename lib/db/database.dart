@@ -785,6 +785,12 @@ class SonoDatabase extends _$SonoDatabase {
   }
 }
 
+extension AlbumDisplayTitle on Album {
+  String get shownTitle => (displayTitle != null && displayTitle!.isNotEmpty)
+      ? displayTitle!
+      : title;
+}
+
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dir = await getApplicationSupportDirectory();

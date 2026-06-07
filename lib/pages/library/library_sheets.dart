@@ -36,7 +36,7 @@ class LibrarySheets {
     final album = song.albumId != null
         ? await db.getAlbumById(song.albumId!)
         : null;
-    String? albumTitle = album?.title;
+    String? albumTitle = album?.shownTitle;
     if (!context.mounted) return;
 
     final c = context.sono;

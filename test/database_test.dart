@@ -115,6 +115,21 @@ void main() {
       expect(albums.length, 2);
     });
 
+    test('shownTitle prefers display title over stored album key', () async {
+      final artistId = await db.getOrCreateArtist('Artist');
+      const folderPath = '/music/Artist/Album Folder';
+      await db.ensureAlbumsExist(
+        {(folderPath, artistId)},
+        displayTitles: {(folderPath, artistId): 'Tagged Album'},
+      );
+
+      final albumMap = await db.getAlbumIdMap();
+      final album = await db.getAlbumById(albumMap[(folderPath, artistId)]!);
+
+      expect(album!.title, folderPath);
+      expect(album.shownTitle, 'Tagged Album');
+    });
+
     test('removeOrphanedAlbums deletes albums with no songs', () async {
       final artistId = await db.getOrCreateArtist('Artist');
       await db.getOrCreateAlbum('Used Album', artistId, null);

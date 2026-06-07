@@ -260,9 +260,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     if (song.albumId != null) {
       final album = await widget.db.getAlbumById(song.albumId!);
       if (seq != _loadSeq || !mounted) return;
-      albumName = (album?.displayTitle?.isNotEmpty ?? false)
-          ? album!.displayTitle
-          : album?.title;
+      albumName = album?.shownTitle;
     }
 
     final results = await _searchLyrics(song, albumName);
@@ -637,9 +635,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       String? albumName;
       if (song.albumId != null) {
         final album = await widget.db.getAlbumById(song.albumId!);
-        albumName = (album?.displayTitle?.isNotEmpty ?? false)
-            ? album!.displayTitle
-            : album?.title;
+        albumName = album?.shownTitle;
       }
 
       if (_song?.id == song.id || _loadedSongId == song.id) {
