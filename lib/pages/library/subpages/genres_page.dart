@@ -8,6 +8,7 @@ import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/list_row.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/card_stack_cover.dart';
+import 'package:sono/pages/library/subpages/genre_detail_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
@@ -35,7 +36,11 @@ class _GenresPageState extends State<GenresPage> {
   }
 
   void _openGenre(String genre) {
-    //TODO: create genre detail page
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => GenreDetailPage(db: widget.db, genre: genre),
+      ),
+    );
   }
 
   @override
