@@ -21,7 +21,7 @@ void main() {
   final total = templateKeys.length;
 
   if (total == 0) {
-    stderr.writeln('No translatabl keys in $templatePath');
+    stderr.writeln('No translatable keys in $templatePath');
     exit(1);
   }
 
