@@ -390,5 +390,29 @@
     "commonRemoveFromPlaylist": "Aus Playlist entfernen",
     "@commonRemoveFromPlaylist": {
         "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
+    },
+    "libraryEmptyGenres": "Noch keine Genres sind eingetroffen :/",
+    "@libraryEmptyGenres": {
+        "description": "Empty state on the Genres list page when no songs have a genre tag."
+    },
+    "albumTypeAlbum": "Album",
+    "@albumTypeAlbum": {
+        "description": "Type label for a standard album shown on the artist detail page."
+    },
+    "albumTypeEp": "EP",
+    "@albumTypeEp": {
+        "description": "Type label for an EP (extended play) album shown on the artist detail page."
+    },
+    "albumTypeSingle": "Single",
+    "@albumTypeSingle": {
+        "description": "Type label for a single-track release shown on the artist detail page."
+    },
+    "albumTypeCompilation": "Kompilation",
+    "@albumTypeCompilation": {
+        "description": "Type label for a compilation album (3+ distinct contributing artists) shown on the artist detail page."
+    },
+    "albumTypeCollaboration": "Collaboration",
+    "@albumTypeCollaboration": {
+        "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
     }
 }
