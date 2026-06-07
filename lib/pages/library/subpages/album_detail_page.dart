@@ -36,6 +36,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
   Album? _album;
   Artist? _artist;
   List<SongWithArtistViewData>? _songs;
+  bool _favorited = false;
 
   @override
   void initState() {
@@ -68,11 +69,13 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
       }
       final songs = await widget.db.getSongsByAlbumWithArtists(widget.albumId);
       final artist = await widget.db.getArtistById(album.artistId);
+      final favorited = await widget.db.getAlbumFavorited(widget.albumId);
       if (!mounted) return;
       setState(() {
         _album = album;
         _artist = artist;
         _songs = songs;
+        _favorited = favorited;
       });
     } catch (e, st) {
       debugPrint('AlbumDetailPage._load failed: $e\n$st');
@@ -150,6 +153,19 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
       db: widget.db,
       album: viewData,
     );
+    await _reloadFavorited();
+  }
+
+  Future<void> _toggleFavorited() async {
+    final next = !_favorited;
+    setState(() => _favorited = next);
+    await widget.db.setAlbumFavorited(widget.albumId, next);
+  }
+
+  Future<void> _reloadFavorited() async {
+    final favorited = await widget.db.getAlbumFavorited(widget.albumId);
+    if (!mounted) return;
+    setState(() => _favorited = favorited);
   }
 
   void _openArtist() {
@@ -220,6 +236,8 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
                     firstReleaseDate: songs
                         ?.map((s) => s.releaseDate)
                         .firstWhere((d) => d != null, orElse: () => null),
+                    favorited: _favorited,
+                    onToggleFavorite: _toggleFavorited,
                     onArtistTap: artist != null ? _openArtist : null,
                     onOpenMore: _openMoreSheet,
                     onShuffle: () => _play(shuffle: true),
@@ -295,6 +313,8 @@ class _Hero extends StatelessWidget {
   final int totalDurationMs;
   final DateTime? firstReleaseDate;
   final VoidCallback? onArtistTap;
+  final bool favorited;
+  final VoidCallback onToggleFavorite;
   final VoidCallback onOpenMore;
   final VoidCallback onShuffle;
   final VoidCallback onPlay;
@@ -307,6 +327,8 @@ class _Hero extends StatelessWidget {
     required this.totalDurationMs,
     required this.firstReleaseDate,
     required this.onArtistTap,
+    required this.favorited,
+    required this.onToggleFavorite,
     required this.onOpenMore,
     required this.onShuffle,
     required this.onPlay,
@@ -380,6 +402,13 @@ class _Hero extends StatelessWidget {
           const SizedBox(height: 14),
           Row(
             children: [
+              _SquareAction(
+                icon: favorited
+                    ? IconsSheet.favoriteAlbumFilled
+                    : IconsSheet.favoriteAlbumOutlined,
+                onTap: onToggleFavorite,
+              ),
+              const SizedBox(width: 8),
               _SquareAction(
                 icon: IconsSheet.moreOptionsVeticalFilled,
                 onTap: onOpenMore,
