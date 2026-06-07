@@ -7,7 +7,10 @@ import 'package:sono/pages/home/home_actions.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
 import 'package:sono/pages/library/subpages/albums_page.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
+import 'package:sono/pages/library/subpages/artists_page.dart';
 import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
+import 'package:sono/pages/library/subpages/songs_page.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
@@ -40,6 +43,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _load();
     widget.scanVersion?.addListener(_load);
+  }
+
+  void _push(Widget page) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
   }
 
   @override
@@ -178,7 +185,11 @@ class _HomePageState extends State<HomePage> {
           // ==== recently added ====
           if (_songs!.isNotEmpty)
             SliverToBoxAdapter(
-              child: _RecentlyAdded(songs: _songs!, onPlay: _playQueue),
+              child: _RecentlyAdded(
+                songs: _songs!,
+                onSeeAll: () => _push(SongsPage(db: widget.db)),
+                onPlay: _playQueue,
+              ),
             ),
 
           // ==== albums ====
@@ -188,9 +199,7 @@ class _HomePageState extends State<HomePage> {
               child: SonoSection(
                 title: l.homeSectionAlbums,
                 titleStyle: const TextStyle(fontSize: 20),
-                onSeeAll: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => AlbumsPage(db: widget.db)),
-                ),
+                onSeeAll: () => _push(AlbumsPage(db: widget.db)),
                 itemExtent: 168,
                 children: _albums!.map((a) {
                   return _AlbumCard(album: a, db: widget.db);
@@ -206,7 +215,7 @@ class _HomePageState extends State<HomePage> {
               child: SonoSection(
                 title: l.homeSectionArtists,
                 titleStyle: const TextStyle(fontSize: 20),
-                onSeeAll: () {},
+                onSeeAll: () => _push(ArtistsPage(db: widget.db)),
                 itemExtent: 168,
                 children: _artists!.map((a) {
                   final count = _artistSongCounts?[a.name] ?? 0;
@@ -219,6 +228,8 @@ class _HomePageState extends State<HomePage> {
                     titleStyle: Theme.of(
                       context,
                     ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+                    onTap: () =>
+                        _push(ArtistDetailPage(db: widget.db, artistId: a.id)),
                   );
                 }).toList(),
               ),
@@ -267,12 +278,17 @@ class _HomePageState extends State<HomePage> {
 
 class _RecentlyAdded extends StatelessWidget {
   final List<SongWithArtistViewData> songs;
+  final VoidCallback onSeeAll;
   final void Function(List<SongWithArtistViewData> queue, int index) onPlay;
 
   //show last 20 songs (highest id = newest); from db by insertion order
   static const _limit = 20;
 
-  const _RecentlyAdded({required this.songs, required this.onPlay});
+  const _RecentlyAdded({
+    required this.songs,
+    required this.onSeeAll,
+    required this.onPlay,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +302,7 @@ class _RecentlyAdded extends StatelessWidget {
     return SonoSection(
       title: l.homeSectionRecentlyAdded,
       titleStyle: const TextStyle(fontSize: 20),
-      onSeeAll: () {},
+      onSeeAll: onSeeAll,
       itemExtent: 168,
       children: recent.asMap().entries.map((e) {
         final s = e.value;
