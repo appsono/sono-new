@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:sono/services/scanner/scan_service.dart';
+//import 'package:sono/services/scanner/scan_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:file_picker/file_picker.dart';
@@ -43,7 +43,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   ScanConfig? _config;
-  AlbumGrouping _grouping = AlbumGrouping.tag;
+  //AlbumGrouping _grouping = AlbumGrouping.tag;
   final _excludedPathCtrl = TextEditingController();
   final _additionalPathCtrl = TextEditingController();
   final _artistCtrl = TextEditingController();
@@ -85,12 +85,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _load() async {
     final c = await ScanSettings(widget.db).load();
-    final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
+    //final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
     _minDurationCtrl.text = c.minDuration?.inSeconds.toString() ?? '';
     if (mounted) {
       setState(() {
         _config = c;
-        _grouping = grouping;
+        //_grouping = grouping;
       });
     }
   }
@@ -101,11 +101,11 @@ class _SettingsPageState extends State<SettingsPage> {
     widget.onRescan?.call();
   }
 
-  Future<void> _saveGrouping(AlbumGrouping g) async {
+  /*Future<void> _saveGrouping(AlbumGrouping g) async {
     await ScanSettings(widget.db).saveAlbumGrouping(g);
     if (mounted) setState(() => _grouping = g);
     widget.onRescan?.call();
-  }
+  }*/
 
   Future<void> _loadDiscord() async {
     final rpc = DiscordRpcService.instance;
@@ -433,11 +433,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
-          title: const Text('group albums by folder'),
+          title: const Text('[BROKEN] group by folder'),
           subtitle: const Text('use song folder instead of album tag'),
-          value: _grouping == AlbumGrouping.folder,
-          onChanged: (on) =>
-              _saveGrouping(on ? AlbumGrouping.folder : AlbumGrouping.tag),
+          value: false,
+          onChanged: null,
         ),
         const SizedBox(height: 16),
 
