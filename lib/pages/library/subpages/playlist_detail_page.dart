@@ -14,6 +14,7 @@ import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/playlist_cover.dart';
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
+import 'package:sono/utils/format_ms.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 const double _scrolledThreshold = 60;
@@ -326,14 +327,6 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
   }
 }
 
-String _formatDuration(int totalMs, AppLocalizations l) {
-  final totalMinutes = totalMs ~/ 60000;
-  final hours = totalMinutes ~/ 60;
-  final minutes = totalMinutes % 60;
-  if (hours > 0) return l.commonDurationLong(hours, minutes);
-  return l.commonDurationShort(minutes);
-}
-
 // ==== hero ====
 class _Hero extends StatelessWidget {
   final Playlist playlist;
@@ -402,7 +395,7 @@ class _Hero extends StatelessWidget {
           ],
           const SizedBox(height: 8),
           Text(
-            '${l.commonSongsCount(songCount)} • ${_formatDuration(totalDurationMs, l)}',
+            '${l.commonSongsCount(songCount)} • ${fmtMsCompact(totalDurationMs, l)}',
             style: TextStyle(
               fontFamily: SonoFonts.primary,
               fontSize: 13,
