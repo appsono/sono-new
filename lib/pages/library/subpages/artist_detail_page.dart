@@ -24,6 +24,7 @@ typedef _ArtistAlbumRow = ({
   int id,
   String title,
   String? displayTitle,
+  DateTime? favoritedAt,
   int songCount,
   int distinctArtistCount,
   int totalDurationMs,
@@ -48,6 +49,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   Artist? _artist;
   List<Song>? _songs;
   List<_ArtistAlbumRow>? _albums;
+  bool _favorited = false;
 
   @override
   void initState() {
@@ -82,11 +84,13 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
       final albums = await widget.db.getArtistAlbumsWithMetadata(
         widget.artistId,
       );
+      final favorited = await widget.db.getArtistFavorited(widget.artistId);
       if (!mounted) return;
       setState(() {
         _artist = artist;
         _songs = songs;
         _albums = albums;
+        _favorited = favorited;
       });
     } catch (e, st) {
       debugPrint('ArtistDetailPage._load failed: $e\n$st');
@@ -115,6 +119,24 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     );
   }
 
+  Future<void> _openAlbumSheet(_ArtistAlbumRow a) async {
+    final artist = _artist;
+    if (artist == null) return;
+    final viewData = AlbumWithArtistViewData(
+      id: a.id,
+      title: a.displayTitle?.isNotEmpty == true ? a.displayTitle! : a.title,
+      artistId: artist.id,
+      cover: null,
+      artistName: artist.name,
+    );
+    await LibrarySheets.openForAlbum(
+      context: context,
+      db: widget.db,
+      album: viewData,
+    );
+    await _reloadAlbums(); //may have toggled albums favorite state
+  }
+
   Future<void> _openMoreSheet() async {
     final artist = _artist;
     if (artist == null) return;
@@ -124,6 +146,26 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
       db: widget.db,
       artist: artist,
     );
+    await _reloadFavorited();
+    await _reloadAlbums();
+  }
+
+  Future<void> _reloadAlbums() async {
+    final albums = await widget.db.getArtistAlbumsWithMetadata(widget.artistId);
+    if (!mounted) return;
+    setState(() => _albums = albums);
+  }
+
+  Future<void> _toggleFavorited() async {
+    final next = !_favorited;
+    setState(() => _favorited = next);
+    await widget.db.setArtistFavorited(widget.artistId, next);
+  }
+
+  Future<void> _reloadFavorited() async {
+    final favorited = await widget.db.getArtistFavorited(widget.artistId);
+    if (!mounted) return;
+    setState(() => _favorited = favorited);
   }
 
   void _openAlbum(int albumId) {
@@ -182,6 +224,8 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                         : '',
                     songCount: songs?.length ?? 0,
                     totalDurationMs: _totalDurationMs(songs),
+                    favorited: _favorited,
+                    onToggleFavorite: _toggleFavorited,
                     onOpenMore: _openMoreSheet,
                     onShuffle: () => _play(shuffle: true),
                     onPlay: _play,
@@ -219,6 +263,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                         album: a,
                         type: type,
                         onTap: () => _openAlbum(a.id),
+                        onLongPress: () => _openAlbumSheet(a),
                       );
                     },
                   ),
@@ -255,6 +300,8 @@ class _Hero extends StatelessWidget {
   final String coverPath;
   final int songCount;
   final int totalDurationMs;
+  final bool favorited;
+  final VoidCallback onToggleFavorite;
   final VoidCallback onOpenMore;
   final VoidCallback onShuffle;
   final VoidCallback onPlay;
@@ -264,6 +311,8 @@ class _Hero extends StatelessWidget {
     required this.coverPath,
     required this.songCount,
     required this.totalDurationMs,
+    required this.favorited,
+    required this.onToggleFavorite,
     required this.onOpenMore,
     required this.onShuffle,
     required this.onPlay,
@@ -314,6 +363,13 @@ class _Hero extends StatelessWidget {
           Row(
             children: [
               _SquareAction(
+                icon: favorited
+                    ? IconsSheet.favoriteArtistFilled
+                    : IconsSheet.favoriteArtistOutlined,
+                onTap: onToggleFavorite,
+              ),
+              const SizedBox(width: 8),
+              _SquareAction(
                 icon: IconsSheet.moreOptionsVeticalFilled,
                 onTap: onOpenMore,
               ),
@@ -333,11 +389,13 @@ class _AlbumGridCard extends StatelessWidget {
   final _ArtistAlbumRow album;
   final AlbumType type;
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
 
   const _AlbumGridCard({
     required this.album,
     required this.type,
     required this.onTap,
+    required this.onLongPress,
   });
 
   @override
@@ -350,47 +408,73 @@ class _AlbumGridCard extends StatelessWidget {
         : album.title;
     final year = album.firstReleaseDate?.year.toString();
     final metaParts = <String>[?year, type.label(l)];
+    final isFavorited = album.favoritedAt != null;
 
-    return BouncyTap(
-      onTap: onTap,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SonoCoverArt(
-                path: album.firstPath,
-                size: constraints.maxWidth,
-                borderRadius: SonoSizes.borderRadiusLg,
-                bordered: true,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                shownTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: SonoFonts.heading,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: c.textPrimary,
-                  height: 1.2,
+    return GestureDetector(
+      onLongPress: onLongPress,
+      behavior: HitTestBehavior.opaque,
+      child: BouncyTap(
+        onTap: onTap,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    SonoCoverArt(
+                      path: album.firstPath,
+                      size: constraints.maxWidth,
+                      borderRadius: SonoSizes.borderRadiusLg,
+                      bordered: true,
+                    ),
+                    if (isFavorited)
+                      Positioned(
+                        top: 6,
+                        right: 6,
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.55),
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconsSheet.svg(
+                            IconsSheet.favoriteAlbumFilled,
+                            size: 14,
+                            color: c.primary,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                metaParts.join(' • '),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: SonoFonts.primary,
-                  fontSize: 12,
-                  color: c.textSecondary,
+                const SizedBox(height: 8),
+                Text(
+                  shownTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: SonoFonts.heading,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: c.textPrimary,
+                    height: 1.2,
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+                const SizedBox(height: 2),
+                Text(
+                  metaParts.join(' • '),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: SonoFonts.primary,
+                    fontSize: 12,
+                    color: c.textSecondary,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
