@@ -230,9 +230,6 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
       final artist = await widget.db.getArtistById(song.artistId!);
       artistName = artist?.name ?? '';
     }
-    debugPrint(
-      'lyrics search: track="${song.title}" artist="$artistName" album="$albumName"',
-    );
     final results = await LrclibService.instance.search(
       trackName: song.title,
       artistName: artistName,
