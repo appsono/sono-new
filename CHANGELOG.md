@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.6.2+4](https://github.com/appsono/sono-new/compare/v0.6.1+4...v0.6.2+4) (2026-06-07)
+
+### Features
+
+* Added album detail page and artist detail pages
+* Added genre pages and linked genres from the library
+* Added indicators on artist pages
+* Added album type inference and labels for albums, EPs, singles, compilations, and collaborations
+* Added stacked cover artwork for collection cards
+* Wired Home page sections, artist rows, song sheets, queue sheets, and player sheets to the new detail pages
+
+### Fixes
+
+* Fixed artist pages showing stale album favorite state after returning from an album page
+* Fixed in-place regrouping so song rows are preserved when grouping settings change
+* Fixed a library sheet key issue
+* Removed lyrics debug logging
+
+### Translation
+
+* Added Kazakh to the language list
+* [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+
 ## [0.6.1+4](https://github.com/appsono/sono-new/compare/v0.6.0+4...v0.6.1+4) (2026-06-06)
 
 ### Fixes
