@@ -168,7 +168,7 @@ class LibrarySheets {
       onAccent: c.textLight,
       infoRows: [
         SongSheetInfoRow(label: l.commonAlbum, value: album.title),
-        SongSheetInfoRow(label: l.commonAlbum, value: album.artistName),
+        SongSheetInfoRow(label: l.commonArtist, value: album.artistName),
       ],
       actionsBuilder: () => SongSheet.defaultsForAlbum(
         l: l,
