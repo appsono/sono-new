@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 import 'package:sono/utils/queue_origin_label.dart';
 
 import 'package:sono/db/database.dart';
@@ -374,7 +375,21 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
         SongSheetAction(
           icon: IconsSheet.artistOutlined,
           label: l.commonGoToArtist,
-          onTap: () {},
+          onTap: song.artistId == null
+              ? () {}
+              : () {
+                  final navigator = Navigator.of(context);
+                  final artistId = song.artistId!;
+                  Future.microtask(() {
+                    if (!navigator.mounted) return;
+                    navigator.push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            ArtistDetailPage(db: widget.db, artistId: artistId),
+                      ),
+                    );
+                  });
+                },
         ),
         if (!isCurrent)
           SongSheetAction(

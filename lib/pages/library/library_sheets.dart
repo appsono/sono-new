@@ -4,6 +4,7 @@ import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
@@ -104,6 +105,21 @@ class LibrarySheets {
                     );
                   });
                 },
+          onGoToArtist: song.artistId == null
+              ? null
+              : () {
+                  final navigator = Navigator.of(context);
+                  final artistId = song.artistId!;
+                  Future.microtask(() {
+                    if (!navigator.mounted) return;
+                    navigator.push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            ArtistDetailPage(db: db, artistId: artistId),
+                      ),
+                    );
+                  });
+                },
           sharePath: song.path,
         );
 
@@ -197,6 +213,18 @@ class LibrarySheets {
         onLike: () async {
           favorited = !favorited;
           await db.setAlbumFavorited(album.id, favorited);
+        },
+        onGoToArtist: () {
+          final navigator = Navigator.of(context);
+          Future.microtask(() {
+            if (!navigator.mounted) return;
+            navigator.push(
+              MaterialPageRoute(
+                builder: (_) =>
+                    ArtistDetailPage(db: db, artistId: album.artistId),
+              ),
+            );
+          });
         },
       ),
     );

@@ -9,6 +9,7 @@ import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/list_row.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/pages/library/library_sheets.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
@@ -52,7 +53,11 @@ class _FavoriteArtistsPageState extends State<FavoriteArtistsPage> {
   }
 
   void _openArtist(int artistId) {
-    //TODO: artist detail page not built yet
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ArtistDetailPage(db: widget.db, artistId: artistId),
+      ),
+    );
   }
 
   Future<void> _openSheet(Artist artist) => LibrarySheets.openForArtist(

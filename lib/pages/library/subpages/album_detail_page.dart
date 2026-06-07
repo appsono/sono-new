@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
@@ -154,11 +155,11 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
   void _openArtist() {
     final artist = _artist;
     if (artist == null) return;
-    //TODO: Navigator.of(context).push(
-    //  MaterialPageRoute(
-    //    builder: (_) => ArtistDetailPage(db: widget.db, artistId: artist.id),
-    //  ),
-    //);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ArtistDetailPage(db: widget.db, artistId: artist.id),
+      ),
+    );
   }
 
   // ==== build ====
@@ -235,7 +236,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
               else if (songs.isEmpty)
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: Center(child: Text(l.playlistEmpty)),
+                  child: Center(child: Text(l.libraryEmptySongs)),
                 )
               else
                 SliverPadding(

@@ -349,7 +349,7 @@ class _AlbumGridCard extends StatelessWidget {
         ? album.displayTitle!
         : album.title;
     final year = album.firstReleaseDate?.year.toString();
-    final metaParts = <String>[if (year != null) year, type.label(l)];
+    final metaParts = <String>[?year, type.label(l)];
 
     return BouncyTap(
       onTap: onTap,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/db/database.dart';
@@ -185,6 +186,21 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
           l: l,
           liked: _liked,
           onLike: _toggleLiked,
+          onGoToArtist: song.artistId == null
+              ? null
+              : () {
+                  final navigator = Navigator.of(context);
+                  final artistId = song.artistId!;
+                  Future.microtask(() {
+                    if (!navigator.mounted) return;
+                    navigator.push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            ArtistDetailPage(db: widget.db, artistId: artistId),
+                      ),
+                    );
+                  });
+                },
           sharePath: song.path,
         );
         return [defaults.first, ...defaults.skip(2)];
@@ -281,12 +297,34 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
           onLike: _toggleLiked,
           onGoToAlbum: album == null
               ? null
-              : () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        AlbumDetailPage(db: widget.db, albumId: album.id),
-                  ),
-                ),
+              : () {
+                  final navigator = Navigator.of(context);
+                  final albumId = album.id;
+                  Future.microtask(() {
+                    if (!navigator.mounted) return;
+                    navigator.push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            AlbumDetailPage(db: widget.db, albumId: albumId),
+                      ),
+                    );
+                  });
+                },
+          onGoToArtist: song.artistId == null
+              ? null
+              : () {
+                  final navigator = Navigator.of(context);
+                  final artistId = song.artistId!;
+                  Future.microtask(() {
+                    if (!navigator.mounted) return;
+                    navigator.push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            ArtistDetailPage(db: widget.db, artistId: artistId),
+                      ),
+                    );
+                  });
+                },
           onAddToPlaylist: () {
             Future.microtask(() {
               if (!context.mounted) return;
