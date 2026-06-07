@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/pages/library/subpages/album_detail_page.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
@@ -31,11 +32,10 @@ class LibrarySheets {
     final l = AppLocalizations.of(context);
 
     final liked0 = await db.getSongLiked(song.id);
-    String? albumTitle;
-    if (song.albumId != null) {
-      final album = await db.getAlbumById(song.albumId!);
-      albumTitle = album?.title;
-    }
+    final album = song.albumId != null
+        ? await db.getAlbumById(song.albumId!)
+        : null;
+    String? albumTitle = album?.title;
     if (!context.mounted) return;
 
     final c = context.sono;
@@ -91,6 +91,19 @@ class LibrarySheets {
               );
             });
           },
+          onGoToAlbum: album == null
+              ? null
+              : () {
+                  Future.microtask(() {
+                    if (!context.mounted) return;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            AlbumDetailPage(db: db, albumId: album.id),
+                      ),
+                    );
+                  });
+                },
           sharePath: song.path,
         );
 

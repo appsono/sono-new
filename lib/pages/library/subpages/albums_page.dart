@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
-import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/list_row.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/pages/library/library_sheets.dart';
+import 'package:sono/pages/library/subpages/album_detail_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
@@ -48,20 +48,6 @@ class _AlbumsPageState extends State<AlbumsPage> {
       _albums = albums;
       _coverPaths = coverPaths;
     });
-  }
-
-  Future<void> _playAlbum(AlbumWithArtistViewData album) async {
-    final songs = await widget.db.getSongsByAlbum(album.id);
-    if (songs.isEmpty) return;
-    AudioService.instance.play(
-      songs,
-      0,
-      origin: QueueOrigin(
-        source: QueueSource.album,
-        label: album.title,
-        refId: album.id,
-      ),
-    );
   }
 
   Future<void> _openSheet(AlbumWithArtistViewData album) =>
@@ -110,8 +96,12 @@ class _AlbumsPageState extends State<AlbumsPage> {
                         coverPath: _coverPaths?[a.id] ?? '',
                         title: a.title,
                         subtitle: a.artistName ?? l.commonUnknownArtist,
-                        //TODO: tap plays album for now; later opens album detail page
-                        onTap: () => _playAlbum(a),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                AlbumDetailPage(db: widget.db, albumId: a.id),
+                          ),
+                        ),
                         onLongPress: () => _openSheet(a),
                         onMore: () => _openSheet(a),
                       );

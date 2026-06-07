@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
+import 'package:sono/pages/library/subpages/album_detail_page.dart';
 import 'package:sono/utils/queue_origin_label.dart';
 
 import 'package:sono/db/database.dart';
@@ -269,11 +270,10 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
     final l = AppLocalizations.of(context);
 
     //resolve album name if any
-    String? albumName;
-    if (song.albumId != null) {
-      final album = await widget.db.getAlbumById(song.albumId!);
-      albumName = album?.title;
-    }
+    final album = song.albumId != null
+        ? await widget.db.getAlbumById(song.albumId!)
+        : null;
+    String? albumName = album?.title;
 
     final isCurrent = index == _currentIndex;
     bool? liked;
@@ -360,11 +360,17 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
             });
           },
         ),
-        SongSheetAction(
-          icon: IconsSheet.albumOutlined,
-          label: l.commonGoToAlbum,
-          onTap: () {},
-        ),
+        if (album != null)
+          SongSheetAction(
+            icon: IconsSheet.albumOutlined,
+            label: l.commonGoToAlbum,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) =>
+                    AlbumDetailPage(db: widget.db, albumId: album.id),
+              ),
+            ),
+          ),
         SongSheetAction(
           icon: IconsSheet.artistOutlined,
           label: l.commonGoToArtist,

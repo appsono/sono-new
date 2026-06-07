@@ -5,6 +5,8 @@ import 'package:sono/l10n/localizations.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/home/home_actions.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
+import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/albums_page.dart';
 import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/icons.dart';
@@ -186,7 +188,9 @@ class _HomePageState extends State<HomePage> {
               child: SonoSection(
                 title: l.homeSectionAlbums,
                 titleStyle: const TextStyle(fontSize: 20),
-                onSeeAll: () {},
+                onSeeAll: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => AlbumsPage(db: widget.db)),
+                ),
                 itemExtent: 168,
                 children: _albums!.map((a) {
                   return _AlbumCard(album: a, db: widget.db);
@@ -319,7 +323,6 @@ class _AlbumCard extends StatefulWidget {
 
 class _AlbumCardState extends State<_AlbumCard> {
   String? _coverPath;
-  List<Song>? _queue;
 
   @override
   void initState() {
@@ -333,23 +336,6 @@ class _AlbumCardState extends State<_AlbumCard> {
     if (songs.isNotEmpty && mounted) {
       setState(() {
         _coverPath = songs.first.path;
-        _queue = songs
-            .map(
-              (s) => Song(
-                id: s.id,
-                path: s.path,
-                title: s.title,
-                duration: s.duration,
-                genre: s.genre,
-                releaseDate: s.releaseDate,
-                trackNumber: s.trackNumber,
-                discNumber: s.discNumber,
-                albumId: s.albumId,
-                artistId: s.artistId,
-                displayArtist: s.displayArtist,
-              ),
-            )
-            .toList();
       });
     }
   }
@@ -366,19 +352,12 @@ class _AlbumCardState extends State<_AlbumCard> {
       titleStyle: Theme.of(
         context,
       ).textTheme.headlineSmall?.copyWith(fontSize: 13),
-      onTap: () {
-        final queue = _queue;
-        if (queue == null || queue.isEmpty) return;
-        AudioService.instance.play(
-          queue,
-          0,
-          origin: QueueOrigin(
-            source: QueueSource.album,
-            label: widget.album.title,
-            refId: widget.album.id,
-          ),
-        );
-      },
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) =>
+              AlbumDetailPage(db: widget.db, albumId: widget.album.id),
+        ),
+      ),
     );
   }
 }

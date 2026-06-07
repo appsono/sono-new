@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:sono/pages/library/subpages/album_detail_page.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/db/database.dart';
@@ -256,11 +257,11 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     final l = AppLocalizations.of(context);
 
     //resolve album name if any
-    String? albumName;
-    if (song.albumId != null) {
-      final album = await widget.db.getAlbumById(song.albumId!);
-      albumName = album?.title;
-    }
+    final album = song.albumId != null
+        ? await widget.db.getAlbumById(song.albumId!)
+        : null;
+    String? albumName = album?.title;
+
     if (!mounted || !context.mounted) return;
 
     _sheetController = SongSheetController(
@@ -278,6 +279,14 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
           l: l,
           liked: _liked,
           onLike: _toggleLiked,
+          onGoToAlbum: album == null
+              ? null
+              : () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        AlbumDetailPage(db: widget.db, albumId: album.id),
+                  ),
+                ),
           onAddToPlaylist: () {
             Future.microtask(() {
               if (!context.mounted) return;
