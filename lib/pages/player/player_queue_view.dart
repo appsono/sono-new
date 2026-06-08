@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:sono_query/sono_query.dart' hide Song;
+import 'package:sono/main.dart';
 
 import 'package:sono/l10n/localizations.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
@@ -10,6 +12,7 @@ import 'package:sono/utils/queue_origin_label.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
+import 'package:sono/pages/global/edit_tags_page.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
@@ -300,6 +303,9 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
       SongSheetInfoRow(label: l.commonPath, value: song.path),
     ];
 
+    final songPath = song.path;
+    final canEditTags = MetadataReader.canWrite(songPath);
+
     await SongSheet.show(
       context: context,
       type: SongSheetType.song,
@@ -400,6 +406,22 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
           ),
       ],
       infoRows: infoRows,
+      infoHeaderAction: SongSheetHeaderAction(
+        icon: IconsSheet.editOutlined,
+        tooltip: canEditTags ? l.commonEdit : l.editTagsUnsupported,
+        enabled: canEditTags,
+        onTap: () async {
+          final navigator = Navigator.of(context);
+          final messenger = SonoApp.messengerKey.currentState;
+          final savedText = l.editTagsSaved;
+
+          final saved = await EditTagsPage.open(context, song.path, widget.db);
+          if (saved != true) return;
+
+          navigator.maybePop();
+          messenger?.showSnackBar(SnackBar(content: Text(savedText)));
+        },
+      ),
     );
   }
 
