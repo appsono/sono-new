@@ -46,6 +46,7 @@ class SongSheetController extends ChangeNotifier {
   Color onAccent;
   List<SongSheetAction> Function()? actionsBuilder;
   List<SongSheetInfoRow> infoRows;
+  SongSheetHeaderAction? infoHeaderAction;
 
   SongSheetController({
     this.colorsNotifier,
@@ -59,6 +60,7 @@ class SongSheetController extends ChangeNotifier {
     required this.onAccent,
     this.actionsBuilder,
     List<SongSheetInfoRow>? infoRows,
+    this.infoHeaderAction,
   }) : infoRows = infoRows ?? const [];
 
   void update({
@@ -72,6 +74,7 @@ class SongSheetController extends ChangeNotifier {
     Color? onAccent,
     List<SongSheetAction> Function()? actionsBuilder,
     List<SongSheetInfoRow>? infoRows,
+    SongSheetHeaderAction? infoHeaderAction,
   }) {
     var changed = false;
     if (coverPath != null && coverPath != this.coverPath) {
@@ -114,6 +117,10 @@ class SongSheetController extends ChangeNotifier {
       this.infoRows = infoRows;
       changed = true;
     }
+    if (infoHeaderAction != null && infoHeaderAction != this.infoHeaderAction) {
+      this.infoHeaderAction = infoHeaderAction;
+      changed = true;
+    }
     if (changed) notifyListeners();
   }
 
@@ -147,6 +154,21 @@ class SongSheetInfoRow {
   const SongSheetInfoRow({required this.label, this.value});
 }
 
+/// Small trailing button shown in sheet header on info page
+class SongSheetHeaderAction {
+  final String icon;
+  final String tooltip;
+  final VoidCallback onTap;
+  final bool enabled;
+
+  const SongSheetHeaderAction({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+    this.enabled = true,
+  });
+}
+
 // ==== widget ====
 
 class SongSheet extends StatefulWidget {
@@ -172,6 +194,7 @@ class SongSheet extends StatefulWidget {
   final Color onAccent;
 
   final SongSheetController? controller;
+  final SongSheetHeaderAction? infoHeaderAction;
 
   const SongSheet({
     required this.type,
@@ -187,6 +210,7 @@ class SongSheet extends StatefulWidget {
     this.actionsBuilder,
     this.infoRows,
     this.controller,
+    this.infoHeaderAction,
     super.key,
   });
 
@@ -206,6 +230,7 @@ class SongSheet extends StatefulWidget {
     List<SongSheetAction> Function()? actionsBuilder,
     List<SongSheetInfoRow>? infoRows,
     SongSheetController? controller,
+    SongSheetHeaderAction? infoHeaderAction,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -228,6 +253,7 @@ class SongSheet extends StatefulWidget {
             onBackground: onBackground,
             onAccent: onAccent,
             controller: controller,
+            infoHeaderAction: infoHeaderAction,
           ),
         );
       },
@@ -423,6 +449,26 @@ class _SongSheetState extends State<SongSheet>
     final subtitle = c?.subtitle ?? widget.subtitle;
     final rows = c?.infoRows ?? widget.infoRows ?? const <SongSheetInfoRow>[];
     final actions = _resolveAction(c);
+    final infoHeaderAction = c?.infoHeaderAction ?? widget.infoHeaderAction;
+    final headerTrailing = infoHeaderAction == null
+        ? null
+        : SizedBox(
+            width: 40,
+            height: 40,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
+              opacity: _page == _SheetPage.info ? 1.0 : 0.0,
+              child: IgnorePointer(
+                ignoring: _page != _SheetPage.info,
+                child: _HeaderActionButton(
+                  action: infoHeaderAction,
+                  surface: surface,
+                  fg: onBg,
+                ),
+              ),
+            ),
+          );
 
     final maxHeight = MediaQuery.sizeOf(context).height * 0.85;
 
@@ -476,6 +522,7 @@ class _SongSheetState extends State<SongSheet>
                       subtitle: subtitle,
                       type: widget.type,
                       fg: onBg,
+                      trailing: headerTrailing,
                     ),
                     const SizedBox(height: 16),
 
@@ -557,6 +604,7 @@ class _Header extends StatelessWidget {
   final String subtitle;
   final SongSheetType type;
   final Color fg;
+  final Widget? trailing;
 
   const _Header({
     required this.coverPath,
@@ -565,6 +613,7 @@ class _Header extends StatelessWidget {
     required this.subtitle,
     required this.type,
     required this.fg,
+    required this.trailing,
   });
 
   @override
@@ -617,6 +666,7 @@ class _Header extends StatelessWidget {
               ],
             ),
           ),
+          if (trailing != null) ...[const SizedBox(width: 8), trailing!],
         ],
       ),
     );
@@ -919,5 +969,46 @@ class _Segment extends StatelessWidget {
       ),
     );
     return BouncyTap(onTap: onTap, child: inner);
+  }
+}
+
+class _HeaderActionButton extends StatelessWidget {
+  final SongSheetHeaderAction action;
+  final Color surface;
+  final Color fg;
+
+  const _HeaderActionButton({
+    required this.action,
+    required this.surface,
+    required this.fg,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = action.enabled;
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 180),
+      opacity: enabled ? 1.0 : 0.4,
+      child: IgnorePointer(
+        ignoring: !enabled,
+        child: Tooltip(
+          message: action.tooltip,
+          child: BouncyTap(
+            onTap: action.onTap,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: surface,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: IconsSheet.svg(action.icon, size: 20, color: fg),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
