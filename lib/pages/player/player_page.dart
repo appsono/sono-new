@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:sono/pages/library/subpages/album_detail_page.dart';
-import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
-
+import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/l10n/localizations.dart';
+import 'package:sono/theme/icons.dart';
+
 //widgets
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/pages/player/player_top_bar.dart';
@@ -20,6 +20,9 @@ import 'package:sono/widgets/song_sheet.dart';
 import 'package:sono/pages/player/player_queue_view.dart';
 import 'package:sono/pages/player/player_lyrics_view.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
+import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
+import 'package:sono/pages/global/edit_tags_page.dart';
 //utils
 import 'package:sono/utils/format_ms.dart';
 
@@ -343,6 +346,9 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
       infoRows: _buildInfoRows(song, albumName, l),
     );
 
+    final songPath = song.path;
+    final canEditTags = MetadataReader.canWrite(songPath);
+
     await SongSheet.show(
       context: context,
       type: SongSheetType.song,
@@ -356,6 +362,22 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
       onAccent: c.onAccent,
       controller: _sheetController,
       infoRows: _buildInfoRows(song, albumName, l),
+      infoHeaderAction: SongSheetHeaderAction(
+        icon: IconsSheet.editOutlined,
+        tooltip: canEditTags ? l.commonEdit : l.editTagsUnsupported,
+        enabled: canEditTags,
+        onTap: () async {
+          final navigator = Navigator.of(context);
+          final messenger = SonoApp.messengerKey.currentState;
+          final savedText = l.editTagsSaved;
+
+          final saved = await EditTagsPage.open(context, song.path, widget.db);
+          if (saved != true) return;
+
+          navigator.maybePop();
+          messenger?.showSnackBar(SnackBar(content: Text(savedText)));
+        },
+      ),
     );
 
     _sheetController = null; //sheet dismissed

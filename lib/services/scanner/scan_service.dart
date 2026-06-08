@@ -284,6 +284,114 @@ class ScanService {
     return (artistCache, albumCache, folderCache);
   }
 
+  /// Rescans an existing song fom disk and updates its database metadata
+  ///
+  /// Rebuilds artist/album links using current grouping settings and refreshes
+  /// stored fields from file's tags
+  ///
+  /// returns true on success, false if song is not in db
+  Future<bool> rescanSingleSong(
+    String path, {
+    sq.ScanConfig config = sq.ScanConfig.none,
+    AlbumGrouping grouping = AlbumGrouping.tag,
+  }) async {
+    final existing = await (db.select(
+      db.songs,
+    )..where((s) => s.path.equals(path))).getSingleOrNull();
+    if (existing == null) return false;
+
+    //fresh read + optional artist parsing
+    var song = sq.MetadataReader.readSync(path);
+    if (config.artistParser != null) {
+      song = song.copyWith(
+        artists: sq.ArtistParser.parse(song.artist, config.artistParser),
+      );
+    }
+
+    final artistCache = await db.getArtistIdMap();
+
+    //upsert artists
+    final neededNames = <String>{};
+    if (song.artists.isNotEmpty) {
+      for (final n in song.artists) {
+        if (n.isNotEmpty) neededNames.add(n);
+      }
+    } else if (song.artist != null && song.artist!.isNotEmpty) {
+      neededNames.add(song.artist!);
+      final main = getMainArtist(song.artist);
+      if (main != null) neededNames.add(main);
+    }
+    final missing = neededNames
+        .where((n) => !artistCache.containsKey(n))
+        .toSet();
+    if (missing.isNotEmpty) {
+      artistCache.addAll(await db.ensureArtistsExist(missing));
+    }
+
+    final mainArtistName = getMainArtistFromSong(song) ?? song.artist;
+    final mainArtistId = mainArtistName != null
+        ? artistCache[mainArtistName]
+        : null;
+
+    //upsert album under current grouping
+    int? albumId;
+    if (grouping == AlbumGrouping.folder) {
+      final folder = _folderPath(path);
+      if (folder.isNotEmpty && mainArtistId != null) {
+        final key = (folder, mainArtistId);
+        final ids = await db.ensureAlbumsExist(
+          {key},
+          displayTitles: {
+            if (_albumDisplay(song) != null) key: _albumDisplay(song)!,
+          },
+        );
+        albumId = ids[key];
+      }
+    } else if (song.album != null &&
+        song.album!.isNotEmpty &&
+        mainArtistId != null) {
+      final key = (song.album!, mainArtistId);
+      final ids = await db.ensureAlbumsExist({key});
+      albumId = ids[key];
+    }
+
+    //disc/track decoding
+    final rawTrack = song.trackNumber;
+    final int? discNumber;
+    final int? trackNumber;
+    if (rawTrack != null && rawTrack >= 1000) {
+      discNumber = rawTrack ~/ 1000;
+      trackNumber = rawTrack % 1000;
+    } else {
+      discNumber = null;
+      trackNumber = rawTrack;
+    }
+
+    final displayAristStr = song.artists.isNotEmpty
+        ? song.artists.join(', ')
+        : song.artist;
+
+    await (db.update(db.songs)..where((s) => s.path.equals(path))).write(
+      SongsCompanion(
+        title: Value(song.title),
+        duration: Value(song.duration?.inMilliseconds),
+        trackNumber: Value(trackNumber),
+        discNumber: Value(discNumber),
+        genre: Value(song.genre),
+        releaseDate: Value(song.releaseDate),
+        albumId: Value(albumId),
+        artistId: Value(mainArtistId),
+        displayArtist: Value(displayAristStr),
+      ),
+    );
+
+    //old album/artist refs may now be unreferenced
+    await db.removeOrphanedAlbums();
+    await db.removeOrphanedArtists();
+
+    return true;
+  }
+
   static void _defaultOnError(String path, Object error) {
     dev.log('scan failed for $path: $error', name: 'sono.scan');
   }
