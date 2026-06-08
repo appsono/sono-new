@@ -390,5 +390,29 @@
                 "type": "String"
             }
         }
+    },
+    "libraryEmptyGenres": "Ühtegi žanrit pole veel välja otsitud :/",
+    "@libraryEmptyGenres": {
+        "description": "Empty state on the Genres list page when no songs have a genre tag."
+    },
+    "albumTypeAlbum": "Album",
+    "@albumTypeAlbum": {
+        "description": "Type label for a standard album shown on the artist detail page."
+    },
+    "albumTypeEp": "EP",
+    "@albumTypeEp": {
+        "description": "Type label for an EP (extended play) album shown on the artist detail page."
+    },
+    "albumTypeSingle": "Singel",
+    "@albumTypeSingle": {
+        "description": "Type label for a single-track release shown on the artist detail page."
+    },
+    "albumTypeCompilation": "Kogumik",
+    "@albumTypeCompilation": {
+        "description": "Type label for a compilation album (3+ distinct contributing artists) shown on the artist detail page."
+    },
+    "albumTypeCollaboration": "Ühistööalbum",
+    "@albumTypeCollaboration": {
+        "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
     }
 }
