@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.6.3+4](https://github.com/appsono/sono-new/compare/v0.6.2+4...v0.6.3+4) (2026-06-08)
+
+### Features
+
+* Added tag editing for songs from the info tab of the song sheet, supporting title, artist, album, track number, year, and genres. Edit button shows on the song sheet from the library, the player, and the queue
+* On Android, the system prompts for permission per file before writing tags
+
+### Fixes
+
+* Centralized album display-name choice in the database layer
+
+### Translation
+
+* [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+* [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (94%)
+* [Ado Listener](https://hosted.weblate.org/user/Ado_Listener/) started translating Sono into Kazakh (1%)
+
 ## [0.6.2+4](https://github.com/appsono/sono-new/compare/v0.6.1+4...v0.6.2+4) (2026-06-07)
 
 ### Features
