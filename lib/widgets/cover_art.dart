@@ -16,9 +16,15 @@ import 'package:sono/theme/tokens.dart';
 /// depening on file type
 class CoverCache {
   static const int _capacity = 64;
+  static const int _maxConcurrent = 4;
+
   static final Map<String, Uint8List?> _cache = {};
   static final List<String> _order = [];
   static final Map<String, Future<Uint8List?>> _inFlight = {};
+
+  static int _running = 0;
+  static final List<({String path, Completer<Uint8List?> completer})> _pending =
+      [];
 
   static Future<Uint8List?> get(String path) async {
     if (path.isEmpty) return null;
@@ -31,12 +37,35 @@ class CoverCache {
     final inFlight = _inFlight[path];
     if (inFlight != null) return inFlight;
 
-    final future = _run(path);
+    final completer = Completer<Uint8List?>();
+    final future = completer.future;
     _inFlight[path] = future;
+
+    _pending.add((path: path, completer: completer));
+    _drain();
+
     try {
       return await future;
     } finally {
       _inFlight.remove(path);
+    }
+  }
+
+  static void _drain() {
+    while (_running < _maxConcurrent && _pending.isNotEmpty) {
+      final item = _pending.removeAt(0);
+      _running++;
+      _run(item.path)
+          .then((bytes) {
+            item.completer.complete(bytes);
+          })
+          .catchError((e) {
+            item.completer.completeError(e);
+          })
+          .whenComplete(() {
+            _running--;
+            _drain();
+          });
     }
   }
 
