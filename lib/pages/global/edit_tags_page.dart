@@ -61,6 +61,7 @@ class _EditTagsPageState extends State<EditTagsPage> {
   late final TextEditingController _artistCtrl;
   late final TextEditingController _albumCtrl;
   late final TextEditingController _trackCtrl;
+  late final TextEditingController _discCtrl;
   late final TextEditingController _yearCtrl;
   late final TextEditingController _genresCtrl;
 
@@ -73,13 +74,41 @@ class _EditTagsPageState extends State<EditTagsPage> {
     _titleCtrl = TextEditingController(text: meta.title);
     _artistCtrl = TextEditingController(text: meta.artist ?? '');
     _albumCtrl = TextEditingController(text: meta.album ?? '');
-    _trackCtrl = TextEditingController(
-      text: meta.trackNumber?.toString() ?? '',
-    );
+
+    final rawTrack = meta.trackNumber;
+    final int? seedDisc;
+    final int? seedTrack;
+    if (rawTrack != null && rawTrack >= 1000) {
+      seedDisc = rawTrack ~/ 1000;
+      seedTrack = rawTrack % 1000;
+    } else {
+      seedDisc = null;
+      seedTrack = rawTrack;
+    }
+
+    _trackCtrl = TextEditingController(text: seedTrack?.toString() ?? '');
+    _discCtrl = TextEditingController(text: seedDisc?.toString() ?? '');
+
     _yearCtrl = TextEditingController(
       text: meta.releaseDate?.year.toString() ?? '',
     );
     _genresCtrl = TextEditingController(text: meta.genre ?? '');
+
+    if (seedDisc == null) {
+      _loadDiscFromDb();
+    }
+  }
+
+  Future<void> _loadDiscFromDb() async {
+    final row = await (widget.db.select(
+      widget.db.songs,
+    )..where((s) => s.path.equals(widget.path))).getSingleOrNull();
+    if (!mounted) return;
+    if (_discCtrl.text.isNotEmpty) return;
+    final disc = row?.discNumber;
+    if (disc != null && disc > 0) {
+      _discCtrl.text = disc.toString();
+    }
   }
 
   @override
@@ -88,6 +117,7 @@ class _EditTagsPageState extends State<EditTagsPage> {
     _artistCtrl.dispose();
     _albumCtrl.dispose();
     _trackCtrl.dispose();
+    _discCtrl.dispose();
     _yearCtrl.dispose();
     _genresCtrl.dispose();
     super.dispose();
@@ -103,7 +133,17 @@ class _EditTagsPageState extends State<EditTagsPage> {
     //parse numerc/list fields. blanl == leave tag untouched
     final yearInt = int.tryParse(_yearCtrl.text.trim());
     final year = yearInt != null ? DateTime(yearInt) : null;
+    final disc = int.tryParse(_discCtrl.text.trim());
     final track = int.tryParse(_trackCtrl.text.trim());
+
+    //encode disc*1000+track only if both are set and disc >= 1
+    final int? encodedTrack;
+    if (disc != null && disc >= 1 && track != null) {
+      encodedTrack = disc * 1000 + track;
+    } else {
+      encodedTrack = track;
+    }
+
     final genresInput = _genresCtrl.text
         .split(',')
         .map((g) => g.trim())
@@ -117,7 +157,7 @@ class _EditTagsPageState extends State<EditTagsPage> {
       title: _titleCtrl.text.trim(),
       artist: _artistCtrl.text.trim(),
       album: _albumCtrl.text.trim(),
-      trackNumber: track,
+      trackNumber: encodedTrack,
       year: year,
       genres: genres,
     );
@@ -216,6 +256,25 @@ class _EditTagsPageState extends State<EditTagsPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
+                              _FieldLabel(text: l.editTagsFieldDiscNumber),
+                              const SizedBox(height: 6),
+                              _Field(
+                                controller: _discCtrl,
+                                enabled: !_saving,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(2),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
                               _FieldLabel(text: l.editTagsFieldTrackNumber),
                               const SizedBox(height: 6),
                               _Field(
@@ -230,25 +289,19 @@ class _EditTagsPageState extends State<EditTagsPage> {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              _FieldLabel(text: l.editTagsFieldYear),
-                              const SizedBox(height: 6),
-                              _Field(
-                                controller: _yearCtrl,
-                                enabled: !_saving,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(4),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    _FieldLabel(text: l.editTagsFieldYear),
+                    const SizedBox(height: 6),
+                    _Field(
+                      controller: _yearCtrl,
+                      enabled: !_saving,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4),
                       ],
                     ),
                     const SizedBox(height: 16),

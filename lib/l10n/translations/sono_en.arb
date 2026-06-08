@@ -451,6 +451,10 @@
   "@editTagsFieldTrackNumber": {
     "description": "Label for the track-number field on the edit tags page. Short form to fit alongside the year field on the same row."
   },
+  "editTagsFieldDiscNumber": "Disc #",
+  "@editTagsFieldDiscNumber": {
+    "description": "Label for the disc-number field on the edit tags page. Used for multi-disc albums."
+  },
   "editTagsFieldYear": "Year",
   "@editTagsFieldYear": {
     "description": "Label for the year field on the edit tags page. Accepts a 4-digit year."
