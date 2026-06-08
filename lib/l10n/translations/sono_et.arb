@@ -414,5 +414,41 @@
     "albumTypeCollaboration": "Ühistööalbum",
     "@albumTypeCollaboration": {
         "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
+    },
+    "commonEdit": "Muuda",
+    "@commonEdit": {
+        "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
+    },
+    "editTagsTitle": "Muuda silte",
+    "@editTagsTitle": {
+        "description": "Page title for the tag editing page opened from the song sheet info tab."
+    },
+    "editTagsUnsupported": "See vorming ei toeta siltide muutmist",
+    "@editTagsUnsupported": {
+        "description": "Tooltip shown on the edit-tags button when MetadataReader.canWrite returns false for the song's file format."
+    },
+    "editTagsSaveFailed": "Siltide salvestamine ei õnnestunud",
+    "@editTagsSaveFailed": {
+        "description": "Snackbar shown when SonoQuery.updateTags returns false or throws."
+    },
+    "editTagsSaved": "Salvestatud",
+    "@editTagsSaved": {
+        "description": "Snackbar shown after tags have been written successfully and the song has been re-scanned."
+    },
+    "editTagsFieldTrackNumber": "Raja #",
+    "@editTagsFieldTrackNumber": {
+        "description": "Label for the track-number field on the edit tags page. Short form to fit alongside the year field on the same row."
+    },
+    "editTagsFieldYear": "Aasta",
+    "@editTagsFieldYear": {
+        "description": "Label for the year field on the edit tags page. Accepts a 4-digit year."
+    },
+    "editTagsFieldGenres": "Žanrid",
+    "@editTagsFieldGenres": {
+        "description": "Label for the genres field on the edit tags page. Multiple values are comma-separated."
+    },
+    "editTagsGenresHint": "Eraldatud komadega",
+    "@editTagsGenresHint": {
+        "description": "Hint shown inside the genres field on the edit tags page to indicate how to enter multiple genres."
     }
 }
