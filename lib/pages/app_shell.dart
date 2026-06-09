@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
@@ -40,8 +41,14 @@ class _AppShellState extends State<AppShell> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AudioService.instance.loadState();
     });
+    _deleteBrokenGenre();
     _checkPermissionAndScan();
     _checkForUpdates();
+  }
+
+  Future<void> _deleteBrokenGenre() async {
+    await (widget.db.update(widget.db.songs)..where((s) => s.genre.equals('')))
+        .write(const SongsCompanion(genre: Value(null)));
   }
 
   Future<void> _checkForUpdates() async {

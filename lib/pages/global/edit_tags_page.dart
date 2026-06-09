@@ -151,12 +151,14 @@ class _EditTagsPageState extends State<EditTagsPage> {
         .toList();
     final genres = genresInput.isEmpty ? null : genresInput;
 
+    String? nz(String s) => s.isEmpty ? null : s;
+
     //writeSync is synchronous and returns false on unsupprted format or io error
     final wrote = await MetadataReader.writeAsync(
       widget.path,
-      title: _titleCtrl.text.trim(),
-      artist: _artistCtrl.text.trim(),
-      album: _albumCtrl.text.trim(),
+      title: nz(_titleCtrl.text.trim()),
+      artist: nz(_artistCtrl.text.trim()),
+      album: nz(_albumCtrl.text.trim()),
       trackNumber: encodedTrack,
       year: year,
       genres: genres,

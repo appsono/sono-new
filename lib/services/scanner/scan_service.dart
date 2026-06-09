@@ -367,9 +367,16 @@ class ScanService {
       trackNumber = rawTrack;
     }
 
-    final displayAristStr = song.artists.isNotEmpty
+    final genre = (song.genre == null || song.genre!.isEmpty)
+        ? null
+        : song.genre;
+
+    final displayAristRaw = song.artists.isNotEmpty
         ? song.artists.join(', ')
         : song.artist;
+    final displayArtistStr = (displayAristRaw?.isEmpty ?? true)
+        ? null
+        : displayAristRaw;
 
     await (db.update(db.songs)..where((s) => s.path.equals(path))).write(
       SongsCompanion(
@@ -377,11 +384,11 @@ class ScanService {
         duration: Value(song.duration?.inMilliseconds),
         trackNumber: Value(trackNumber),
         discNumber: Value(discNumber),
-        genre: Value(song.genre),
+        genre: Value(genre),
         releaseDate: Value(song.releaseDate),
         albumId: Value(albumId),
         artistId: Value(mainArtistId),
-        displayArtist: Value(displayAristStr),
+        displayArtist: Value(displayArtistStr),
       ),
     );
 
