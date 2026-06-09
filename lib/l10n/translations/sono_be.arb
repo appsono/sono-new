@@ -320,7 +320,7 @@
     "@libraryEmptyPlaylists": {
         "description": "Empty state on the Playlists list page when the user has not created any playlists."
     },
-    "libraryEmptyLikedSongs": "Вы пакуль што не ўпадабалі песняў. Дадайце некалькі",
+    "libraryEmptyLikedSongs": "Вы пакуль што не ўпадабалі песень. Дадайце некалькі",
     "@libraryEmptyLikedSongs": {
         "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
     },
@@ -332,7 +332,7 @@
     "@libraryEmptyFavoriteArtists": {
         "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
     },
-    "libraryEmptySongs": "У вашай бібліятэцы пакуль што няма песняў :/",
+    "libraryEmptySongs": "У вашай бібліятэцы пакуль што няма песень :/",
     "@libraryEmptySongs": {
         "description": "Empty state on the Songs list page when no songs have been scanned."
     },
