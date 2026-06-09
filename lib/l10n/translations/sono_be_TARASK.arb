@@ -222,5 +222,237 @@
     "songSheetUnknownValue": "невядома",
     "@songSheetUnknownValue": {
         "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+    },
+    "commonDurationLong": "{hours}гадз {minutes}хв",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "{minutes}хв",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonMoreOptions": "Больш опцый",
+    "@commonMoreOptions": {
+        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
+    },
+    "commonCreatePlaylist": "Стварыць плэй-ліст",
+    "@commonCreatePlaylist": {
+        "description": "Button and action label for creating a new playlist."
+    },
+    "commonEdit": "Рэдагаваць",
+    "@commonEdit": {
+        "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
+    },
+    "commonRename": "Перайменаваць",
+    "@commonRename": {
+        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
+    },
+    "commonDelete": "Выдаліць",
+    "@commonDelete": {
+        "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+    },
+    "commonCancel": "Скасаваць",
+    "@commonCancel": {
+        "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+    },
+    "commonSave": "Захаваць",
+    "@commonSave": {
+        "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+    },
+    "commonUndo": "Адрабіць",
+    "@commonUndo": {
+        "description": "Undo action on a snackbar to reverse the last action."
+    },
+    "commonRemoveFromPlaylist": "Выдаліць з плэй-ліста",
+    "@commonRemoveFromPlaylist": {
+        "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
+    },
+    "libraryPageTitle": "Бібліятэка",
+    "@libraryPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "libraryCardGenres": "Жанры",
+    "@libraryCardGenres": {
+        "description": "Library page card label. Opens a list of genres."
+    },
+    "libraryCardPlaylists": "Плэй-лісты",
+    "@libraryCardPlaylists": {
+        "description": "Library page card label. Opens user playlists."
+    },
+    "libraryCardLikedSongs": "Упадабаныя песьні",
+    "@libraryCardLikedSongs": {
+        "description": "Library page card label. Opens the list of songs the user has liked."
+    },
+    "libraryCardFavoriteAlbums": "Абраныя альбомы",
+    "@libraryCardFavoriteAlbums": {
+        "description": "Library page card label. Opens the list of albums the user has favorited."
+    },
+    "libraryCardFavoriteArtists": "Абраныя выканаўцы",
+    "@libraryCardFavoriteArtists": {
+        "description": "Library page card label. Opens the list of artists the user has favorited."
+    },
+    "libraryCardArtists": "Выканаўцы",
+    "@libraryCardArtists": {
+        "description": "Library page card label. Opens the full list of artists in the library."
+    },
+    "libraryCardSongs": "Песьні",
+    "@libraryCardSongs": {
+        "description": "Library page card label. Opens the full list of songs in the library."
+    },
+    "libraryCardAlbums": "Альбомы",
+    "@libraryCardAlbums": {
+        "description": "Library page card label. Opens the full list of albums in the library."
+    },
+    "libraryEmptyPlaylists": "Плэй-лістоў пакуль што няма :/",
+    "@libraryEmptyPlaylists": {
+        "description": "Empty state on the Playlists list page when the user has not created any playlists."
+    },
+    "libraryEmptyLikedSongs": "Вы пакуль што не ўпадабалі песьняў. Дадайце некалькі",
+    "@libraryEmptyLikedSongs": {
+        "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
+    },
+    "libraryEmptyFavoriteAlbums": "Альбомаў пакуль што не абрана :/",
+    "@libraryEmptyFavoriteAlbums": {
+        "description": "Empty state on the Favorite Albums list page when the user has not favorited any albums."
+    },
+    "libraryEmptyFavoriteArtists": "Выканаўцаў пакуль што не абрана :/",
+    "@libraryEmptyFavoriteArtists": {
+        "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
+    },
+    "libraryEmptySongs": "У вашай бібліятэцы пакуль што няма песьняў :/",
+    "@libraryEmptySongs": {
+        "description": "Empty state on the Songs list page when no songs have been scanned."
+    },
+    "libraryEmptyAlbums": "У вашай бібліятэцы пакуль што няма альбомаў :/",
+    "@libraryEmptyAlbums": {
+        "description": "Empty state on the Albums list page when no albums have been scanned."
+    },
+    "libraryEmptyArtists": "У вашай бібліятэцы пакуль што няма выканаўцаў :/",
+    "@libraryEmptyArtists": {
+        "description": "Empty state on the Artists list page when no artists have been scanned."
+    },
+    "libraryEmptyGenres": "Вам яшчэ не даставілі жанраў :/",
+    "@libraryEmptyGenres": {
+        "description": "Empty state on the Genres list page when no songs have a genre tag."
+    },
+    "playlistNameLabel": "Імя",
+    "@playlistNameLabel": {
+        "description": "Placeholder text for the playlist name field in the create playlist modal."
+    },
+    "playlistDescriptionLabel": "Апісаньне (неабавязкова)",
+    "@playlistDescriptionLabel": {
+        "description": "Placeholder text for the optional playlist description field in the create playlist modal."
+    },
+    "playlistDefaultName": "Мой плэй-ліст",
+    "@playlistDefaultName": {
+        "description": "Fallback name applied when the user creates a playlist without entering one."
+    },
+    "playlistRenameTitle": "Перайменаваць плэй-ліст",
+    "@playlistRenameTitle": {
+        "description": "Title of the rename playlist modal."
+    },
+    "playlistDeleteTitle": "Выдаліць «{name}»?",
+    "@playlistDeleteTitle": {
+        "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistEmpty": "Гэты плэй-ліст, на жаль, пусты",
+    "@playlistEmpty": {
+        "description": "Empty state shown on a playlist detail page when no songs have been added yet."
+    },
+    "playlistActionReorder": "Зьмяніць парадак песьняў",
+    "@playlistActionReorder": {
+        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
+    },
+    "playlistAdded": "Дададзена да «{name}»",
+    "@playlistAdded": {
+        "description": "Snackbar shown after a song has been added to a playlist via the picker.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistAlreadyContains": "Ужо ў «{name}»",
+    "@playlistAlreadyContains": {
+        "description": "Snackbar shown when the user tries to add a song to a playlist that already contains it.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "albumTypeAlbum": "Альбом",
+    "@albumTypeAlbum": {
+        "description": "Type label for a standard album shown on the artist detail page."
+    },
+    "albumTypeEp": "Міні-альбом",
+    "@albumTypeEp": {
+        "description": "Type label for an EP (extended play) album shown on the artist detail page."
+    },
+    "albumTypeSingle": "Сінгл",
+    "@albumTypeSingle": {
+        "description": "Type label for a single-track release shown on the artist detail page."
+    },
+    "albumTypeCompilation": "Кампіляцыя",
+    "@albumTypeCompilation": {
+        "description": "Type label for a compilation album (3+ distinct contributing artists) shown on the artist detail page."
+    },
+    "albumTypeCollaboration": "Супрацоўніцтва",
+    "@albumTypeCollaboration": {
+        "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
+    },
+    "editTagsTitle": "Рэдагаваць цэтлікі",
+    "@editTagsTitle": {
+        "description": "Page title for the tag editing page opened from the song sheet info tab."
+    },
+    "editTagsUnsupported": "Гэты фармат не падтрымлівае рэдагаваньне цэтлікаў",
+    "@editTagsUnsupported": {
+        "description": "Tooltip shown on the edit-tags button when MetadataReader.canWrite returns false for the song's file format."
+    },
+    "editTagsSaveFailed": "Не ўдалося захаваць цэтлікі",
+    "@editTagsSaveFailed": {
+        "description": "Snackbar shown when SonoQuery.updateTags returns false or throws."
+    },
+    "editTagsSaved": "Захавана",
+    "@editTagsSaved": {
+        "description": "Snackbar shown after tags have been written successfully and the song has been re-scanned."
+    },
+    "editTagsFieldTrackNumber": "Трэк №",
+    "@editTagsFieldTrackNumber": {
+        "description": "Label for the track-number field on the edit tags page. Short form to fit alongside the year field on the same row."
+    },
+    "editTagsFieldDiscNumber": "Дыск №",
+    "@editTagsFieldDiscNumber": {
+        "description": "Label for the disc-number field on the edit tags page. Used for multi-disc albums."
+    },
+    "editTagsFieldYear": "Год",
+    "@editTagsFieldYear": {
+        "description": "Label for the year field on the edit tags page. Accepts a 4-digit year."
+    },
+    "editTagsFieldGenres": "Жанры",
+    "@editTagsFieldGenres": {
+        "description": "Label for the genres field on the edit tags page. Multiple values are comma-separated."
+    },
+    "editTagsGenresHint": "Раздзяленьне коскаю",
+    "@editTagsGenresHint": {
+        "description": "Hint shown inside the genres field on the edit tags page to indicate how to enter multiple genres."
     }
 }

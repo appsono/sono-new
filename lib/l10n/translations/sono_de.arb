@@ -450,5 +450,9 @@
     "editTagsGenresHint": "Kommagetrennt",
     "@editTagsGenresHint": {
         "description": "Hint shown inside the genres field on the edit tags page to indicate how to enter multiple genres."
+    },
+    "editTagsFieldDiscNumber": "Disc-Nr",
+    "@editTagsFieldDiscNumber": {
+        "description": "Label for the disc-number field on the edit tags page. Used for multi-disc albums."
     }
 }
