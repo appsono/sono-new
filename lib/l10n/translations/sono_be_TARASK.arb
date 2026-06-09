@@ -222,5 +222,106 @@
     "songSheetUnknownValue": "невядома",
     "@songSheetUnknownValue": {
         "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+    },
+    "commonDurationLong": "{hours}гадз {minutes}хв",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "{minutes}хв",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonMoreOptions": "Больш опцый",
+    "@commonMoreOptions": {
+        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
+    },
+    "commonCreatePlaylist": "Стварыць плэй-ліст",
+    "@commonCreatePlaylist": {
+        "description": "Button and action label for creating a new playlist."
+    },
+    "commonEdit": "Рэдагаваць",
+    "@commonEdit": {
+        "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
+    },
+    "commonRename": "Перайменаваць",
+    "@commonRename": {
+        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
+    },
+    "commonDelete": "Выдаліць",
+    "@commonDelete": {
+        "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+    },
+    "commonCancel": "Скасаваць",
+    "@commonCancel": {
+        "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+    },
+    "commonSave": "Захаваць",
+    "@commonSave": {
+        "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+    },
+    "commonUndo": "Адрабіць",
+    "@commonUndo": {
+        "description": "Undo action on a snackbar to reverse the last action."
+    },
+    "commonRemoveFromPlaylist": "Выдаліць з плэй-ліста",
+    "@commonRemoveFromPlaylist": {
+        "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
+    },
+    "libraryPageTitle": "Бібліятэка",
+    "@libraryPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "libraryCardGenres": "Жанры",
+    "@libraryCardGenres": {
+        "description": "Library page card label. Opens a list of genres."
+    },
+    "libraryCardPlaylists": "Плэй-лісты",
+    "@libraryCardPlaylists": {
+        "description": "Library page card label. Opens user playlists."
+    },
+    "libraryCardLikedSongs": "Упадабаныя песьні",
+    "@libraryCardLikedSongs": {
+        "description": "Library page card label. Opens the list of songs the user has liked."
+    },
+    "libraryCardFavoriteAlbums": "Абраныя альбомы",
+    "@libraryCardFavoriteAlbums": {
+        "description": "Library page card label. Opens the list of albums the user has favorited."
+    },
+    "libraryCardFavoriteArtists": "Абраныя выканаўцы",
+    "@libraryCardFavoriteArtists": {
+        "description": "Library page card label. Opens the list of artists the user has favorited."
+    },
+    "libraryCardArtists": "Выканаўцы",
+    "@libraryCardArtists": {
+        "description": "Library page card label. Opens the full list of artists in the library."
+    },
+    "libraryCardSongs": "Песьні",
+    "@libraryCardSongs": {
+        "description": "Library page card label. Opens the full list of songs in the library."
+    },
+    "libraryCardAlbums": "Альбомы",
+    "@libraryCardAlbums": {
+        "description": "Library page card label. Opens the full list of albums in the library."
+    },
+    "libraryEmptyPlaylists": "Плэй-лістоў пакуль што няма :/",
+    "@libraryEmptyPlaylists": {
+        "description": "Empty state on the Playlists list page when the user has not created any playlists."
+    },
+    "libraryEmptyLikedSongs": "Вы пакуль што не ўпадабалі песьняў. Дадайце некалькі",
+    "@libraryEmptyLikedSongs": {
+        "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
     }
 }
