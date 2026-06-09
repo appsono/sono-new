@@ -418,5 +418,41 @@
     "albumTypeCollaboration": "Супрацоўніцтва",
     "@albumTypeCollaboration": {
         "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
+    },
+    "editTagsTitle": "Рэдагаваць цэтлікі",
+    "@editTagsTitle": {
+        "description": "Page title for the tag editing page opened from the song sheet info tab."
+    },
+    "editTagsUnsupported": "Гэты фармат не падтрымлівае рэдагаванне цэтлікаў",
+    "@editTagsUnsupported": {
+        "description": "Tooltip shown on the edit-tags button when MetadataReader.canWrite returns false for the song's file format."
+    },
+    "editTagsSaveFailed": "Не ўдалося захаваць цэтлікі",
+    "@editTagsSaveFailed": {
+        "description": "Snackbar shown when SonoQuery.updateTags returns false or throws."
+    },
+    "editTagsSaved": "Захавана",
+    "@editTagsSaved": {
+        "description": "Snackbar shown after tags have been written successfully and the song has been re-scanned."
+    },
+    "editTagsFieldTrackNumber": "Трэк №",
+    "@editTagsFieldTrackNumber": {
+        "description": "Label for the track-number field on the edit tags page. Short form to fit alongside the year field on the same row."
+    },
+    "editTagsFieldDiscNumber": "Дыск №",
+    "@editTagsFieldDiscNumber": {
+        "description": "Label for the disc-number field on the edit tags page. Used for multi-disc albums."
+    },
+    "editTagsFieldYear": "Год",
+    "@editTagsFieldYear": {
+        "description": "Label for the year field on the edit tags page. Accepts a 4-digit year."
+    },
+    "editTagsFieldGenres": "Жанры",
+    "@editTagsFieldGenres": {
+        "description": "Label for the genres field on the edit tags page. Multiple values are comma-separated."
+    },
+    "editTagsGenresHint": "Раздзяленне коскай",
+    "@editTagsGenresHint": {
+        "description": "Hint shown inside the genres field on the edit tags page to indicate how to enter multiple genres."
     }
 }
