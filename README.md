@@ -17,6 +17,7 @@ The app is new and currently in a very early stage.
 Sono is yet another local music player, it's cross platform and NOT material design. Yes, I took inspiration from Material Design for the Fullscreen Player, but I just like extracting colors from stuff and make them bouncy :]
 
 It is built with Flutter and and has all the features you need. Not yet, but soon :D
+
 Bad news: it doesn't run on a Samsung Galaxy Tab A6 from 2016, I'm very sorry...
 
 ## Contributing
