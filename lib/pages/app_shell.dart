@@ -68,8 +68,9 @@ class _AppShellState extends State<AppShell> {
 
   Future<void> _checkPermissionAndScan({bool force = false}) async {
     if (Platform.isAndroid) {
-      final status = await Permission.audio.request();
-      if (!status.isGranted) return;
+      final audio = await Permission.audio.request();
+      final storage = await Permission.storage.request();
+      if (!audio.isGranted && !storage.isGranted) return;
     }
     final config = await ScanSettings(widget.db).load();
     final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
