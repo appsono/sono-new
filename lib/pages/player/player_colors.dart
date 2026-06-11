@@ -5,8 +5,9 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
-import 'package:crypto/crypto.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
+
+import 'package:sono/services/covers/cover_cache.dart' show coverContentKey;
 
 /// Derived color set extracted from album artwork via material_color_utilities
 ///
@@ -60,7 +61,7 @@ class PlayerColors {
   static Future<PlayerColors> fromImageBytes(Uint8List bytes) async {
     if (bytes.isEmpty) return fallback;
 
-    final key = md5.convert(bytes).toString();
+    final key = coverContentKey(bytes);
 
     final cached = _cache[key];
     if (cached != null) {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:sono/services/covers/cover_cache.dart';
 
 /// Uploads cover art bytes to a temp file host so discord can display them
 ///
@@ -30,7 +30,7 @@ class CoverUploader {
 
   /// Upload image bytes and return public URL, or null on failure
   Future<String?> upload(Uint8List imageBytes) async {
-    final hash = md5.convert(imageBytes).toString();
+    final hash = coverContentKey(imageBytes);
 
     final cached = _cache[hash];
     if (cached != null &&
