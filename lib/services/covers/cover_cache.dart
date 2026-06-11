@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:sono_query/sono_query.dart';
 
@@ -17,6 +18,10 @@ class CoverCache {
   static const int _maxBytes = 48 * 1024 * 1024;
   static const int _maxEntries = 512; //bounds known-null negative cache
   static int _totalBytes = 0;
+
+  static const int _maxConcurrent = 4;
+  static int _active = 0;
+  static final List<Completer<void>> _waiters = [];
 
   static final Map<String, Uint8List?> _cache = {};
   static final List<String> _order = [];
@@ -57,6 +62,7 @@ class CoverCache {
   }
 
   static Future<Uint8List?> _run(String path) async {
+    await _acquire();
     try {
       final bytes = await SonoQuery.getCover(path);
       _put(path, bytes);
@@ -64,6 +70,26 @@ class CoverCache {
     } catch (_) {
       _put(path, null);
       return null;
+    } finally {
+      _release();
+    }
+  }
+
+  static Future<void> _acquire() async {
+    if (_active < _maxConcurrent) {
+      _active++;
+      return;
+    }
+    final c = Completer<void>();
+    _waiters.add(c);
+    await c.future;
+  }
+
+  static void _release() {
+    if (_waiters.isNotEmpty) {
+      _waiters.removeAt(0).complete();
+    } else {
+      _active--;
     }
   }
 
