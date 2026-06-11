@@ -139,7 +139,15 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
     //fired when user opens view
     //jump so they land on active line
     if (status != AnimationStatus.forward) return;
+    _handlePositon(player.AudioService.instance.position);
     _scrollToCurrentLine(animated: false);
+  }
+
+  bool get _revealed {
+    final s = widget.slideAnimation?.status;
+    return s == null ||
+        s == AnimationStatus.forward ||
+        s == AnimationStatus.completed;
   }
 
   // ==== swipe down dismiss ====
@@ -495,6 +503,7 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   // ==== position tracking + scroll ====
   void _handlePositon(Duration p) {
     _position = p;
+    if (!_revealed) return; //view is mounted but hidden
     if (_lines.isEmpty) return;
     if (_loading) return;
     if (_lineKeys.length != _lines.length) return;

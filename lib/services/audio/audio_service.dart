@@ -113,10 +113,24 @@ class AudioService {
     return _player.stream.playing;
   }
 
+  Stream<Duration>? _throttledPositionStream;
+
   Stream<String?> get artistNameStream => _artistNameController.stream;
   String? get currentArtistName => _currentArtistName;
 
+  /// position quantized to 250ms steps so many UI consumers
+  /// rebuild at most 4x/sec instead of per mpv callback
+  /// (seek jumps still instant)
   Stream<Duration> get positionStream {
+    _ensureInitialized();
+    return _throttledPositionStream ??= _player.stream.position
+        .map((p) => Duration(milliseconds: (p.inMilliseconds ~/ 250) * 250))
+        .distinct()
+        .asBroadcastStream();
+  }
+
+  /// untouched mpv position stream
+  Stream<Duration> get rawPositionStream {
     _ensureInitialized();
     return _player.stream.position;
   }
