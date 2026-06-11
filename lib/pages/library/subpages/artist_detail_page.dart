@@ -110,7 +110,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     final ordered = shuffle ? (List<Song>.of(songs)..shuffle()) : songs;
     AudioService.instance.play(
       ordered,
-      0,
+      shuffle ? 0 : index,
       origin: QueueOrigin(
         source: QueueSource.artist,
         label: artist.name,

@@ -244,21 +244,7 @@ class _HomePageState extends State<HomePage> {
   void _playQueue(List<SongWithArtistViewData> songs, int index) {
     final l = AppLocalizations.of(context);
 
-    final queue = songs
-        .map(
-          (s) => Song(
-            id: s.id,
-            path: s.path,
-            title: s.title,
-            duration: s.duration,
-            genre: s.genre,
-            releaseDate: s.releaseDate,
-            albumId: s.albumId,
-            artistId: s.artistId,
-            displayArtist: s.displayArtist,
-          ),
-        )
-        .toList();
+    final queue = [for (final s in songs) s.toSong()];
     AudioService.instance.play(
       queue,
       index,

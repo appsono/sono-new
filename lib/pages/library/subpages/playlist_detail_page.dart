@@ -98,21 +98,7 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
   List<Song> _asQueue() {
     final source = _songs;
     if (source == null) return const [];
-    return source
-        .map(
-          (s) => Song(
-            id: s.id,
-            path: s.path,
-            title: s.title,
-            duration: s.duration,
-            genre: s.genre,
-            releaseDate: s.releaseDate,
-            albumId: s.albumId,
-            artistId: s.artistId,
-            displayArtist: s.displayArtist,
-          ),
-        )
-        .toList();
+    return [for (final s in source) s.toSong()];
   }
 
   void _play({int index = 0, bool shuffle = false}) {

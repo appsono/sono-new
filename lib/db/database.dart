@@ -448,8 +448,17 @@ class SonoDatabase extends _$SonoDatabase {
     return (select(songs)..where((s) => s.id.isIn(ids))).get();
   }
 
-  Future<List<SongWithArtistViewData>> getAllSongsWithArtists() =>
-      select(songWithArtistView).get();
+  Future<List<SongWithArtistViewData>> getAllSongsWithArtists({
+    bool orderByTitle = false,
+  }) {
+    final q = select(songWithArtistView);
+    if (orderByTitle) {
+      q.orderBy([
+        (v) => OrderingTerm(expression: v.title.collate(Collate.noCase)),
+      ]);
+    }
+    return q.get();
+  }
 
   Future<List<Song>> getSongsByAlbum(int albumId) =>
       (select(songs)
@@ -835,6 +844,22 @@ extension AlbumDisplayTitle on Album {
   String get shownTitle => (displayTitle != null && displayTitle!.isNotEmpty)
       ? displayTitle!
       : title;
+}
+
+extension SongViewToSong on SongWithArtistViewData {
+  /// view row -> playable Song, replaces hand-rolled map blocks
+  /// duplicated across library pages
+  Song toSong() => Song(
+    id: id,
+    path: path,
+    title: title,
+    duration: duration,
+    genre: genre,
+    releaseDate: releaseDate,
+    albumId: albumId,
+    artistId: artistId,
+    displayArtist: displayArtist,
+  );
 }
 
 LazyDatabase _openConnection() {

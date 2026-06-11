@@ -40,21 +40,7 @@ class _GenreDetailPageState extends State<GenreDetailPage> {
   void _play(int index) {
     final source = _songs;
     if (source == null) return;
-    final queue = source
-        .map(
-          (s) => Song(
-            id: s.id,
-            path: s.path,
-            title: s.title,
-            duration: s.duration,
-            genre: s.genre,
-            releaseDate: s.releaseDate,
-            albumId: s.albumId,
-            artistId: s.artistId,
-            displayArtist: s.displayArtist,
-          ),
-        )
-        .toList();
+    final queue = [for (final s in source) s.toSong()];
     AudioService.instance.play(
       queue,
       index,

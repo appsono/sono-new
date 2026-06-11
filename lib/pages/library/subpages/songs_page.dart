@@ -30,10 +30,7 @@ class _SongsPageState extends State<SongsPage> {
   }
 
   Future<void> _load() async {
-    final songs = await widget.db.getAllSongsWithArtists();
-    songs.sort(
-      (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
-    );
+    final songs = await widget.db.getAllSongsWithArtists(orderByTitle: true);
     if (!mounted) return;
     setState(() => _songs = songs);
   }
@@ -41,21 +38,7 @@ class _SongsPageState extends State<SongsPage> {
   void _play(int index) {
     final source = _songs;
     if (source == null) return;
-    final queue = source
-        .map(
-          (s) => Song(
-            id: s.id,
-            path: s.path,
-            title: s.title,
-            duration: s.duration,
-            genre: s.genre,
-            releaseDate: s.releaseDate,
-            albumId: s.albumId,
-            artistId: s.artistId,
-            displayArtist: s.displayArtist,
-          ),
-        )
-        .toList();
+    final queue = [for (final s in source) s.toSong()];
     AudioService.instance.play(queue, index, origin: QueueOrigin.allSongs);
   }
 
@@ -96,21 +79,32 @@ class _SongsPageState extends State<SongsPage> {
               else
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  sliver: SliverList.separated(
-                    separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  sliver: SliverPrototypeExtentList.builder(
+                    prototypeItem: Padding(
+                      padding: EdgeInsets.only(bottom: 8),
+                      child: SonoListRow(
+                        coverPath: '',
+                        title: '',
+                        subtitle: '',
+                        onTap: () {},
+                      ),
+                    ),
                     itemCount: songs.length,
                     itemBuilder: (context, i) {
                       final s = songs[i];
-                      return SonoListRow(
-                        coverPath: s.path,
-                        title: s.title,
-                        subtitle:
-                            s.displayArtist ??
-                            s.artistName ??
-                            l.commonUnknownArtist,
-                        onTap: () => _play(i),
-                        onLongPress: () => _openSheet(s),
-                        onMore: () => _openSheet(s),
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: SonoListRow(
+                          coverPath: s.path,
+                          title: s.title,
+                          subtitle:
+                              s.displayArtist ??
+                              s.artistName ??
+                              l.commonUnknownArtist,
+                          onTap: () => _play(i),
+                          onLongPress: () => _openSheet(s),
+                          onMore: () => _openSheet(s),
+                        ),
                       );
                     },
                   ),
