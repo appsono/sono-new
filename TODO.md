@@ -49,9 +49,9 @@
 
 ### Phase 5
 
-- Create Library Widgets
-- Create the different views (albums, artists, etc.)
-- Create Library Page
+- ~~Create Library Widgets~~ **DONE**
+- ~~Create the different views (albums, artists, etc.)~~ **DONE**
+- ~~Create Library Page~~ **DONE**
 
 ### Phase 6
 
