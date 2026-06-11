@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ late AudioHandler audioHandler;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //smoother scroll on Android devides where touch input rate doesnt match
+  //smoother scroll on Android devices where touch input rate doesnt match
   //display refresh rate
   GestureBinding.instance.resamplingEnabled = true;
   MediaKit.ensureInitialized();
@@ -47,31 +48,37 @@ void main() async {
       androidNotificationIcon: 'drawable/ic_notification',
     ),
   );
-  AudioEffectsService.instance.attachDb(db);
-  await AudioEffectsService.instance.loadSettings();
 
   sono.AudioService.instance.attachDb(db);
+  AudioEffectsService.instance.attachDb(db);
+  LocaleService.instance.attachDb(db);
+
+  //only locale and theme gate first frame
+  await Future.wait([
+    LocaleService.instance.loadSaved(),
+    db.getSetting('theme.mode').then((saved) {
+      SonoApp.themeNotifier.value = saved == 'light'
+          ? SonoColors.light
+          : SonoColors.dark;
+    }),
+  ]);
+
+  runApp(SonoApp(db: db));
+
+  //everything below does not affect first paint
+  //keystore reads (discord) are slow on android
+  //and must NOT block startup
+  unawaited(AudioEffectsService.instance.loadSettings());
 
   DiscordRpcService.instance.attachDb(db);
-  await DiscordRpcService.instance.loadState();
+  unawaited(DiscordRpcService.instance.loadState());
 
   SmtcService.instance.attachDb(db);
-  await SmtcService.instance.init();
+  unawaited(SmtcService.instance.init());
 
   UpdateService.instance.attachDb(db);
 
-  LocaleService.instance.attachDb(db);
-  await LocaleService.instance.loadSaved();
-
-  //restore saved theme before first build to avoid flash
-  final savedTheme = await db.getSetting('theme.mode');
-  SonoApp.themeNotifier.value = savedTheme == 'light'
-      ? SonoColors.light
-      : SonoColors.dark;
-
-  if (Platform.isIOS) await _createIosReadme();
-
-  runApp(SonoApp(db: db));
+  if (Platform.isIOS) unawaited(_createIosReadme());
 }
 
 class SonoApp extends StatefulWidget {
