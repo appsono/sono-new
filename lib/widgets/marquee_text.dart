@@ -29,7 +29,7 @@ class SonoMarqueeText extends StatefulWidget {
 }
 
 class _SonoMarqueeTextState extends State<SonoMarqueeText>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   AnimationController? _anim;
   double _containerWidth = 0;
   double _titleWidth = 0;
@@ -37,9 +37,27 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
   double _scrollDistance = 0;
   bool _needsScroll = false;
   bool _measured = false;
+  int _loopId = 0;
 
   final _titleKey = GlobalKey();
   final _subtitleKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final ctrl = _anim;
+    if (ctrl == null) return;
+    if (state == AppLifecycleState.resumed) {
+      _runLoop(ctrl); //bumps _load, invalidating any stale loop
+    } else {
+      ctrl.stop();
+    }
+  }
 
   @override
   void didUpdateWidget(SonoMarqueeText old) {
@@ -158,16 +176,17 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
   }
 
   Future<void> _runLoop(AnimationController controller) async {
+    final id = ++_loopId;
     await Future.delayed(widget.startDelay);
-    while (mounted && _anim == controller) {
+    while (mounted && _anim == controller && id == _loopId) {
       try {
         await controller.forward(from: 0.0).orCancel;
       } on TickerCanceled {
         return;
       }
-      if (!mounted || _anim != controller) return;
+      if (!mounted || _anim != controller || id != _loopId) return;
       await Future.delayed(widget.startDelay);
-      if (!mounted || _anim != controller) return;
+      if (!mounted || _anim != controller || id != _loopId) return;
       controller.value = 0.0;
     }
   }
@@ -281,6 +300,7 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _anim?.dispose();
     super.dispose();
   }
