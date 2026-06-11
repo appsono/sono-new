@@ -3270,14 +3270,12 @@ class AlbumWithArtistViewData extends DataClass {
   final int id;
   final String title;
   final int artistId;
-  final Uint8List? cover;
   final DateTime? favoritedAt;
   final String? artistName;
   const AlbumWithArtistViewData({
     required this.id,
     required this.title,
     required this.artistId,
-    this.cover,
     this.favoritedAt,
     this.artistName,
   });
@@ -3290,7 +3288,6 @@ class AlbumWithArtistViewData extends DataClass {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       artistId: serializer.fromJson<int>(json['artistId']),
-      cover: serializer.fromJson<Uint8List?>(json['cover']),
       favoritedAt: serializer.fromJson<DateTime?>(json['favoritedAt']),
       artistName: serializer.fromJson<String?>(json['artistName']),
     );
@@ -3302,7 +3299,6 @@ class AlbumWithArtistViewData extends DataClass {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'artistId': serializer.toJson<int>(artistId),
-      'cover': serializer.toJson<Uint8List?>(cover),
       'favoritedAt': serializer.toJson<DateTime?>(favoritedAt),
       'artistName': serializer.toJson<String?>(artistName),
     };
@@ -3312,14 +3308,12 @@ class AlbumWithArtistViewData extends DataClass {
     int? id,
     String? title,
     int? artistId,
-    Value<Uint8List?> cover = const Value.absent(),
     Value<DateTime?> favoritedAt = const Value.absent(),
     Value<String?> artistName = const Value.absent(),
   }) => AlbumWithArtistViewData(
     id: id ?? this.id,
     title: title ?? this.title,
     artistId: artistId ?? this.artistId,
-    cover: cover.present ? cover.value : this.cover,
     favoritedAt: favoritedAt.present ? favoritedAt.value : this.favoritedAt,
     artistName: artistName.present ? artistName.value : this.artistName,
   );
@@ -3329,7 +3323,6 @@ class AlbumWithArtistViewData extends DataClass {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('artistId: $artistId, ')
-          ..write('cover: $cover, ')
           ..write('favoritedAt: $favoritedAt, ')
           ..write('artistName: $artistName')
           ..write(')'))
@@ -3337,14 +3330,7 @@ class AlbumWithArtistViewData extends DataClass {
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    title,
-    artistId,
-    $driftBlobEquality.hash(cover),
-    favoritedAt,
-    artistName,
-  );
+  int get hashCode => Object.hash(id, title, artistId, favoritedAt, artistName);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3352,7 +3338,6 @@ class AlbumWithArtistViewData extends DataClass {
           other.id == this.id &&
           other.title == this.title &&
           other.artistId == this.artistId &&
-          $driftBlobEquality.equals(other.cover, this.cover) &&
           other.favoritedAt == this.favoritedAt &&
           other.artistName == this.artistName);
 }
@@ -3371,7 +3356,6 @@ class $AlbumWithArtistViewView
     id,
     title,
     artistId,
-    cover,
     favoritedAt,
     artistName,
   ];
@@ -3402,10 +3386,6 @@ class $AlbumWithArtistViewView
         DriftSqlType.int,
         data['${effectivePrefix}artist_id'],
       )!,
-      cover: attachedDatabase.typeMapping.read(
-        DriftSqlType.blob,
-        data['${effectivePrefix}cover'],
-      ),
       favoritedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}favorited_at'],
@@ -3437,13 +3417,6 @@ class $AlbumWithArtistViewView
     false,
     generatedAs: GeneratedAs(albums.artistId, false),
     type: DriftSqlType.int,
-  );
-  late final GeneratedColumn<Uint8List> cover = GeneratedColumn<Uint8List>(
-    'cover',
-    aliasedName,
-    true,
-    generatedAs: GeneratedAs(albums.cover, false),
-    type: DriftSqlType.blob,
   );
   late final GeneratedColumn<DateTime> favoritedAt = GeneratedColumn<DateTime>(
     'favorited_at',

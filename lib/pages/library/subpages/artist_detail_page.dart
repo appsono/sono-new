@@ -126,7 +126,6 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
       id: a.id,
       title: a.displayTitle?.isNotEmpty == true ? a.displayTitle! : a.title,
       artistId: artist.id,
-      cover: null,
       artistName: artist.name,
     );
     await LibrarySheets.openForAlbum(

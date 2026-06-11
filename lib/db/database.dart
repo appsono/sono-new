@@ -281,7 +281,6 @@ class SonoDatabase extends _$SonoDatabase {
         id: a.id,
         title: shown,
         artistId: a.artistId,
-        cover: null, //loaded on demand
         artistName: ar?.name,
       );
     }).toList();
@@ -333,7 +332,6 @@ class SonoDatabase extends _$SonoDatabase {
         id: a.id,
         title: shown,
         artistId: a.artistId,
-        cover: null, //loaded on demand
         artistName: ar?.name,
       );
     }).toList();

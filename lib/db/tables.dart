@@ -105,7 +105,6 @@ abstract class AlbumWithArtistView extends View {
         albums.id,
         albums.title,
         albums.artistId,
-        albums.cover,
         albums.favoritedAt,
         artistName,
       ]).from(albums).join([

@@ -130,7 +130,6 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
           ? album.displayTitle!
           : album.title,
       artistId: album.artistId,
-      cover: null,
       artistName: artist?.name,
     );
 
