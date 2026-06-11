@@ -69,6 +69,7 @@ class AudioService {
   List<Song> _queue = [];
   List<Song>? _cachedUnmodifiableQueue;
   List<Song>? _cachedEffectiveQueue;
+  bool _queueDirty = true;
 
   List<int> _shuffleOrder = [];
   int _currentIndex = -1;
@@ -294,7 +295,7 @@ class AudioService {
       if (!_player.state.playing) return;
       final now = DateTime.now();
       if (_lastPositionSave == null ||
-          now.difference(_lastPositionSave!).inSeconds >= 5) {
+          now.difference(_lastPositionSave!).inSeconds >= 30) {
         _lastPositionSave = now;
         _persistPosition(pos);
       }
@@ -422,9 +423,13 @@ class AudioService {
     await db.transaction(() async {
       await db.setSetting('playback.shuffle', _shuffle.toString());
       await db.setSetting('playback.repeat', _repeat.name);
-      //save queue and index
-      final ids = _queue.map((s) => s.id).toList();
-      await db.setSetting('playback.queue', jsonEncode(ids));
+      //queue membership/order only rewritten when actually changed
+      //plain skips only touch index row
+      if (_queueDirty) {
+        final ids = _queue.map((s) => s.id).toList();
+        await db.setSetting('playback.queue', jsonEncode(ids));
+        _queueDirty = false;
+      }
       await db.setSetting('playback.current_index', _effectiveIndex.toString());
       await db.setSetting('playback.origin', jsonEncode(_origin.toJson()));
     });
@@ -445,6 +450,7 @@ class AudioService {
   /// [origin] describes where the queue came from (album, playlist, etc)
   /// and gets shown in the fullscreen player top bar. Defaults to all songs
   Future<void> play(List<Song> songs, int index, {QueueOrigin? origin}) async {
+    _queueDirty = true;
     _queue = List.of(songs);
     _rebuildShuffleOrder(anchorIndex: index);
     //when shuffle is on, the anchor song is at position 0 of shuffle order
@@ -482,6 +488,7 @@ class AudioService {
 
   /// Stop playback and clear queue
   Future<void> stop() async {
+    _queueDirty = true;
     await _player.stop();
     _queue = [];
     _currentIndex = -1;
@@ -598,6 +605,7 @@ class AudioService {
 
   /// Add song to end of queue
   Future<void> addToQueue(Song song) async {
+    _queueDirty = true;
     final newIndex = _queue.length;
     _queue.add(song);
     if (_shuffle) {
@@ -619,6 +627,7 @@ class AudioService {
 
   /// Insert song as next up
   Future<void> playNext(Song song) async {
+    _queueDirty = true;
     if (_shuffle && _shuffleOrder.isNotEmpty) {
       //insert into raw queue at end, but put it in shuffle order
       final newIndex = _queue.length;
@@ -640,6 +649,7 @@ class AudioService {
 
   /// Remove song from queue by index
   Future<void> removeFromQueue(int index) async {
+    _queueDirty = true;
     if (index < 0 || index >= _queue.length) return;
     final wasCurrentIndex = _currentIndex;
 
@@ -677,6 +687,7 @@ class AudioService {
 
   /// Move song at [oldIndex] to [newIndex] in current queue
   Future<void> reorderQueue(int oldIndex, int newIndex) async {
+    _queueDirty = true;
     if (_queue.isEmpty) return;
     //ReorderableListView gives newIndex as slot AFTER gap removal,
     //so for downward moves, subtract one to get actual target index
