@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/pages/player/player_page.dart';
 
 import 'package:sono/services/audio/audio_service.dart';
+import 'package:sono/services/covers/cover_thumbs.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/marquee_text.dart';
@@ -105,7 +106,7 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
   }
 
   Future<void> _loadCover() async {
-    final bytes = await CoverCache.get(widget.song.path);
+    final bytes = await CoverThumbs.get(widget.song.path);
     if (mounted) {
       setState(() {
         _coverBytes = bytes;
@@ -172,6 +173,7 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
                           SonoCoverArt(
                             key: ValueKey(widget.song.path),
                             path: widget.song.path,
+                            coverBytes: _coverBytes,
                             size: 54,
                             shape: CoverShape.circle,
                             spinning: playing,

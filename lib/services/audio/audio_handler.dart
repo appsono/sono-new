@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:audio_session/audio_session.dart';
 
 import 'package:sono/services/audio/audio_service.dart' as sono;
-import 'package:sono/services/covers/cover_cache.dart';
+import 'package:sono/services/covers/cover_thumbs.dart';
 import 'package:sono/db/database.dart';
 
 class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
@@ -111,7 +111,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       _tempDirPath ??= (await getTemporaryDirectory()).path;
       if (token != _updateToken) return;
 
-      final Uint8List? imageBytes = await CoverCache.get(
+      final Uint8List? imageBytes = await CoverThumbs.get(
         song.path,
       ).timeout(const Duration(seconds: 2), onTimeout: () => null);
       if (token != _updateToken) return;
