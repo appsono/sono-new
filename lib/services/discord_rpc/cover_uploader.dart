@@ -61,7 +61,7 @@ class CoverUploader {
   }
 
   void _cachePut(String hash, String url) {
-    if (_cache.length >= 3) _cache.remove(_cache.keys.first);
+    if (_cache.length >= 64) _cache.remove(_cache.keys.first);
     _cache[hash] = (url: url, uploadedAt: DateTime.now());
   }
 

@@ -236,9 +236,22 @@ class DiscordRpcService {
     try {
       final bytes = await CoverCache.get(song.path);
       if (bytes != null && bytes.isNotEmpty) {
-        final publicUrl = await _coverUploader.upload(bytes);
-        if (publicUrl != null) {
-          coverURL = await _toDiscordImageUrl(publicUrl);
+        final contentKey = coverContentKey(bytes);
+        final hit = _proxyByContent[contentKey];
+        if (hit != null &&
+            DateTime.now().difference(hit.at) < const Duration(hours: 1)) {
+          coverURL = hit.url;
+        } else {
+          final publicUrl = await _coverUploader.upload(bytes);
+          if (publicUrl != null) {
+            coverURL = await _toDiscordImageUrl(publicUrl);
+            if (coverURL != null) {
+              if (_proxyByContent.length >= 64) {
+                _proxyByContent.remove(_proxyByContent.keys.first);
+              }
+              _proxyByContent[contentKey] = (url: coverURL, at: DateTime.now());
+            }
+          }
         }
       }
     } catch (e) {
@@ -300,6 +313,7 @@ class DiscordRpcService {
 
   /// Cache public URL > mp:external/... proxy URL
   final Map<String, String> _externalImageCache = {};
+  final Map<String, ({String url, DateTime at})> _proxyByContent = {};
 
   /// Register public image URL with discord and return mp:external proxy URL
   Future<String?> _toDiscordImageUrl(String publicUrl) async {
