@@ -111,6 +111,23 @@ class SonoDatabase extends _$SonoDatabase {
   );
 
   /// ==== Artists ====
+
+  /// artistId -> (representative song path, song count) in one pass
+  Future<Map<int, ({String path, int count})>> getArtistCoverAndCounts() async {
+    final rows = await customSelect(
+      'SELECT artist_id AS aid, MIN(path) AS path, COUNT(*) AS cnt '
+      'FROM songs WHERE artist_id IS NOT NULL GROUP BY artist_id',
+      readsFrom: {songs},
+    ).get();
+    return {
+      for (final r in rows)
+        r.read<int>('aid'): (
+          path: r.read<String>('path'),
+          count: r.read<int>('cnt'),
+        ),
+    };
+  }
+
   Future<int> getOrCreateArtist(String name) async {
     final existing = await (select(
       artists,
@@ -236,6 +253,16 @@ class SonoDatabase extends _$SonoDatabase {
   }
 
   Future<List<Album>> getAllAlbums() => select(albums).get();
+
+  /// albumId -> representative song path in one pass
+  Future<Map<int, String>> getAlbumCoverPaths() async {
+    final rows = await customSelect(
+      'SELECT album_id AS aid, MIN(path) AS path '
+      'FROM songs WHERE album_id IS NOT NULL GROUP BY album_id',
+      readsFrom: {songs},
+    ).get();
+    return {for (final r in rows) r.read<int>('aid'): r.read<String>('path')};
+  }
 
   Future<Album?> getAlbumById(int id) =>
       (select(albums)..where((a) => a.id.equals(id))).getSingleOrNull();

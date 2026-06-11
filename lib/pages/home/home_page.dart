@@ -35,8 +35,9 @@ class _HomePageState extends State<HomePage> {
   List<SongWithArtistViewData>? _songs;
   List<Artist>? _artists;
   List<AlbumWithArtistViewData>? _albums;
+  Map<int, int>? _artistSongCounts;
   Map<int, String>? _artistCoverPaths;
-  Map<String, int>? _artistSongCounts;
+  Map<int, String>? _albumCoverPaths;
 
   @override
   void initState() {
@@ -60,28 +61,21 @@ class _HomePageState extends State<HomePage> {
     songs.sort((a, b) => a.id.compareTo(b.id));
     final artists = await widget.db.getAllArtists();
     final albums = await widget.db.getAllAlbumsWithArtists();
-
-    final coverPaths = <int, String>{};
-    for (final artist in artists) {
-      final artistSongs = await widget.db.getSongsByArtist(artist.id);
-      if (artistSongs.isNotEmpty) {
-        coverPaths[artist.id] = artistSongs.first.path;
-      }
-    }
-
-    final counts = <String, int>{};
-    for (final s in songs) {
-      final name = s.artistName;
-      if (name != null) counts[name] = (counts[name] ?? 0) + 1;
-    }
+    final artistMeta = await widget.db.getArtistCoverAndCounts();
+    final albumCovers = await widget.db.getAlbumCoverPaths();
 
     if (!mounted) return;
     setState(() {
       _songs = songs;
       _artists = artists;
       _albums = albums;
-      _artistCoverPaths = coverPaths;
-      _artistSongCounts = counts;
+      _artistCoverPaths = {
+        for (final e in artistMeta.entries) e.key: e.value.path,
+      };
+      _artistSongCounts = {
+        for (final e in artistMeta.entries) e.key: e.value.count,
+      };
+      _albumCoverPaths = albumCovers;
     });
   }
 
@@ -202,7 +196,11 @@ class _HomePageState extends State<HomePage> {
                 onSeeAll: () => _push(AlbumsPage(db: widget.db)),
                 itemExtent: 168,
                 children: _albums!.map((a) {
-                  return _AlbumCard(album: a, db: widget.db);
+                  return _AlbumCard(
+                    album: a,
+                    db: widget.db,
+                    coverPath: _albumCoverPaths?[a.id] ?? '',
+                  );
                 }).toList(),
               ),
             ),
@@ -218,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                 onSeeAll: () => _push(ArtistsPage(db: widget.db)),
                 itemExtent: 168,
                 children: _artists!.map((a) {
-                  final count = _artistSongCounts?[a.name] ?? 0;
+                  final count = _artistSongCounts?[a.id] ?? 0;
                   return SonoMediaCard(
                     path: _artistCoverPaths?[a.id] ?? '',
                     title: a.name,
@@ -327,51 +325,32 @@ class _RecentlyAdded extends StatelessWidget {
 /// ===========================
 
 //loads cover on demand so section query stays cover free
-class _AlbumCard extends StatefulWidget {
+class _AlbumCard extends StatelessWidget {
   final AlbumWithArtistViewData album;
   final SonoDatabase db;
+  final String coverPath;
 
-  const _AlbumCard({required this.album, required this.db});
-
-  @override
-  State<_AlbumCard> createState() => _AlbumCardState();
-}
-
-class _AlbumCardState extends State<_AlbumCard> {
-  String? _coverPath;
-
-  @override
-  void initState() {
-    super.initState();
-    _resolveCoverPath();
-  }
-
-  Future<void> _resolveCoverPath() async {
-    //grab first song in album to use its file path for cover extraction
-    final songs = await widget.db.getSongsByAlbum(widget.album.id);
-    if (songs.isNotEmpty && mounted) {
-      setState(() {
-        _coverPath = songs.first.path;
-      });
-    }
-  }
+  const _AlbumCard({
+    required this.album,
+    required this.db,
+    required this.coverPath,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
 
     return SonoMediaCard(
-      path: _coverPath ?? '',
-      title: widget.album.title,
-      subtitle: widget.album.artistName ?? l.commonUnknownArtist,
+      path: coverPath,
+      title: album.title,
+      subtitle: album.artistName ?? l.commonUnknownArtist,
       bordered: true,
       titleStyle: Theme.of(
         context,
       ).textTheme.headlineSmall?.copyWith(fontSize: 13),
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) =>
-              AlbumDetailPage(db: widget.db, albumId: widget.album.id),
+          builder: (_) => AlbumDetailPage(db: db, albumId: album.id),
         ),
       ),
     );
