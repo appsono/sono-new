@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.7.0+5](https://github.com/appsono/sono-new/compare/v0.6.3+4...v0.7.0+5) (2026-06-11)
+
+### Features
+
+* Incremental rescans: files that haven't changed on disk are skipped using mtime+size fingerprints, so startup scans on an unchanged library finish in a fraction of the time
+* Tag edits made by other apps are now picked up on normal rescans instead of requiring a force rescan
+* Added a disc number field to tag editing
+
+### Performance
+
+* Unified all cover art loads behind a single byte-budgeted in-memory cache. Covers are read from disk once per song instead of up to five times per song change, and the cache can no longer balloon memory on libraries with large embedded art
+* The notification, mini player background, and Discord RPC now use downscaled cover thumbnails instead of full resolution art
+* Discord RPC remembers recently uploaded covers, so listening through an album no longer re-uploads the same image on every track
+* Home page now loads with a fixed number of database queries instead of one per artist
+* Library lists sort in SQL and use fixed-extent rendering for smoother scrolling on large libraries
+* Cover tag parsing moved off the UI thread and concurrent loads are capped, fixing stutter while scrolling through long song and album lists
+* Playback position updates are throttled to 4 per second across the UI, and the hidden lyrics view no longer does per-tick work behind the player
+* The playback queue is only written to the database when it actually changes, and the resume position is persisted every 30 seconds instead of every 5
+* The spinning cover and marquee pause when the app is in the background
+* Non-critical services (Discord RPC, EQ restore, desktop media controls) now initialize after the first frame for a faster cold start
+* Carousel and scan progress no longer trigger unnecessary rebuilds
+
+### Fixes
+
+* Fixed the startup scan freezing partway through when songs deleted from disk were still referenced by playlists or cached lyrics. Databases migrated up from older versions now get proper ON DELETE CASCADE on those tables
+* Fixed songs not loading for some libraries
+* Stopped the tag editor from writing empty genre fields
+
+### Translation
+
+* [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
+* [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
+* [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into French (100%)
+* [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+
 ## [0.6.3+4](https://github.com/appsono/sono-new/compare/v0.6.2+4...v0.6.3+4) (2026-06-08)
 
 ### Features
