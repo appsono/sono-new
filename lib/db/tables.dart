@@ -41,6 +41,11 @@ class Songs extends Table {
   )();
   TextColumn get displayArtist => text().nullable()();
   DateTimeColumn get likedAt => dateTime().nullable()();
+
+  /// file mtime in ms, paired with fileSize as scan fingerprint
+  /// null until song is touched by a (sono_query) v0.7.0+ scan
+  IntColumn get mtimeMs => integer().nullable()();
+  IntColumn get fileSize => integer().nullable()();
 }
 
 class LyricsCache extends Table {

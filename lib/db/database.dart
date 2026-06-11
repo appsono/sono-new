@@ -26,7 +26,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -98,8 +98,12 @@ class SonoDatabase extends _$SonoDatabase {
           'DELETE FROM lyrics_cache WHERE song_id NOT IN (SELECT id FROM songs)',
         );
       }
+      if (from < 16) {
+        await m.addColumn(songs, songs.mtimeMs);
+        await m.addColumn(songs, songs.fileSize);
+      }
       //future migrations go here:
-      // if (from < 16) { .. }
+      // if (from < 17) { .. }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -395,6 +399,21 @@ class SonoDatabase extends _$SonoDatabase {
   Future<Set<String>> getAllSongPaths() async {
     final rows = await (selectOnly(songs)..addColumns([songs.path])).get();
     return rows.map((row) => row.read(songs.path)!).toSet();
+  }
+
+  /// path -> "mtimeMs:size" for every song that has a stored fingerprint
+  /// passed to sono_query so unchanged files skip metadata re-reads
+  Future<Map<String, String>> getSongFingerprints() async {
+    final rows =
+        await (selectOnly(songs)
+              ..addColumns([songs.path, songs.mtimeMs, songs.fileSize])
+              ..where(songs.mtimeMs.isNotNull() & songs.fileSize.isNotNull()))
+            .get();
+    return {
+      for (final r in rows)
+        r.read(songs.path)!:
+            '${r.read(songs.mtimeMs)}:${r.read(songs.fileSize)}',
+    };
   }
 
   Future<List<Song>> getSongsByIds(List<int> ids) {
