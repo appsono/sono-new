@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:sono_query/sono_query.dart' as sq;
+import 'package:sono/services/covers/cover_cache.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as sa;
@@ -234,7 +234,7 @@ class DiscordRpcService {
     //resolve cover art => discord proxy URL
     String? coverURL;
     try {
-      final bytes = await sq.SonoQuery.getCover(song.path);
+      final bytes = await CoverCache.get(song.path);
       if (bytes != null && bytes.isNotEmpty) {
         final publicUrl = await _coverUploader.upload(bytes);
         if (publicUrl != null) {

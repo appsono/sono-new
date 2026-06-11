@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:sono/pages/player/player_page.dart';
-import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/db/database.dart';
@@ -106,7 +105,7 @@ class _MiniPlayerContentState extends State<_MiniPlayerContent> {
   }
 
   Future<void> _loadCover() async {
-    final bytes = await SonoQuery.getCover(widget.song.path);
+    final bytes = await CoverCache.get(widget.song.path);
     if (mounted) {
       setState(() {
         _coverBytes = bytes;

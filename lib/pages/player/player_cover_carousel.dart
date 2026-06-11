@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui' show lerpDouble;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/player/player_colors.dart';
@@ -142,7 +141,7 @@ class _CoverCarouselState extends State<CoverCarousel> {
       if (_coverCache.containsKey(path)) continue;
       if (_loadingPaths.contains(path)) continue;
       _loadingPaths.add(path);
-      SonoQuery.getCover(path)
+      CoverCache.get(path)
           .then((bytes) {
             _loadingPaths.remove(path);
             if (!mounted) return;

@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:sono_query/sono_query.dart' as query;
 
 import 'package:sono/services/audio/audio_service.dart' as sono;
+import 'package:sono/services/covers/cover_cache.dart';
 import 'package:sono/db/database.dart';
 
 class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
@@ -111,7 +111,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
       _tempDirPath ??= (await getTemporaryDirectory()).path;
       if (token != _updateToken) return;
 
-      final Uint8List? imageBytes = await query.SonoQuery.getCover(
+      final Uint8List? imageBytes = await CoverCache.get(
         song.path,
       ).timeout(const Duration(seconds: 2), onTimeout: () => null);
       if (token != _updateToken) return;

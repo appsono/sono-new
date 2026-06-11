@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:sono/widgets/cover_art.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
@@ -142,7 +143,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     }
 
     try {
-      final bytes = await SonoQuery.getCover(song.path);
+      final bytes = await CoverCache.get(song.path);
       if (!mounted || song.id != _lastSongId) return;
 
       final newColors = (bytes == null || bytes.isEmpty)
