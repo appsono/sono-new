@@ -88,17 +88,23 @@ class _AppShellState extends State<AppShell> {
     }
     final config = await ScanSettings(widget.db).load();
     final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
-    await ScanService(widget.db).scan(
-      config: config,
-      grouping: grouping,
-      force: force,
-      onProgress: (progress) {
-        final now = DateTime.now();
-        if (now.difference(_lastProgressPush).inMilliseconds < 120) return;
-        _lastProgressPush = now;
-        _scanProgress.value = progress;
-      },
-    );
+    try {
+      await ScanService(widget.db).scan(
+        config: config,
+        grouping: grouping,
+        force: force,
+        onProgress: (progress) {
+          final now = DateTime.now();
+          if (now.difference(_lastProgressPush).inMilliseconds < 120) return;
+          _lastProgressPush = now;
+          _scanProgress.value = progress;
+        },
+      );
+    } catch (e, st) {
+      debugPrint('strtup scan failed: $e\n$st');
+    } finally {
+      _scanProgress.value = null;
+    }
     _scanProgress.value = null;
     _scanVersion.value++;
   }

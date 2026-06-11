@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,7 +27,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => 17;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -102,8 +103,24 @@ class SonoDatabase extends _$SonoDatabase {
         await m.addColumn(songs, songs.mtimeMs);
         await m.addColumn(songs, songs.fileSize);
       }
+      if (from < 17) {
+        //defensive orphan cleanup so recreation below cant trip
+        //over rows pointing at deleted songs
+        await customStatement(
+          'DELETE FROM playlist_songs WHERE song_id NOT IN (SELECT id FROM songs)',
+        );
+        await customStatement(
+          'DELETE FROM lyrics_cache WHERE song_id NOT IN (SELECT id FROM songs)',
+        );
+
+        //recreate fk children so their on-disk ddl matches tables.dart:
+        //sqlite bakes fk actions at table creation, dbs migrated up from
+        //pre-cascade versions never got ON DELETE CASCADE
+        await m.alterTable(TableMigration(lyricsCache));
+        await m.alterTable(TableMigration(playlistSongs));
+      }
       //future migrations go here:
-      // if (from < 17) { .. }
+      // if (from < 18) { .. }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -581,8 +598,31 @@ class SonoDatabase extends _$SonoDatabase {
         .get();
   }
 
-  Future<void> removeDeletedSongs(Set<String> currentPaths) async {
-    await (delete(songs)..where((s) => s.path.isNotIn(currentPaths))).go();
+  Future<void> removeDeletedSongs(Set<String> presentPaths) async {
+    //diff in dart so sql variable count is bound by deletions, not
+    //library size
+    final dbPaths = await getAllSongPaths();
+    final deleted = dbPaths.difference(presentPaths).toList();
+    if (deleted.isEmpty) return;
+
+    await transaction(() async {
+      for (var i = 0; i < deleted.length; i += 400) {
+        final part = deleted.sublist(i, math.min(i + 400, deleted.length));
+        final ids =
+            await (selectOnly(songs)
+                  ..addColumns([songs.id])
+                  ..where(songs.path.isIn(part)))
+                .map((r) => r.read(songs.id)!)
+                .get();
+        if (ids.isEmpty) continue;
+        //explicit dependent cleanup: dbs migrated up from old schema
+        //versions created these tables without ON DELETE CASCADE in
+        //their ddl so the fk rejects the song delete otherwise
+        await (delete(playlistSongs)..where((ps) => ps.songId.isIn(ids))).go();
+        await (delete(lyricsCache)..where((c) => c.songId.isIn(ids))).go();
+        await (delete(songs)..where((s) => s.id.isIn(ids))).go();
+      }
+    });
   }
 
   Future<void> clearAllSongs() => delete(songs).go();
