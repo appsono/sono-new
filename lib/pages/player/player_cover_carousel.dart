@@ -196,25 +196,29 @@ class _CoverCarouselState extends State<CoverCarousel> {
             itemBuilder: (_, i) {
               final song = _queue[i];
 
-              return Transform.translate(
-                offset: Offset(-shift, 0),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: _cardPadding),
-                  child: AnimatedBuilder(
-                    animation: _controller,
-                    builder: (_, child) {
-                      final page = _controller.hasClients
-                          ? (_controller.page ?? _currentIndex.toDouble())
-                          : _currentIndex.toDouble();
-                      return _CarouselCoverCard(
-                        song: song,
-                        index: i,
-                        page: page,
-                        currentIndex: _currentIndex,
-                        coverSize: pageWidth,
-                        coverBytes: _coverCache[song.path],
-                      );
-                    },
+              return RepaintBoundary(
+                child: Transform.translate(
+                  offset: Offset(-shift, 0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: _cardPadding,
+                    ),
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (_, child) {
+                        final page = _controller.hasClients
+                            ? (_controller.page ?? _currentIndex.toDouble())
+                            : _currentIndex.toDouble();
+                        return _CarouselCoverCard(
+                          song: song,
+                          index: i,
+                          page: page,
+                          currentIndex: _currentIndex,
+                          coverSize: pageWidth,
+                          coverBytes: _coverCache[song.path],
+                        );
+                      },
+                    ),
                   ),
                 ),
               );
@@ -282,9 +286,7 @@ class _CarouselCoverCard extends StatelessWidget {
       bottomRight: radius.bottomRight,
     );
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 180),
-      curve: Curves.easeOutCubic,
+    return DecoratedBox(
       decoration: BoxDecoration(borderRadius: radius),
       child: ClipRRect(
         borderRadius: outerRadius,
