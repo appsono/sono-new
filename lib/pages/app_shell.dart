@@ -30,7 +30,8 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _tab = 0;
-  ScanProgress? _scanProgress;
+  final _scanProgress = ValueNotifier<ScanProgress?>(null);
+  DateTime _lastProgressPush = DateTime.fromMillisecondsSinceEpoch(0);
   final _scanVersion = ValueNotifier<int>(0);
   UpdateInfo? _update;
 
@@ -44,6 +45,12 @@ class _AppShellState extends State<AppShell> {
     _deleteBrokenGenre();
     _checkPermissionAndScan();
     _checkForUpdates();
+  }
+
+  @override
+  void dispose() {
+    _scanProgress.dispose();
+    super.dispose();
   }
 
   Future<void> _deleteBrokenGenre() async {
@@ -86,10 +93,13 @@ class _AppShellState extends State<AppShell> {
       grouping: grouping,
       force: force,
       onProgress: (progress) {
-        if (mounted) setState(() => _scanProgress = progress);
+        final now = DateTime.now();
+        if (now.difference(_lastProgressPush).inMilliseconds < 120) return;
+        _lastProgressPush = now;
+        _scanProgress.value = progress;
       },
     );
-    if (mounted) setState(() => _scanProgress = null);
+    _scanProgress.value = null;
     _scanVersion.value++;
   }
 
@@ -109,17 +119,20 @@ class _AppShellState extends State<AppShell> {
               LibraryPage(db: widget.db),
             ],
           ),
-          if (_scanProgress != null)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: LinearProgressIndicator(
-                value: _scanProgress!.progress > 0
-                    ? _scanProgress!.progress
-                    : null,
-              ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ValueListenableBuilder(
+              valueListenable: _scanProgress,
+              builder: (_, p, _) {
+                if (p == null) return const SizedBox.shrink();
+                return LinearProgressIndicator(
+                  value: p.progress > 0 ? p.progress : null,
+                );
+              },
             ),
+          ),
           if (_update != null)
             Positioned(
               top: 0,
