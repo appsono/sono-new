@@ -36,34 +36,37 @@
     "homeSectionAlbums": "Albums",
     "homeSectionArtists": "Artistes",
     "homeGreetingEarlyBird": "Waouh, lève-tôt",
-    "homeGreetingMorning": "Matin",
-    "homeGreetingMidday": "Midi",
-    "homeGreetingAfternoon": "Après-midi",
-    "homeGreetingEvening": "Soir",
-    "homeGreetingNight": "Nuit",
-    "homeGreetingLate": "Heyyy dors",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
+    "homeGreetingMorning": "Matin",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
+    "homeGreetingMidday": "Midi",
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
+    "homeGreetingAfternoon": "Après-midi",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
+    "homeGreetingEvening": "Soir",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
+    "homeGreetingNight": "Nuit",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
+    "homeGreetingLate": "Heyyy dors",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
     "homeFallbackPhrase1": "Amuse-toi à faire ce que tu veux",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
     "homeFallbackPhrase2": "Bonne écoute !",
     "homeFallbackPhrase3": "Qu'est-ce qui est au programme aujourd'hui ?",
     "homeFallbackPhrase4": "Bienvenue à nouveau :D",
@@ -73,9 +76,6 @@
     "homeFallbackPhrase8": "mweh :3",
     "homeFallbackPhrase9": "qui es-tu?!",
     "homeFallbackPhrase10": "Choisissez votre nom d'utilisateur...",
-    "@homeFallbackPhrase1": {
-        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
-    },
     "playerNowPlaying": "Lecture en cours",
     "@playerNowPlaying": {
         "description": "Used in the player top bar and on the queue view's collapse button."
@@ -86,19 +86,19 @@
     },
     "playerTooltipSkipNext": "Suivant",
     "playerTooltipShuffleOn": "Chansons aléatoires",
-    "playerTooltipShuffleOff": "pas de melange",
     "@playerTooltipShuffleOn": {
         "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
     },
+    "playerTooltipShuffleOff": "pas de melange",
     "@playerTooltipShuffleOff": {
         "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
     },
     "playerTooltipRepeatOff": "boucle désactivé",
-    "playerTooltipRepeatAll": "Répète tout",
-    "playerTooltipRepeatOne": "Répète une fois",
     "@playerTooltipRepeatOff": {
         "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
     },
+    "playerTooltipRepeatAll": "Répète tout",
+    "playerTooltipRepeatOne": "Répète une fois",
     "playerTooltipOpenQueue": "File d'attente ouverte",
     "playerTooltipOpenLyrics": "Voir paroles",
     "queueLabelUpNext": "À suivre",
@@ -126,11 +126,11 @@
     "lyricsMenuResetSaved": "Réinitialiser les paroles enregistrées",
     "lyricsMenuResetSavedSubtitle": "Effacer le cache et récupérer à nouveau les paroles",
     "lyricsMenuRepeatOff": "Désactivé",
-    "lyricsMenuRepeatAll": "Répéter tout",
-    "lyricsMenuRepeatOne": "Répéter un",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
+    "lyricsMenuRepeatAll": "Répéter tout",
+    "lyricsMenuRepeatOne": "Répéter un",
     "lyricsTooltipBackToPlayer": "Retour au lecteur",
     "lyricsTooltiplMore": "Plus",
     "authSignIn": "Se connecter",
@@ -144,5 +144,321 @@
     "contributorsCodeSection": "Code",
     "contributorsTranslatorSection": "Traductions",
     "contributorsLoading": "Chargement…",
-    "contributorsLoadFailed": "Impossible de charger les contributeurs :/"
+    "contributorsLoadFailed": "Impossible de charger les contributeurs :/",
+    "commonDurationLong": "{hours}h {minutes}min",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "{minutes}min",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonFavorite": "Préféré",
+    "@commonFavorite": {
+        "description": "Favortie an album or artist. Imperative verb. After-state is commonFavorited."
+    },
+    "commonFavorited": "Favoris",
+    "@commonFavorited": {
+        "description": "State label shown after an album or artist has been favorited."
+    },
+    "commonMoreOptions": "Plus d'options",
+    "@commonMoreOptions": {
+        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
+    },
+    "commonShare": "Partager",
+    "@commonShare": {
+        "description": "Share action. Imperative verb."
+    },
+    "commonPlayAll": "Tout jouer",
+    "@commonPlayAll": {
+        "description": "Play all songs from an artist, album, or section. Imperative form."
+    },
+    "commonPlayNext": "Jouer ensuite",
+    "@commonPlayNext": {
+        "description": "Queue a song to play right after the current one. Imperative form."
+    },
+    "commonAddToQueue": "Ajouter à la file d'attente",
+    "@commonAddToQueue": {
+        "description": "Append to the end of the playback queue. Imperative form."
+    },
+    "commonCreatePlaylist": "Créer une playlist",
+    "@commonCreatePlaylist": {
+        "description": "Button and action label for creating a new playlist."
+    },
+    "commonRemoveFromQueue": "Retirer de la file d'attente",
+    "@commonRemoveFromQueue": {
+        "description": "Remove a song from the playback queue. Imperative form."
+    },
+    "commonGoToAlbum": "Aller à l'album",
+    "@commonGoToAlbum": {
+        "description": "Navigate to the album page. Imperative form."
+    },
+    "commonGoToArtist": "Aller à l'artiste",
+    "@commonGoToArtist": {
+        "description": "Navigate to the artist page. Imperative form."
+    },
+    "commonTitle": "Titre",
+    "@commonTitle": {
+        "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
+    },
+    "commonArtist": "Artiste",
+    "@commonArtist": {
+        "description": "Noun label for the artist metadata field. Shown in info/details views."
+    },
+    "commonAlbum": "Album",
+    "@commonAlbum": {
+        "description": "Noun label for the album metadata field. Shown in info/details views."
+    },
+    "commonGenre": "Genre",
+    "@commonGenre": {
+        "description": "Noun label for the genre metadata field. Shown in info/details views."
+    },
+    "commonDuration": "Durée",
+    "@commonDuration": {
+        "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
+    },
+    "commonReleased": "sortie le",
+    "@commonReleased": {
+        "description": "Label for the release date metadata field. Past participle form."
+    },
+    "commonPath": "Chemin",
+    "@commonPath": {
+        "description": "Label for the filesystem path metadata field."
+    },
+    "commonEdit": "Modifier",
+    "@commonEdit": {
+        "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
+    },
+    "commonRename": "Renommé",
+    "@commonRename": {
+        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
+    },
+    "commonDelete": "Supprimer",
+    "@commonDelete": {
+        "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+    },
+    "commonCancel": "Annuler",
+    "@commonCancel": {
+        "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+    },
+    "commonSave": "Sauvegarder",
+    "@commonSave": {
+        "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+    },
+    "commonUndo": "Défaire",
+    "@commonUndo": {
+        "description": "Undo action on a snackbar to reverse the last action."
+    },
+    "commonRemoveFromPlaylist": "Supprimer de la playlist",
+    "@commonRemoveFromPlaylist": {
+        "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
+    },
+    "libraryPageTitle": "Bibliothèque",
+    "@libraryPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "libraryCardGenres": "Genres",
+    "@libraryCardGenres": {
+        "description": "Library page card label. Opens a list of genres."
+    },
+    "libraryCardPlaylists": "Playlists",
+    "@libraryCardPlaylists": {
+        "description": "Library page card label. Opens user playlists."
+    },
+    "libraryCardLikedSongs": "Chansons aimées",
+    "@libraryCardLikedSongs": {
+        "description": "Library page card label. Opens the list of songs the user has liked."
+    },
+    "libraryCardFavoriteAlbums": "Albums préférés",
+    "@libraryCardFavoriteAlbums": {
+        "description": "Library page card label. Opens the list of albums the user has favorited."
+    },
+    "libraryCardFavoriteArtists": "Artistes préférés",
+    "@libraryCardFavoriteArtists": {
+        "description": "Library page card label. Opens the list of artists the user has favorited."
+    },
+    "libraryCardArtists": "Artistes",
+    "@libraryCardArtists": {
+        "description": "Library page card label. Opens the full list of artists in the library."
+    },
+    "libraryCardSongs": "Chansons",
+    "@libraryCardSongs": {
+        "description": "Library page card label. Opens the full list of songs in the library."
+    },
+    "libraryCardAlbums": "Albums",
+    "@libraryCardAlbums": {
+        "description": "Library page card label. Opens the full list of albums in the library."
+    },
+    "libraryEmptyPlaylists": "Pas encore de playlists :/",
+    "@libraryEmptyPlaylists": {
+        "description": "Empty state on the Playlists list page when the user has not created any playlists."
+    },
+    "libraryEmptyLikedSongs": "Vous n'avez encore aimé aucune chanson. Allez-y, aimez-en quelques-unes.",
+    "@libraryEmptyLikedSongs": {
+        "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
+    },
+    "libraryEmptyFavoriteAlbums": "Pas encore d'albums préférés :/",
+    "@libraryEmptyFavoriteAlbums": {
+        "description": "Empty state on the Favorite Albums list page when the user has not favorited any albums."
+    },
+    "libraryEmptyFavoriteArtists": "Pas encore d'artistes préférés :/",
+    "@libraryEmptyFavoriteArtists": {
+        "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
+    },
+    "libraryEmptySongs": "Aucune chanson dans votre bibliothèque pour le moment :/",
+    "@libraryEmptySongs": {
+        "description": "Empty state on the Songs list page when no songs have been scanned."
+    },
+    "libraryEmptyAlbums": "Aucun album dans votre bibliothèque pour le moment :/",
+    "@libraryEmptyAlbums": {
+        "description": "Empty state on the Albums list page when no albums have been scanned."
+    },
+    "libraryEmptyArtists": "Aucun artiste dans votre bibliothèque pour le moment :/",
+    "@libraryEmptyArtists": {
+        "description": "Empty state on the Artists list page when no artists have been scanned."
+    },
+    "libraryEmptyGenres": "Aucun genre n'est encore arrivé :/",
+    "@libraryEmptyGenres": {
+        "description": "Empty state on the Genres list page when no songs have a genre tag."
+    },
+    "playlistNameLabel": "Nom",
+    "@playlistNameLabel": {
+        "description": "Placeholder text for the playlist name field in the create playlist modal."
+    },
+    "playlistDescriptionLabel": "Description (facultatif)",
+    "@playlistDescriptionLabel": {
+        "description": "Placeholder text for the optional playlist description field in the create playlist modal."
+    },
+    "playlistDefaultName": "Nouvelle liste de lecture",
+    "@playlistDefaultName": {
+        "description": "Fallback name applied when the user creates a playlist without entering one."
+    },
+    "playlistRenameTitle": "Renommer la playlist",
+    "@playlistRenameTitle": {
+        "description": "Title of the rename playlist modal."
+    },
+    "playlistDeleteTitle": "Supprimer « {name} » ?",
+    "@playlistDeleteTitle": {
+        "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistEmpty": "Cette playlist est vide… malheureusement",
+    "@playlistEmpty": {
+        "description": "Empty state shown on a playlist detail page when no songs have been added yet."
+    },
+    "playlistActionReorder": "Réorganiser les chansons",
+    "@playlistActionReorder": {
+        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
+    },
+    "playlistAdded": "Ajouté à \"{name}\"",
+    "@playlistAdded": {
+        "description": "Snackbar shown after a song has been added to a playlist via the picker.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistAlreadyContains": "Déjà dans \"{name}\"",
+    "@playlistAlreadyContains": {
+        "description": "Snackbar shown when the user tries to add a song to a playlist that already contains it.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "albumTypeAlbum": "Album",
+    "@albumTypeAlbum": {
+        "description": "Type label for a standard album shown on the artist detail page."
+    },
+    "albumTypeEp": "EP",
+    "@albumTypeEp": {
+        "description": "Type label for an EP (extended play) album shown on the artist detail page."
+    },
+    "albumTypeSingle": "Single",
+    "@albumTypeSingle": {
+        "description": "Type label for a single-track release shown on the artist detail page."
+    },
+    "albumTypeCompilation": "Compilation",
+    "@albumTypeCompilation": {
+        "description": "Type label for a compilation album (3+ distinct contributing artists) shown on the artist detail page."
+    },
+    "albumTypeCollaboration": "Collaboration",
+    "@albumTypeCollaboration": {
+        "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
+    },
+    "songSheetTabOptions": "Options",
+    "@songSheetTabOptions": {
+        "description": "Bottom toggle on the media options sheet. Switches to the actions grid."
+    },
+    "songSheetTabInfo": "Info",
+    "@songSheetTabInfo": {
+        "description": "Bottom toggle on the media options sheet. Switches to the metadata view."
+    },
+    "songSheetEmptyActions": "Aucune action disponible",
+    "@songSheetEmptyActions": {
+        "description": "Shown when the song sheet has no actions to display."
+    },
+    "songSheetEmptyInfo": "Aucune information disponible",
+    "@songSheetEmptyInfo": {
+        "description": "Shown when the song sheet has no metadata rows."
+    },
+    "songSheetUnknownValue": "inconnu",
+    "@songSheetUnknownValue": {
+        "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
+    },
+    "editTagsTitle": "Modifier les tags",
+    "@editTagsTitle": {
+        "description": "Page title for the tag editing page opened from the song sheet info tab."
+    },
+    "editTagsUnsupported": "Ce format ne prend pas en charge l'édition des tags",
+    "@editTagsUnsupported": {
+        "description": "Tooltip shown on the edit-tags button when MetadataReader.canWrite returns false for the song's file format."
+    },
+    "editTagsSaveFailed": "Impossible d'enregistrer les tags",
+    "@editTagsSaveFailed": {
+        "description": "Snackbar shown when SonoQuery.updateTags returns false or throws."
+    },
+    "editTagsSaved": "Enregistrée",
+    "@editTagsSaved": {
+        "description": "Snackbar shown after tags have been written successfully and the song has been re-scanned."
+    },
+    "editTagsFieldTrackNumber": "Piste #",
+    "@editTagsFieldTrackNumber": {
+        "description": "Label for the track-number field on the edit tags page. Short form to fit alongside the year field on the same row."
+    },
+    "editTagsFieldDiscNumber": "Disque #",
+    "@editTagsFieldDiscNumber": {
+        "description": "Label for the disc-number field on the edit tags page. Used for multi-disc albums."
+    },
+    "editTagsFieldYear": "Année",
+    "@editTagsFieldYear": {
+        "description": "Label for the year field on the edit tags page. Accepts a 4-digit year."
+    },
+    "editTagsFieldGenres": "Genres",
+    "@editTagsFieldGenres": {
+        "description": "Label for the genres field on the edit tags page. Multiple values are comma-separated."
+    },
+    "editTagsGenresHint": "Séparés par des virgules",
+    "@editTagsGenresHint": {
+        "description": "Hint shown inside the genres field on the edit tags page to indicate how to enter multiple genres."
+    }
 }
