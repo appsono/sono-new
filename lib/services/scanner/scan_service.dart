@@ -63,6 +63,9 @@ class ScanService {
       await db.clearAllAlbums();
     }
     final existingPaths = await db.getAllSongPaths();
+    final fingerprints = force
+        ? const <String, String>{}
+        : await db.getSongFingerprints();
     final allPaths = <String>{};
     final pendingChunk = <sq.Song>[];
 
@@ -76,15 +79,28 @@ class ScanService {
 
     await for (final song in sq.SonoQuery.getSongsStream(
       config: config,
+      //desktop/ios: unchanged ils never get their tags re-read
+      //android: mediastore is one query anyway, the map gates
+      //per-song processing below instead
+      knownFingerprints: force ? null : fingerprints,
       onProgress: onProgress,
       onError: onError ?? _defaultOnError,
     )) {
       allPaths.add(song.path);
 
-      /// on force, every songs goes through chunk processing
-      /// regardless of wheter it already exists (need to recompute
-      /// its album_id and artist_id for new grouping)
-      if (force || !existingPaths.contains(song.path)) {
+      /// force: everything is reprocessed (regroup needs fresh ids)
+      /// otherwise process new files, plus exisiting files whose
+      /// fingerprint changed on disk (tag edits outside of sono)
+      final fp = (song.mtimeMs != null && song.fileSize != null)
+          ? sq.SonoQuery.fingerprint(song.mtimeMs!, song.fileSize!)
+          : null;
+      final unchanged =
+          !force &&
+          existingPaths.contains(song.path) &&
+          fp != null &&
+          fingerprints[song.path] == fp;
+
+      if (!unchanged) {
         pendingChunk.add(song);
 
         if (pendingChunk.length >= _chunkSize) {
@@ -205,11 +221,10 @@ class ScanService {
       }
     }
 
-    //split into inserts (new songs) and updates (exisiting songs
-    //being re-grouped)
+    //split into inserts (new songs) and updates (exisiting songs that
+    //changed on disk or are being re-grouped)
     final toInsert = <SongsCompanion>[];
-    final toUpdate =
-        <({String path, int? albumId, int? artistId, String? displayArtist})>[];
+    final toUpdate = <({String path, SongsCompanion data})>[];
 
     for (final song in chunk) {
       final mainArtist = getMainArtistFromSong(song) ?? song.artist;
@@ -227,26 +242,34 @@ class ScanService {
           ? song.artists.join(', ')
           : song.artist;
 
-      if (force && existingPaths.contains(song.path)) {
-        //regroup: only album_id/artist_id/displayArtist can change
+      final rawTrack = song.trackNumber;
+      final int? discNumber;
+      final int? trackNumber;
+      if (rawTrack != null && rawTrack >= 1000) {
+        discNumber = rawTrack ~/ 1000;
+        trackNumber = rawTrack % 1000;
+      } else {
+        discNumber = null;
+        trackNumber = rawTrack;
+      }
+
+      if (existingPaths.contains(song.path)) {
         toUpdate.add((
           path: song.path,
-          albumId: albumId,
-          artistId: mainArtistId,
-          displayArtist: displayArtistStr,
+          data: SongsCompanion(
+            title: Value(song.title),
+            duration: Value(song.duration?.inMilliseconds),
+            trackNumber: Value(trackNumber),
+            discNumber: Value(discNumber),
+            genre: Value(song.genre),
+            releaseDate: Value(song.releaseDate),
+            albumId: Value(albumId),
+            artistId: Value(mainArtistId),
+            displayArtist: Value(displayArtistStr),
+            mtimeMs: Value(song.fileSize),
+          ),
         ));
       } else {
-        final rawTrack = song.trackNumber;
-        final int? discNumber;
-        final int? trackNumber;
-        if (rawTrack != null && rawTrack >= 1000) {
-          discNumber = rawTrack ~/ 1000;
-          trackNumber = rawTrack % 1000;
-        } else {
-          discNumber = null;
-          trackNumber = rawTrack;
-        }
-
         toInsert.add(
           SongsCompanion.insert(
             path: song.path,
@@ -259,6 +282,8 @@ class ScanService {
             albumId: Value(albumId),
             artistId: Value(mainArtistId),
             displayArtist: Value(displayArtistStr),
+            mtimeMs: Value(song.mtimeMs),
+            fileSize: Value(song.fileSize),
           ),
         );
       }
@@ -269,15 +294,7 @@ class ScanService {
         batch.insertAll(db.songs, toInsert);
       }
       for (final u in toUpdate) {
-        batch.update(
-          db.songs,
-          SongsCompanion(
-            albumId: Value(u.albumId),
-            artistId: Value(u.artistId),
-            displayArtist: Value(u.displayArtist),
-          ),
-          where: (s) => s.path.equals(u.path),
-        );
+        batch.update(db.songs, u.data, where: (s) => s.path.equals(u.path));
       }
     });
 
