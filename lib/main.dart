@@ -69,7 +69,9 @@ void main() async {
     }),
   ]);
 
-  PaintingBinding.instance.imageCache..maximumSize = DeviceProfile.imageCacheEntries..maximumSizeBytes = DeviceProfile.imageCacheBytes;
+  PaintingBinding.instance.imageCache
+    ..maximumSize = DeviceProfile.imageCacheEntries
+    ..maximumSizeBytes = DeviceProfile.imageCacheBytes;
   runApp(SonoApp(db: db));
 
   //everything below does not affect first paint
