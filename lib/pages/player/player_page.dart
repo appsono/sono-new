@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:sono/widgets/cover_art.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
+
 import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
-import 'package:sono/l10n/localizations.dart';
+import 'package:sono/services/covers/cover_thumbs.dart';
 import 'package:sono/theme/icons.dart';
+import 'package:sono/l10n/localizations.dart';
 
 //widgets
 import 'package:sono/pages/player/player_colors.dart';
@@ -143,7 +144,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
     }
 
     try {
-      final bytes = await CoverCache.get(song.path);
+      final bytes = await CoverThumbs.get(song.path);
       if (!mounted || song.id != _lastSongId) return;
 
       final newColors = (bytes == null || bytes.isEmpty)
