@@ -18,7 +18,7 @@ Sono is yet another local music player, it's cross platform and NOT material des
 
 It is built with Flutter and and has all the features you need. Not yet, but soon :D
 
-Bad news: it doesn't run on a Samsung Galaxy Tab A6 from 2016, I'm very sorry...
+Good news: Sono even runs on a Samsung Galaxy Tab A6 from 2016 (slow on boot, but it gets there :D)
 
 ## Contributing
 

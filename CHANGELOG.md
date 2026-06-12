@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.7.1+5](https://github.com/appsono/sono-new/compare/v0.7.0+5...v0.7.1+5) (2026-06-12)
+
+### Performance
+
+* Sono now detects low-RAM devices and scales itself down: smaller cover caches, smaller audio buffers, lower thumbnail resolution, and a tighter player carousel on weak hardware
+* Cover caches shrink automatically while the app is in the background and release memory when the system asks for it, making background playback much less likely to be killed on low-end devices
+* Player colors are now extracted from cover thumbnails instead of full resolution art, cutting peak memory during song changes from up to ~40MB to ~1MB
+* Cover scanning, thumbnail decoding, and tag-edit file copies no longer run on the Android main thread (sono_query 0.8.0), removing stutters during scrolling and song changes
+* Cover thumbnails now work on devices without MediaStore thumbnails (Android 9 and below, filesystem-scanned libraries) via a memory-bounded native decode
+* Good news: Sono now runs on a Samsung Galaxy Tab A6 from 2016 (slow on boot, but it gets there :D)
+* On Windows, media overlay artwork goes through the thumbnail cache and timeline updates are pushed far less often
+
+### Fixes
+
+* Fixed a crash when the playback notification appeared on Android 12 and below
+
+### Translation
+
+* [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
+
 ## [0.7.0+5](https://github.com/appsono/sono-new/compare/v0.6.3+4...v0.7.0+5) (2026-06-11)
 
 ### Features
