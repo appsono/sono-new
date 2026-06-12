@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.2+5](https://github.com/appsono/sono-new/compare/v0.7.1+5...v0.7.2+5) (2026-06-12)
+
+### Fixes
+
+* Fixed severe memory growth when scrolling large libraries: cover tiles kept full-resolution art pinned in memory long after it was evicted from Sono's own caches, which could reach over 1GB on a few thousand songs. Cover tiles now hold only their small decoded image, and the system image cache is freed when the app goes to the background
+
 ## [0.7.1+5](https://github.com/appsono/sono-new/compare/v0.7.0+5...v0.7.1+5) (2026-06-12)
 
 ### Performance
