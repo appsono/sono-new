@@ -28,6 +28,7 @@ class DeviceProfile {
   }
 
   // ==== budgets ====
+  static int get skiaResourceCacheBytes => isLow ? 32 << 20 : 64 << 20;
   static int get imageCacheEntries => isLow ? 100 : 300;
   static int get imageCacheBytes => isLow ? 24 << 20 : 64 << 20;
   static int get coverCacheBytes => isLow ? 16 << 20 : 48 << 20;

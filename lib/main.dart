@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:path_provider/path_provider.dart';
@@ -33,9 +34,6 @@ void main() async {
   GestureBinding.instance.resamplingEnabled = true;
   MediaKit.ensureInitialized();
   await DeviceProfile.detect();
-  PaintingBinding.instance.imageCache
-    ..maximumSize = DeviceProfile.imageCacheEntries
-    ..maximumSizeBytes = DeviceProfile.imageCacheBytes;
 
   final db = SonoDatabase();
 
@@ -88,6 +86,12 @@ void main() async {
   UpdateService.instance.attachDb(db);
 
   CoverMemoryPressure.instance.install();
+  unawaited(
+    SystemChannels.skia.invokeMethod(
+      'Skia.setResourceCacheMaxBytes',
+      DeviceProfile.skiaResourceCacheBytes,
+    ),
+  );
 
   if (Platform.isIOS) unawaited(_createIosReadme());
 }
