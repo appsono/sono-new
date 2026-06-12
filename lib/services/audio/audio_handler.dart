@@ -219,7 +219,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           MediaAction.setShuffleMode,
           MediaAction.setRepeatMode,
         },
-        androidCompactActionIndices: const [1, 2, 3],
+        androidCompactActionIndices: const [0, 1, 2],
         processingState: AudioProcessingState.ready,
         //processingState: (_audio.isBuffering)
         //    ? AudioProcessingState.loading
