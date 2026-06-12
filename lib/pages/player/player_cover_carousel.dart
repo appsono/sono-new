@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
+import 'package:sono/services/device_profile.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/cover_art.dart';
 
@@ -21,7 +22,7 @@ class CoverCarousel extends StatefulWidget {
 class _CoverCarouselState extends State<CoverCarousel> {
   static const _viewportFraction = 0.78;
   static const _cardPadding = 6.5; //gap between covers = 2x this
-  static const _cacheRadius = 3; //prefetch 3 prev + 3 next
+  static int get _cacheRadius => DeviceProfile.carouselRadius;
 
   late final PageController _controller;
   StreamSubscription<Song?>? _songSub;

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:sono_query/sono_query.dart';
 
+import 'package:sono/services/device_profile.dart';
+
 /// Fast cache key for cover bytes; replaces md5 on UI isolate
 String coverContentKey(Uint8List bytes) {
   if (bytes.isEmpty) return 'empty';
@@ -15,7 +17,7 @@ String coverContentKey(Uint8List bytes) {
 ///
 /// Evicts by total bytes, not entry count, to bound memory usage#
 class CoverCache {
-  static const int _maxBytes = 48 * 1024 * 1024;
+  static int get _maxBytes => DeviceProfile.coverCacheBytes;
   static const int _maxEntries = 512; //bounds known-null negative cache
   static int _totalBytes = 0;
 
@@ -112,6 +114,13 @@ class CoverCache {
     }
     while ((_totalBytes > _maxBytes || _order.length > _maxEntries) &&
         _order.length > 1) {
+      final oldest = _order.removeAt(0);
+      _totalBytes -= _cache.remove(oldest)?.length ?? 0;
+    }
+  }
+
+  static void trimToBytes(int maxBytes) {
+    while (_totalBytes > maxBytes && _order.isNotEmpty) {
       final oldest = _order.removeAt(0);
       _totalBytes -= _cache.remove(oldest)?.length ?? 0;
     }

@@ -8,6 +8,8 @@ import 'package:audio_service/audio_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:sono/l10n/localizations.dart';
+import 'package:sono/services/covers/cover_memory_pressure.dart';
+import 'package:sono/services/device_profile.dart';
 import 'package:sono/services/locale_service.dart';
 
 import 'package:sono/db/database.dart';
@@ -30,6 +32,7 @@ void main() async {
   //display refresh rate
   GestureBinding.instance.resamplingEnabled = true;
   MediaKit.ensureInitialized();
+  await DeviceProfile.detect();
 
   final db = SonoDatabase();
 
@@ -77,6 +80,8 @@ void main() async {
   unawaited(SmtcService.instance.init());
 
   UpdateService.instance.attachDb(db);
+
+  CoverMemoryPressure.instance.install();
 
   if (Platform.isIOS) unawaited(_createIosReadme());
 }

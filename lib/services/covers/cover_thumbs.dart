@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 import 'package:sono_query/sono_query.dart';
 
+import 'package:sono/services/device_profile.dart';
 import 'package:sono/services/covers/cover_cache.dart';
 
 /// Small-cover cach lightweight consumers (notificatons, blur, uploads, etc.)
@@ -10,10 +11,10 @@ import 'package:sono/services/covers/cover_cache.dart';
 /// 1) MediaStore thumbnail (Android Q+)
 /// 2) Downscaled CoverCache bytes in isolate when needed
 class CoverThumbs {
-  static const int _maxDim = 512;
+  static int get _maxDim => DeviceProfile.thumbMaxDim;
   //full bvytes at or below this are as-is (re-encoding unnecessary)
   static const int _passThroughBytes = 200 * 1024;
-  static const int _capacity = 32; //thumbs are small,~3mb worst case
+  static int get _capacity => DeviceProfile.thumbCapacity;
 
   static final Map<String, Uint8List?> _cache = {};
   static final List<String> _order = [];
@@ -77,6 +78,12 @@ class CoverThumbs {
     _cache[path] = bytes;
     _touch(path);
     while (_order.length > _capacity) {
+      _cache.remove(_order.removeAt(0));
+    }
+  }
+
+  static void trimToEntries(int maxEntries) {
+    while (_order.length > maxEntries) {
       _cache.remove(_order.removeAt(0));
     }
   }

@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'package:media_kit/media_kit.dart';
+
 import 'package:sono/db/database.dart' hide Playlist;
 import 'package:sono/services/audio/audio_effects_service.dart';
+import 'package:sono/services/device_profile.dart';
 
 enum RepeatMode { off, all, one }
 
@@ -263,9 +265,18 @@ class AudioService {
 
       //lean demuxer / cache
       await platform.setProperty('cache', 'no');
-      await platform.setProperty('demuxer-max-bytes', '16MiB');
-      await platform.setProperty('demuxer-max-back-bytes', '4MiB');
-      await platform.setProperty('demuxer-readhead-secs', '4');
+      await platform.setProperty(
+        'demuxer-max-bytes',
+        DeviceProfile.demuxerMaxBytes,
+      );
+      await platform.setProperty(
+        'demuxer-max-back-bytes',
+        DeviceProfile.demuxerBackBytes,
+      );
+      await platform.setProperty(
+        'demuxer-readhead-secs',
+        DeviceProfile.readheadSecs,
+      );
       await platform.setProperty('audio-buffer', '2');
 
       //playback behavior
