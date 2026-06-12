@@ -28,6 +28,8 @@ class CoverMemoryPressure with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden) {
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
       CoverCache.trimToBytes(_backgroundCoverBytes);
       CoverThumbs.trimToEntries(_backgroundThumbEntries);
     }

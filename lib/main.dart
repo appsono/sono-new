@@ -33,6 +33,9 @@ void main() async {
   GestureBinding.instance.resamplingEnabled = true;
   MediaKit.ensureInitialized();
   await DeviceProfile.detect();
+  PaintingBinding.instance.imageCache
+    ..maximumSize = DeviceProfile.imageCacheEntries
+    ..maximumSizeBytes = DeviceProfile.imageCacheBytes;
 
   final db = SonoDatabase();
 
@@ -66,6 +69,7 @@ void main() async {
     }),
   ]);
 
+  PaintingBinding.instance.imageCache..maximumSize = DeviceProfile.imageCacheEntries..maximumSizeBytes = DeviceProfile.imageCacheBytes;
   runApp(SonoApp(db: db));
 
   //everything below does not affect first paint

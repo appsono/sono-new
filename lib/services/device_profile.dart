@@ -28,6 +28,8 @@ class DeviceProfile {
   }
 
   // ==== budgets ====
+  static int get imageCacheEntries => isLow ? 100 : 300;
+  static int get imageCacheBytes => isLow ? 24 << 20 : 64 << 20;
   static int get coverCacheBytes => isLow ? 16 << 20 : 48 << 20;
   static int get backgroundCoverBytes => isLow ? 0 : 8 << 20;
   static int get thumbCapacity => isLow ? 8 : 16;

@@ -8,6 +8,7 @@ import 'package:sono/theme/tokens.dart';
 
 export 'package:sono/services/covers/cover_cache.dart' show CoverCache;
 import 'package:sono/services/covers/cover_cache.dart';
+import 'package:sono/services/covers/cover_image.dart';
 
 enum CoverShape { rounded, circle }
 
@@ -113,6 +114,14 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     }
   }
 
+  ImageProvider _provider(int px) {
+    final external = widget.coverBytes;
+    if (external != null && identical(external, _cover)) {
+      return ResizeImage(MemoryImage(external), width: px, height: px);
+    }
+    return CoverImage(widget.path, px);
+  }
+
   Future<void> _loadCover() async {
     final cover = await CoverCache.get(widget.path);
     if (mounted) {
@@ -185,14 +194,7 @@ class _SonoCoverArtState extends State<SonoCoverArt>
           color: context.sono.primary,
           border: border,
           image: (_loaded && _cover != null)
-              ? DecorationImage(
-                  image: ResizeImage(
-                    MemoryImage(_cover!),
-                    width: px,
-                    height: px,
-                  ),
-                  fit: BoxFit.contain,
-                )
+              ? DecorationImage(image: _provider(px), fit: BoxFit.contain)
               : null,
         ),
         child: _loaded && _cover != null
@@ -214,13 +216,12 @@ class _SonoCoverArtState extends State<SonoCoverArt>
     if (!_loaded || _cover == null) {
       inner = _Placeholder(size: widget.size, icon: widget.fallbackIcon);
     } else {
-      inner = Image.memory(
-        _cover!,
+      inner = Image(
+        image: _provider(px),
         width: widget.size,
         height: widget.size,
-        cacheWidth: px, //< decode to this  size
-        cacheHeight: px, //< decode to this size
         fit: BoxFit.cover,
+        gaplessPlayback: true,
         errorBuilder: (_, _, _) =>
             _Placeholder(size: widget.size, icon: widget.fallbackIcon),
       );
