@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:smtc_windows/smtc_windows.dart';
-import 'package:sono_query/sono_query.dart' as sq;
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as sa;
+import 'package:sono/services/covers/cover_thumbs.dart';
 
 class SmtcService {
   SmtcService._();
@@ -20,6 +20,7 @@ class SmtcService {
   StreamSubscription? _buttonSub;
 
   SonoDatabase? _db;
+  Duration _lastTimelinePush = Duration.zero;
   String? _tempDirPath;
   File? _coverFile;
   int _coverCounter = 0;
@@ -56,7 +57,12 @@ class SmtcService {
       );
     });
     _durationSub = audio.durationStream.listen((_) => _pushTimeline());
-    _positionSub = audio.positionStream.listen((_) => _pushTimeline());
+    _positionSub = audio.positionStream.listen((pos) {
+      final delta = (pos - _lastTimelinePush).inMilliseconds.abs();
+      if (delta < 5000 && delta > 0) return;
+      _lastTimelinePush = pos;
+      _pushTimeline();
+    });
   }
 
   void _pushTimeline() {
@@ -107,7 +113,7 @@ class SmtcService {
     String? thumbnailUri;
     try {
       _tempDirPath ??= (await getTemporaryDirectory()).path;
-      final bytes = await sq.SonoQuery.getCover(
+      final bytes = await CoverThumbs.get(
         song.path,
       ).timeout(const Duration(seconds: 2), onTimeout: () => null);
       if (token != _updateToken) return;
