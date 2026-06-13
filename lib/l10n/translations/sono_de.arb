@@ -450,5 +450,21 @@
     "editTagsFieldDiscNumber": "Disc-Nr",
     "@editTagsFieldDiscNumber": {
         "description": "Label for the disc-number field on the edit tags page. Used for multi-disc albums."
+    },
+    "changelogTitle": "Das ist neu",
+    "@changelogTitle": {
+        "description": "Heading of the changelog modal opened from the news/updates button in the home and library headers. Shows the latest release notes."
+    },
+    "changelogLoading": "Lade…",
+    "@changelogLoading": {
+        "description": "Placeholder shown in the changelog modal while the bundled changelog file is being read."
+    },
+    "changelogUnavailable": "Konnte den Changelog nicht laden",
+    "@changelogUnavailable": {
+        "description": "Shown in the changelog modal when the changelog file is missing or no release block could be parsed."
+    },
+    "playlistEditTitle": "Playlist bearbeiten",
+    "@playlistEditTitle": {
+        "description": "Title of the edit playlist modal (name + description)."
     }
 }
