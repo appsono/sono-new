@@ -115,6 +115,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - uses: actions/download-artifact@v7
         with:
@@ -127,6 +130,34 @@ jobs:
           name: ios-release
           path: artifacts/ios
 
+      - name: Prepare release notes
+        run: |
+          TAG="${{ needs.check-version.outputs.tag }}"
+          CURRENT="${TAG#v}"
+          REPO_URL="https://github.com/${{ github.repository }}"
+
+          PREV=$(git tag --sort=-creatordate | head -n1)
+
+          NOTES=$(awk -v hdr="## [$CURRENT] " '
+            index($0, hdr)==1 {found=1; next}
+            found && index($0,"## [")==1 {exit}
+            found {print}
+          ' CHANGELOG.md | sed -e '/./,$!d' | tac | sed -e '/./,$!d' | tac)
+
+          if [ -z "$NOTES" ]; then
+            NOTES="_No changelog entry found for $CURRENT._"
+          fi
+
+          {
+            printf '%s\n\n\n' "$NOTES"
+            if [ -n "$PREV" ]; then
+              printf '**Full Changelog:** %s/compare/%s...%s\n' "$REPO_URL" "$PREV" "$TAG"
+            fi
+          } > release_notes.md
+
+          echo "---- release_notes.md ----"
+          cat release_notes.md
+
       - name: Create tag
         run: |
           git tag "${{ needs.check-version.outputs.tag }}"
@@ -136,7 +167,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.check-version.outputs.tag }}
+          body_path: release_notes.md
           files: |
             artifacts/android/**/*
             artifacts/ios/sono-unsigned.ipa
-          generate_release_notes: true
