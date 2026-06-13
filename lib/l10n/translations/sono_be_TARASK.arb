@@ -360,10 +360,6 @@
     "@playlistDefaultName": {
         "description": "Fallback name applied when the user creates a playlist without entering one."
     },
-    "playlistRenameTitle": "Перайменаваць плэй-ліст",
-    "@playlistRenameTitle": {
-        "description": "Title of the rename playlist modal."
-    },
     "playlistDeleteTitle": "Выдаліць «{name}»?",
     "@playlistDeleteTitle": {
         "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",
