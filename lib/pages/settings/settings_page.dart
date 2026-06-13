@@ -109,6 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadDiscord() async {
     final rpc = DiscordRpcService.instance;
+    await rpc.ready;
     final connected = rpc.isConnected;
     final enabled = rpc.isEnabled;
     String? username;

@@ -38,6 +38,11 @@ class DiscordRpcService {
   DateTime? _rateLimitUntil;
   bool _enabled = false;
 
+  final Completer<void> _ready = Completer<void>();
+
+  /// Completes once [loadState] has finished its keystore read
+  Future<void> get ready => _ready.future;
+
   StreamSubscription? _songSub;
   StreamSubscription? _playingSub;
 
@@ -57,7 +62,10 @@ class DiscordRpcService {
   /// load saved dsc token from db and start listening if present
   Future<void> loadState() async {
     final db = _db;
-    if (db == null) return;
+    if (db == null) {
+      if (!_ready.isCompleted) _ready.complete();
+      return;
+    }
 
     try {
       final legacyToken = await db.getSetting('discord.token');
@@ -80,8 +88,11 @@ class DiscordRpcService {
       _userToken = null;
       _enabled = false;
       _sessionToken = null;
+      if (!_ready.isCompleted) _ready.complete();
       return;
     }
+
+    if (!_ready.isCompleted) _ready.complete();
 
     if (_userToken != null && _enabled) {
       _start();
