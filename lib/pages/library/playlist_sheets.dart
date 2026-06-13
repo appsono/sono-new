@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:drift/drift.dart' show Value;
 
 import 'package:sono/main.dart';
 import 'package:sono/l10n/localizations.dart';
@@ -13,7 +14,7 @@ import 'package:sono/widgets/bottom_modal_sheet.dart';
 /// seperated from LibrarySheets because playlist actions differ
 /// (create flows, rename dialogs, etc)
 
-enum _PlaylistAction { rename, delete }
+enum _PlaylistAction { edit, delete }
 
 class PlaylistSheets {
   PlaylistSheets._();
@@ -50,8 +51,8 @@ class PlaylistSheets {
     if (action == null || !context.mounted) return;
 
     switch (action) {
-      case _PlaylistAction.rename:
-        await openRename(
+      case _PlaylistAction.edit:
+        await openEdit(
           context: context,
           db: db,
           playlist: playlist,
@@ -68,7 +69,7 @@ class PlaylistSheets {
   }
 
   // ==== rename ====
-  static Future<void> openRename({
+  static Future<void> openEdit({
     required BuildContext context,
     required SonoDatabase db,
     required Playlist playlist,
@@ -79,11 +80,8 @@ class PlaylistSheets {
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withValues(alpha: 0.4),
       isScrollControlled: true,
-      builder: (_) => _RenamePlaylistSheet(
-        db: db,
-        playlist: playlist,
-        onChanged: onChanged,
-      ),
+      builder: (_) =>
+          _EditPlaylistSheet(db: db, playlist: playlist, onChanged: onChanged),
     );
   }
 
@@ -218,9 +216,9 @@ class _PlaylistActionSheet extends StatelessWidget {
       itemsBuilder: () => [
         BottomSheetAction(
           icon: IconsSheet.editOutlined,
-          label: l.commonRename,
+          label: l.commonEdit,
           dismissOnTap: false,
-          onTap: () => Navigator.of(context).pop(_PlaylistAction.rename),
+          onTap: () => Navigator.of(context).pop(_PlaylistAction.edit),
         ),
         BottomSheetAction(
           icon: IconsSheet.deleteOutlined,
@@ -234,34 +232,37 @@ class _PlaylistActionSheet extends StatelessWidget {
   }
 }
 
-// ==== rename ====
-class _RenamePlaylistSheet extends StatefulWidget {
+// ==== edit ====
+class _EditPlaylistSheet extends StatefulWidget {
   final SonoDatabase db;
   final Playlist playlist;
   final VoidCallback onChanged;
 
-  const _RenamePlaylistSheet({
+  const _EditPlaylistSheet({
     required this.db,
     required this.playlist,
     required this.onChanged,
   });
 
   @override
-  State<_RenamePlaylistSheet> createState() => _RenamePlaylistSheetState();
+  State<_EditPlaylistSheet> createState() => _EditPlaylistSheetState();
 }
 
-class _RenamePlaylistSheetState extends State<_RenamePlaylistSheet> {
+class _EditPlaylistSheetState extends State<_EditPlaylistSheet> {
   late final TextEditingController _nameCtrl;
+  late final TextEditingController _descCtrl;
 
   @override
   void initState() {
     super.initState();
     _nameCtrl = TextEditingController(text: widget.playlist.name);
+    _descCtrl = TextEditingController(text: widget.playlist.description ?? '');
   }
 
   @override
   void dispose() {
     _nameCtrl.dispose();
+    _descCtrl.dispose();
     super.dispose();
   }
 
@@ -270,8 +271,18 @@ class _RenamePlaylistSheetState extends State<_RenamePlaylistSheet> {
     final name = _nameCtrl.text.trim().isEmpty
         ? l.playlistDefaultName
         : _nameCtrl.text.trim();
-    if (name != widget.playlist.name) {
-      await widget.db.updatePlaylist(widget.playlist.id, name: name);
+    final desc = _descCtrl.text.trim();
+    final newDesc = desc.isEmpty ? null : desc;
+
+    final nameChanged = name != widget.playlist.name;
+    final descChanged = newDesc != widget.playlist.description;
+
+    if (nameChanged || descChanged) {
+      await widget.db.updatePlaylist(
+        widget.playlist.id,
+        name: name,
+        description: Value(newDesc),
+      );
       widget.onChanged();
     }
     if (mounted) Navigator.of(context).maybePop();
@@ -283,7 +294,7 @@ class _RenamePlaylistSheetState extends State<_RenamePlaylistSheet> {
     final c = context.sono;
 
     return BottomModalSheet(
-      title: l.playlistRenameTitle,
+      title: l.playlistEditTitle,
       background: c.bgContainer,
       surface: c.bgSurface,
       accent: c.primary,
@@ -294,8 +305,15 @@ class _RenamePlaylistSheetState extends State<_RenamePlaylistSheet> {
           label: l.playlistNameLabel,
           controller: _nameCtrl,
           autofocus: true,
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           maxLength: 80,
+          onSubmitted: _submit,
+        ),
+        BottomSheetTextField(
+          label: l.playlistDescriptionLabel,
+          controller: _descCtrl,
+          textInputAction: TextInputAction.done,
+          maxLength: 200,
           onSubmitted: _submit,
         ),
         const BottomSheetDivider(),
