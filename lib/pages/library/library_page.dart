@@ -7,6 +7,7 @@ import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/widgets/header.dart';
+import 'package:sono/widgets/changelog_sheet.dart';
 
 import 'package:sono/pages/library/subpages/playlists_page.dart';
 import 'package:sono/pages/library/subpages/liked_songs_page.dart';
@@ -143,9 +144,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     SonoHeaderAction(
                       icon: IconsSheet.bellOutlined,
                       tooltip: l.homeHeaderNewsAndUpdates,
-                      onTap: () {
-                        //navigate to "changelog" page
-                      },
+                      onTap: () => ChangelogSheet.show(context),
                     ),
                     SonoHeaderAction(
                       icon: IconsSheet.settingsOutlined,

@@ -26,6 +26,15 @@ class BottomSheetSectionLabel extends BottomSheetItem {
   const BottomSheetSectionLabel(this.text);
 }
 
+/// plain read-only text lin (e.g. changelog body)
+/// [bullet] indents with leading dot; [muted] dims text
+class BottomSheetText extends BottomSheetItem {
+  final String text;
+  final bool bullet;
+  final bool muted;
+  const BottomSheetText(this.text, {this.bullet = false, this.muted = false});
+}
+
 /// thin seperator between groups
 class BottomSheetDivider extends BottomSheetItem {
   const BottomSheetDivider();
@@ -299,6 +308,45 @@ class _BottomModalSheetState extends State<BottomModalSheet> {
             letterSpacing: 0.8,
           ),
         ),
+      ),
+      BottomSheetText() => Padding(
+        padding: EdgeInsets.fromLTRB(item.bullet ? 24 : 16, 3, 16, 3),
+        child: item.bullet
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 7, right: 8),
+                    child: Container(
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: muted,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      item.text,
+                      style: TextStyle(
+                        fontFamily: SonoFonts.primary,
+                        fontSize: 13,
+                        height: 1.35,
+                        color: widget.onBackground.withValues(alpha: 0.85),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Text(
+                item.text,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 12,
+                  color: item.muted ? muted : widget.onBackground,
+                ),
+              ),
       ),
       BottomSheetDivider() => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

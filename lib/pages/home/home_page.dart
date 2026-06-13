@@ -18,6 +18,7 @@ import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/media_card.dart';
 import 'package:sono/widgets/section.dart';
+import 'package:sono/widgets/changelog_sheet.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 
@@ -110,9 +111,7 @@ class _HomePageState extends State<HomePage> {
                     SonoHeaderAction(
                       icon: IconsSheet.bellOutlined,
                       tooltip: l.homeHeaderNewsAndUpdates,
-                      onTap: () {
-                        //navigate to "changelog" page
-                      },
+                      onTap: () => ChangelogSheet.show(context),
                     ),
                     SonoHeaderAction(
                       icon: IconsSheet.settingsOutlined,

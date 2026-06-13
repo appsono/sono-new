@@ -70,6 +70,7 @@ flutter:
     - assets/app/icons/filled/
     - assets/app/brands/
     - assets/app/translators.json
+    - CHANGELOG.md
 
   fonts:
     - family: VarelaRound
