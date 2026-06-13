@@ -846,6 +846,7 @@ class SonoDatabase extends _$SonoDatabase {
         genre: s.genre,
         releaseDate: s.releaseDate,
         albumId: s.albumId,
+        artistId: s.artistId,
         displayArtist: s.displayArtist,
         likedAt: s.likedAt,
         artistName: ar?.name,
