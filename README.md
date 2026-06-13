@@ -8,8 +8,8 @@ The app is new and currently in a very early stage.
 </p>
 
 <p align="center">
-  <img src="assets/github/image.png" width="200">
-  <img src="assets/github/image2.png" width="200">
+  <img src="assets/github/image.png" width="160">
+  <img src="assets/github/image2.png" width="160">
 </p>
 
 ## What is Sono?
