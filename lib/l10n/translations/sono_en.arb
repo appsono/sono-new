@@ -170,6 +170,19 @@
   "navLibrary": "Library",
   "navSearch": "Search",
 
+  "changelogTitle": "What's new",
+  "@changelogTitle": {
+    "description": "Heading of the changelog modal opened from the news/updates button in the home and library headers. Shows the latest release notes."
+  },
+  "changelogLoading": "Loading…",
+  "@changelogLoading": {
+    "description": "Placeholder shown in the changelog modal while the bundled changelog file is being read."
+  },
+  "changelogUnavailable": "Couldn't load the changelog",
+  "@changelogUnavailable": {
+    "description": "Shown in the changelog modal when the changelog file is missing or no release block could be parsed."
+  },
+
   "homeActionCreatePlaylist": "Create Playlist",
   "homeHeaderNewsAndUpdates": "News & Updates",
   "homeHeaderSettings": "Settings",
