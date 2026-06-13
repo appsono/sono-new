@@ -39,5 +39,21 @@
     "commonPlay": "Ойнату",
     "@commonPlay": {
         "description": "Play action. Button label and tooltip across the player, mini player, queue view, and media sheets. Imperative verb form."
+    },
+    "commonPause": "Тоқтату",
+    "@commonPause": {
+        "description": "Pause action. Used in the same contexts as commonPlay."
+    },
+    "commonShuffle": "Араластыру",
+    "@commonShuffle": {
+        "description": "Shuffle playback action label. Used as button label in the lyrics menu, song sheets, and elsewhere. Imperative verb form. Not the ongoing state, which is playerTooltipShuffleOn."
+    },
+    "commonShuffleAll": "Барлығын араластыру",
+    "@commonShuffleAll": {
+        "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form."
+    },
+    "commonRepeat": "Қайталау",
+    "@commonRepeat": {
+        "description": "Repeat playback action label. Imperative form."
     }
 }
