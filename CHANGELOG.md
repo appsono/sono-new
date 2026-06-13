@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0+6] - 2026-06-13
+
 ### Added
 
 - Added a changelog viewer: the news button on the home and library headers now opens the latest release notes in a bottom sheet
@@ -724,7 +726,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.7.2+5...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.8.0+6...HEAD
 [0.7.2+5]: https://github.com/appsono/sono-new/compare/v0.7.1+5...v0.7.2+5
 [0.7.1+5]: https://github.com/appsono/sono-new/compare/v0.7.0+5...v0.7.1+5
 [0.7.0+5]: https://github.com/appsono/sono-new/compare/v0.6.3+4...v0.7.0+5
