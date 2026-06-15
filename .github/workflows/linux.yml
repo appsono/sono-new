@@ -31,7 +31,12 @@ jobs:
         run: |
           for so in libmimalloc libsecret-1 libjsoncpp; do
             lib=$(ldd build/linux/x64/release/bundle/sono | awk -v n="$so" '$0 ~ n {print $3}')
-            [ -n "$lib" ] && echo "bundling: $lib" && cp -L "$lib" build/linux/x64/release/bundle/lib/
+            if [ -n "$lib" ]; then
+              echo "bundling: $lib"
+              cp -L "$lib" build/linux/x64/release/bundle/lib/
+            else
+              echo "skip: $so not linked"
+            fi
           done
 
       - name: Read version
