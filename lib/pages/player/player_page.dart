@@ -400,10 +400,10 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
           },
           child: Scaffold(
             backgroundColor: c.background,
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  Padding(
+            body: Stack(
+              children: [
+                SafeArea(
+                  child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -436,36 +436,36 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
                       ],
                     ),
                   ),
-                  if (_queueMounted)
-                    Positioned.fill(
-                      child: SlideTransition(
-                        position: _queueSlide,
-                        child: PlayerQueueView(
-                          c: c,
-                          db: widget.db,
-                          slideAnimation: _queueCtrl,
-                          onClose: _closeSubView,
-                          liked: _liked,
-                          onToggleLike: _toggleLiked,
-                        ),
+                ),
+                if (_queueMounted)
+                  Positioned.fill(
+                    child: SlideTransition(
+                      position: _queueSlide,
+                      child: PlayerQueueView(
+                        c: c,
+                        db: widget.db,
+                        slideAnimation: _queueCtrl,
+                        onClose: _closeSubView,
+                        liked: _liked,
+                        onToggleLike: _toggleLiked,
                       ),
                     ),
-                  if (_lyricsMounted)
-                    Positioned.fill(
-                      child: SlideTransition(
-                        position: _lyricsSlide,
-                        child: PlayerLyricsView(
-                          c: c,
-                          db: widget.db,
-                          slideAnimation: _lyricsCtrl,
-                          onClose: _closeSubView,
-                          liked: _liked,
-                          onToggleLike: _toggleLiked,
-                        ),
+                  ),
+                if (_lyricsMounted)
+                  Positioned.fill(
+                    child: SlideTransition(
+                      position: _lyricsSlide,
+                      child: PlayerLyricsView(
+                        c: c,
+                        db: widget.db,
+                        slideAnimation: _lyricsCtrl,
+                        onClose: _closeSubView,
+                        liked: _liked,
+                        onToggleLike: _toggleLiked,
                       ),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         );
