@@ -6,6 +6,9 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v6
 
@@ -18,9 +21,59 @@ jobs:
 
       - run: flutter build windows --release
 
-      - name: Upload Windows build
-        uses: actions/upload-artifact@v7
+      - name: Read version
+        id: v
+        run: echo "version=$(grep '^version:' pubspec.yaml | awk '{print $2}')" >>
+          "$GITHUB_OUTPUT"
+
+      - name: Package portable zip
+        run: |
+          mkdir -p installer
+          cd build/windows/x64/runner/Release
+          7z a -tzip "$GITHUB_WORKSPACE/installer/sono-${{ steps.v.outputs.version }}-windows-x64.zip" .
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Write installer script
+        run: |
+          cat > sono.iss <<'EOF'
+          [Setup]
+          AppId={{B7F4B0B2-8C3E-4E6B-9A2D-7E1C3F0A55D1}
+          AppName=Sono
+          AppVersion={#MyAppVersion}
+          AppPublisher=appsono
+          DefaultDirName={autopf}\Sono
+          DefaultGroupName=Sono
+          UninstallDisplayIcon={app}\sono.exe
+          OutputDir=installer
+          OutputBaseFilename=sono-{#MyAppVersion}-windows-x64-setup
+          Compression=lzma2
+          SolidCompression=yes
+          ArchitecturesAllowed=x64compatible
+          ArchitecturesInstallIn64BitMode=x64compatible
+          WizardStyle=modern
+
+          [Tasks]
+          Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional icons:"
+
+          [Files]
+          Source: "build\windows\x64\runner\Release\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+
+          [Icons]
+          Name: "{group}\Sono"; Filename: "{app}\sono.exe"
+          Name: "{commondesktop}\Sono"; Filename: "{app}\sono.exe"; Tasks: desktopicon
+
+          [Run]
+          Filename: "{app}\sono.exe"; Description: "Launch Sono"; Flags: nowait postinstall skipifsilent
+          EOF
+
+      - name: Build installer
+        run: |
+          "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" \
+            "/DMyAppVersion=${{ steps.v.outputs.version }}" sono.iss
+
+      - uses: actions/upload-artifact@v7
         with:
           name: sono-windows
-          path: build/windows/x64/runner/Release/
-
+          path: installer/*
