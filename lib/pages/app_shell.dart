@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:permission_handler/permission_handler.dart';
@@ -45,10 +46,38 @@ class _AppShellState extends State<AppShell> {
     _deleteBrokenGenre();
     _checkPermissionAndScan();
     _checkForUpdates();
+    if (Platform.isAndroid) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _maybeHideAndroidNavBar(),
+      );
+    }
+  }
+
+  //hide androids three-button nav bar to keep it from covering ui
+  void _maybeHideAndroidNavBar() {
+    final view = WidgetsBinding.instance.platformDispatcher.views.first;
+    final bottomDp = view.viewPadding.bottom / view.devicePixelRatio;
+    if (bottomDp <= 40) return; //gesture nav: nothing to do
+
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top], //keep status bar, hide nav bar
+    );
+    SystemChrome.setSystemUIChangeCallback((visible) async {
+      if (!visible || !mounted) return;
+      await Future.delayed(const Duration(seconds: 3));
+      if (mounted) {
+        SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.manual,
+          overlays: [SystemUiOverlay.top],
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
+    SystemChrome.setSystemUIChangeCallback(null);
     _scanProgress.dispose();
     super.dispose();
   }

@@ -32,6 +32,9 @@ void main() async {
   //smoother scroll on Android devices where touch input rate doesnt match
   //display refresh rate
   GestureBinding.instance.resamplingEnabled = true;
+  if (Platform.isAndroid) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
   MediaKit.ensureInitialized();
   await DeviceProfile.detect();
 
