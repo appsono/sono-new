@@ -346,10 +346,6 @@
     "@playlistDefaultName": {
         "description": "Fallback name applied when the user creates a playlist without entering one."
     },
-    "playlistRenameTitle": "Renommer la playlist",
-    "@playlistRenameTitle": {
-        "description": "Title of the rename playlist modal."
-    },
     "playlistDeleteTitle": "Supprimer « {name} » ?",
     "@playlistDeleteTitle": {
         "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",

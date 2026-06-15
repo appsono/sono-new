@@ -352,10 +352,6 @@
     "@playlistDefaultName": {
         "description": "Fallback name applied when the user creates a playlist without entering one."
     },
-    "playlistRenameTitle": "Muuda esitusloendi nime",
-    "@playlistRenameTitle": {
-        "description": "Title of the rename playlist modal."
-    },
     "playlistDeleteTitle": "Kas kustutad „{name}“ esitusloendi?",
     "@playlistDeleteTitle": {
         "description": "Title of the delete-playlist confirmation modal. Includes the playlist name in quotes.",
@@ -454,5 +450,21 @@
     "editTagsFieldDiscNumber": "Plaadi #",
     "@editTagsFieldDiscNumber": {
         "description": "Label for the disc-number field on the edit tags page. Used for multi-disc albums."
+    },
+    "changelogTitle": "Mida on meil uut",
+    "@changelogTitle": {
+        "description": "Heading of the changelog modal opened from the news/updates button in the home and library headers. Shows the latest release notes."
+    },
+    "changelogLoading": "Laadin andmeid…",
+    "@changelogLoading": {
+        "description": "Placeholder shown in the changelog modal while the bundled changelog file is being read."
+    },
+    "changelogUnavailable": "Muudatuste logi laadimine ei õnnestunud",
+    "@changelogUnavailable": {
+        "description": "Shown in the changelog modal when the changelog file is missing or no release block could be parsed."
+    },
+    "playlistEditTitle": "Muuda esitusloendit",
+    "@playlistEditTitle": {
+        "description": "Title of the edit playlist modal (name + description)."
     }
 }

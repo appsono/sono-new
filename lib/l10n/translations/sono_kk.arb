@@ -3,5 +3,57 @@
     "@appName": {
         "description": "Application name, shown in window titles and stores"
     },
-    "commonUnknown": "Белгісіз"
+    "commonUnknown": "Белгісіз",
+    "commonUnknownArtist": "Белгісіз әнші",
+    "commonSongsCount": "{count, plural, =0{no songs} =1{1 song} other{{count} Songs}}",
+    "@commonSongsCount": {
+        "description": "Number of songs for an artist/album/playlist",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "commonDurationLong": "{hours}сағ {minutes}м",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "{minutes}м",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonPlay": "Ойнату",
+    "@commonPlay": {
+        "description": "Play action. Button label and tooltip across the player, mini player, queue view, and media sheets. Imperative verb form."
+    },
+    "commonPause": "Тоқтату",
+    "@commonPause": {
+        "description": "Pause action. Used in the same contexts as commonPlay."
+    },
+    "commonShuffle": "Араластыру",
+    "@commonShuffle": {
+        "description": "Shuffle playback action label. Used as button label in the lyrics menu, song sheets, and elsewhere. Imperative verb form. Not the ongoing state, which is playerTooltipShuffleOn."
+    },
+    "commonShuffleAll": "Барлығын араластыру",
+    "@commonShuffleAll": {
+        "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form."
+    },
+    "commonRepeat": "Қайталау",
+    "@commonRepeat": {
+        "description": "Repeat playback action label. Imperative form."
+    }
 }
