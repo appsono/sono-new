@@ -15,7 +15,8 @@ jobs:
           sudo apt-get install -y \
             clang cmake ninja-build pkg-config \
             libgtk-3-dev liblzma-dev libstdc++-12-dev \
-            libmimalloc-dev imagemagick
+            libmimalloc-dev libsecret-1-dev libjsoncpp-dev \
+            imagemagick
 
       - uses: subosito/flutter-action@v2
         with:
@@ -26,11 +27,12 @@ jobs:
 
       - run: flutter build linux --release
 
-      - name: Bundle mimalloc into the app
+      - name: Bundle native libs into the app
         run: |
-          lib=$(ldd build/linux/x64/release/bundle/sono | awk '/mimalloc/ {print $3}')
-          echo "bundling: $lib"
-          cp -L "$lib" build/linux/x64/release/bundle/lib/
+          for so in libmimalloc libsecret-1 libjsoncpp; do
+            lib=$(ldd build/linux/x64/release/bundle/sono | awk -v n="$so" '$0 ~ n {print $3}')
+            [ -n "$lib" ] && echo "bundling: $lib" && cp -L "$lib" build/linux/x64/release/bundle/lib/
+          done
 
       - name: Read version
         id: v
