@@ -3,6 +3,8 @@ name: Release
 on:
   push:
     branches: [main]
+    paths:
+      - pubspec.yaml
 
 permissions:
   contents: write
@@ -11,28 +13,26 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
     outputs:
-      changed: ${{ steps.version.outputs.changed }}
-      tag: ${{ steps.version.outputs.tag }}
+      changed: ${{ steps.check.outputs.changed }}
+      tag: ${{ steps.check.outputs.tag }}
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 2
 
-      - name: Check for version change
-        id: version
+      - name: Check release tag
+        id: check
         run: |
           CURRENT=$(grep '^version:' pubspec.yaml | awk '{print $2}')
-          git show HEAD~1:pubspec.yaml > /tmp/old_pubspec.yaml 2>/dev/null || true
-          OLD=$(grep '^version:' /tmp/old_pubspec.yaml 2>/dev/null | awk '{print $2}')
-
-          echo "old=$OLD"
+          TAG="v$CURRENT"
           echo "current=$CURRENT"
 
-          if [ "$CURRENT" != "$OLD" ] && [ -n "$CURRENT" ]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "tag=v$CURRENT" >> "$GITHUB_OUTPUT"
-          else
+          if [ -z "$CURRENT" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
+          elif [ -n "$(git ls-remote --tags origin "refs/tags/$TAG")" ]; then
+            echo "tag $TAG already exists, skipping"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           fi
 
   build-android:
