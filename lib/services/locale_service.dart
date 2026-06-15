@@ -83,6 +83,30 @@ class LocaleService {
   SonoDatabase? _db;
   void attachDb(SonoDatabase db) => _db = db;
 
+  /// Parses stored tag a [Locale]
+  static Locale? _parseTag(String raw) {
+    final parts = raw
+        .split(RegExp(r'[-_]'))
+        .where((p) => p.isNotEmpty)
+        .toList();
+    if (parts.isEmpty) return null;
+    String? script;
+    String? country;
+    for (final p in parts.skip(1)) {
+      if (p.length == 4) {
+        //script canonical casing is Titlecase
+        script = p[0].toUpperCase() + p.substring(1).toLowerCase();
+      } else {
+        country = p.toUpperCase();
+      }
+    }
+    return Locale.fromSubtags(
+      languageCode: parts.first.toLowerCase(),
+      scriptCode: script,
+      countryCode: country,
+    );
+  }
+
   /// Reads saved locale from db
   /// To avoid flashing this gets called before first build
   Future<void> loadSaved() async {
@@ -93,18 +117,16 @@ class LocaleService {
       notifier.value = null;
       return;
     }
-    //tolerate region tags
-    //(e.g. "pt_BR")
-    final parts = raw.split('_');
-    final locale = parts.length == 1
-        ? Locale(parts[0])
-        : Locale(parts[0], parts[1]);
+
+    final locale = _parseTag(raw);
     //ignore garbage from older builds
-    if (!supportedLocales.any(
-      (l) =>
-          l.languageCode == locale.languageCode &&
-          l.countryCode == locale.countryCode,
-    )) {
+    if (locale == null ||
+        !supportedLocales.any(
+          (l) =>
+              l.languageCode == locale.languageCode &&
+              l.scriptCode == locale.scriptCode &&
+              l.countryCode == locale.countryCode,
+        )) {
       notifier.value = null;
       return;
     }
@@ -117,13 +139,6 @@ class LocaleService {
     notifier.value = locale;
     final db = _db;
     if (db == null) return;
-    if (locale == null) {
-      await db.setSetting(_settingKey, '');
-      return;
-    }
-    final value = locale.countryCode == null
-        ? locale.languageCode
-        : '${locale.languageCode}_${locale.countryCode}';
-    await db.setSetting(_settingKey, value);
+    await db.setSetting(_settingKey, locale?.toLanguageTag() ?? '');
   }
 }
