@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1+7] - 2026-06-15
+
+### Fixed
+
+- Fixed player's lyrics and queue views not respecting bottom safe area on devices with gesture navigation
+- Fixed player sub-views (lyrics, queue) rendering outside safe area and a brief header flash when opening them
+- Hid system 3-dot overflow navigation bar
+- Fixed locale picker losing script subtag (e.g. for languages with multiple scripts) when persisting a selection
+
+### Translation
+
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
+- [Ado Listener](https://hosted.weblate.org/user/Ado_Listener/) translated Sono into Kazakh (7%)
+
 ## [0.8.0+6] - 2026-06-13
 
 ### Added
