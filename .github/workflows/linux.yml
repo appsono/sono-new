@@ -72,7 +72,7 @@ jobs:
           Priority: optional
           Architecture: amd64
           Depends: libgtk-3-0
-          Maintainer: Sono <noreply@sono.wtf>
+          Maintainer: Sono <sonosupport@gmail.com>
           Description: Local-library music player
            Sono is a cross-platform local music player.
           EOF
