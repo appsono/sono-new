@@ -429,10 +429,11 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
   Widget build(BuildContext context) {
     final c = widget.c;
     final l = AppLocalizations.of(context);
+    final vp = MediaQuery.viewPaddingOf(context);
 
     return Container(
       color: c.background,
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      padding: EdgeInsets.fromLTRB(24, vp.top + 24, 24, 0),
       child: Stack(
         children: [
           Column(
@@ -467,7 +468,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
                     physics: const ClampingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics(),
                     ),
-                    padding: const EdgeInsets.only(bottom: 120),
+                    padding: EdgeInsets.only(bottom: vp.bottom + 120),
                     proxyDecorator: (child, index, anim) =>
                         Material(color: Colors.transparent, child: child),
                     onReorder: _onReorder,
@@ -496,7 +497,7 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 100,
+            bottom: vp.bottom + 100,
             child: IgnorePointer(
               ignoring: !_showJumpButton,
               child: AnimatedOpacity(
@@ -555,7 +556,12 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
               ),
             ),
           ),
-          Positioned(left: 0, right: 0, bottom: 28, child: _QueueActions(c: c)),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: vp.bottom + 28,
+            child: _QueueActions(c: c),
+          ),
         ],
       ),
     );

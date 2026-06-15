@@ -663,10 +663,11 @@ class _PlayerLyricsViewState extends State<PlayerLyricsView> {
   @override
   Widget build(BuildContext context) {
     final c = widget.c;
+    final vp = MediaQuery.viewPaddingOf(context);
 
     return Container(
       color: c.background,
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      padding: EdgeInsets.fromLTRB(24, vp.top + 24, 24, vp.bottom + 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
