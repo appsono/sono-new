@@ -47,6 +47,11 @@ static void my_application_activate(GApplication* application) {
   gtk_window_set_default_size(window, 465, 950);
   gtk_window_set_resizable(window, FALSE);
 
+  // Map the running window to its themed icon (the .desktop file and the
+  // hicolor icon installed by the .deb / AppImage both use APPLICATION_ID),
+  // so taskbars, docks and alt-tab show the Sono icon instead of a default.
+  gtk_window_set_icon_name(window, APPLICATION_ID);
+
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
       project, self->dart_entrypoint_arguments);
