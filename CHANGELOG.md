@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed a startup crash on Windows caused by a flutter_rust_bridge version mismatch (pinned to 2.11.1)
+- Fixed Sono failing to launch on Linux because bundled plugin libraries weren't found at runtime. `$ORIGIN/lib` rpath is now baked into plugin `.so` files at build time
+- Fixed crashes and other platform issues on desktop by updating sono_query to 0.8.3
+
 ## [0.8.1+7] - 2026-06-15
 
 ### Fixed
