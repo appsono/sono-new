@@ -45,10 +45,10 @@ dart run build_runner build --delete-conflicting-outputs
 lib/
 ├── db/          # Drift database schema and generated code
 ├── helper/      # Small utility functions
-├── l10n/        # Localization and translations 
+├── l10n/        # Localization and translations
 ├── pages/       # App pages (home, settings, auth, etc.)
 ├── services/    # Audio engine, scanner, Discord RPC, etc.
-├── utils/       # Reused utils across mutiple files 
+├── utils/       # Reused utils across mutiple files
 ├── theme/       # Tokens, icons, theme config
 └── widgets/     # Reusable UI components
 ```
@@ -107,9 +107,6 @@ The design direction is set (Figma designs exist). If you're touching UI:
 
 Based on TODO.md, the biggest open areas are:
 
-- **Fullscreen player**: Phase 4 of the UI roadmap
-- **Library page**: Phase 5 (album/artist views)
-- **Sorting options**: songs list by title, artist, date added
 - **Bug reports**: especially on Windows and iOS, which get less testing
 
 If you're new to the codebase, `lib/widgets/` is the safest place to start. It's self-contained with a low risk of breaking things, again that's out of my point of view.
