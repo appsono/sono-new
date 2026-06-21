@@ -127,7 +127,11 @@ class SonoDatabase extends _$SonoDatabase {
     },
   );
 
+  ///
+  ///
   /// ==== Artists ====
+  ///
+  ///
 
   /// artistId -> (representative song path, song count) in one pass
   Future<Map<int, ({String path, int count})>> getArtistCoverAndCounts() async {
@@ -180,6 +184,17 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<List<Artist>> getAllArtists() => select(artists).get();
 
+  Future<List<Artist>> searchArtists(String query, {int? limit}) {
+    final pattern = '%$query%';
+    final q = select(artists)
+      ..where((a) => a.name.like(pattern))
+      ..orderBy([
+        (a) => OrderingTerm(expression: a.name.collate(Collate.noCase)),
+      ]);
+    if (limit != null) q.limit(limit);
+    return q.get();
+  }
+
   /// Remove artists that have no songs referencing them
   Future<void> removeOrphanedArtists() async {
     await customStatement(
@@ -209,7 +224,11 @@ class SonoDatabase extends _$SonoDatabase {
         .get();
   }
 
+  ///
+  ///
   /// ==== Albums ====
+  ///
+  ///
   Future<int> getOrCreateAlbum(
     String title,
     int artistId,
@@ -354,6 +373,40 @@ class SonoDatabase extends _$SonoDatabase {
     }).toList();
   }
 
+  Future<List<AlbumWithArtistViewData>> searchAlbums(
+    String query, {
+    int? limit,
+  }) async {
+    final pattern = '%$query%';
+    final q =
+        select(albums).join([
+            leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+          ])
+          ..where(
+            albums.title.like(pattern) |
+                albums.displayTitle.like(pattern) |
+                artists.name.like(pattern),
+          )
+          ..orderBy([
+            OrderingTerm(expression: albums.title.collate(Collate.noCase)),
+          ]);
+    if (limit != null) q.limit(limit);
+    final rows = await q.get();
+    return rows.map((row) {
+      final a = row.readTable(albums);
+      final ar = row.readTableOrNull(artists);
+      final shown = (a.displayTitle != null && a.displayTitle!.isNotEmpty)
+          ? a.displayTitle!
+          : a.title;
+      return AlbumWithArtistViewData(
+        id: a.id,
+        title: shown,
+        artistId: a.artistId,
+        artistName: ar?.name,
+      );
+    }).toList();
+  }
+
   /// Albums by an artist with aggregate metadata for artist detail grid
   /// Sorted newest release first; undated albums last
   Future<
@@ -433,7 +486,11 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<void> clearAllAlbums() => delete(albums).go();
 
+  ///
+  ///
   /// ==== Songs ====
+  ///
+  ///
   Future<void> insertSong(SongsCompanion song) => into(songs).insert(song);
 
   Future<List<Song>> getAllSongs() => select(songs).get();
@@ -472,6 +529,20 @@ class SonoDatabase extends _$SonoDatabase {
         (v) => OrderingTerm(expression: v.title.collate(Collate.noCase)),
       ]);
     }
+    return q.get();
+  }
+
+  /// case-insensitive LIKE on song title + artist name
+  /// pass [limit] for capped sections
+  /// raw %/_ in [query] act as LIKE wildcards
+  Future<List<SongWithArtistViewData>> searchSongs(String query, {int? limit}) {
+    final pattern = '%$query%';
+    final q = select(songWithArtistView)
+      ..where((s) => s.title.like(pattern) | s.artistName.like(pattern))
+      ..orderBy([
+        (s) => OrderingTerm(expression: s.title.collate(Collate.noCase)),
+      ]);
+    if (limit != null) q.limit(limit);
     return q.get();
   }
 
@@ -567,6 +638,41 @@ class SonoDatabase extends _$SonoDatabase {
         .get();
   }
 
+  Future<void> removeDeletedSongs(Set<String> presentPaths) async {
+    //diff in dart so sql variable count is bound by deletions, not
+    //library size
+    final dbPaths = await getAllSongPaths();
+    final deleted = dbPaths.difference(presentPaths).toList();
+    if (deleted.isEmpty) return;
+
+    await transaction(() async {
+      for (var i = 0; i < deleted.length; i += 400) {
+        final part = deleted.sublist(i, math.min(i + 400, deleted.length));
+        final ids =
+            await (selectOnly(songs)
+                  ..addColumns([songs.id])
+                  ..where(songs.path.isIn(part)))
+                .map((r) => r.read(songs.id)!)
+                .get();
+        if (ids.isEmpty) continue;
+        //explicit dependent cleanup: dbs migrated up from old schema
+        //versions created these tables without ON DELETE CASCADE in
+        //their ddl so the fk rejects the song delete otherwise
+        await (delete(playlistSongs)..where((ps) => ps.songId.isIn(ids))).go();
+        await (delete(lyricsCache)..where((c) => c.songId.isIn(ids))).go();
+        await (delete(songs)..where((s) => s.id.isIn(ids))).go();
+      }
+    });
+  }
+
+  Future<void> clearAllSongs() => delete(songs).go();
+
+  ///
+  ///
+  /// ==== Genres ====
+  ///
+  ///
+
   /// Distinct genres present in library with song counts and representative
   /// path for cover rendering (sorted ABC...>)
   Future<List<({String genre, int count, String firstPath})>>
@@ -598,36 +704,34 @@ class SonoDatabase extends _$SonoDatabase {
         .get();
   }
 
-  Future<void> removeDeletedSongs(Set<String> presentPaths) async {
-    //diff in dart so sql variable count is bound by deletions, not
-    //library size
-    final dbPaths = await getAllSongPaths();
-    final deleted = dbPaths.difference(presentPaths).toList();
-    if (deleted.isEmpty) return;
-
-    await transaction(() async {
-      for (var i = 0; i < deleted.length; i += 400) {
-        final part = deleted.sublist(i, math.min(i + 400, deleted.length));
-        final ids =
-            await (selectOnly(songs)
-                  ..addColumns([songs.id])
-                  ..where(songs.path.isIn(part)))
-                .map((r) => r.read(songs.id)!)
-                .get();
-        if (ids.isEmpty) continue;
-        //explicit dependent cleanup: dbs migrated up from old schema
-        //versions created these tables without ON DELETE CASCADE in
-        //their ddl so the fk rejects the song delete otherwise
-        await (delete(playlistSongs)..where((ps) => ps.songId.isIn(ids))).go();
-        await (delete(lyricsCache)..where((c) => c.songId.isIn(ids))).go();
-        await (delete(songs)..where((s) => s.id.isIn(ids))).go();
-      }
-    });
+  Future<List<({String genre, int count, String firstPath})>> searchGenres(
+    String query, {
+    int? limit,
+  }) async {
+    final pattern = '%$query%';
+    final countExp = songs.id.count();
+    final firstPathExp = songs.path.min();
+    final q = selectOnly(songs)
+      ..addColumns([songs.genre, countExp, firstPathExp])
+      ..where(songs.genre.isNotNull() & songs.genre.like(pattern))
+      ..groupBy([songs.genre])
+      ..orderBy([OrderingTerm(expression: songs.genre)]);
+    if (limit != null) q.limit(limit);
+    final rows = await q.get();
+    return rows.map((r) {
+      return (
+        genre: r.read(songs.genre)!,
+        count: r.read(countExp) ?? 0,
+        firstPath: r.read(firstPathExp) ?? '',
+      );
+    }).toList();
   }
 
-  Future<void> clearAllSongs() => delete(songs).go();
-
+  ///
+  ///
   /// ==== Lyrics Cache ====
+  ///
+  ///
   Future<void> cacheLyrics(
     int songId,
     String versionsJson, {
@@ -653,7 +757,11 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<void> clearAllLyricsCache() => delete(lyricsCache).go();
 
+  ///
+  ///
   /// ==== Settings ====
+  ///
+  ///
   Future<String?> getSetting(String key) async {
     final row = await (select(
       settings,
@@ -676,7 +784,11 @@ class SonoDatabase extends _$SonoDatabase {
     return {for (final s in rows) s.settingKey: s.value};
   }
 
-  // ==== Profile ====
+  ///
+  ///
+  /// ==== Profile ====
+  ///
+  ///
   Stream<Profile?> watchProfile() => select(profiles).watchSingleOrNull();
   Future<Profile?> getProfile() => select(profiles).getSingleOrNull();
   Future<void> upsertProfile({
@@ -698,7 +810,11 @@ class SonoDatabase extends _$SonoDatabase {
     }
   }
 
+  ///
+  ///
   /// ==== Playlists ====
+  ///
+  ///
   Future<List<Playlist>> getAllPlaylists() => (select(
     playlists,
   )..orderBy([(p) => OrderingTerm.desc(p.createdAt)])).get();
@@ -852,6 +968,17 @@ class SonoDatabase extends _$SonoDatabase {
         artistName: ar?.name,
       );
     }).toList();
+  }
+
+  Future<List<Playlist>> searchPlaylists(String query, {int? limit}) {
+    final pattern = '%$query%';
+    final q = select(playlists)
+      ..where((p) => p.name.like(pattern))
+      ..orderBy([
+        (p) => OrderingTerm(expression: p.name.collate(Collate.noCase)),
+      ]);
+    if (limit != null) q.limit(limit);
+    return q.get();
   }
 
   /// First N song paths in playlist

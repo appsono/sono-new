@@ -10,11 +10,23 @@ import 'package:sono/widgets/list_row.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/pages/library/library_sheets.dart';
 
+enum SongListSource { all, recentlyAdded, search }
+
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class SongsPage extends StatefulWidget {
   final SonoDatabase db;
-  const SongsPage({required this.db, super.key});
+  final SongListSource source;
+  final String? query;
+  final String? title;
+
+  const SongsPage({
+    required this.db,
+    this.source = SongListSource.all,
+    this.query,
+    this.title,
+    super.key,
+  });
 
   @override
   State<SongsPage> createState() => _SongsPageState();
@@ -30,9 +42,26 @@ class _SongsPageState extends State<SongsPage> {
   }
 
   Future<void> _load() async {
-    final songs = await widget.db.getAllSongsWithArtists(orderByTitle: true);
+    final songs = switch (widget.source) {
+      SongListSource.all => await widget.db.getAllSongsWithArtists(
+        orderByTitle: true,
+      ),
+      SongListSource.recentlyAdded =>
+        (await widget.db.getAllSongsWithArtists())
+          ..sort((a, b) => b.id.compareTo(a.id)),
+      SongListSource.search => await widget.db.searchSongs(widget.query ?? ''),
+    };
     if (!mounted) return;
     setState(() => _songs = songs);
+  }
+
+  String _title(AppLocalizations l) {
+    if (widget.title != null) widget.title!;
+    return switch (widget.source) {
+      SongListSource.all => l.libraryCardSongs,
+      SongListSource.recentlyAdded => l.homeSectionRecentlyAdded,
+      SongListSource.search => widget.query ?? l.libraryCardSongs,
+    };
   }
 
   void _play(int index) {
@@ -59,7 +88,7 @@ class _SongsPageState extends State<SongsPage> {
               SonoStickyHeader(
                 child: SonoHeader(
                   backButton: true,
-                  pageTitle: l.libraryCardSongs,
+                  pageTitle: _title(l),
                   onBackTap: () => Navigator.of(context).pop(),
                   actions: const [],
                 ),

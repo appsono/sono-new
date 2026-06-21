@@ -10,11 +10,23 @@ import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/card_stack_cover.dart';
 import 'package:sono/pages/library/subpages/genre_detail_page.dart';
 
+enum GenresListSource { all, search }
+
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class GenresPage extends StatefulWidget {
   final SonoDatabase db;
-  const GenresPage({required this.db, super.key});
+  final GenresListSource source;
+  final String? query;
+  final String? title;
+
+  const GenresPage({
+    required this.db,
+    this.source = GenresListSource.all,
+    this.query,
+    this.title,
+    super.key,
+  });
 
   @override
   State<GenresPage> createState() => _GenresPageState();
@@ -30,9 +42,22 @@ class _GenresPageState extends State<GenresPage> {
   }
 
   Future<void> _load() async {
-    final genres = await widget.db.getAllGenresWithCounts();
+    final genres = switch (widget.source) {
+      GenresListSource.all => await widget.db.getAllGenresWithCounts(),
+      GenresListSource.search => await widget.db.searchGenres(
+        widget.query ?? '',
+      ),
+    };
     if (!mounted) return;
     setState(() => _genres = genres);
+  }
+
+  String _title(AppLocalizations l) {
+    if (widget.title != null) widget.title!;
+    return switch (widget.source) {
+      GenresListSource.all => l.libraryCardGenres,
+      GenresListSource.search => widget.query ?? l.libraryCardGenres,
+    };
   }
 
   void _openGenre(String genre) {
@@ -56,7 +81,7 @@ class _GenresPageState extends State<GenresPage> {
               SonoStickyHeader(
                 child: SonoHeader(
                   backButton: true,
-                  pageTitle: l.libraryCardGenres,
+                  pageTitle: _title(l),
                   onBackTap: () => Navigator.of(context).pop(),
                   actions: const [],
                 ),

@@ -11,11 +11,23 @@ import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 
+enum ArtistListSource { all, search }
+
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class ArtistsPage extends StatefulWidget {
   final SonoDatabase db;
-  const ArtistsPage({required this.db, super.key});
+  final ArtistListSource source;
+  final String? query;
+  final String? title;
+
+  const ArtistsPage({
+    required this.db,
+    this.source = ArtistListSource.all,
+    this.query,
+    this.title,
+    super.key,
+  });
 
   @override
   State<ArtistsPage> createState() => _ArtistsPageState();
@@ -33,7 +45,12 @@ class _ArtistsPageState extends State<ArtistsPage> {
   }
 
   Future<void> _load() async {
-    final artists = await widget.db.getAllArtists();
+    final artists = switch (widget.source) {
+      ArtistListSource.all => await widget.db.getAllArtists(),
+      ArtistListSource.search => await widget.db.searchArtists(
+        widget.query ?? '',
+      ),
+    };
     artists.sort(
       (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
     );
@@ -52,6 +69,14 @@ class _ArtistsPageState extends State<ArtistsPage> {
       _coverPaths = coverPaths;
       _songCounts = songCounts;
     });
+  }
+
+  String _title(AppLocalizations l) {
+    if (widget.title != null) widget.title!;
+    return switch (widget.source) {
+      ArtistListSource.all => l.libraryCardArtists,
+      ArtistListSource.search => widget.query ?? l.libraryCardArtists,
+    };
   }
 
   void _openArtist(int artistId) {
@@ -82,7 +107,7 @@ class _ArtistsPageState extends State<ArtistsPage> {
               SonoStickyHeader(
                 child: SonoHeader(
                   backButton: true,
-                  pageTitle: l.libraryCardArtists,
+                  pageTitle: _title(l),
                   onBackTap: () => Navigator.of(context).pop(),
                   actions: const [],
                 ),

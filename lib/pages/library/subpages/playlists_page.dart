@@ -14,11 +14,23 @@ import 'package:sono/widgets/playlist_cover.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
 import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 
+enum PlaylistListSource { all, search }
+
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class PlaylistsPage extends StatefulWidget {
   final SonoDatabase db;
-  const PlaylistsPage({required this.db, super.key});
+  final PlaylistListSource source;
+  final String? query;
+  final String? title;
+
+  const PlaylistsPage({
+    required this.db,
+    this.source = PlaylistListSource.all,
+    this.query,
+    this.title,
+    super.key,
+  });
 
   @override
   State<PlaylistsPage> createState() => _PlaylistsPageState();
@@ -36,7 +48,12 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
   }
 
   Future<void> _load() async {
-    final playlists = await widget.db.getAllPlaylists();
+    final playlists = switch (widget.source) {
+      PlaylistListSource.all => await widget.db.getAllPlaylists(),
+      PlaylistListSource.search => await widget.db.searchPlaylists(
+        widget.query ?? '',
+      ),
+    };
 
     final songCounts = <int, int>{};
     final coverPaths = <int, List<String>>{};
@@ -51,6 +68,14 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
       _songCounts = songCounts;
       _coverPaths = coverPaths;
     });
+  }
+
+  String _title(AppLocalizations l) {
+    if (widget.title != null) widget.title!;
+    return switch (widget.source) {
+      PlaylistListSource.all => l.libraryCardPlaylists,
+      PlaylistListSource.search => widget.query ?? l.libraryCardPlaylists,
+    };
   }
 
   Future<void> _openCeate() async {
@@ -93,7 +118,7 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
               SonoStickyHeader(
                 child: SonoHeader(
                   backButton: true,
-                  pageTitle: l.libraryCardPlaylists,
+                  pageTitle: _title(l),
                   onBackTap: () => Navigator.of(context).pop(),
                   actions: [
                     SonoHeaderAction(

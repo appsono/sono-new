@@ -10,11 +10,23 @@ import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
 
+enum AlbumListSource { all, search }
+
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class AlbumsPage extends StatefulWidget {
   final SonoDatabase db;
-  const AlbumsPage({required this.db, super.key});
+  final AlbumListSource source;
+  final String? query;
+  final String? title;
+
+  const AlbumsPage({
+    required this.db,
+    this.source = AlbumListSource.all,
+    this.query,
+    this.title,
+    super.key,
+  });
 
   @override
   State<AlbumsPage> createState() => _AlbumsPageState();
@@ -31,7 +43,12 @@ class _AlbumsPageState extends State<AlbumsPage> {
   }
 
   Future<void> _load() async {
-    final albums = await widget.db.getAllAlbumsWithArtists();
+    final albums = switch (widget.source) {
+      AlbumListSource.all => await widget.db.getAllAlbumsWithArtists(),
+      AlbumListSource.search => await widget.db.searchAlbums(
+        widget.query ?? '',
+      ),
+    };
     albums.sort(
       (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
     );
@@ -48,6 +65,14 @@ class _AlbumsPageState extends State<AlbumsPage> {
       _albums = albums;
       _coverPaths = coverPaths;
     });
+  }
+
+  String _title(AppLocalizations l) {
+    if (widget.title != null) widget.title!;
+    return switch (widget.source) {
+      AlbumListSource.all => l.libraryCardAlbums,
+      AlbumListSource.search => widget.query ?? l.libraryCardAlbums,
+    };
   }
 
   Future<void> _openSheet(AlbumWithArtistViewData album) =>
@@ -67,7 +92,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
               SonoStickyHeader(
                 child: SonoHeader(
                   backButton: true,
-                  pageTitle: l.libraryCardAlbums,
+                  pageTitle: _title(l),
                   onBackTap: () => Navigator.of(context).pop(),
                   actions: const [],
                 ),
