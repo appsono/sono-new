@@ -1362,6 +1362,7 @@ class _CompactProgressBarState extends State<_CompactProgressBar> {
             _fmt(_duration),
             style: timeStyle,
             textAlign: TextAlign.right,
+            textScaler: TextScaler.noScaling,
           ),
         ),
       ],

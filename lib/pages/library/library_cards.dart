@@ -55,6 +55,7 @@ class SonoLibraryCards extends StatelessWidget {
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+              textScaler: TextScaler.noScaling,
             ),
             if (subtitle != null) ...[
               const SizedBox(height: 2),
@@ -68,6 +69,7 @@ class SonoLibraryCards extends StatelessWidget {
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+                textScaler: TextScaler.noScaling,
               ),
             ],
           ],
