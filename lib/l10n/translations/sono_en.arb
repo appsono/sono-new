@@ -220,6 +220,15 @@
     "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
   },
 
+  "searchPageTitle": "Search",
+  "@searchPageTitle": {
+    "description": "Shown in the header next to the profile picture at the top of the page."
+  },
+  "searchFieldHint": "Search something…",
+  "@searchFieldHint": {
+    "description": "Placeholder text inside the search field on the Search tab. Hints at the local-library categories that can be searched."
+  },
+
 
   "libraryPageTitle": "Library",
   "@libraryPageTitle": {
