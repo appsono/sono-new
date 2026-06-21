@@ -58,6 +58,7 @@
 
         shellHook = ''
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+          export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ pkgs.mpv-unwrapped pkgs.sqlite ]}:$LD_LIBRARY_PATH"
           flutter config --no-analytics >/dev/null 2>&1 || true
         '';
       };
