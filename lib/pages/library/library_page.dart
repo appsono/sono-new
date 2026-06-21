@@ -32,7 +32,8 @@ typedef _Row = ({_CardData short, _CardData long, bool shortFirst});
 
 class LibraryPage extends StatefulWidget {
   final SonoDatabase db;
-  const LibraryPage({required this.db, super.key});
+  final VoidCallback? onOpenSettings;
+  const LibraryPage({required this.db, this.onOpenSettings, super.key});
 
   @override
   State<LibraryPage> createState() => _LibraryPageState();
@@ -149,9 +150,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     SonoHeaderAction(
                       icon: IconsSheet.settingsOutlined,
                       tooltip: l.homeHeaderSettings,
-                      onTap: () {
-                        //navigate to settings page
-                      },
+                      onTap: () => widget.onOpenSettings?.call(),
                     ),
                   ],
                 ),

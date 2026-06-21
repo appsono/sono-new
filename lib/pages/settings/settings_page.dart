@@ -27,10 +27,12 @@ import 'package:sono/theme/theme.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/contributors_sheet.dart';
 import 'package:sono/widgets/kofi_button.dart';
+import 'package:sono/widgets/header.dart';
+import 'package:sono/widgets/mini_player.dart';
 
 import 'package:sono_query/sono_query.dart' hide Song;
 
-const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
+const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class SettingsPage extends StatefulWidget {
   final SonoDatabase db;
@@ -278,420 +280,470 @@ class _SettingsPageState extends State<SettingsPage> {
     if (c == null) return const SizedBox.shrink();
     final l = AppLocalizations.of(context);
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      children: [
-        const SizedBox(height: 60),
+    return Scaffold(
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SonoStickyHeader(
+                child: SonoHeader(
+                  backButton: true,
+                  pageTitle: l.homeHeaderSettings,
+                  onBackTap: () => Navigator.of(context).pop(),
+                  actions: const [],
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
 
-        if (Platform.isIOS) ...[
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.info_outline_rounded, size: 18),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'To add music, copy your audio files into Sono\'s folder using the Files app.',
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    if (Platform.isIOS) ...[
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.info_outline_rounded, size: 18),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'To add music, copy your audio files into Sono\'s folder using the Files app.',
+                                  ),
+                                  const SizedBox(height: 8),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.zero,
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () => launchUrl(
+                                      Uri.parse('shareddocuments:///'),
+                                      mode: LaunchMode.externalApplication,
+                                    ),
+                                    child: const Text('Open Files app'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      const SizedBox(height: 16),
+                    ],
+
+                    // ==== profile ====
+                    const _SectionHeader(label: 'Profile'),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: _pickAvatar,
+                          child: CircleAvatar(
+                            radius: 28,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                            backgroundImage: _avatar != null
+                                ? MemoryImage(_avatar!)
+                                : null,
+                            child: _avatar == null
+                                ? IconsSheet.svg(
+                                    IconsSheet.profileFilled,
+                                    color: context.sono.textSecondary,
+                                    size: 26,
+                                  )
+                                : null,
+                          ),
                         ),
-                        onPressed: () => launchUrl(
-                          Uri.parse('shareddocuments:///'),
-                          mode: LaunchMode.externalApplication,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: TextField(
+                            controller: _usernameCtrl,
+                            textInputAction: TextInputAction.done,
+                            autofocus: false,
+                            onTapOutside: (_) =>
+                                FocusManager.instance.primaryFocus?.unfocus(),
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              labelText: 'username',
+                              hintText: 'your name',
+                            ),
+                            onSubmitted: (val) {
+                              final v = _usernameCtrl.text.trim();
+                              if (v == _username) return;
+                              _username = v;
+                              widget.db.upsertProfile(username: v);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('username updated :D'),
+                                  duration: Duration(seconds: 1),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                        child: const Text('Open Files app'),
+                        if (_avatar != null)
+                          IconButton(
+                            icon: IconsSheet.svg(
+                              IconsSheet.closeOutlined,
+                              color: context.sono.textSecondary,
+                              size: SonoSizes.iconSm,
+                            ),
+                            tooltip: 'Remove Avatar',
+                            onPressed: _clearAvatar,
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    const Divider(),
+                    const SizedBox(height: 12),
+
+                    // ==== language ====
+                    _SectionHeader(label: 'Language'),
+                    const SizedBox(height: 12),
+                    const _LanguageSection(),
+                    const SizedBox(height: 32),
+                    const Divider(),
+                    const SizedBox(height: 12),
+
+                    // ==== appearance ====
+                    const _SectionHeader(label: 'Appearance'),
+                    const SizedBox(height: 4),
+                    ValueListenableBuilder<SonoColors>(
+                      valueListenable: SonoApp.themeNotifier,
+                      builder: (_, colors, _) {
+                        final isDark = colors == SonoColors.dark;
+                        return SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Dark mode'),
+                          value: isDark,
+                          onChanged: (val) {
+                            SonoApp.themeNotifier.value = val
+                                ? SonoColors.dark
+                                : SonoColors.light;
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    const Divider(),
+                    const SizedBox(height: 12),
+
+                    // ==== playback effects ====
+                    const _SectionHeader(label: 'Playback'),
+                    const SizedBox(height: 12),
+                    const _EffectsSection(),
+                    const SizedBox(height: 32),
+                    const Divider(),
+                    const SizedBox(height: 12),
+
+                    // ==== library / scan ====
+                    const _SectionHeader(label: 'Library'),
+                    const SizedBox(height: 12),
+
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('group by folder'),
+                      subtitle: const Text(
+                        'use song folder instead of album tag',
+                      ),
+                      value: _grouping == AlbumGrouping.folder,
+                      onChanged: (on) => _saveGrouping(
+                        on ? AlbumGrouping.folder : AlbumGrouping.tag,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    //min dur
+                    Row(
+                      children: [
+                        const Text('min duration (sec)'),
+                        const Spacer(),
+                        SizedBox(
+                          width: 64,
+                          child: TextField(
+                            controller: _minDurationCtrl,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              hintText: 'off',
+                            ),
+                            onSubmitted: (val) {
+                              final s = int.tryParse(val);
+                              _save(
+                                ScanConfig(
+                                  excludedPaths: c.excludedPaths,
+                                  additionalPaths: c.additionalPaths,
+                                  minDuration: s != null
+                                      ? Duration(seconds: s)
+                                      : null,
+                                  artistParser: c.artistParser,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    //excluded paths
+                    _chipList(
+                      'excluded paths',
+                      c.excludedPaths,
+                      _excludedPathCtrl,
+                      'e.g. /storage/.../Ringtones',
+                      onAdd: (val) => _save(
+                        ScanConfig(
+                          excludedPaths: [...c.excludedPaths, val],
+                          additionalPaths: c.additionalPaths,
+                          minDuration: c.minDuration,
+                          artistParser: c.artistParser,
+                        ),
+                      ),
+                      onRemove: (i) => _save(
+                        ScanConfig(
+                          excludedPaths: [...c.excludedPaths]..removeAt(i),
+                          additionalPaths: c.additionalPaths,
+                          minDuration: c.minDuration,
+                          artistParser: c.artistParser,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    //additional paths
+                    if (Platform.isLinux || Platform.isWindows)
+                      _chipList(
+                        'additional paths',
+                        c.additionalPaths,
+                        _additionalPathCtrl,
+                        'e.g. /home/user/Downloads',
+                        onAdd: (val) => _save(
+                          ScanConfig(
+                            excludedPaths: c.excludedPaths,
+                            additionalPaths: [...c.additionalPaths, val],
+                            minDuration: c.minDuration,
+                            artistParser: c.artistParser,
+                          ),
+                        ),
+                        onRemove: (i) => _save(
+                          ScanConfig(
+                            excludedPaths: c.excludedPaths,
+                            additionalPaths: [...c.additionalPaths]
+                              ..removeAt(i),
+                            minDuration: c.minDuration,
+                            artistParser: c.artistParser,
+                          ),
+                        ),
+                      ),
+                    if (Platform.isLinux || Platform.isWindows)
+                      const SizedBox(height: 16),
+
+                    //artist parser toggle
+                    SwitchListTile(
+                      title: const Text('multi-artist parsing'),
+                      contentPadding: EdgeInsets.zero,
+                      value: c.artistParser != null,
+                      onChanged: (on) => _save(
+                        ScanConfig(
+                          excludedPaths: c.excludedPaths,
+                          additionalPaths: c.additionalPaths,
+                          minDuration: c.minDuration,
+                          artistParser: on
+                              ? (c.artistParser ?? const ArtistParserConfig())
+                              : null,
+                        ),
+                      ),
+                    ),
+
+                    if (c.artistParser != null) ...[
+                      //delimiters
+                      _chipList(
+                        'delimiters',
+                        c.artistParser!.delimiters,
+                        _delimiterCtrl,
+                        'e.g. " / " or ";"',
+                        onAdd: (val) => _save(
+                          ScanConfig(
+                            excludedPaths: c.excludedPaths,
+                            additionalPaths: c.additionalPaths,
+                            minDuration: c.minDuration,
+                            artistParser: ArtistParserConfig(
+                              delimiters: [...c.artistParser!.delimiters, val],
+                              excludedArtists: c.artistParser!.excludedArtists,
+                            ),
+                          ),
+                        ),
+                        onRemove: (i) => _save(
+                          ScanConfig(
+                            excludedPaths: c.excludedPaths,
+                            additionalPaths: c.additionalPaths,
+                            minDuration: c.minDuration,
+                            artistParser: ArtistParserConfig(
+                              delimiters: [...c.artistParser!.delimiters]
+                                ..removeAt(i),
+                              excludedArtists: c.artistParser!.excludedArtists,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      //protected artists
+                      _chipList(
+                        'protected artists',
+                        c.artistParser!.excludedArtists,
+                        _artistCtrl,
+                        'e.g. Tyler, The Creator',
+                        onAdd: (val) => _save(
+                          ScanConfig(
+                            excludedPaths: c.excludedPaths,
+                            additionalPaths: c.additionalPaths,
+                            minDuration: c.minDuration,
+                            artistParser: ArtistParserConfig(
+                              delimiters: c.artistParser!.delimiters,
+                              excludedArtists: [
+                                ...c.artistParser!.excludedArtists,
+                                val,
+                              ],
+                            ),
+                          ),
+                        ),
+                        onRemove: (i) => _save(
+                          ScanConfig(
+                            excludedPaths: c.excludedPaths,
+                            additionalPaths: c.additionalPaths,
+                            minDuration: c.minDuration,
+                            artistParser: ArtistParserConfig(
+                              delimiters: c.artistParser!.delimiters,
+                              excludedArtists: [
+                                ...c.artistParser!.excludedArtists,
+                              ]..removeAt(i),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
 
-        // ==== profile ====
-        const _SectionHeader(label: 'Profile'),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: _pickAvatar,
-              child: CircleAvatar(
-                radius: 28,
-                backgroundColor: Theme.of(
-                  context,
-                ).colorScheme.surfaceContainerHighest,
-                backgroundImage: _avatar != null ? MemoryImage(_avatar!) : null,
-                child: _avatar == null
-                    ? IconsSheet.svg(
-                        IconsSheet.profileFilled,
-                        color: context.sono.textSecondary,
-                        size: 26,
-                      )
-                    : null,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                controller: _usernameCtrl,
-                textInputAction: TextInputAction.done,
-                autofocus: false,
-                onTapOutside: (_) =>
-                    FocusManager.instance.primaryFocus?.unfocus(),
-                decoration: const InputDecoration(
-                  isDense: true,
-                  labelText: 'username',
-                  hintText: 'your name',
-                ),
-                onSubmitted: (val) {
-                  final v = _usernameCtrl.text.trim();
-                  if (v == _username) return;
-                  _username = v;
-                  widget.db.upsertProfile(username: v);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('username updated :D'),
-                      duration: Duration(seconds: 1),
+                    const SizedBox(height: 32),
+                    const Divider(),
+                    const SizedBox(height: 12),
+
+                    // ==== discord ====
+                    if (Platform.isAndroid || Platform.isIOS) ...[
+                      const _SectionHeader(label: 'Discord RPC'),
+                      const SizedBox(height: 12),
+                      if (_discordLoading)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      else if (_discordConnected) ...[
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(_discordUsername ?? 'Connected'),
+                          trailing: TextButton(
+                            onPressed: _discordLogout,
+                            child: const Text('Disconnect'),
+                          ),
+                        ),
+                        SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Enabled'),
+                          value: _discordEnabled,
+                          onChanged: (val) async {
+                            await DiscordRpcService.instance.setEnabled(val);
+                            if (mounted) setState(() => _discordEnabled = val);
+                          },
+                        ),
+                      ] else
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Connect Discord'),
+                          subtitle: const Text(
+                            'to show current song on discord.',
+                          ),
+                          trailing: FilledButton(
+                            onPressed: _discordLogin,
+                            child: const Text('Sign in'),
+                          ),
+                        ),
+
+                      const SizedBox(height: 32),
+                      const Divider(),
+                      const SizedBox(height: 12),
+                    ],
+
+                    // ==== updates checker ====
+                    const _SectionHeader(label: 'Updates'),
+                    const SizedBox(height: 12),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Check for updates'),
+                      subtitle: const Text(
+                        'looks at the github releases page.',
+                      ),
+                      trailing: _updateChecking
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : TextButton(
+                              onPressed: _checkForUpdatesManual,
+                              child: const Text('Check'),
+                            ),
                     ),
-                  );
-                },
-              ),
-            ),
-            if (_avatar != null)
-              IconButton(
-                icon: IconsSheet.svg(
-                  IconsSheet.closeOutlined,
-                  color: context.sono.textSecondary,
-                  size: SonoSizes.iconSm,
-                ),
-                tooltip: 'Remove Avatar',
-                onPressed: _clearAvatar,
-              ),
-          ],
-        ),
-        const SizedBox(height: 32),
-        const Divider(),
-        const SizedBox(height: 12),
 
-        // ==== language ====
-        _SectionHeader(label: 'Language'),
-        const SizedBox(height: 12),
-        const _LanguageSection(),
-        const SizedBox(height: 32),
-        const Divider(),
-        const SizedBox(height: 12),
+                    const SizedBox(height: 32),
+                    const Divider(),
+                    const SizedBox(height: 12),
 
-        // ==== appearance ====
-        const _SectionHeader(label: 'Appearance'),
-        const SizedBox(height: 4),
-        ValueListenableBuilder<SonoColors>(
-          valueListenable: SonoApp.themeNotifier,
-          builder: (_, colors, _) {
-            final isDark = colors == SonoColors.dark;
-            return SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Dark mode'),
-              value: isDark,
-              onChanged: (val) {
-                SonoApp.themeNotifier.value = val
-                    ? SonoColors.dark
-                    : SonoColors.light;
-              },
-            );
-          },
-        ),
-        const SizedBox(height: 32),
-        const Divider(),
-        const SizedBox(height: 12),
-
-        // ==== playback effects ====
-        const _SectionHeader(label: 'Playback'),
-        const SizedBox(height: 12),
-        const _EffectsSection(),
-        const SizedBox(height: 32),
-        const Divider(),
-        const SizedBox(height: 12),
-
-        // ==== library / scan ====
-        const _SectionHeader(label: 'Library'),
-        const SizedBox(height: 12),
-
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('group by folder'),
-          subtitle: const Text('use song folder instead of album tag'),
-          value: _grouping == AlbumGrouping.folder,
-          onChanged: (on) =>
-              _saveGrouping(on ? AlbumGrouping.folder : AlbumGrouping.tag),
-        ),
-        const SizedBox(height: 16),
-
-        //min dur
-        Row(
-          children: [
-            const Text('min duration (sec)'),
-            const Spacer(),
-            SizedBox(
-              width: 64,
-              child: TextField(
-                controller: _minDurationCtrl,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  hintText: 'off',
-                ),
-                onSubmitted: (val) {
-                  final s = int.tryParse(val);
-                  _save(
-                    ScanConfig(
-                      excludedPaths: c.excludedPaths,
-                      additionalPaths: c.additionalPaths,
-                      minDuration: s != null ? Duration(seconds: s) : null,
-                      artistParser: c.artistParser,
+                    // ==== contributors & support ====
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _ContributorsButton(
+                            label: l.settingsContributors,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: KofiButton(
+                            url: 'https://ko-fi.com/mathiiis',
+                            label: l.settingsSupportKofi,
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
 
-        //excluded paths
-        _chipList(
-          'excluded paths',
-          c.excludedPaths,
-          _excludedPathCtrl,
-          'e.g. /storage/.../Ringtones',
-          onAdd: (val) => _save(
-            ScanConfig(
-              excludedPaths: [...c.excludedPaths, val],
-              additionalPaths: c.additionalPaths,
-              minDuration: c.minDuration,
-              artistParser: c.artistParser,
-            ),
-          ),
-          onRemove: (i) => _save(
-            ScanConfig(
-              excludedPaths: [...c.excludedPaths]..removeAt(i),
-              additionalPaths: c.additionalPaths,
-              minDuration: c.minDuration,
-              artistParser: c.artistParser,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-
-        //additional paths
-        if (Platform.isLinux || Platform.isWindows)
-          _chipList(
-            'additional paths',
-            c.additionalPaths,
-            _additionalPathCtrl,
-            'e.g. /home/user/Downloads',
-            onAdd: (val) => _save(
-              ScanConfig(
-                excludedPaths: c.excludedPaths,
-                additionalPaths: [...c.additionalPaths, val],
-                minDuration: c.minDuration,
-                artistParser: c.artistParser,
-              ),
-            ),
-            onRemove: (i) => _save(
-              ScanConfig(
-                excludedPaths: c.excludedPaths,
-                additionalPaths: [...c.additionalPaths]..removeAt(i),
-                minDuration: c.minDuration,
-                artistParser: c.artistParser,
-              ),
-            ),
-          ),
-        if (Platform.isLinux || Platform.isWindows) const SizedBox(height: 16),
-
-        //artist parser toggle
-        SwitchListTile(
-          title: const Text('multi-artist parsing'),
-          contentPadding: EdgeInsets.zero,
-          value: c.artistParser != null,
-          onChanged: (on) => _save(
-            ScanConfig(
-              excludedPaths: c.excludedPaths,
-              additionalPaths: c.additionalPaths,
-              minDuration: c.minDuration,
-              artistParser: on
-                  ? (c.artistParser ?? const ArtistParserConfig())
-                  : null,
-            ),
-          ),
-        ),
-
-        if (c.artistParser != null) ...[
-          //delimiters
-          _chipList(
-            'delimiters',
-            c.artistParser!.delimiters,
-            _delimiterCtrl,
-            'e.g. " / " or ";"',
-            onAdd: (val) => _save(
-              ScanConfig(
-                excludedPaths: c.excludedPaths,
-                additionalPaths: c.additionalPaths,
-                minDuration: c.minDuration,
-                artistParser: ArtistParserConfig(
-                  delimiters: [...c.artistParser!.delimiters, val],
-                  excludedArtists: c.artistParser!.excludedArtists,
+                    // ==== bottom clearance ====
+                    SizedBox(height: _bottomInset),
+                  ]),
                 ),
               ),
-            ),
-            onRemove: (i) => _save(
-              ScanConfig(
-                excludedPaths: c.excludedPaths,
-                additionalPaths: c.additionalPaths,
-                minDuration: c.minDuration,
-                artistParser: ArtistParserConfig(
-                  delimiters: [...c.artistParser!.delimiters]..removeAt(i),
-                  excludedArtists: c.artistParser!.excludedArtists,
-                ),
-              ),
-            ),
+            ],
           ),
-          const SizedBox(height: 12),
-
-          //protected artists
-          _chipList(
-            'protected artists',
-            c.artistParser!.excludedArtists,
-            _artistCtrl,
-            'e.g. Tyler, The Creator',
-            onAdd: (val) => _save(
-              ScanConfig(
-                excludedPaths: c.excludedPaths,
-                additionalPaths: c.additionalPaths,
-                minDuration: c.minDuration,
-                artistParser: ArtistParserConfig(
-                  delimiters: c.artistParser!.delimiters,
-                  excludedArtists: [...c.artistParser!.excludedArtists, val],
-                ),
-              ),
-            ),
-            onRemove: (i) => _save(
-              ScanConfig(
-                excludedPaths: c.excludedPaths,
-                additionalPaths: c.additionalPaths,
-                minDuration: c.minDuration,
-                artistParser: ArtistParserConfig(
-                  delimiters: c.artistParser!.delimiters,
-                  excludedArtists: [...c.artistParser!.excludedArtists]
-                    ..removeAt(i),
-                ),
-              ),
-            ),
+          Positioned(
+            left: 12,
+            right: 12,
+            bottom: 22,
+            child: SonoMiniPlayer(db: widget.db, navBarVisible: false),
           ),
         ],
-
-        const SizedBox(height: 32),
-        const Divider(),
-        const SizedBox(height: 12),
-
-        // ==== discord ====
-        if (Platform.isAndroid || Platform.isIOS) ...[
-          const _SectionHeader(label: 'Discord RPC'),
-          const SizedBox(height: 12),
-          if (_discordLoading)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Center(child: CircularProgressIndicator()),
-            )
-          else if (_discordConnected) ...[
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(_discordUsername ?? 'Connected'),
-              trailing: TextButton(
-                onPressed: _discordLogout,
-                child: const Text('Disconnect'),
-              ),
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Enabled'),
-              value: _discordEnabled,
-              onChanged: (val) async {
-                await DiscordRpcService.instance.setEnabled(val);
-                if (mounted) setState(() => _discordEnabled = val);
-              },
-            ),
-          ] else
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Connect Discord'),
-              subtitle: const Text('to show current song on discord.'),
-              trailing: FilledButton(
-                onPressed: _discordLogin,
-                child: const Text('Sign in'),
-              ),
-            ),
-
-          const SizedBox(height: 32),
-          const Divider(),
-          const SizedBox(height: 12),
-        ],
-
-        // ==== updates checker ====
-        const _SectionHeader(label: 'Updates'),
-        const SizedBox(height: 12),
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Check for updates'),
-          subtitle: const Text('looks at the github releases page.'),
-          trailing: _updateChecking
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : TextButton(
-                  onPressed: _checkForUpdatesManual,
-                  child: const Text('Check'),
-                ),
-        ),
-
-        const SizedBox(height: 32),
-        const Divider(),
-        const SizedBox(height: 12),
-
-        // ==== contributors & support ====
-        Row(
-          children: [
-            Expanded(child: _ContributorsButton(label: l.settingsContributors)),
-            const SizedBox(width: 10),
-            Expanded(
-              child: KofiButton(
-                url: 'https://ko-fi.com/mathiiis',
-                label: l.settingsSupportKofi,
-              ),
-            ),
-          ],
-        ),
-
-        // ==== bottom clearance ====
-        SizedBox(height: _bottomInset),
-      ],
+      ),
     );
   }
 

@@ -9,8 +9,9 @@ import 'package:sono_query/sono_query.dart' hide Song;
 import 'package:sono/db/database.dart';
 
 import 'package:sono/pages/home/home_page.dart';
-import 'package:sono/pages/settings/settings_page.dart';
+import 'package:sono/pages/search/search_page.dart';
 import 'package:sono/pages/library/library_page.dart';
+import 'package:sono/pages/settings/settings_page.dart';
 
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/services/scanner/scan_service.dart';
@@ -102,6 +103,17 @@ class _AppShellState extends State<AppShell> {
     if (mounted) setState(() => _update = null);
   }
 
+  void _openSettings() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SettingsPage(
+          db: widget.db,
+          onRescan: () => _checkPermissionAndScan(force: true),
+        ),
+      ),
+    );
+  }
+
   Future<void> _dismissUpdate() async {
     final info = _update;
     if (info == null) return;
@@ -146,12 +158,13 @@ class _AppShellState extends State<AppShell> {
           IndexedStack(
             index: _tab,
             children: [
-              HomePage(db: widget.db, scanVersion: _scanVersion),
-              SettingsPage(
+              HomePage(
                 db: widget.db,
-                onRescan: () => _checkPermissionAndScan(force: true),
+                scanVersion: _scanVersion,
+                onOpenSettings: _openSettings,
               ),
-              LibraryPage(db: widget.db),
+              SearchPage(db: widget.db, onOpenSettings: _openSettings),
+              LibraryPage(db: widget.db, onOpenSettings: _openSettings),
             ],
           ),
           Positioned(
@@ -202,7 +215,10 @@ class _AppShellState extends State<AppShell> {
                     const SizedBox(height: 6),
                     SonoNavBar(
                       selectedIndex: _tab,
-                      onDestinationSelected: (i) => setState(() => _tab = i),
+                      onDestinationSelected: (i) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        setState(() => _tab = i);
+                      },
                       miniPlayerVisible: hasSong,
                     ),
                   ],

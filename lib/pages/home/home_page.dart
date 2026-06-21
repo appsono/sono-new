@@ -25,8 +25,14 @@ const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 class HomePage extends StatefulWidget {
   final SonoDatabase db;
   final ValueNotifier<int>? scanVersion;
+  final VoidCallback? onOpenSettings;
 
-  const HomePage({required this.db, this.scanVersion, super.key});
+  const HomePage({
+    required this.db,
+    this.scanVersion,
+    this.onOpenSettings,
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -116,9 +122,7 @@ class _HomePageState extends State<HomePage> {
                     SonoHeaderAction(
                       icon: IconsSheet.settingsOutlined,
                       tooltip: l.homeHeaderSettings,
-                      onTap: () {
-                        //navigate to settings page
-                      },
+                      onTap: () => widget.onOpenSettings?.call(),
                     ),
                   ],
                 ),
