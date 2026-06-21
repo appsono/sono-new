@@ -9,6 +9,8 @@ import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/changelog_sheet.dart';
 
+enum SearchFilter { all, songs, albums, artists, playlists, genres }
+
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class SearchPage extends StatefulWidget {
@@ -24,6 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   final _controller = TextEditingController();
   final _focus = FocusNode();
   String _query = '';
+  SearchFilter _filter = SearchFilter.all;
 
   @override
   void initState() {
@@ -40,6 +43,12 @@ class _SearchPageState extends State<SearchPage> {
   void _onChanged(String value) {
     setState(() => _query = value);
     //TODO:debounced search wired when implemented
+  }
+
+  void _onFilter(SearchFilter f) {
+    if (f == _filter) return;
+    setState(() => _filter = f);
+    //TODO: results re-scope in place
   }
 
   void _clear() {
@@ -98,6 +107,11 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
+
+          if (hasQuery)
+            SliverToBoxAdapter(
+              child: _FilterChips(selected: _filter, onSelected: _onFilter),
+            ),
 
           // ==== bottom clearance ====
           SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
@@ -206,6 +220,96 @@ class _ClearButton extends StatelessWidget {
           IconsSheet.closeOutlined,
           size: 14,
           color: c.textSecondary,
+        ),
+      ),
+    );
+  }
+}
+
+/// ==== horizontal filter strip ====
+class _FilterChips extends StatelessWidget {
+  final SearchFilter selected;
+  final ValueChanged<SearchFilter> onSelected;
+
+  const _FilterChips({required this.selected, required this.onSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    const order = SearchFilter.values;
+    String label(SearchFilter f) => switch (f) {
+      SearchFilter.all => l.searchFilterAll,
+      SearchFilter.songs => l.libraryCardSongs,
+      SearchFilter.albums => l.libraryCardAlbums,
+      SearchFilter.artists => l.libraryCardArtists,
+      SearchFilter.playlists => l.libraryCardPlaylists,
+      SearchFilter.genres => l.libraryCardGenres,
+    };
+
+    return SizedBox(
+      height: 50,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(16, 2, 16, 4),
+        itemCount: order.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (context, i) {
+          final f = order[i];
+          return _FilterChip(
+            label: label(f),
+            selected: f == selected,
+            onTap: () => onSelected(f),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _FilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: SonoDurations.normal,
+        curve: Curves.easeOut,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: selected ? c.primary : c.bgSurface,
+          borderRadius: selected
+              ? BorderRadius.circular(8)
+              : BorderRadius.circular(100),
+          border: Border.all(
+            color: selected ? Colors.transparent : c.borderLight10,
+            width: 1.5,
+          ),
+        ),
+        child: AnimatedDefaultTextStyle(
+          duration: SonoDurations.fast,
+          curve: Curves.easeOut,
+          style: TextStyle(
+            fontFamily: SonoFonts.primary,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: selected ? c.textLight : c.textSecondary,
+          ),
+          child: Text(label),
         ),
       ),
     );
