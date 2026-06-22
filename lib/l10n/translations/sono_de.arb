@@ -466,5 +466,17 @@
     "playlistEditTitle": "Playlist bearbeiten",
     "@playlistEditTitle": {
         "description": "Title of the edit playlist modal (name + description)."
+    },
+    "searchPageTitle": "Suche",
+    "@searchPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "searchFieldHint": "Such etwas…",
+    "@searchFieldHint": {
+        "description": "Placeholder text inside the search field on the Search tab. Hints at the local-library categories that can be searched."
+    },
+    "searchFilterAll": "Alle",
+    "@searchFilterAll": {
+        "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
     }
 }
