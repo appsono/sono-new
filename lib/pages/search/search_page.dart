@@ -291,7 +291,9 @@ class _FilterChip extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          color: selected ? c.primary : c.bgSurface,
+          color: selected
+              ? c.primary
+              : Color.alphaBlend(c.bgSurface, c.bgPrimary),
           borderRadius: selected
               ? BorderRadius.circular(8)
               : BorderRadius.circular(100),
