@@ -318,6 +318,7 @@ class SonoDatabase extends _$SonoDatabase {
         title: shown,
         artistId: a.artistId,
         artistName: ar?.name,
+        favoritedAt: a.favoritedAt,
       );
     }).toList();
   }

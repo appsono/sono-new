@@ -1,17 +1,27 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/header.dart';
+import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/changelog_sheet.dart';
+import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/widgets/list_row.dart';
+import 'package:sono/pages/library/library_sheets.dart';
+import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/albums_page.dart';
+import 'package:sono/pages/library/subpages/songs_page.dart';
 
 enum SearchFilter { all, songs, albums, artists, playlists, genres }
 
-const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
+const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
+const int _kSectionCap = 4;
 
 class SearchPage extends StatefulWidget {
   final SonoDatabase db;
@@ -28,6 +38,12 @@ class _SearchPageState extends State<SearchPage> {
   String _query = '';
   SearchFilter _filter = SearchFilter.all;
 
+  Timer? _debounce;
+  int _seq = 0;
+  List<SongWithArtistViewData> _songs = [];
+  List<AlbumWithArtistViewData> _albums = [];
+  Map<int, String> _albumCovers = {}; //albumId > first cover path
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +51,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _focus.dispose();
     _controller.dispose();
     super.dispose();
@@ -42,8 +59,56 @@ class _SearchPageState extends State<SearchPage> {
 
   void _onChanged(String value) {
     setState(() => _query = value);
-    //TODO:debounced search wired when implemented
+    _debounce?.cancel();
+
+    final q = value.trim();
+    if (q.isEmpty) {
+      setState(() {
+        _filter = SearchFilter.all;
+        _songs = [];
+        _albums = [];
+        _albumCovers = {};
+      });
+      return;
+    }
+    _debounce = Timer(const Duration(milliseconds: 250), () => _runSearch(q));
   }
+
+  Future<void> _runSearch(String q) async {
+    final seq = ++_seq;
+    final songs = await widget.db.searchSongs(q, limit: _kSectionCap);
+    final albums = await widget.db.searchAlbums(q, limit: _kSectionCap);
+
+    //first cover per album
+    final covers = <int, String>{};
+    for (final a in albums) {
+      final s = await widget.db.getSongsByAlbum(a.id);
+      covers[a.id] = s.isNotEmpty ? s.first.path : '';
+    }
+
+    if (!mounted || seq != _seq) return; //stale, drop
+    setState(() {
+      _songs = songs;
+      _albums = albums;
+      _albumCovers = covers;
+    });
+  }
+
+  void _playSong(int index) {
+    if (_songs.isEmpty) return;
+    final queue = [for (final s in _songs) s.toSong()];
+    AudioService.instance.play(
+      queue,
+      index,
+      origin: QueueOrigin(source: QueueSource.search, label: _query.trim()),
+    );
+  }
+
+  Future<void> _openSongSheet(SongWithArtistViewData song) =>
+      LibrarySheets.openForSong(context: context, db: widget.db, song: song);
+
+  void _push(Widget page) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
 
   void _onFilter(SearchFilter f) {
     if (f == _filter) return;
@@ -51,14 +116,28 @@ class _SearchPageState extends State<SearchPage> {
     //TODO: results re-scope in place
   }
 
+  bool get _showSongs =>
+      _filter == SearchFilter.all || _filter == SearchFilter.songs;
+
+  bool get _showAlbums =>
+      _filter == SearchFilter.all || _filter == SearchFilter.albums;
+
   void _clear() {
     _controller.clear();
-    setState(() => _query = '');
+    _debounce?.cancel();
+    setState(() {
+      _query = '';
+      _filter = SearchFilter.all;
+      _songs = [];
+      _albums = [];
+      _albumCovers = {};
+    });
     _focus.requestFocus();
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final hasQuery = _query.trim().isNotEmpty;
 
     return Scaffold(
@@ -68,7 +147,6 @@ class _SearchPageState extends State<SearchPage> {
           StreamBuilder<Profile?>(
             stream: widget.db.watchProfile(),
             builder: (context, snap) {
-              final l = AppLocalizations.of(context);
               final profile = snap.data;
               return SonoStickyHeader(
                 child: SonoHeader(
@@ -108,10 +186,112 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
 
+          //filter chips
           if (hasQuery)
             SliverToBoxAdapter(
               child: _FilterChips(selected: _filter, onSelected: _onFilter),
             ),
+
+          //results body
+          if (hasQuery && _showSongs && _songs.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: _SearchSectionHeader(
+                label: l.libraryCardSongs,
+                count: _songs.length,
+                onSeeAll: _songs.length >= _kSectionCap
+                    ? () => _push(
+                        SongsPage(
+                          db: widget.db,
+                          source: SongListSource.search,
+                          query: _query.trim(),
+                        ),
+                      )
+                    : null,
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              sliver: SliverList.separated(
+                separatorBuilder: (_, _) => const SizedBox(height: 8),
+                itemCount: _songs.length,
+                itemBuilder: (context, i) {
+                  final s = _songs[i];
+                  return SonoListRow(
+                    coverPath: s.path,
+                    title: s.title,
+                    subtitle:
+                        s.displayArtist ??
+                        s.artistName ??
+                        l.commonUnknownArtist,
+                    onTap: () => _playSong(i),
+                    onLongPress: () => _openSongSheet(s),
+                    onMore: () => _openSongSheet(s),
+                  );
+                },
+              ),
+            ),
+          ],
+
+          //albums
+          if (hasQuery && _showAlbums && _albums.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: _SearchSectionHeader(
+                label: l.libraryCardAlbums,
+                count: _albums.length,
+                onSeeAll: _albums.length >= _kSectionCap
+                    ? () => _push(
+                        AlbumsPage(
+                          db: widget.db,
+                          source: AlbumListSource.search,
+                          query: _query.trim(),
+                        ),
+                      )
+                    : null,
+              ),
+            ),
+            if (_filter == SearchFilter.all)
+              //horizontal list
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 196,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: _albums.length,
+                    separatorBuilder: (_, _) => const SizedBox(width: 12),
+                    itemBuilder: (context, i) {
+                      final a = _albums[i];
+                      return _AlbumRailCard(
+                        album: a,
+                        coverPath: _albumCovers[a.id] ?? '',
+                        onTap: () => _push(
+                          AlbumDetailPage(db: widget.db, albumId: a.id),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              )
+            else
+              //vertical list
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                sliver: SliverList.separated(
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  itemCount: _albums.length,
+                  itemBuilder: (context, i) {
+                    final a = _albums[i];
+                    return SonoListRow(
+                      coverPath: _albumCovers[a.id] ?? '',
+                      title: a.title,
+                      subtitle: a.artistName ?? l.commonUnknownArtist,
+                      onTap: () =>
+                          _push(AlbumDetailPage(db: widget.db, albumId: a.id)),
+                    );
+                  },
+                ),
+              ),
+          ],
 
           // ==== bottom clearance ====
           SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
@@ -312,6 +492,149 @@ class _FilterChip extends StatelessWidget {
             color: selected ? c.textLight : c.textSecondary,
           ),
           child: Text(label),
+        ),
+      ),
+    );
+  }
+}
+
+/// ==== search results section header ====
+class _SearchSectionHeader extends StatelessWidget {
+  final String label;
+  final int count;
+  final VoidCallback? onSeeAll;
+
+  const _SearchSectionHeader({
+    required this.label,
+    required this.count,
+    this.onSeeAll,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: SonoFonts.heading,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: c.textPrimary,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '$count',
+            style: TextStyle(
+              fontFamily: SonoFonts.primary,
+              fontSize: 14,
+              color: c.textTertiary,
+            ),
+          ),
+          const Spacer(),
+          if (onSeeAll != null)
+            GestureDetector(
+              onTap: onSeeAll,
+              behavior: HitTestBehavior.opaque,
+              child: Text(
+                l.commonSeeAll,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: c.primary,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+// ==== horizontal album card ====
+class _AlbumRailCard extends StatelessWidget {
+  final AlbumWithArtistViewData album;
+  final String coverPath;
+  final VoidCallback onTap;
+
+  static const double _cover = 150;
+
+  const _AlbumRailCard({
+    required this.album,
+    required this.coverPath,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+    final isFavorited = album.favoritedAt != null;
+
+    return BouncyTap(
+      onTap: onTap,
+      child: SizedBox(
+        width: _cover,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                SonoCoverArt(
+                  path: coverPath,
+                  size: _cover,
+                  borderRadius: SonoSizes.borderRadiusLg,
+                  bordered: true,
+                ),
+                if (isFavorited)
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.55),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconsSheet.svg(
+                        IconsSheet.favoriteAlbumFilled,
+                        size: 14,
+                        color: c.textLight,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              album.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: SonoFonts.heading,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: c.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              album.artistName ?? l.commonUnknownArtist,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: SonoFonts.primary,
+                fontSize: 12,
+                color: c.textSecondary,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -67,6 +67,10 @@
     "description": "State label shown after an album or artist has been favorited."
   },
 
+  "commonSeeAll": "See all",
+  "@commonSeeAll": {
+    "description": "Affordance in a section header that opens the full list of matches for that category."
+  },
   "commonMoreOptions": "More options",
   "@commonMoreOptions": {
     "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
