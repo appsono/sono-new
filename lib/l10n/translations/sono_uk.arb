@@ -466,5 +466,21 @@
     "playlistEditTitle": "Редагувати список відтворення",
     "@playlistEditTitle": {
         "description": "Title of the edit playlist modal (name + description)."
+    },
+    "commonSeeAll": "Переглянути все",
+    "@commonSeeAll": {
+        "description": "Affordance in a section header that opens the full list of matches for that category."
+    },
+    "searchPageTitle": "Пошук",
+    "@searchPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "searchFieldHint": "Шукайте щось…",
+    "@searchFieldHint": {
+        "description": "Placeholder text inside the search field on the Search tab. Hints at the local-library categories that can be searched."
+    },
+    "searchFilterAll": "Усе",
+    "@searchFilterAll": {
+        "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
     }
 }
