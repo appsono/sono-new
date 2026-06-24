@@ -478,5 +478,9 @@
     "searchFilterAll": "Kõik",
     "@searchFilterAll": {
         "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
+    },
+    "commonSeeAll": "Vaata kõiki",
+    "@commonSeeAll": {
+        "description": "Affordance in a section header that opens the full list of matches for that category."
     }
 }
