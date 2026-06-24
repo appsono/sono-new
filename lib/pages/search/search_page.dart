@@ -15,8 +15,6 @@ import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/list_row.dart';
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
-import 'package:sono/pages/library/subpages/albums_page.dart';
-import 'package:sono/pages/library/subpages/songs_page.dart';
 
 enum SearchFilter { all, songs, albums, artists, playlists, genres }
 
@@ -227,13 +225,7 @@ class _SearchPageState extends State<SearchPage> {
                 count: _songCount,
                 onSeeAll:
                     (_filter == SearchFilter.all && _songCount > _kSectionCap)
-                    ? () => _push(
-                        SongsPage(
-                          db: widget.db,
-                          source: SongListSource.search,
-                          query: _query.trim(),
-                        ),
-                      )
+                    ? () => _onFilter(SearchFilter.songs)
                     : null,
               ),
             ),
@@ -268,13 +260,7 @@ class _SearchPageState extends State<SearchPage> {
                 count: _albumCount,
                 onSeeAll:
                     (_filter == SearchFilter.all && _albumCount > _kSectionCap)
-                    ? () => _push(
-                        AlbumsPage(
-                          db: widget.db,
-                          source: AlbumListSource.search,
-                          query: _query.trim(),
-                        ),
-                      )
+                    ? () => _onFilter(SearchFilter.albums)
                     : null,
               ),
             ),
