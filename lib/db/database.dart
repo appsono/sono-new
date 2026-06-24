@@ -195,6 +195,15 @@ class SonoDatabase extends _$SonoDatabase {
     return q.get();
   }
 
+  Future<int> searchArtistsCount(String query) async {
+    final pattern = '%$query%';
+    final count = artists.id.count();
+    final q = selectOnly(artists)
+      ..addColumns([count])
+      ..where(artists.name.like(pattern));
+    return (await q.getSingle()).read(count) ?? 0;
+  }
+
   /// Remove artists that have no songs referencing them
   Future<void> removeOrphanedArtists() async {
     await customStatement(
@@ -408,6 +417,22 @@ class SonoDatabase extends _$SonoDatabase {
     }).toList();
   }
 
+  Future<int> searchAlbumsCount(String query) async {
+    final pattern = '%$query%';
+    final count = albums.id.count(distinct: true);
+    final q =
+        selectOnly(albums).join([
+            leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+          ])
+          ..addColumns([count])
+          ..where(
+            albums.title.like(pattern) |
+                albums.displayTitle.like(pattern) |
+                artists.name.like(pattern),
+          );
+    return (await q.getSingle()).read(count) ?? 0;
+  }
+
   /// Albums by an artist with aggregate metadata for artist detail grid
   /// Sorted newest release first; undated albums last
   Future<
@@ -545,6 +570,18 @@ class SonoDatabase extends _$SonoDatabase {
       ]);
     if (limit != null) q.limit(limit);
     return q.get();
+  }
+
+  Future<int> searchSongsCount(String query) async {
+    final pattern = '%$query%';
+    final count = songWithArtistView.id.count();
+    final q = selectOnly(songWithArtistView)
+      ..addColumns([count])
+      ..where(
+        songWithArtistView.title.like(pattern) |
+            songWithArtistView.artistName.like(pattern),
+      );
+    return (await q.getSingle()).read(count) ?? 0;
   }
 
   Future<List<Song>> getSongsByAlbum(int albumId) =>
@@ -726,6 +763,15 @@ class SonoDatabase extends _$SonoDatabase {
         firstPath: r.read(firstPathExp) ?? '',
       );
     }).toList();
+  }
+
+  Future<int> searchGenresCount(String query) async {
+    final pattern = '%$query%';
+    final count = songs.genre.count(distinct: true);
+    final q = selectOnly(songs)
+      ..addColumns([count])
+      ..where(songs.genre.isNotNull() & songs.genre.like(pattern));
+    return (await q.getSingle()).read(count) ?? 0;
   }
 
   ///
@@ -980,6 +1026,15 @@ class SonoDatabase extends _$SonoDatabase {
       ]);
     if (limit != null) q.limit(limit);
     return q.get();
+  }
+
+  Future<int> searchPlaylistsCount(String query) async {
+    final pattern = '%$query%';
+    final count = playlists.id.count();
+    final q = selectOnly(playlists)
+      ..addColumns([count])
+      ..where(playlists.name.like(pattern));
+    return (await q.getSingle()).read(count) ?? 0;
   }
 
   /// First N song paths in playlist
