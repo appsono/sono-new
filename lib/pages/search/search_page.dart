@@ -44,6 +44,9 @@ class _SearchPageState extends State<SearchPage> {
   List<AlbumWithArtistViewData> _albums = [];
   Map<int, String> _albumCovers = {}; //albumId > first cover path
 
+  int _songCount = 0;
+  int _albumCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -66,8 +69,10 @@ class _SearchPageState extends State<SearchPage> {
       setState(() {
         _filter = SearchFilter.all;
         _songs = [];
+        _songCount = 0;
         _albums = [];
         _albumCovers = {};
+        _albumCount = 0;
       });
       return;
     }
@@ -76,21 +81,40 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> _runSearch(String q) async {
     final seq = ++_seq;
-    final songs = await widget.db.searchSongs(q, limit: _kSectionCap);
-    final albums = await widget.db.searchAlbums(q, limit: _kSectionCap);
+    final cap = _filter == SearchFilter.all
+        ? _kSectionCap
+        : null; //uncapped in single chip
 
-    //first cover per album
-    final covers = <int, String>{};
-    for (final a in albums) {
-      final s = await widget.db.getSongsByAlbum(a.id);
-      covers[a.id] = s.isNotEmpty ? s.first.path : '';
+    var songs = <SongWithArtistViewData>[];
+    var songCount = 0;
+    if (_showSongs) {
+      songs = await widget.db.searchSongs(q, limit: cap);
+      songCount = cap == null
+          ? songs.length
+          : await widget.db.searchSongsCount(q);
+    }
+
+    var albums = <AlbumWithArtistViewData>[];
+    var albumCovers = <int, String>{};
+    var albumCount = 0;
+    if (_showAlbums) {
+      albums = await widget.db.searchAlbums(q, limit: cap);
+      albumCount = cap == null
+          ? albums.length
+          : await widget.db.searchAlbumsCount(q);
+      for (final a in albums) {
+        final s = await widget.db.getSongsByAlbum(a.id);
+        albumCovers[a.id] = s.isNotEmpty ? s.first.path : '';
+      }
     }
 
     if (!mounted || seq != _seq) return; //stale, drop
     setState(() {
       _songs = songs;
+      _songCount = songCount;
       _albums = albums;
-      _albumCovers = covers;
+      _albumCovers = albumCovers;
+      _albumCount = albumCount;
     });
   }
 
@@ -113,7 +137,8 @@ class _SearchPageState extends State<SearchPage> {
   void _onFilter(SearchFilter f) {
     if (f == _filter) return;
     setState(() => _filter = f);
-    //TODO: results re-scope in place
+    final q = _query.trim();
+    if (q.isNotEmpty) _runSearch(q);
   }
 
   bool get _showSongs =>
@@ -129,8 +154,10 @@ class _SearchPageState extends State<SearchPage> {
       _query = '';
       _filter = SearchFilter.all;
       _songs = [];
+      _songCount = 0;
       _albums = [];
       _albumCovers = {};
+      _albumCount = 0;
     });
     _focus.requestFocus();
   }
@@ -197,8 +224,9 @@ class _SearchPageState extends State<SearchPage> {
             SliverToBoxAdapter(
               child: _SearchSectionHeader(
                 label: l.libraryCardSongs,
-                count: _songs.length,
-                onSeeAll: _songs.length >= _kSectionCap
+                count: _songCount,
+                onSeeAll:
+                    (_filter == SearchFilter.all && _songCount > _kSectionCap)
                     ? () => _push(
                         SongsPage(
                           db: widget.db,
@@ -237,8 +265,9 @@ class _SearchPageState extends State<SearchPage> {
             SliverToBoxAdapter(
               child: _SearchSectionHeader(
                 label: l.libraryCardAlbums,
-                count: _albums.length,
-                onSeeAll: _albums.length >= _kSectionCap
+                count: _albumCount,
+                onSeeAll:
+                    (_filter == SearchFilter.all && _albumCount > _kSectionCap)
                     ? () => _push(
                         AlbumsPage(
                           db: widget.db,
