@@ -13,9 +13,14 @@ import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/changelog_sheet.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/list_row.dart';
+import 'package:sono/widgets/playlist_cover.dart';
+import 'package:sono/widgets/card_stack_cover.dart';
 import 'package:sono/pages/library/library_sheets.dart';
+import 'package:sono/pages/library/playlist_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
 import 'package:sono/pages/library/subpages/artist_detail_page.dart';
+import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
+import 'package:sono/pages/library/subpages/genre_detail_page.dart';
 
 enum SearchFilter { all, songs, albums, artists, playlists, genres }
 
@@ -45,6 +50,10 @@ class _SearchPageState extends State<SearchPage> {
   List<Artist> _artists = [];
   Map<int, String> _artistCovers = {};
   Map<int, int> _artistsCounts = {};
+  List<Playlist> _playlists = [];
+  Map<int, int> _playlistCounts = {};
+  Map<int, List<String>> _playlistCovers = {};
+  List<({String genre, int count, String firstPath})> _genres = [];
 
   String? _cachedQuery; //query loaded results belong to
 
@@ -76,6 +85,10 @@ class _SearchPageState extends State<SearchPage> {
         _artists = [];
         _artistCovers = {};
         _artistsCounts = {};
+        _playlists = [];
+        _playlistCounts = {};
+        _playlistCovers = {};
+        _genres = [];
       });
       return;
     }
@@ -104,6 +117,19 @@ class _SearchPageState extends State<SearchPage> {
       if (s.isNotEmpty) artistCovers[a.id] = s.first.path;
     }
 
+    final playlists = await widget.db.searchPlaylists(q);
+    final playlistCounts = <int, int>{};
+    final playlistCovers = <int, List<String>>{};
+    for (final p in playlists) {
+      playlistCounts[p.id] = await widget.db.getPlaylistSongCount(p.id);
+      playlistCovers[p.id] = await widget.db.getFirstNPlaylistSongPaths(
+        p.id,
+        4,
+      );
+    }
+
+    final genres = await widget.db.searchGenres(q);
+
     if (!mounted || seq != _seq) return; //stale, drop
     setState(() {
       _cachedQuery = q;
@@ -113,6 +139,10 @@ class _SearchPageState extends State<SearchPage> {
       _artists = artists;
       _artistCovers = artistCovers;
       _artistsCounts = artistCounts;
+      _playlists = playlists;
+      _playlistCounts = playlistCounts;
+      _playlistCovers = playlistCovers;
+      _genres = genres;
     });
   }
 
@@ -135,6 +165,14 @@ class _SearchPageState extends State<SearchPage> {
     artist: artist,
   );
 
+  Future<void> _openPlaylistSheet(Playlist playlist) =>
+      PlaylistSheets.openForPlaylist(
+        context: context,
+        db: widget.db,
+        playlist: playlist,
+        onChanged: () {},
+      );
+
   void _push(Widget page) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
 
@@ -155,6 +193,12 @@ class _SearchPageState extends State<SearchPage> {
   bool get _showArtists =>
       _filter == SearchFilter.all || _filter == SearchFilter.artists;
 
+  bool get _showPlaylists =>
+      _filter == SearchFilter.all || _filter == SearchFilter.playlists;
+
+  bool get _showGenres =>
+      _filter == SearchFilter.all || _filter == SearchFilter.genres;
+
   void _clear() {
     _controller.clear();
     _debounce?.cancel();
@@ -168,6 +212,10 @@ class _SearchPageState extends State<SearchPage> {
       _artists = [];
       _artistCovers = {};
       _artistsCounts = {};
+      _playlists = [];
+      _playlistCounts = {};
+      _playlistCovers = {};
+      _genres = [];
     });
     _focus.requestFocus();
   }
@@ -186,6 +234,12 @@ class _SearchPageState extends State<SearchPage> {
     final artistsShown = _filter == SearchFilter.all
         ? _artists.take(_kSectionCap).toList()
         : _artists;
+    final playlistsShown = _filter == SearchFilter.all
+        ? _playlists.take(_kSectionCap).toList()
+        : _playlists;
+    final genresShown = _filter == SearchFilter.all
+        ? _genres.take(_kSectionCap).toList()
+        : _genres;
 
     final settled = _cachedQuery == _query.trim();
     final loading = hasQuery && !settled;
@@ -193,7 +247,9 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // centered full-page states, behind the scroll view
+          //
+          // full page states
+          //
           if (loading)
             const Center(child: CircularProgressIndicator())
           else if (hasQuery && !_hasResults)
@@ -259,7 +315,10 @@ class _SearchPageState extends State<SearchPage> {
                   child: _FilterChips(selected: _filter, onSelected: _onFilter),
                 ),
 
-              // results sections (only when settled with matches)
+              //
+              // results sections
+              // only when settled with matches
+              //
               if (!loading && hasQuery && _hasResults) ...[
                 //songs
                 if (_showSongs && _songs.isNotEmpty) ...[
@@ -387,6 +446,86 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                           onLongPress: () => _openArtistSheet(a),
                           onMore: () => _openArtistSheet(a),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+
+                //playlists
+                if (_showPlaylists && _playlists.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: _SearchSectionHeader(
+                      label: l.libraryCardPlaylists,
+                      count: _playlists.length,
+                      onSeeAll:
+                          (_filter == SearchFilter.all &&
+                              _playlists.length > _kSectionCap)
+                          ? () => _onFilter(SearchFilter.playlists)
+                          : null,
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    sliver: SliverList.separated(
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      itemCount: playlistsShown.length,
+                      itemBuilder: (context, i) {
+                        final p = playlistsShown[i];
+                        return SonoListRow(
+                          coverPath: '',
+                          leading: SonoPlaylistCover(
+                            coverPath: p.coverPath,
+                            songPaths: _playlistCovers[p.id] ?? const [],
+                            size: SonoListRow.coverSize,
+                            bordered: true,
+                          ),
+                          title: p.name,
+                          subtitle: l.commonSongsCount(
+                            _playlistCounts[p.id] ?? 0,
+                          ),
+                          onTap: () => _push(
+                            PlaylistDetailPage(db: widget.db, playlistId: p.id),
+                          ),
+                          onLongPress: () => _openPlaylistSheet(p),
+                          onMore: () => _openPlaylistSheet(p),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+
+                //genres
+                if (_showGenres && _genres.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: _SearchSectionHeader(
+                      label: l.libraryCardGenres,
+                      count: _genres.length,
+                      onSeeAll:
+                          (_filter == SearchFilter.all &&
+                              _genres.length > _kSectionCap)
+                          ? () => _onFilter(SearchFilter.genres)
+                          : null,
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    sliver: SliverList.separated(
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      itemCount: genresShown.length,
+                      itemBuilder: (context, i) {
+                        final g = genresShown[i];
+                        return SonoListRow(
+                          coverPath: '',
+                          leading: SonoCardStackCover(
+                            coverPath: g.firstPath,
+                            size: SonoListRow.coverSize - 10,
+                          ),
+                          title: g.genre,
+                          subtitle: l.commonSongsCount(g.count),
+                          onTap: () => _push(
+                            GenreDetailPage(db: widget.db, genre: g.genre),
+                          ),
                         );
                       },
                     ),
