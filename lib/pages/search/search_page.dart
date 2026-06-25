@@ -46,9 +46,7 @@ class _SearchPageState extends State<SearchPage> {
   Map<int, String> _artistCovers = {};
   Map<int, int> _artistsCounts = {};
 
-  int _songCount = 0;
-  int _albumCount = 0;
-  int _artistCount = 0;
+  String? _cachedQuery; //query loaded results belong to
 
   @override
   void initState() {
@@ -71,15 +69,13 @@ class _SearchPageState extends State<SearchPage> {
     if (q.isEmpty) {
       setState(() {
         _filter = SearchFilter.all;
+        _cachedQuery = null;
         _songs = [];
-        _songCount = 0;
         _albums = [];
         _albumCovers = {};
-        _albumCount = 0;
         _artists = [];
         _artistCovers = {};
         _artistsCounts = {};
-        _artistCount = 0;
       });
       return;
     }
@@ -87,67 +83,42 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _runSearch(String q) async {
+    if (q == _cachedQuery) return;
     final seq = ++_seq;
-    final cap = _filter == SearchFilter.all
-        ? _kSectionCap
-        : null; //uncapped in single chip
 
-    var songs = <SongWithArtistViewData>[];
-    var songCount = 0;
-    if (_showSongs) {
-      songs = await widget.db.searchSongs(q, limit: cap);
-      songCount = cap == null
-          ? songs.length
-          : await widget.db.searchSongsCount(q);
+    final songs = await widget.db.searchSongs(q);
+
+    final albums = await widget.db.searchAlbums(q);
+    final albumCovers = <int, String>{};
+    for (final a in albums) {
+      final s = await widget.db.getSongsByAlbum(a.id);
+      albumCovers[a.id] = s.isNotEmpty ? s.first.path : '';
     }
 
-    var albums = <AlbumWithArtistViewData>[];
-    var albumCovers = <int, String>{};
-    var albumCount = 0;
-    if (_showAlbums) {
-      albums = await widget.db.searchAlbums(q, limit: cap);
-      albumCount = cap == null
-          ? albums.length
-          : await widget.db.searchAlbumsCount(q);
-      for (final a in albums) {
-        final s = await widget.db.getSongsByAlbum(a.id);
-        albumCovers[a.id] = s.isNotEmpty ? s.first.path : '';
-      }
-    }
-
-    var artists = <Artist>[];
-    var artistCovers = <int, String>{};
-    var artistCounts = <int, int>{};
-    var artistCount = 0;
-    if (_showArtists) {
-      artists = await widget.db.searchArtists(q, limit: cap);
-      artistCount = cap == null
-          ? artists.length
-          : await widget.db.searchArtistsCount(q);
-      for (final a in artists) {
-        final s = await widget.db.getSongsByArtist(a.id);
-        artistCounts[a.id] = s.length;
-        if (s.isNotEmpty) artistCovers[a.id] = s.first.path;
-      }
+    final artists = await widget.db.searchArtists(q);
+    final artistCovers = <int, String>{};
+    final artistCounts = <int, int>{};
+    for (final a in artists) {
+      final s = await widget.db.getSongsByArtist(a.id);
+      artistCounts[a.id] = s.length;
+      if (s.isNotEmpty) artistCovers[a.id] = s.first.path;
     }
 
     if (!mounted || seq != _seq) return; //stale, drop
     setState(() {
+      _cachedQuery = q;
       _songs = songs;
-      _songCount = songCount;
       _albums = albums;
       _albumCovers = albumCovers;
-      _albumCount = albumCount;
       _artists = artists;
       _artistCovers = artistCovers;
       _artistsCounts = artistCounts;
-      _artistCount = artistCount;
     });
   }
 
-  void _playSong(int index) {
-    if (_songs.isEmpty) return;
-    final queue = [for (final s in _songs) s.toSong()];
+  void _playSong(int index, List<SongWithArtistViewData> shown) {
+    if (shown.isEmpty) return;
+    final queue = [for (final s in shown) s.toSong()];
     AudioService.instance.play(
       queue,
       index,
@@ -170,9 +141,10 @@ class _SearchPageState extends State<SearchPage> {
   void _onFilter(SearchFilter f) {
     if (f == _filter) return;
     setState(() => _filter = f);
-    final q = _query.trim();
-    if (q.isNotEmpty) _runSearch(q);
   }
+
+  bool get _hasResults =>
+      _songs.isNotEmpty || _albums.isNotEmpty || _artists.isNotEmpty;
 
   bool get _showSongs =>
       _filter == SearchFilter.all || _filter == SearchFilter.songs;
@@ -189,15 +161,13 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       _query = '';
       _filter = SearchFilter.all;
+      _cachedQuery = null;
       _songs = [];
-      _songCount = 0;
       _albums = [];
       _albumCovers = {};
-      _albumCount = 0;
       _artists = [];
       _artistCovers = {};
       _artistsCounts = {};
-      _artistCount = 0;
     });
     _focus.requestFocus();
   }
@@ -207,184 +177,227 @@ class _SearchPageState extends State<SearchPage> {
     final l = AppLocalizations.of(context);
     final hasQuery = _query.trim().isNotEmpty;
 
+    final songsShown = _filter == SearchFilter.all
+        ? _songs.take(_kSectionCap).toList()
+        : _songs;
+    final albumsShown = _filter == SearchFilter.all
+        ? _albums.take(_kSectionCap).toList()
+        : _albums;
+    final artistsShown = _filter == SearchFilter.all
+        ? _artists.take(_kSectionCap).toList()
+        : _artists;
+
+    final settled = _cachedQuery == _query.trim();
+    final loading = hasQuery && !settled;
+
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // ==== header ====
-          StreamBuilder<Profile?>(
-            stream: widget.db.watchProfile(),
-            builder: (context, snap) {
-              final profile = snap.data;
-              return SonoStickyHeader(
-                child: SonoHeader(
-                  pageTitle: l.searchPageTitle,
-                  avatar: profile?.avatar,
-                  onProfileTap: () {
-                    //will open sidebar later
-                  },
-                  actions: [
-                    SonoHeaderAction(
-                      icon: IconsSheet.bellOutlined,
-                      tooltip: l.homeHeaderNewsAndUpdates,
-                      onTap: () => ChangelogSheet.show(context),
-                    ),
-                    SonoHeaderAction(
-                      icon: IconsSheet.settingsOutlined,
-                      tooltip: l.homeHeaderSettings,
-                      onTap: () => widget.onOpenSettings?.call(),
-                    ),
-                  ],
+      body: Stack(
+        children: [
+          // centered full-page states, behind the scroll view
+          if (loading)
+            const Center(child: CircularProgressIndicator())
+          else if (hasQuery && !_hasResults)
+            Center(
+              child: Text(
+                l.searchNoResults,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 14,
+                  color: context.sono.textSecondary,
                 ),
-              );
-            },
-          ),
-
-          //sticky header search, so sticky :P
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: _SearchField(
-                controller: _controller,
-                focusNode: _focus,
-                showClear: hasQuery,
-                onChanged: _onChanged,
-                onClear: _clear,
               ),
             ),
-          ),
 
-          //filter chips
-          if (hasQuery)
-            SliverToBoxAdapter(
-              child: _FilterChips(selected: _filter, onSelected: _onFilter),
-            ),
-
-          //results body
-          if (hasQuery && _showSongs && _songs.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: _SearchSectionHeader(
-                label: l.libraryCardSongs,
-                count: _songCount,
-                onSeeAll:
-                    (_filter == SearchFilter.all && _songCount > _kSectionCap)
-                    ? () => _onFilter(SearchFilter.songs)
-                    : null,
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              sliver: SliverList.separated(
-                separatorBuilder: (_, _) => const SizedBox(height: 8),
-                itemCount: _songs.length,
-                itemBuilder: (context, i) {
-                  final s = _songs[i];
-                  return SonoListRow(
-                    coverPath: s.path,
-                    title: s.title,
-                    subtitle:
-                        s.displayArtist ??
-                        s.artistName ??
-                        l.commonUnknownArtist,
-                    onTap: () => _playSong(i),
-                    onLongPress: () => _openSongSheet(s),
-                    onMore: () => _openSongSheet(s),
+          CustomScrollView(
+            slivers: [
+              // ==== header ====
+              StreamBuilder<Profile?>(
+                stream: widget.db.watchProfile(),
+                builder: (context, snap) {
+                  final profile = snap.data;
+                  return SonoStickyHeader(
+                    child: SonoHeader(
+                      pageTitle: l.searchPageTitle,
+                      avatar: profile?.avatar,
+                      onProfileTap: () {
+                        //will open sidebar later
+                      },
+                      actions: [
+                        SonoHeaderAction(
+                          icon: IconsSheet.bellOutlined,
+                          tooltip: l.homeHeaderNewsAndUpdates,
+                          onTap: () => ChangelogSheet.show(context),
+                        ),
+                        SonoHeaderAction(
+                          icon: IconsSheet.settingsOutlined,
+                          tooltip: l.homeHeaderSettings,
+                          onTap: () => widget.onOpenSettings?.call(),
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),
-            ),
-          ],
 
-          //albums
-          if (hasQuery && _showAlbums && _albums.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: _SearchSectionHeader(
-                label: l.libraryCardAlbums,
-                count: _albumCount,
-                onSeeAll:
-                    (_filter == SearchFilter.all && _albumCount > _kSectionCap)
-                    ? () => _onFilter(SearchFilter.albums)
-                    : null,
-              ),
-            ),
-            if (_filter == SearchFilter.all)
-              //horizontal list
+              //sticky header search, so sticky :P
               SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 196,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: _albums.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 12),
-                    itemBuilder: (context, i) {
-                      final a = _albums[i];
-                      return _AlbumRailCard(
-                        album: a,
-                        coverPath: _albumCovers[a.id] ?? '',
-                        onTap: () => _push(
-                          AlbumDetailPage(db: widget.db, albumId: a.id),
-                        ),
-                      );
-                    },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                  child: _SearchField(
+                    controller: _controller,
+                    focusNode: _focus,
+                    showClear: hasQuery,
+                    onChanged: _onChanged,
+                    onClear: _clear,
                   ),
                 ),
-              )
-            else
-              //vertical list
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                sliver: SliverList.separated(
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemCount: _albums.length,
-                  itemBuilder: (context, i) {
-                    final a = _albums[i];
-                    return SonoListRow(
-                      coverPath: _albumCovers[a.id] ?? '',
-                      title: a.title,
-                      subtitle: a.artistName ?? l.commonUnknownArtist,
-                      onTap: () =>
-                          _push(AlbumDetailPage(db: widget.db, albumId: a.id)),
-                    );
-                  },
+              ),
+
+              //filter chips
+              if (hasQuery && _hasResults)
+                SliverToBoxAdapter(
+                  child: _FilterChips(selected: _filter, onSelected: _onFilter),
                 ),
-              ),
-          ],
 
-          if (hasQuery && _showArtists && _artists.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: _SearchSectionHeader(
-                label: l.libraryCardArtists,
-                count: _artistCount,
-                onSeeAll:
-                    (_filter == SearchFilter.all && _artistCount > _kSectionCap)
-                    ? () => _onFilter(SearchFilter.artists)
-                    : null,
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              sliver: SliverList.separated(
-                separatorBuilder: (_, _) => const SizedBox(height: 8),
-                itemCount: _artists.length,
-                itemBuilder: (context, i) {
-                  final a = _artists[i];
-                  return SonoListRow(
-                    coverPath: _artistCovers[a.id] ?? '',
-                    coverShape: CoverShape.circle,
-                    title: a.name,
-                    subtitle: l.commonSongsCount(_artistsCounts[a.id] ?? 0),
-                    onTap: () =>
-                        _push(ArtistDetailPage(db: widget.db, artistId: a.id)),
-                    onLongPress: () => _openArtistSheet(a),
-                    onMore: () => _openArtistSheet(a),
-                  );
-                },
-              ),
-            ),
-          ],
+              // results sections (only when settled with matches)
+              if (!loading && hasQuery && _hasResults) ...[
+                //songs
+                if (_showSongs && _songs.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: _SearchSectionHeader(
+                      label: l.libraryCardSongs,
+                      count: _songs.length,
+                      onSeeAll:
+                          (_filter == SearchFilter.all &&
+                              _songs.length > _kSectionCap)
+                          ? () => _onFilter(SearchFilter.songs)
+                          : null,
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    sliver: SliverList.separated(
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      itemCount: songsShown.length,
+                      itemBuilder: (context, i) {
+                        final s = songsShown[i];
+                        return SonoListRow(
+                          coverPath: s.path,
+                          title: s.title,
+                          subtitle:
+                              s.displayArtist ??
+                              s.artistName ??
+                              l.commonUnknownArtist,
+                          onTap: () => _playSong(i, songsShown),
+                          onLongPress: () => _openSongSheet(s),
+                          onMore: () => _openSongSheet(s),
+                        );
+                      },
+                    ),
+                  ),
+                ],
 
-          // ==== bottom clearance ====
-          SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+                //albums
+                if (_showAlbums && _albums.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: _SearchSectionHeader(
+                      label: l.libraryCardAlbums,
+                      count: _albums.length,
+                      onSeeAll:
+                          (_filter == SearchFilter.all &&
+                              _albums.length > _kSectionCap)
+                          ? () => _onFilter(SearchFilter.albums)
+                          : null,
+                    ),
+                  ),
+                  if (_filter == SearchFilter.all)
+                    //horizontal list
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 196,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: albumsShown.length,
+                          separatorBuilder: (_, _) => const SizedBox(width: 12),
+                          itemBuilder: (context, i) {
+                            final a = albumsShown[i];
+                            return _AlbumRailCard(
+                              album: a,
+                              coverPath: _albumCovers[a.id] ?? '',
+                              onTap: () => _push(
+                                AlbumDetailPage(db: widget.db, albumId: a.id),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  else
+                    //vertical list
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      sliver: SliverList.separated(
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
+                        itemCount: albumsShown.length,
+                        itemBuilder: (context, i) {
+                          final a = albumsShown[i];
+                          return SonoListRow(
+                            coverPath: _albumCovers[a.id] ?? '',
+                            title: a.title,
+                            subtitle: a.artistName ?? l.commonUnknownArtist,
+                            onTap: () => _push(
+                              AlbumDetailPage(db: widget.db, albumId: a.id),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                ],
+
+                //artists
+                if (_showArtists && _artists.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: _SearchSectionHeader(
+                      label: l.libraryCardArtists,
+                      count: _artists.length,
+                      onSeeAll:
+                          (_filter == SearchFilter.all &&
+                              _artists.length > _kSectionCap)
+                          ? () => _onFilter(SearchFilter.artists)
+                          : null,
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    sliver: SliverList.separated(
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      itemCount: artistsShown.length,
+                      itemBuilder: (context, i) {
+                        final a = artistsShown[i];
+                        return SonoListRow(
+                          coverPath: _artistCovers[a.id] ?? '',
+                          coverShape: CoverShape.circle,
+                          title: a.name,
+                          subtitle: l.commonSongsCount(
+                            _artistsCounts[a.id] ?? 0,
+                          ),
+                          onTap: () => _push(
+                            ArtistDetailPage(db: widget.db, artistId: a.id),
+                          ),
+                          onLongPress: () => _openArtistSheet(a),
+                          onMore: () => _openArtistSheet(a),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ],
+
+              // ==== bottom clearance ====
+              SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
+            ],
+          ),
         ],
       ),
     );

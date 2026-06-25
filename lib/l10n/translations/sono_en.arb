@@ -236,6 +236,10 @@
   "@searchFilterAll": {
     "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
   },
+  "searchNoResults": "No results found :(",
+  "@searchNoResults": {
+    "description": "Shown on the Search tab when a query returns no matching songs, albums, artists, playlists, or genres."
+  },
 
 
   "libraryPageTitle": "Library",
