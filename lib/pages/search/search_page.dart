@@ -15,6 +15,7 @@ import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/list_row.dart';
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 
 enum SearchFilter { all, songs, albums, artists, playlists, genres }
 
@@ -41,9 +42,13 @@ class _SearchPageState extends State<SearchPage> {
   List<SongWithArtistViewData> _songs = [];
   List<AlbumWithArtistViewData> _albums = [];
   Map<int, String> _albumCovers = {}; //albumId > first cover path
+  List<Artist> _artists = [];
+  Map<int, String> _artistCovers = {};
+  Map<int, int> _artistsCounts = {};
 
   int _songCount = 0;
   int _albumCount = 0;
+  int _artistCount = 0;
 
   @override
   void initState() {
@@ -71,6 +76,10 @@ class _SearchPageState extends State<SearchPage> {
         _albums = [];
         _albumCovers = {};
         _albumCount = 0;
+        _artists = [];
+        _artistCovers = {};
+        _artistsCounts = {};
+        _artistCount = 0;
       });
       return;
     }
@@ -106,6 +115,22 @@ class _SearchPageState extends State<SearchPage> {
       }
     }
 
+    var artists = <Artist>[];
+    var artistCovers = <int, String>{};
+    var artistCounts = <int, int>{};
+    var artistCount = 0;
+    if (_showArtists) {
+      artists = await widget.db.searchArtists(q, limit: cap);
+      artistCount = cap == null
+          ? artists.length
+          : await widget.db.searchArtistsCount(q);
+      for (final a in artists) {
+        final s = await widget.db.getSongsByArtist(a.id);
+        artistCounts[a.id] = s.length;
+        if (s.isNotEmpty) artistCovers[a.id] = s.first.path;
+      }
+    }
+
     if (!mounted || seq != _seq) return; //stale, drop
     setState(() {
       _songs = songs;
@@ -113,6 +138,10 @@ class _SearchPageState extends State<SearchPage> {
       _albums = albums;
       _albumCovers = albumCovers;
       _albumCount = albumCount;
+      _artists = artists;
+      _artistCovers = artistCovers;
+      _artistsCounts = artistCounts;
+      _artistCount = artistCount;
     });
   }
 
@@ -128,6 +157,12 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> _openSongSheet(SongWithArtistViewData song) =>
       LibrarySheets.openForSong(context: context, db: widget.db, song: song);
+
+  Future<void> _openArtistSheet(Artist artist) => LibrarySheets.openForArtist(
+    context: context,
+    db: widget.db,
+    artist: artist,
+  );
 
   void _push(Widget page) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
@@ -145,6 +180,9 @@ class _SearchPageState extends State<SearchPage> {
   bool get _showAlbums =>
       _filter == SearchFilter.all || _filter == SearchFilter.albums;
 
+  bool get _showArtists =>
+      _filter == SearchFilter.all || _filter == SearchFilter.artists;
+
   void _clear() {
     _controller.clear();
     _debounce?.cancel();
@@ -156,6 +194,10 @@ class _SearchPageState extends State<SearchPage> {
       _albums = [];
       _albumCovers = {};
       _albumCount = 0;
+      _artists = [];
+      _artistCovers = {};
+      _artistsCounts = {};
+      _artistCount = 0;
     });
     _focus.requestFocus();
   }
@@ -306,6 +348,39 @@ class _SearchPageState extends State<SearchPage> {
                   },
                 ),
               ),
+          ],
+
+          if (hasQuery && _showArtists && _artists.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: _SearchSectionHeader(
+                label: l.libraryCardArtists,
+                count: _artistCount,
+                onSeeAll:
+                    (_filter == SearchFilter.all && _artistCount > _kSectionCap)
+                    ? () => _onFilter(SearchFilter.artists)
+                    : null,
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              sliver: SliverList.separated(
+                separatorBuilder: (_, _) => const SizedBox(height: 8),
+                itemCount: _artists.length,
+                itemBuilder: (context, i) {
+                  final a = _artists[i];
+                  return SonoListRow(
+                    coverPath: _artistCovers[a.id] ?? '',
+                    coverShape: CoverShape.circle,
+                    title: a.name,
+                    subtitle: l.commonSongsCount(_artistsCounts[a.id] ?? 0),
+                    onTap: () =>
+                        _push(ArtistDetailPage(db: widget.db, artistId: a.id)),
+                    onLongPress: () => _openArtistSheet(a),
+                    onMore: () => _openArtistSheet(a),
+                  );
+                },
+              ),
+            ),
           ],
 
           // ==== bottom clearance ====
