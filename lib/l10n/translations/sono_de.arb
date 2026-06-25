@@ -478,5 +478,13 @@
     "searchFilterAll": "Alle",
     "@searchFilterAll": {
         "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
+    },
+    "commonSeeAll": "Alle anzeigen",
+    "@commonSeeAll": {
+        "description": "Affordance in a section header that opens the full list of matches for that category."
+    },
+    "searchNoResults": "Keine Suchergebnisse :(",
+    "@searchNoResults": {
+        "description": "Shown on the Search tab when a query returns no matching songs, albums, artists, playlists, or genres."
     }
 }
