@@ -159,6 +159,9 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> _openSongSheet(SongWithArtistViewData song) =>
       LibrarySheets.openForSong(context: context, db: widget.db, song: song);
 
+  Future<void> _openAlbumSheet(AlbumWithArtistViewData album) =>
+      LibrarySheets.openForAlbum(context: context, db: widget.db, album: album);
+
   Future<void> _openArtistSheet(Artist artist) => LibrarySheets.openForArtist(
     context: context,
     db: widget.db,
@@ -387,6 +390,7 @@ class _SearchPageState extends State<SearchPage> {
                               onTap: () => _push(
                                 AlbumDetailPage(db: widget.db, albumId: a.id),
                               ),
+                              onLongPress: () => _openAlbumSheet(a),
                             );
                           },
                         ),
@@ -408,6 +412,8 @@ class _SearchPageState extends State<SearchPage> {
                             onTap: () => _push(
                               AlbumDetailPage(db: widget.db, albumId: a.id),
                             ),
+                            onLongPress: () => _openAlbumSheet(a),
+                            onMore: () => _openAlbumSheet(a),
                           );
                         },
                       ),
@@ -804,6 +810,7 @@ class _AlbumRailCard extends StatelessWidget {
   final AlbumWithArtistViewData album;
   final String coverPath;
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
 
   static const double _cover = 150;
 
@@ -811,6 +818,7 @@ class _AlbumRailCard extends StatelessWidget {
     required this.album,
     required this.coverPath,
     required this.onTap,
+    required this.onLongPress,
   });
 
   @override
@@ -821,6 +829,7 @@ class _AlbumRailCard extends StatelessWidget {
 
     return BouncyTap(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: SizedBox(
         width: _cover,
         child: Column(
