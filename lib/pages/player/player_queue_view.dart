@@ -371,12 +371,18 @@ class _PlayerQueueViewState extends State<PlayerQueueView> {
           SongSheetAction(
             icon: IconsSheet.albumOutlined,
             label: l.commonGoToAlbum,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) =>
-                    AlbumDetailPage(db: widget.db, albumId: album.id),
-              ),
-            ),
+            onTap: () {
+              final navigator = Navigator.of(context);
+              Future.microtask(() {
+                if (!context.mounted) return;
+                navigator.push(
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        AlbumDetailPage(db: widget.db, albumId: album.id),
+                  ),
+                );
+              });
+            },
           ),
         SongSheetAction(
           icon: IconsSheet.artistOutlined,
