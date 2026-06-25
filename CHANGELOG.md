@@ -750,14 +750,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.8.0+6...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.8.1+7...HEAD
+[0.8.1+7]: https://github.com/appsono/sono-new/compare/v0.8.0+6...v0.8.1+7
+[0.8.0+6]: https://github.com/appsono/sono-new/compare/v0.7.2+5...v0.8.0+6
 [0.7.2+5]: https://github.com/appsono/sono-new/compare/v0.7.1+5...v0.7.2+5
 [0.7.1+5]: https://github.com/appsono/sono-new/compare/v0.7.0+5...v0.7.1+5
 [0.7.0+5]: https://github.com/appsono/sono-new/compare/v0.6.3+4...v0.7.0+5
 [0.6.3+4]: https://github.com/appsono/sono-new/compare/v0.6.2+4...v0.6.3+4
 [0.6.2+4]: https://github.com/appsono/sono-new/compare/v0.6.1+4...v0.6.2+4
 [0.6.1+4]: https://github.com/appsono/sono-new/compare/v0.6.0+4...v0.6.1+4
-[0.6.0+4]: https://github.com/appsono/sono-new/compare/v0.5.3+3...v0.6.0+3
+[0.6.0+4]: https://github.com/appsono/sono-new/compare/v0.5.3+3...v0.6.0+4
 [0.5.3+3]: https://github.com/appsono/sono-new/compare/v0.5.2+2...v0.5.3+3
 [0.5.2+3]: https://github.com/appsono/sono-new/compare/v0.5.1+2...v0.5.2+3
 [0.5.1+3]: https://github.com/appsono/sono-new/compare/v0.5.0+2...v0.5.1+3
