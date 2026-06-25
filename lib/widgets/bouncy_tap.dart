@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 // on release. Same feel as SonoMediaCard mweh
 class BouncyTap extends StatefulWidget {
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
   final Widget child;
   final double pressScale;
 
   const BouncyTap({
     required this.onTap,
+    this.onLongPress,
     required this.child,
     this.pressScale = 0.92, // ignore: unused_element_parameter
     super.key,
@@ -27,6 +29,7 @@ class _BouncyTapState extends State<BouncyTap> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
+      onLongPress: widget.onLongPress,
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) async {
         await Future.delayed(const Duration(milliseconds: 100));
