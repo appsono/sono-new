@@ -466,5 +466,37 @@
     "playlistEditTitle": "Muuda esitusloendit",
     "@playlistEditTitle": {
         "description": "Title of the edit playlist modal (name + description)."
+    },
+    "searchPageTitle": "Otsi",
+    "@searchPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "searchFieldHint": "Otsi midagi…",
+    "@searchFieldHint": {
+        "description": "Placeholder text inside the search field on the Search tab. Hints at the local-library categories that can be searched."
+    },
+    "searchFilterAll": "Kõik",
+    "@searchFilterAll": {
+        "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
+    },
+    "commonSeeAll": "Vaata kõiki",
+    "@commonSeeAll": {
+        "description": "Affordance in a section header that opens the full list of matches for that category."
+    },
+    "searchNoResults": "Tulemusi ei leidu :(",
+    "@searchNoResults": {
+        "description": "Shown on the Search tab when a query returns no matching songs, albums, artists, playlists, or genres."
+    },
+    "searchRecentTitle": "Hiljutised otsingud",
+    "@searchRecentTitle": {
+        "description": "Header above the list of the user's recent search terms, shown on the Search tab when the field is empty."
+    },
+    "searchRecentClear": "Eemalda",
+    "@searchRecentClear": {
+        "description": "Action that removes all saved recent searches at once."
+    },
+    "searchRecentRemove": "Eemalda",
+    "@searchRecentRemove": {
+        "description": "Accessibility label for the button that removes a single recent search term from the list."
     }
 }
