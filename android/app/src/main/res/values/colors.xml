@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#ff4893</color>
+  <color name="ic_launcher_background">#ff4893</color>
+  <color name="sono_widget_placeholder_bg">#ff2d2d2d</color>
+  <color name="sono_widget_placeholder_fg">#ffe0e0e0</color>
 </resources>
