@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing new yet.
+
+## [0.9.0+8] - 2026-06-26
+
 ### Added
 
+- Added a search page for songs, albums, artists, playlists, and genres, with recent searches and browse-by-genre when empty
 - Added new clock icon
+
+### Changed
+
+- Settings now opens from the header gear instead of the navigation bar
 
 ### Fixed
 
@@ -18,6 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed crashes and other platform issues on desktop by updating sono_query to 0.8.3
 - Fixed text overflowing on home action buttons, library cards, and lyrics progress bar when system font scaling is increased
 - Fixed "Go to album" button in queue view doing nothing
+
+### Translation
+
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (96%) and Belarusian (be_TARASK) (96%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (99%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (97%)
 
 ## [0.8.1+7] - 2026-06-15
 
@@ -754,7 +770,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.8.1+7...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.9.0+8...HEAD
+[0.9.0+8]: https://github.com/appsono/sono-new/compare/v0.8.1+7...v0.9.0+8
 [0.8.1+7]: https://github.com/appsono/sono-new/compare/v0.8.0+6...v0.8.1+7
 [0.8.0+6]: https://github.com/appsono/sono-new/compare/v0.7.2+5...v0.8.0+6
 [0.7.2+5]: https://github.com/appsono/sono-new/compare/v0.7.1+5...v0.7.2+5
@@ -806,4 +823,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.2.1+1]: https://github.com/appsono/sono-new/compare/v0.2.0+2...v0.2.1+1
 [0.2.0+2]: https://github.com/appsono/sono-new/compare/v0.1.9+3...v0.2.0+2
 [0.1.9+3]: https://github.com/appsono/sono-new/releases/tag/v0.1.9+3
-
