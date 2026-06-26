@@ -47,6 +47,10 @@ abstract final class IconsSheet {
       'assets/app/icons/outlined/close_outlined.svg';
   static const String closeFilled = 'assets/app/icons/filled/close_filled.svg';
 
+  static const String clockOutlined =
+      'assets/app/icons/outlined/clock_outlined.svg';
+  static const String clockFilled = 'assets/app/icons/filled/clock_filled.svg';
+
   static const String crossfadeOutlined =
       'assets/app/icons/outlined/crossfade_outlined.svg';
   static const String crossfadeFilled =
