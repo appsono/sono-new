@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
@@ -26,6 +27,8 @@ enum SearchFilter { all, songs, albums, artists, playlists, genres }
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 const int _kSectionCap = 4;
+const String _kRecentKey = 'search.recent';
+const int _kRecentMax = 4;
 
 class SearchPage extends StatefulWidget {
   final SonoDatabase db;
@@ -40,6 +43,7 @@ class _SearchPageState extends State<SearchPage> {
   final _controller = TextEditingController();
   final _focus = FocusNode();
   String _query = '';
+  List<String> _recent = [];
   SearchFilter _filter = SearchFilter.all;
 
   Timer? _debounce;
@@ -60,6 +64,17 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    _loadRecent();
+  }
+
+  Future<void> _loadRecent() async {
+    final raw = await widget.db.getSetting(_kRecentKey);
+    if (raw == null || raw.isEmpty) return;
+    try {
+      final list = (jsonDecode(raw) as List).cast<String>();
+      if (!mounted) return;
+      setState(() => _recent = list);
+    } catch (_) {} //corrupt value
   }
 
   @override
@@ -144,6 +159,40 @@ class _SearchPageState extends State<SearchPage> {
       _playlistCovers = playlistCovers;
       _genres = genres;
     });
+  }
+
+  void _onSubmitted(String value) => _addRecent(value);
+
+  void _useRecent(String term) {
+    _controller.text = term;
+    _onChanged(term); //runs debounced search
+    _addRecent(term); //bump to top
+  }
+
+  Future<void> _persistRecent() =>
+      widget.db.setSetting(_kRecentKey, jsonEncode(_recent));
+
+  void _addRecent(String term) {
+    final t = term.trim();
+    if (t.isEmpty) return;
+    setState(() {
+      _recent.removeWhere((e) => e.toLowerCase() == t.toLowerCase());
+      _recent.insert(0, t);
+      if (_recent.length > _kRecentMax) {
+        _recent = _recent.sublist(0, _kRecentMax);
+      }
+    });
+    _persistRecent();
+  }
+
+  void _removeRecent(String term) {
+    setState(() => _recent.remove(term));
+    _persistRecent();
+  }
+
+  void _clearRecent() {
+    setState(() => _recent = []);
+    widget.db.removeSetting(_kRecentKey);
   }
 
   void _playSong(int index, List<SongWithArtistViewData> shown) {
@@ -307,6 +356,7 @@ class _SearchPageState extends State<SearchPage> {
                     focusNode: _focus,
                     showClear: hasQuery,
                     onChanged: _onChanged,
+                    onSubmitted: _onSubmitted,
                     onClear: _clear,
                   ),
                 ),
@@ -539,11 +589,126 @@ class _SearchPageState extends State<SearchPage> {
                 ],
               ],
 
+              if (!hasQuery && _recent.isNotEmpty) ...[
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          l.searchRecentTitle,
+                          style: TextStyle(
+                            fontFamily: SonoFonts.heading,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: context.sono.textPrimary,
+                          ),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: _clearRecent,
+                          behavior: HitTestBehavior.opaque,
+                          child: Text(
+                            l.searchRecentClear,
+                            style: TextStyle(
+                              fontFamily: SonoFonts.primary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: context.sono.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverList.separated(
+                    separatorBuilder: (_, _) => const SizedBox(height: 2),
+                    itemCount: _recent.length,
+                    itemBuilder: (context, i) {
+                      final term = _recent[i];
+                      return _RecentRow(
+                        term: term,
+                        onTap: () => _useRecent(term),
+                        onRemove: () => _removeRecent(term),
+                      );
+                    },
+                  ),
+                ),
+              ],
+
               // ==== bottom clearance ====
               SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// ==== Recent row ====
+class _RecentRow extends StatelessWidget {
+  final String term;
+  final VoidCallback onTap;
+  final VoidCallback onRemove;
+
+  const _RecentRow({
+    required this.term,
+    required this.onTap,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            IconsSheet.svg(
+              IconsSheet.searchOutlined,
+              size: 18,
+              color: c.textTertiary,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                term,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 15,
+                  color: c.textPrimary,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: onRemove,
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Semantics(
+                  label: l.searchRecentRemove,
+                  button: true,
+                  child: IconsSheet.svg(
+                    IconsSheet.closeOutlined,
+                    size: 14,
+                    color: c.textTertiary,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -555,6 +720,7 @@ class _SearchField extends StatelessWidget {
   final FocusNode focusNode;
   final bool showClear;
   final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmitted;
   final VoidCallback onClear;
 
   const _SearchField({
@@ -562,6 +728,7 @@ class _SearchField extends StatelessWidget {
     required this.focusNode,
     required this.showClear,
     required this.onChanged,
+    required this.onSubmitted,
     required this.onClear,
   });
 
@@ -598,6 +765,7 @@ class _SearchField extends StatelessWidget {
                   controller: controller,
                   focusNode: focusNode,
                   onChanged: onChanged,
+                  onSubmitted: onSubmitted,
                   textInputAction: TextInputAction.search,
                   cursorColor: c.primary,
                   style: TextStyle(
