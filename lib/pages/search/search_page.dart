@@ -589,6 +589,10 @@ class _SearchPageState extends State<SearchPage> {
                 ],
               ],
 
+              //
+              // "idle" page
+              // (when no search)
+              //
               if (!hasQuery && _recent.isNotEmpty) ...[
                 SliverToBoxAdapter(
                   child: Padding(
@@ -674,7 +678,7 @@ class _RecentRow extends StatelessWidget {
         child: Row(
           children: [
             IconsSheet.svg(
-              IconsSheet.searchOutlined,
+              IconsSheet.clockOutlined,
               size: 18,
               color: c.textTertiary,
             ),
