@@ -1,39 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="12dp"
-    android:background="@color/sono_widget_placeholder_bg">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/widget_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sono"
-        android:textColor="@color/sono_widget_placeholder_fg"
-        android:textSize="16sp"
-        android:maxLines="1"
-        android:ellipsize="end" />
+    <!-- full-bleed cover -->
+    <ImageView
+        android:id="@+id/widget_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:contentDescription="@null" />
 
-    <TextView
-        android:id="@+id/widget_artist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/sono_widget_placeholder_fg"
-        android:textSize="13sp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:alpha="0.7" />
+    <!-- fallback -->
+    <FrameLayout
+        android:id="@+id/widget_fallback"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ic_launcher_background"
+        android:visibility="gone">
 
-    <TextView
-        android:id="@+id/widget_state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/sono_widget_placeholder_fg"
-        android:textSize="11sp"
-        android:layout_marginTop="4dp"
-        android:alpha="0.5" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
-</LinearLayout>
+</FrameLayout>
