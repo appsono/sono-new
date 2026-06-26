@@ -22,6 +22,7 @@ import 'package:sono/pages/library/subpages/album_detail_page.dart';
 import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 import 'package:sono/pages/library/subpages/genre_detail_page.dart';
+import 'package:sono/pages/library/subpages/genres_page.dart';
 
 enum SearchFilter { all, songs, albums, artists, playlists, genres }
 
@@ -29,6 +30,7 @@ const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 const int _kSectionCap = 4;
 const String _kRecentKey = 'search.recent';
 const int _kRecentMax = 4;
+const int _kGenreBrowseCap = 8;
 
 class SearchPage extends StatefulWidget {
   final SonoDatabase db;
@@ -44,6 +46,7 @@ class _SearchPageState extends State<SearchPage> {
   final _focus = FocusNode();
   String _query = '';
   List<String> _recent = [];
+  List<({String genre, int count, String firstPath})> _allGenres = [];
   SearchFilter _filter = SearchFilter.all;
 
   Timer? _debounce;
@@ -65,6 +68,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     _loadRecent();
+    _loadGenres();
   }
 
   Future<void> _loadRecent() async {
@@ -75,6 +79,13 @@ class _SearchPageState extends State<SearchPage> {
       if (!mounted) return;
       setState(() => _recent = list);
     } catch (_) {} //corrupt value
+  }
+
+  Future<void> _loadGenres() async {
+    final genres = await widget.db.getAllGenresWithCounts();
+    genres.sort((a, b) => b.count.compareTo(a.count));
+    if (!mounted) return;
+    setState(() => _allGenres = genres);
   }
 
   @override
@@ -231,6 +242,22 @@ class _SearchPageState extends State<SearchPage> {
   void _onFilter(SearchFilter f) {
     if (f == _filter) return;
     setState(() => _filter = f);
+  }
+
+  Color _accentForIndex(BuildContext context, int i) {
+    final c = context.sono;
+    final accents = [
+      c.accentBlue,
+      c.accentPurple,
+      c.accentOrange,
+      c.accentTeal,
+      c.accentRed,
+      c.accentGreen,
+      c.accentAmber,
+      c.accentLightBlue,
+      //c.accentBrown, no.
+    ];
+    return accents[i % accents.length];
   }
 
   bool get _hasResults =>
@@ -643,6 +670,70 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
 
+              if (!hasQuery && _allGenres.isNotEmpty) ...[
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          l.searchBrowseGenres,
+                          style: TextStyle(
+                            fontFamily: SonoFonts.heading,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: context.sono.textPrimary,
+                          ),
+                        ),
+                        const Spacer(),
+                        if (_allGenres.length > _kGenreBrowseCap)
+                          GestureDetector(
+                            onTap: () => _push(GenresPage(db: widget.db)),
+                            behavior: HitTestBehavior.opaque,
+                            child: Text(
+                              l.commonSeeAll,
+                              style: TextStyle(
+                                fontFamily: SonoFonts.primary,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: context.sono.primary,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  sliver: Builder(
+                    builder: (context) {
+                      final shown = _allGenres.take(_kGenreBrowseCap).toList();
+                      return SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 2.4,
+                            ),
+                        delegate: SliverChildBuilderDelegate((context, i) {
+                          final g = shown[i];
+                          return _GenreTile(
+                            genre: g.genre,
+                            count: g.count,
+                            accent: _accentForIndex(context, i),
+                            onTap: () => _push(
+                              GenreDetailPage(db: widget.db, genre: g.genre),
+                            ),
+                          );
+                        }, childCount: shown.length),
+                      );
+                    },
+                  ),
+                ),
+              ],
+
               // ==== bottom clearance ====
               SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
             ],
@@ -709,6 +800,79 @@ class _RecentRow extends StatelessWidget {
                     color: c.textTertiary,
                   ),
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// ==== Genre tiles stuff ====
+class _GenreTile extends StatelessWidget {
+  final String genre;
+  final int count;
+  final Color accent;
+  final VoidCallback onTap;
+
+  const _GenreTile({
+    required this.genre,
+    required this.count,
+    required this.accent,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+
+    return BouncyTap(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: c.bgContainer,
+          borderRadius: BorderRadius.circular(SonoSizes.borderRadius),
+          border: Border.all(color: c.borderLight10),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Row(
+          children: [
+            IconsSheet.svg(
+              IconsSheet.genreFilled,
+              size: SonoSizes.iconLg,
+              color: accent,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    genre,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: SonoFonts.heading,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: c.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    l.commonSongsCount(count),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: SonoFonts.primary,
+                      fontSize: 12,
+                      color: c.textSecondary,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
