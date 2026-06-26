@@ -18,7 +18,7 @@
 - ~~Save/restore last playing queue and position on app restart~~ FIXED
 - ~~Save/restore shuffle and repeat mode~~ **FIXED**
 - ~~Clean up orphaned artists/albums after song deletion~~ **FIXED**
-- Add sorting options for songs list (title, artist, date added)
+- ~~Add sorting options for songs list (title, artist, date added)~~ **ADDED**
 - ~~Proper database migrations (version tracking, rollback strategy)~~ **FIXED**
 
 ## UI
@@ -55,7 +55,7 @@
 
 ### Phase 6
 
-- Create Search Page
+- ~~Create Search Page~~ **DONE**
 
 <br>
 
