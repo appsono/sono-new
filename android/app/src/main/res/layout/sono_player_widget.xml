@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="12dp"
     android:background="@color/sono_widget_placeholder_bg">
 
     <TextView
+        android:id="@+id/widget_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="Sono"
         android:textColor="@color/sono_widget_placeholder_fg"
-        android:textSize="18sp" />
+        android:textSize="16sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/widget_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/sono_widget_placeholder_fg"
+        android:textSize="13sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:alpha="0.7" />
+
+    <TextView
+        android:id="@+id/widget_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/sono_widget_placeholder_fg"
+        android:textSize="11sp"
+        android:layout_marginTop="4dp"
+        android:alpha="0.5" />
+
+</LinearLayout>
