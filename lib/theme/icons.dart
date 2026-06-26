@@ -127,6 +127,11 @@ abstract final class IconsSheet {
   static const String moreOptionsVeticalFilled =
       'assets/app/icons/filled/more_options_vertical_filled.svg';
 
+  static const String nowPlayingOutlined =
+      'assets/app/icons/outlined/now_playing_outlined.svg';
+  static const String nowPlayingFilled =
+      'assets/app/icons/filled/now_playing_filled.svg';
+
   static const String pauseOutlined =
       'assets/app/icons/outlined/pause_outlined.svg';
   static const String pauseFilled = 'assets/app/icons/filled/pause_filled.svg';
