@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added new clock icon
+
 ### Fixed
 
 - Fixed a startup crash on Windows caused by a flutter_rust_bridge version mismatch (pinned to 2.11.1)
@@ -802,3 +806,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.2.1+1]: https://github.com/appsono/sono-new/compare/v0.2.0+2...v0.2.1+1
 [0.2.0+2]: https://github.com/appsono/sono-new/compare/v0.1.9+3...v0.2.0+2
 [0.1.9+3]: https://github.com/appsono/sono-new/releases/tag/v0.1.9+3
+
