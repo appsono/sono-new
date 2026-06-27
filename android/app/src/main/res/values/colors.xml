@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="ic_launcher_background">#ff4893</color>
-  <color name="sono_widget_placeholder_bg">#ff2d2d2d</color>
-  <color name="sono_widget_placeholder_fg">#ffe0e0e0</color>
+    <color name="widget_now_playing_tint">#d9ffffff</color>
+    <color name="widget_overlay_icon">#f2ffffff</color>
+    <color name="widget_overlay_scrim">#59000000</color>
 </resources>

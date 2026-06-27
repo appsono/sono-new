@@ -29,4 +29,38 @@
             android:contentDescription="@null" />
     </FrameLayout>
 
+    <ViewFlipper
+        android:id="@+id/widget_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inAnimation="@anim/widget_overlay_fade_in"
+        android:outAnimation="@anim/widget_overlay_fade_out">
+
+        <!-- playing -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="14dp"
+                android:src="@drawable/ic_widget_now_playing"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <!-- paused -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/widget_overlay_scrim">
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_widget_play"
+                android:contentDescription="@null" />
+        </FrameLayout>
+    </ViewFlipper>
+
 </FrameLayout>

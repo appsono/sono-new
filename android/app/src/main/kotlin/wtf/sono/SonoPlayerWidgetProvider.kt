@@ -18,6 +18,9 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
     // (thumbs are already small)
     private val maxCoverPx = 512
 
+    private val statePrefs = "sono_widget_state"
+    private val keyLastPlaying = "last_playing"
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -29,6 +32,19 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
             coverPath
                 ?.takeIf { it.isNotEmpty() }
                 ?.let { decodeBounded(it, maxCoverPx) }
+
+        val title = widgetData.getString("player_title", null)
+        val playing = widgetData.getBoolean("player_playing", false)
+        val hasSong = !title.isNullOrEmpty()
+
+        val state = context.getSharedPreferences(statePrefs, Context.MODE_PRIVATE)
+        val hadLast = state.contains(keyLastPlaying)
+        val lastPlaying = state.getBoolean(keyLastPlaying, playing)
+
+        // playing -> child 0, paused -> child 1
+        val targetIndex = if (playing) 0 else 1
+        val fromIndex = if (lastPlaying) 0 else 1
+        val animate = hasSong && hadLast && (playing != lastPlaying)
 
         appWidgetIds.forEach { id ->
             val views = RemoteViews(context.packageName, R.layout.sono_player_widget)
@@ -42,8 +58,23 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
                 views.setViewVisibility(R.id.widget_fallback, View.VISIBLE)
             }
 
+            if (hasSong) {
+                views.setViewVisibility(R.id.widget_overlay, View.VISIBLE)
+                if (animate) {
+                    views.setDisplayedChild(R.id.widget_overlay, fromIndex)
+                    views.showNext(R.id.widget_overlay)
+                } else {
+                    views.setDisplayedChild(R.id.widget_overlay, targetIndex)
+                }
+            } else {
+                views.setViewVisibility(R.id.widget_overlay, View.GONE)
+            }
+
             appWidgetManager.updateAppWidget(id, views)
         }
+
+        // remember what just showed
+        state.edit().putBoolean(keyLastPlaying, playing).apply()
     }
 
     // decode with inSampleSize to prevent large bitmap binder overflow
