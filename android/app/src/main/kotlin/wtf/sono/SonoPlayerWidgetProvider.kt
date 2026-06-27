@@ -1,10 +1,14 @@
 package wtf.sono
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.view.KeyEvent
 import android.view.View
 import android.widget.RemoteViews
 import es.antonborri.home_widget.HomeWidgetProvider
@@ -14,10 +18,7 @@ import kotlin.math.max
 // ==== player home screen widget ====
 // full-bleed album cover, with fallback when no cover
 class SonoPlayerWidgetProvider : HomeWidgetProvider() {
-    // cap longest side for RemoteViews binder limit
-    // (thumbs are already small)
     private val maxCoverPx = 512
-
     private val statePrefs = "sono_widget_state"
     private val keyLastPlaying = "last_playing"
 
@@ -46,6 +47,11 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
         val fromIndex = if (lastPlaying) 0 else 1
         val animate = hasSong && hadLast && (playing != lastPlaying)
 
+        // media buttons aimed at audio_service session
+        val prevPi = mediaButton(context, KeyEvent.KEYCODE_MEDIA_PREVIOUS, 1)
+        val playPausePi = mediaButton(context, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE, 2)
+        val nextPi = mediaButton(context, KeyEvent.KEYCODE_MEDIA_NEXT, 3)
+
         appWidgetIds.forEach { id ->
             val views = RemoteViews(context.packageName, R.layout.sono_player_widget)
 
@@ -70,11 +76,37 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
                 views.setViewVisibility(R.id.widget_overlay, View.GONE)
             }
 
+            views.setOnClickPendingIntent(R.id.widget_zone_prev, prevPi)
+            views.setOnClickPendingIntent(R.id.widget_zone_playpause, playPausePi)
+            views.setOnClickPendingIntent(R.id.widget_zone_next, nextPi)
+
             appWidgetManager.updateAppWidget(id, views)
         }
 
         // remember what just showed
         state.edit().putBoolean(keyLastPlaying, playing).apply()
+    }
+
+    private fun mediaButton(
+        context: Context,
+        keyCode: Int,
+        requestCode: Int,
+    ): PendingIntent {
+        val intent =
+            Intent(Intent.ACTION_MEDIA_BUTTON).apply {
+                component =
+                    ComponentName(
+                        context.packageName,
+                        "com.ryanheise.audioservice.MediaButtonReceiver",
+                    )
+                putExtra(Intent.EXTRA_KEY_EVENT, KeyEvent(KeyEvent.ACTION_DOWN, keyCode))
+            }
+        return PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
     }
 
     // decode with inSampleSize to prevent large bitmap binder overflow
