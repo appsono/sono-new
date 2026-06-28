@@ -21,9 +21,6 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
     private val maxCoverPx = 512
     private val statePrefs = "sono_widget_state"
     private val keyLastPlaying = "last_playing"
-    private val keyLastSong = "last_song"
-    private val keyLastCoverChild = "last_cover_child"
-    private val keyLastCoverPresent = "last_cover_present"
 
     override fun onUpdate(
         context: Context,
@@ -31,11 +28,23 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
         appWidgetIds: IntArray,
         widgetData: SharedPreferences,
     ) {
-        val coverPath = widgetData.getString("player_cover", null)
-        val bitmap =
-            coverPath
+        val newCoverPath = widgetData.getString("player_cover", null)
+        val outCoverPath = widgetData.getString("player_cover_out", null)
+        val skipDir = widgetData.getString("player_skip_dir", "none") ?: "none"
+
+        val newBitmap =
+            newCoverPath
                 ?.takeIf { it.isNotEmpty() }
                 ?.let { decodeBounded(it, maxCoverPx) }
+
+        val sliding = (skipDir == "fwd" || skipDir == "bwd") && newBitmap != null
+        val outBitmap =
+            if (sliding) {
+                outCoverPath?.takeIf { it.isNotEmpty() }?.let { decodeBounded(it, maxCoverPx) }
+            } else {
+                null
+            }
+        val canSlide = sliding && outBitmap != null
 
         val title = widgetData.getString("player_title", null)
         val playing = widgetData.getBoolean("player_playing", false)
@@ -48,18 +57,7 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
         // playing -> child 0, paused -> child 1
         val targetIndex = if (playing) 0 else 1
         val fromIndex = if (lastPlaying) 0 else 1
-        val animate = hasSong && hadLast && (playing != lastPlaying)
-
-        val song = widgetData.getString("player_song", null) ?: ""
-        val hasCover = bitmap != null
-        val hadLastSong = state.contains(keyLastSong)
-        val lastSong = state.getString(keyLastSong, "")
-        val lastCoverChild = state.getInt(keyLastCoverChild, 0)
-        val lastCoverPresent = state.getBoolean(keyLastCoverPresent, false)
-
-        val songChanged = hadLastSong && song != lastSong
-        val coverSlide = songChanged && hasCover && lastCoverPresent
-        val newCoverChild = if (hasCover && coverSlide) 1 - lastCoverChild else lastCoverChild
+        val animateOverlay = hasSong && hadLast && (playing != lastPlaying)
 
         // media buttons aimed at audio_service session
         val prevPi = mediaButton(context, KeyEvent.KEYCODE_MEDIA_PREVIOUS, 1)
@@ -69,27 +67,48 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
         appWidgetIds.forEach { id ->
             val views = RemoteViews(context.packageName, R.layout.sono_player_widget)
 
-            if (bitmap != null) {
-                views.setViewVisibility(R.id.widget_cover, View.VISIBLE)
+            if (newBitmap != null) {
                 views.setViewVisibility(R.id.widget_fallback, View.GONE)
+                if (canSlide) {
+                    val isFwd = skipDir == "fwd"
+                    val activeFlipper =
+                        if (isFwd) R.id.widget_cover_fwd else R.id.widget_cover_bwd
+                    val activeA = if (isFwd) R.id.widget_cover_fwd_a else R.id.widget_cover_bwd_a
+                    val activeB = if (isFwd) R.id.widget_cover_fwd_b else R.id.widget_cover_bwd_b
+                    val otherFlipper =
+                        if (isFwd) R.id.widget_cover_bwd else R.id.widget_cover_fwd
+                    val otherA = if (isFwd) R.id.widget_cover_bwd_a else R.id.widget_cover_fwd_a
+                    val otherB = if (isFwd) R.id.widget_cover_bwd_b else R.id.widget_cover_fwd_b
 
-                val targetChildId = if (newCoverChild == 0) R.id.widget_cover_a else R.id.widget_cover_b
-                views.setImageViewBitmap(targetChildId, bitmap)
+                    // old in child 0, new in child 1, animate 0 -> 1
+                    views.setImageViewBitmap(activeA, outBitmap)
+                    views.setImageViewBitmap(activeB, newBitmap)
+                    views.setDisplayedChild(activeFlipper, 0)
+                    views.showNext(activeFlipper)
+                    views.setViewVisibility(activeFlipper, View.VISIBLE)
 
-                if (coverSlide) {
-                    views.setDisplayedChild(R.id.widget_cover, lastCoverChild)
-                    views.showNext(R.id.widget_cover)
+                    // clear and hide other flipper so it holds no stale bitmaps
+                    views.setImageViewBitmap(otherA, null)
+                    views.setImageViewBitmap(otherB, null)
+                    views.setViewVisibility(otherFlipper, View.GONE)
                 } else {
-                    views.setDisplayedChild(R.id.widget_cover, newCoverChild)
+                    // rest on forward flipper hide backward
+                    views.setImageViewBitmap(R.id.widget_cover_fwd_a, newBitmap)
+                    views.setDisplayedChild(R.id.widget_cover_fwd, 0)
+                    views.setViewVisibility(R.id.widget_cover_fwd, View.VISIBLE)
+                    views.setImageViewBitmap(R.id.widget_cover_bwd_a, null)
+                    views.setImageViewBitmap(R.id.widget_cover_bwd_b, null)
+                    views.setViewVisibility(R.id.widget_cover_bwd, View.GONE)
                 }
             } else {
-                views.setViewVisibility(R.id.widget_cover, View.GONE)
+                views.setViewVisibility(R.id.widget_cover_fwd, View.GONE)
+                views.setViewVisibility(R.id.widget_cover_bwd, View.GONE)
                 views.setViewVisibility(R.id.widget_fallback, View.VISIBLE)
             }
 
             if (hasSong) {
                 views.setViewVisibility(R.id.widget_overlay, View.VISIBLE)
-                if (animate) {
+                if (animateOverlay) {
                     views.setDisplayedChild(R.id.widget_overlay, fromIndex)
                     views.showNext(R.id.widget_overlay)
                 } else {
@@ -106,14 +125,7 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
             appWidgetManager.updateAppWidget(id, views)
         }
 
-        // remember what just showed
-        state
-            .edit()
-            .putBoolean(keyLastPlaying, playing)
-            .putString(keyLastSong, song)
-            .putInt(keyLastCoverChild, newCoverChild)
-            .putBoolean(keyLastCoverPresent, hasCover)
-            .apply()
+        state.edit().putBoolean(keyLastPlaying, playing).apply()
     }
 
     private fun mediaButton(
@@ -148,7 +160,7 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
         return try {
             val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
             BitmapFactory.decodeFile(path, bounds)
-            var longest = max(bounds.outWidth, bounds.outHeight)
+            val longest = max(bounds.outWidth, bounds.outHeight)
             var sample = 1
             while (longest / sample > maxPx) sample *= 2
             BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = sample })

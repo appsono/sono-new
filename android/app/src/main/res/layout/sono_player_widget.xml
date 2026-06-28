@@ -28,6 +28,56 @@
             android:contentDescription="@null" />
     </ViewFlipper>
 
+    <!--
+        forward cover flipper
+        new cover enters from right
+    -->
+    <ViewFlipper
+        android:id="@+id/widget_cover_fwd"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inAnimation="@anim/widget_cover_slide_in"
+        android:outAnimation="@anim/widget_cover_slide_out"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/widget_cover_fwd_a"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null" />
+        <ImageView
+            android:id="@+id/widget_cover_fwd_b"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null" />
+    </ViewFlipper>
+
+    <!--
+      backward cover flipper
+      new cover enters from left
+    -->
+    <ViewFlipper
+        android:id="@+id/widget_cover_bwd"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inAnimation="@anim/widget_cover_slide_in_back"
+        android:outAnimation="@anim/widget_cover_slide_out_back"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/widget_cover_bwd_a"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null" />
+        <ImageView
+            android:id="@+id/widget_cover_bwd_b"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null" />
+    </ViewFlipper>
+
     <!-- fallback -->
     <FrameLayout
         android:id="@+id/widget_fallback"

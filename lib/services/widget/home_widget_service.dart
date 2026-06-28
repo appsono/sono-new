@@ -27,6 +27,8 @@ class HomeWidgetService {
   static const String keyArtist = 'player_artist';
   static const String keyPlaying = 'player_playing';
   static const String keyCover = 'player_cover';
+  static const String keyCoverOut = 'player_cover_out';
+  static const String keySkipDir = 'player_skip_dir';
 
   final List<StreamSubscription> _subs = [];
   bool _started = false;
@@ -40,6 +42,7 @@ class HomeWidgetService {
   int _coverCounter = 0;
   File? _coverFile;
   String? _coverSongPath;
+  int? _lastIndex;
 
   void init() {
     if (!Platform.isAndroid) return;
@@ -64,20 +67,42 @@ class HomeWidgetService {
     final audio = AudioService.instance;
     final Song? song = audio.currentSong;
 
+    // capture outgoing state before cover reloads
+    final songChanged = song?.path != _coverSongPath;
+    final String outgoingCover = _coverFile?.path ?? '';
+
+    String dir = 'none';
+    final idx = audio.currentIndex;
+    final len = audio.queue.length;
+    if (songChanged && _lastIndex != null && len > 1) {
+      final last = _lastIndex!;
+      final fwd = idx == last + 1 || (last == len - 1 && idx == 0);
+      final bwd = idx == last - 1 || (last == 0 && idx == len - 1);
+      if (fwd) {
+        dir = 'fwd';
+      } else if (bwd) {
+        dir = 'bwd';
+      }
+    }
+    _lastIndex = idx;
+
+    if (songChanged) {
+      await _loadCover(song);
+    }
+
     final String title = song?.title ?? '';
     final String artist = audio.currentArtistName ?? song?.displayArtist ?? '';
     final bool playing = audio.isPlaying;
 
-    //reload cover only when song changed
-    if (song?.path != _coverSongPath) {
-      await _loadCover(song);
-    }
-
-    await HomeWidget.saveWidgetData<String>(keySong, song?.path ?? '');
     await HomeWidget.saveWidgetData<String>(keyTitle, title);
     await HomeWidget.saveWidgetData<String>(keyArtist, artist);
     await HomeWidget.saveWidgetData<bool>(keyPlaying, playing);
     await HomeWidget.saveWidgetData<String>(keyCover, _coverFile?.path ?? '');
+    await HomeWidget.saveWidgetData<String>(
+      keyCoverOut,
+      dir == 'none' ? '' : outgoingCover,
+    );
+    await HomeWidget.saveWidgetData<String>(keySkipDir, dir);
 
     await HomeWidget.updateWidget(qualifiedAndroidName: _androidProvider);
   }
