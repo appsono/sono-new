@@ -21,6 +21,9 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
     private val maxCoverPx = 512
     private val statePrefs = "sono_widget_state"
     private val keyLastPlaying = "last_playing"
+    private val keyLastSong = "last_song"
+    private val keyLastCoverChild = "last_cover_child"
+    private val keyLastCoverPresent = "last_cover_present"
 
     override fun onUpdate(
         context: Context,
@@ -47,6 +50,17 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
         val fromIndex = if (lastPlaying) 0 else 1
         val animate = hasSong && hadLast && (playing != lastPlaying)
 
+        val song = widgetData.getString("player_song", null) ?: ""
+        val hasCover = bitmap != null
+        val hadLastSong = state.contains(keyLastSong)
+        val lastSong = state.getString(keyLastSong, "")
+        val lastCoverChild = state.getInt(keyLastCoverChild, 0)
+        val lastCoverPresent = state.getBoolean(keyLastCoverPresent, false)
+
+        val songChanged = hadLastSong && song != lastSong
+        val coverSlide = songChanged && hasCover && lastCoverPresent
+        val newCoverChild = if (hasCover && coverSlide) 1 - lastCoverChild else lastCoverChild
+
         // media buttons aimed at audio_service session
         val prevPi = mediaButton(context, KeyEvent.KEYCODE_MEDIA_PREVIOUS, 1)
         val playPausePi = mediaButton(context, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE, 2)
@@ -56,9 +70,18 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.sono_player_widget)
 
             if (bitmap != null) {
-                views.setImageViewBitmap(R.id.widget_cover, bitmap)
                 views.setViewVisibility(R.id.widget_cover, View.VISIBLE)
                 views.setViewVisibility(R.id.widget_fallback, View.GONE)
+
+                val targetChildId = if (newCoverChild == 0) R.id.widget_cover_a else R.id.widget_cover_b
+                views.setImageViewBitmap(targetChildId, bitmap)
+
+                if (coverSlide) {
+                    views.setDisplayedChild(R.id.widget_cover, lastCoverChild)
+                    views.showNext(R.id.widget_cover)
+                } else {
+                    views.setDisplayedChild(R.id.widget_cover, newCoverChild)
+                }
             } else {
                 views.setViewVisibility(R.id.widget_cover, View.GONE)
                 views.setViewVisibility(R.id.widget_fallback, View.VISIBLE)
@@ -84,7 +107,13 @@ class SonoPlayerWidgetProvider : HomeWidgetProvider() {
         }
 
         // remember what just showed
-        state.edit().putBoolean(keyLastPlaying, playing).apply()
+        state
+            .edit()
+            .putBoolean(keyLastPlaying, playing)
+            .putString(keyLastSong, song)
+            .putInt(keyLastCoverChild, newCoverChild)
+            .putBoolean(keyLastCoverPresent, hasCover)
+            .apply()
     }
 
     private fun mediaButton(

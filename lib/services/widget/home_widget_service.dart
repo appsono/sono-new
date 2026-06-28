@@ -22,6 +22,7 @@ class HomeWidgetService {
   static const String _androidProvider = 'wtf.sono.SonoPlayerWidgetProvider';
 
   /// ==== widget data keys ====
+  static const String keySong = 'player_song';
   static const String keyTitle = 'player_title';
   static const String keyArtist = 'player_artist';
   static const String keyPlaying = 'player_playing';
@@ -72,6 +73,7 @@ class HomeWidgetService {
       await _loadCover(song);
     }
 
+    await HomeWidget.saveWidgetData<String>(keySong, song?.path ?? '');
     await HomeWidget.saveWidgetData<String>(keyTitle, title);
     await HomeWidget.saveWidgetData<String>(keyArtist, artist);
     await HomeWidget.saveWidgetData<bool>(keyPlaying, playing);

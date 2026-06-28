@@ -3,14 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- full-bleed cover -->
-    <ImageView
+    <!--
+      full-bleed cover
+      two-child flipper for skip slide
+    -->
+    <ViewFlipper
         android:id="@+id/widget_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:visibility="gone"
-        android:contentDescription="@null" />
+        android:inAnimation="@anim/widget_cover_slide_in"
+        android:outAnimation="@anim/widget_cover_slide_out"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/widget_cover_a"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null" />
+        <ImageView
+            android:id="@+id/widget_cover_b"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null" />
+    </ViewFlipper>
 
     <!-- fallback -->
     <FrameLayout
