@@ -1,0 +1,31 @@
+name: Bump license year
+
+on:
+  schedule:
+    - cron: "0 3 2 1 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Bump copyright year
+        run: sh scripts/bump_license_year.sh
+
+      - name: Open PR if anything changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: bump license year"
+          title: "chore: bump license year"
+          body: |
+            Automated update of the copyright year range in stamped source files.
+
+            Triggered by yearly schedule. Comment-only change.
+          branch: chore/license-year
+          delete-branch: true
