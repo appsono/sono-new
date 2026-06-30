@@ -15,7 +15,8 @@ set -l header (string join \n \
 '// This program is distributed in the hope that it will be useful,' \
 '// but WITHOUT ANY WARRANTY; without even the implied warranty of' \
 '// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the' \
-'// GNU General Public License for more details.')
+'// GNU General Public License for more details.' \
+'')
 
 set -l count 0
 for f in (find lib -type f -name '*.dart')
@@ -30,7 +31,7 @@ for f in (find lib -type f -name '*.dart')
     end
 
     set -l tmp (mktemp)
-    printf '%s\n\n' $header >$tmp
+    printf '%s\n' $header >$tmp
     cat $f >>$tmp
     mv $tmp $f
     set count (math $count + 1)
