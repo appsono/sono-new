@@ -478,5 +478,29 @@
     "searchFilterAll": "Усё",
     "@searchFilterAll": {
         "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
+    },
+    "commonSeeAll": "Праглядзець усе",
+    "@commonSeeAll": {
+        "description": "Affordance in a section header that opens the full list of matches for that category."
+    },
+    "searchNoResults": "Нічога ня знойдзена :(",
+    "@searchNoResults": {
+        "description": "Shown on the Search tab when a query returns no matching songs, albums, artists, playlists, or genres."
+    },
+    "searchRecentTitle": "Надовешнія запыты",
+    "@searchRecentTitle": {
+        "description": "Header above the list of the user's recent search terms, shown on the Search tab when the field is empty."
+    },
+    "searchRecentClear": "Ачысьціць",
+    "@searchRecentClear": {
+        "description": "Action that removes all saved recent searches at once."
+    },
+    "searchRecentRemove": "Прыбраць",
+    "@searchRecentRemove": {
+        "description": "Accessibility label for the button that removes a single recent search term from the list."
+    },
+    "searchBrowseGenres": "Агляд жанраў",
+    "@searchBrowseGenres": {
+        "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
     }
 }
