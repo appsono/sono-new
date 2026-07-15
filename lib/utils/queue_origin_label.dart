@@ -25,7 +25,6 @@ String queueOriginLabel({
   return switch (origin.source) {
     QueueSource.allSongs => l.playerOriginAllSongs,
     QueueSource.recentlyAdded => l.homeSectionRecentlyAdded,
-    //TODO: adds keys for these when the feature ships
     QueueSource.liked => l.playerOriginAllSongs,
     QueueSource.search => l.playerOriginAllSongs,
     //these should always carry a data label, just in-case fallback:
