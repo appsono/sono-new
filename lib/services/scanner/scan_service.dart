@@ -70,8 +70,12 @@ class ScanService {
     sq.ScanProgressCallback? onProgress,
     sq.ScanErrorCallback? onError,
   }) async {
+    List<({String title, String artist, DateTime favoritedAt})> favSnapshot =
+        const [];
     if (force) {
+      favSnapshot = await db.snapshotFavoritedAlbums();
       await db.detachAllSongsFromAlbums();
+      await db.clearAllAlbums();
     }
     final existingPaths = await db.getAllSongPaths();
     final fingerprints = force
@@ -148,11 +152,10 @@ class ScanService {
       pendingChunk.clear();
     }
 
-    if (!force) {
-      await db.removeDeletedSongs(allPaths);
-    }
+    if (!force) await db.removeDeletedSongs(allPaths);
     await db.removeOrphanedAlbums();
     await db.removeOrphanedArtists();
+    if (force) await db.restoreFavoritedAlbums(favSnapshot);
   }
 
   Future<(Map<String, int>, Map<(String, int), int>, Map<String, int>)>

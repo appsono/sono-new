@@ -522,6 +522,46 @@ class SonoDatabase extends _$SonoDatabase {
     await customStatement('UPDATE songs SET album_id = NULL');
   }
 
+  Future<void> clearAllAlbums() => delete(albums).go();
+
+  /// Snapshot favorited album by title + artist name before a destructive rescan
+  Future<List<({String title, String artist, DateTime favoritedAt})>>
+  snapshotFavoritedAlbums() async {
+    final rows = await (select(albums).join([
+      innerJoin(artists, artists.id.equalsExp(albums.artistId)),
+    ])..where(albums.favoritedAt.isNotNull())).get();
+    return [
+      for (final r in rows)
+        (
+          title: r.readTable(albums).title,
+          artist: r.readTable(artists).name,
+          favoritedAt: r.readTable(albums).favoritedAt!,
+        ),
+    ];
+  }
+
+  /// Re-apply favorites snapshot after rebuild (missing albums are skipped)
+  Future<void> restoreFavoritedAlbums(
+    List<({String title, String artist, DateTime favoritedAt})> snapshot,
+  ) async {
+    if (snapshot.isEmpty) return;
+    final artistIds = await getArtistIdMap();
+    final albumIds = await getAlbumIdMap();
+    await batch((b) {
+      for (final f in snapshot) {
+        final aid = artistIds[f.artist];
+        if (aid == null) continue;
+        final albumId = albumIds[(f.title, aid)];
+        if (albumId == null) continue;
+        b.update(
+          albums,
+          AlbumsCompanion(favoritedAt: Value(f.favoritedAt)),
+          where: (a) => a.id.equals(albumId),
+        );
+      }
+    });
+  }
+
   ///
   ///
   /// ==== Songs ====
