@@ -522,8 +522,6 @@ class SonoDatabase extends _$SonoDatabase {
     await customStatement('UPDATE songs SET album_id = NULL');
   }
 
-  Future<void> clearAllAlbums() => delete(albums).go();
-
   ///
   ///
   /// ==== Songs ====

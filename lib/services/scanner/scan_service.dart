@@ -72,7 +72,6 @@ class ScanService {
   }) async {
     if (force) {
       await db.detachAllSongsFromAlbums();
-      await db.clearAllAlbums();
     }
     final existingPaths = await db.getAllSongPaths();
     final fingerprints = force
