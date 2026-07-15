@@ -30,7 +30,6 @@ import 'package:sono/pages/app_shell.dart';
 import 'package:sono/services/audio/audio_handler.dart';
 import 'package:sono/services/audio/audio_service.dart' as sono;
 import 'package:sono/services/audio/audio_effects_service.dart';
-import 'package:sono/services/widget/home_widget_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/smtc_service.dart';
 import 'package:sono/services/update_service.dart';
@@ -72,8 +71,6 @@ void main() async {
   sono.AudioService.instance.attachDb(db);
   AudioEffectsService.instance.attachDb(db);
   LocaleService.instance.attachDb(db);
-
-  HomeWidgetService.instance.init();
 
   //only locale and theme gate first frame
   await Future.wait([
