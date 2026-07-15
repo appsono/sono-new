@@ -50,6 +50,7 @@
           pkgs.mimalloc
           pkgs.libsecret #flutter_secure_storage_linux
           pkgs.pcre2
+          pkgs.fish
         ];
 
         ANDROID_HOME = "${androidSdk}/libexec/android-sdk";
@@ -60,6 +61,12 @@
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ pkgs.mpv-unwrapped pkgs.sqlite ]}:$LD_LIBRARY_PATH"
           flutter config --no-analytics >/dev/null 2>&1 || true
+
+          if [[ $- == *i* && -z ''${IN_LOQUI_SHELL:-} ]]; then
+            export IN_LOQUI_SHELL=1
+            export SHELL="$(command -v fish)"
+            exec fish
+          fi
         '';
       };
     };
