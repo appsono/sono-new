@@ -15,6 +15,7 @@
 - ~~Add to Queue / Play next isn't wired up with UI~~ **FIXED**
 - ~~Skip to previous doesn't work when on the last song in the queue with loop all
   enabled~~ **FIXED**
+- ~~Favorite Albums removed after forced rescan / sorting mode changed~~ **FIXED**
 
 ## UI
 
