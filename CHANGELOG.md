@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added new now playing icon
+- Added "Play next" and "Add to queue" actions to song, album, artist sheets. Queueing onto an empty queue now starts playback
+
+### Fixed
+
+- Fixed favorite albums being lost after a forced rescan or a change of grouping mode
+- Fixed the album sheet's shuffle button doing nothing
+- Fixed "Skip to previous" playing the same song with loop-all enabled
+
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
 
 ## [0.9.0+8] - 2026-06-26
 
