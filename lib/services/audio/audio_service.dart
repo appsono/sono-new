@@ -628,6 +628,10 @@ class AudioService {
 
   /// Add song to end of queue
   Future<void> addToQueue(Song song) async {
+    if (_queue.isEmpty || _currentIndex < 0) {
+      await play([song], 0);
+      return;
+    }
     _queueDirty = true;
     final newIndex = _queue.length;
     _queue.add(song);
@@ -648,8 +652,43 @@ class AudioService {
     await _rebuildLookahead();
   }
 
+  /// Append multiple songs to end of queue in a signle pass
+  Future<void> addAllToQueue(List<Song> songs, {QueueOrigin? origin}) async {
+    if (songs.isEmpty) return;
+    if (_queue.isEmpty || _currentIndex < 0) {
+      await play(songs, 0, origin: origin);
+      return;
+    }
+    _queueDirty = true;
+    final firstNewIndex = _queue.length;
+    _queue.addAll(songs);
+
+    if (shuffle) {
+      final rng = Random();
+      for (var i = 0; i < songs.length; i++) {
+        final rawIndex = firstNewIndex + i;
+        if (_shuffleOrder.isEmpty) {
+          _shuffleOrder.add(rawIndex);
+          continue;
+        }
+        final base = _currentIndex.clamp(-1, _shuffleOrder.length - 1);
+        final range = _shuffleOrder.length - base; //always >= 1
+        _shuffleOrder.insert(base + 1 + rng.nextInt(range), rawIndex);
+      }
+    }
+
+    _invalidateQueueCache();
+    _scheduleStateSave();
+    _queueController.add(effectiveQueue);
+    await _rebuildLookahead();
+  }
+
   /// Insert song as next up
   Future<void> playNext(Song song) async {
+    if (_queue.isEmpty || _currentIndex < 0) {
+      await play([song], 0);
+      return;
+    }
     _queueDirty = true;
     if (_shuffle && _shuffleOrder.isNotEmpty) {
       //insert into raw queue at end, but put it in shuffle order

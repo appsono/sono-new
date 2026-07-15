@@ -202,6 +202,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
         final defaults = SongSheet.defaultsForSong(
           l: l,
           liked: _liked,
+          includeQueueActions: false,
           onLike: _toggleLiked,
           onGoToArtist: song.artistId == null
               ? null
@@ -220,7 +221,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
                 },
           sharePath: song.path,
         );
-        return [defaults.first, ...defaults.skip(2)];
+        return defaults;
       },
     );
   }

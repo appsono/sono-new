@@ -287,6 +287,7 @@ class SongSheet extends StatefulWidget {
   static List<SongSheetAction> defaultsForSong({
     required AppLocalizations l,
     bool liked = false,
+    bool includeQueueActions = true,
     VoidCallback? onLike,
     VoidCallback? onPlayNext,
     VoidCallback? onAddToQueue,
@@ -301,11 +302,18 @@ class SongSheet extends StatefulWidget {
       dismissOnTap: false,
       onTap: onLike ?? () {},
     ),
-    SongSheetAction(
-      icon: IconsSheet.queueOutlined,
-      label: l.commonPlayNext,
-      onTap: onPlayNext ?? () {},
-    ),
+    if (includeQueueActions) ...[
+      SongSheetAction(
+        icon: IconsSheet.queueOutlined,
+        label: l.commonPlayNext,
+        onTap: onPlayNext ?? () {},
+      ),
+      SongSheetAction(
+        icon: IconsSheet.queueFilled,
+        label: l.commonAddToQueue,
+        onTap: onAddToQueue ?? () {},
+      ),
+    ],
     SongSheetAction(
       icon: IconsSheet.addToPlaylistOutlined,
       label: l.commonAddToPlaylist,
@@ -348,7 +356,7 @@ class SongSheet extends StatefulWidget {
     SongSheetAction(
       icon: IconsSheet.shuffleOutlined,
       label: l.commonShuffle,
-      onTap: onAddToQueue ?? () {},
+      onTap: onShuffle ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.queueOutlined,
@@ -376,11 +384,17 @@ class SongSheet extends StatefulWidget {
     VoidCallback? onPlay,
     VoidCallback? onShuffle,
     VoidCallback? onLike,
+    VoidCallback? onAddToQueue,
   }) => [
     SongSheetAction(
       icon: IconsSheet.playFilled,
       label: l.commonPlayAll,
       onTap: onPlay ?? () {},
+    ),
+    SongSheetAction(
+      icon: IconsSheet.queueFilled,
+      label: l.commonAddToQueue,
+      onTap: onAddToQueue ?? () {},
     ),
     SongSheetAction(
       icon: IconsSheet.shuffleOutlined,

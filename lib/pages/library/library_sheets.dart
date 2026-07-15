@@ -113,6 +113,8 @@ class LibrarySheets {
             liked = !liked;
             await db.setSongLiked(song.id, liked);
           },
+          onPlayNext: () => AudioService.instance.playNext(song.toSong()),
+          onAddToQueue: () => AudioService.instance.addToQueue(song.toSong()),
           onAddToPlaylist: () {
             Future.microtask(() {
               if (!context.mounted) return;
@@ -240,6 +242,14 @@ class LibrarySheets {
         l: l,
         onPlay: play,
         onShuffle: shuffle,
+        onAddToQueue: () => AudioService.instance.addAllToQueue(
+          songs,
+          origin: QueueOrigin(
+            source: QueueSource.album,
+            label: album.title,
+            refId: album.id,
+          ),
+        ),
         liked: favorited,
         onLike: () async {
           favorited = !favorited;
@@ -327,6 +337,14 @@ class LibrarySheets {
         l: l,
         onPlay: playAll,
         onShuffle: shuffleAll,
+        onAddToQueue: () => AudioService.instance.addAllToQueue(
+          songs,
+          origin: QueueOrigin(
+            source: QueueSource.artist,
+            label: artist.name,
+            refId: artist.id,
+          ),
+        ),
         liked: favorited,
         onLike: () async {
           favorited = !favorited;
