@@ -855,6 +855,8 @@ class AudioService {
         }
       }
 
+      _targetIndex = _currentIndex;
+
       _scheduleStateSave();
       _persistPosition(Duration.zero);
 
