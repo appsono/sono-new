@@ -524,39 +524,48 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<void> clearAllAlbums() => delete(albums).go();
 
-  /// Snapshot favorited album by title + artist name before a destructive rescan
-  Future<List<({String title, String artist, DateTime favoritedAt})>>
+  /// Snapshot favorites by a representative song path (stable across grouping mode)
+  Future<List<({String songPath, DateTime favoritedAt})>>
   snapshotFavoritedAlbums() async {
-    final rows = await (select(albums).join([
-      innerJoin(artists, artists.id.equalsExp(albums.artistId)),
-    ])..where(albums.favoritedAt.isNotNull())).get();
-    return [
-      for (final r in rows)
-        (
-          title: r.readTable(albums).title,
-          artist: r.readTable(artists).name,
-          favoritedAt: r.readTable(albums).favoritedAt!,
-        ),
-    ];
+    final favs = await (select(
+      albums,
+    )..where((a) => a.favoritedAt.isNotNull())).get();
+    final out = <({String songPath, DateTime favoritedAt})>[];
+    for (final a in favs) {
+      final song =
+          await (select(songs)
+                ..where((s) => s.albumId.equals(a.id))
+                ..orderBy([(s) => OrderingTerm(expression: s.path)])
+                ..limit(1))
+              .getSingleOrNull();
+      if (song != null) {
+        out.add((songPath: song.path, favoritedAt: a.favoritedAt!));
+      }
+    }
+    return out;
   }
 
-  /// Re-apply favorites snapshot after rebuild (missing albums are skipped)
+  /// Re-favorite album each snapshot song now belongs to (missing albums are skipped)
   Future<void> restoreFavoritedAlbums(
-    List<({String title, String artist, DateTime favoritedAt})> snapshot,
+    List<({String songPath, DateTime favoritedAt})> snapshot,
   ) async {
     if (snapshot.isEmpty) return;
-    final artistIds = await getArtistIdMap();
-    final albumIds = await getAlbumIdMap();
+    final updates = <({int albumId, DateTime favoritedAt})>[];
+    for (final f in snapshot) {
+      final song = await (select(
+        songs,
+      )..where((s) => s.path.equals(f.songPath))).getSingleOrNull();
+      final albumId = song?.albumId;
+      if (albumId == null) continue;
+      updates.add((albumId: albumId, favoritedAt: f.favoritedAt));
+    }
+    if (updates.isEmpty) return;
     await batch((b) {
-      for (final f in snapshot) {
-        final aid = artistIds[f.artist];
-        if (aid == null) continue;
-        final albumId = albumIds[(f.title, aid)];
-        if (albumId == null) continue;
+      for (final u in updates) {
         b.update(
           albums,
-          AlbumsCompanion(favoritedAt: Value(f.favoritedAt)),
-          where: (a) => a.id.equals(albumId),
+          AlbumsCompanion(favoritedAt: Value(u.favoritedAt)),
+          where: (a) => a.id.equals(u.albumId),
         );
       }
     });

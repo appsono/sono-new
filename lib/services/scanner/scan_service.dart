@@ -70,8 +70,7 @@ class ScanService {
     sq.ScanProgressCallback? onProgress,
     sq.ScanErrorCallback? onError,
   }) async {
-    List<({String title, String artist, DateTime favoritedAt})> favSnapshot =
-        const [];
+    List<({String songPath, DateTime favoritedAt})> favSnapshot = const [];
     if (force) {
       favSnapshot = await db.snapshotFavoritedAlbums();
       await db.detachAllSongsFromAlbums();
