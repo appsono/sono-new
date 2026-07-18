@@ -1119,6 +1119,26 @@ class SonoDatabase extends _$SonoDatabase {
             .getSingle();
     return row.read(countExp) ?? 0;
   }
+
+  /// Playlist memebers with song path plus position and addedAt, for backup
+  Future<List<({String path, int position, DateTime addedAt})>>
+  getPlaylistSongDetails(int playlistId) async {
+    final rows =
+        await (select(playlistSongs).join([
+                innerJoin(songs, songs.id.equalsExp(playlistSongs.songId)),
+              ])
+              ..where(playlistSongs.playlistId.equals(playlistId))
+              ..orderBy([OrderingTerm.asc(playlistSongs.position)]))
+            .get();
+    return [
+      for (final r in rows)
+        (
+          path: r.readTable(songs).path,
+          position: r.readTable(playlistSongs).position,
+          addedAt: r.readTable(playlistSongs).addedAt,
+        ),
+    ];
+  }
 }
 
 extension AlbumDisplayTitle on Album {
