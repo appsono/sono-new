@@ -84,7 +84,7 @@ class BackupExportService {
           'likedAt': s.likedAt?.toUtc().toIso8601String(),
           'mtimeMs': s.mtimeMs,
           'fileSize': s.fileSize,
-          'durartion': s.duration,
+          'duration': s.duration,
         },
     ];
   }
