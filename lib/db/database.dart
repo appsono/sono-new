@@ -1120,7 +1120,7 @@ class SonoDatabase extends _$SonoDatabase {
     return row.read(countExp) ?? 0;
   }
 
-  /// Playlist memebers with song path plus position and addedAt, for backup
+  /// Playlist members with song path plus position and addedAt, for backup
   Future<List<({String path, int position, DateTime addedAt})>>
   getPlaylistSongDetails(int playlistId) async {
     final rows =
