@@ -26,7 +26,7 @@ class BackupExportService {
   static const formatVersion = 1;
 
   /// Setting prefixes safe to carry across devices
-  static const _exportableSettingPrefixes = ['scan.', 'fx.'];
+  static const _exportableSettingPrefixes = ['scan.', 'fx.', '.library'];
   static const _exportableSettingKeys = {'app.locale'};
 
   Future<String> exportToJson() async {
