@@ -22,6 +22,8 @@ Nothing yet.
 - Fixed the album sheet's shuffle button doing nothing
 - Fixed "Skip to previous" playing the same song with loop-all enabled
 
+### Translation
+
 - [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
 - [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
 - [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
