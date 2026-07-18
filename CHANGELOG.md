@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+- Added backup export, saving liked, favorites, playlists, profile, and settings in one json file
 
 ## [0.9.1+9] - 2026-07-18
 

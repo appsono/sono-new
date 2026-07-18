@@ -11,6 +11,7 @@
 // GNU General Public License for more details.
 
 import 'dart:io';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -19,6 +20,7 @@ import 'package:sono/services/scanner/scan_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:sono/l10n/localizations.dart';
 import 'package:sono/services/locale_service.dart';
@@ -26,6 +28,7 @@ import 'package:sono/services/locale_service.dart';
 import 'package:sono/services/scanner/scan_settings.dart';
 import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
+import 'package:sono/services/backup/backup_export_service.dart';
 import 'package:sono/services/update_service.dart';
 
 import 'package:sono/main.dart';
@@ -78,6 +81,8 @@ class _SettingsPageState extends State<SettingsPage> {
   //update state
   bool _updateChecking = false;
 
+  bool _backupExporting = false;
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +111,54 @@ class _SettingsPageState extends State<SettingsPage> {
         _config = c;
         _grouping = grouping;
       });
+    }
+  }
+
+  Future<void> _exportBackup() async {
+    setState(() => _backupExporting = true);
+    try {
+      final json = await BackupExportService(widget.db).exportToJson();
+      final now = DateTime.now();
+      String p(int v) => v.toString().padLeft(2, '0');
+      final stamp =
+          '${now.year}-${now.month}-${p(now.day)}_${p(now.hour)}-${p(now.minute)}';
+      final name = 'sono-backup-$stamp.json';
+      String? saved;
+
+      if (Platform.isAndroid) {
+        saved = await FilePicker.saveFile(
+          fileName: name,
+          bytes: utf8.encode(json),
+        );
+      } else {
+        //ios docs dir is exposed in files app via UIFileSharingEnabled
+        final base = await getApplicationDocumentsDirectory();
+        final dir = Directory(
+          '${base.path}/${Platform.isIOS ? 'backups' : 'sono-backups'}',
+        );
+        await dir.create(recursive: true);
+        final file = File('${dir.path}/$name');
+        await file.writeAsString(json);
+        saved = file.path;
+      }
+
+      if (!mounted || saved == null) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('saved to $saved'),
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('backup export failed: $e'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _backupExporting = false);
     }
   }
 
@@ -648,6 +701,27 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                     ],
+
+                    const SizedBox(height: 24),
+
+                    // ==== backup ====
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('export backup'),
+                      subtitle: const Text(
+                        'likes, favorites, playlists, profile and settings.',
+                      ),
+                      trailing: _backupExporting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : TextButton(
+                              onPressed: _exportBackup,
+                              child: const Text('Export'),
+                            ),
+                    ),
 
                     const SizedBox(height: 32),
                     const Divider(),
