@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.9.1+9] - 2026-07-18
+
 ### Added
 
 - Added new now playing icon
