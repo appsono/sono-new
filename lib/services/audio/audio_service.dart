@@ -249,7 +249,7 @@ class AudioService {
 
     _player = Player(
       configuration: const PlayerConfiguration(
-        pitch: true, //enable pitch control
+        pitch: false,
         title: 'Sono',
         bufferSize: 8 * 1024 * 1024, //8mb instead of 32mb default
         libass: false, //disables subtitle renderer

@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+### Fixed
+
+- Fixed EQ and bass boost having no effect on some songs, and being dropped when speed or pitch changed
 
 ## [0.10.0+10] - 2026-07-19
 

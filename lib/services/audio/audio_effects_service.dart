@@ -93,12 +93,8 @@ class AudioEffectsService {
       } catch (_) {}
     }
 
-    //apply loaded speed/pitch
-    await _player?.setRate(_speed);
-    await _player?.setPitch(_pitch);
-    if (_eqEnabled || _bassBoost.abs() > 0.1) {
-      await _applyFilterChain();
-    }
+    //one apply covers speed, pitch, eq and bass
+    await _applySpeedAndPitch();
   }
 
   /// Persist current settings to database
@@ -179,22 +175,32 @@ class AudioEffectsService {
 
   Future<void> setSpeed(double rate) async {
     _speed = rate.clamp(0.25, 4.0);
-    await _player?.setRate(_speed);
-    //disable pitch correction at normal speed
-    final platform = _player?.platform;
-    if (platform is NativePlayer) {
-      await platform.setProperty(
-        'audio-pitch-correction',
-        _speed == 1.0 ? 'no' : 'yes',
-      );
-    }
+    await _applySpeedAndPitch();
     _saveSettings();
   }
 
   Future<void> setPitch(double pitch) async {
     _pitch = pitch.clamp(0.25, 4.0);
-    await _player?.setPitch(_pitch);
+    await _applySpeedAndPitch();
     _saveSettings();
+  }
+
+  /// Avoids setRate/setPitch, which replace af chain
+  /// Speed shifts pitch. scaletempo restores tempo
+  Future<void> _applySpeedAndPitch() async {
+    final platform = _player?.platform;
+    if (platform is NativePlayer) {
+      final neutral = _speed == 1.0 && _pitch == 1.0;
+      await platform.setProperty(
+        'audio-pitch-correction',
+        neutral ? 'yes' : 'no',
+      );
+      await platform.setProperty(
+        'speed',
+        neutral ? '1.0' : _pitch.toStringAsFixed(8),
+      );
+    }
+    await _applyFilterChain();
   }
 
   /// ===========================
@@ -245,11 +251,18 @@ class AudioEffectsService {
   }
 
   /// Build full af string
+  /// > service owns entire af property
+  /// => media_kit overwrites af wholesale in setRate/setPitch
   String _buildAfString() {
     const dbEps = 0.05;
     final eqContributes = _eqEnabled && _eqGains.any((g) => g.abs() >= dbEps);
     final bassContributes = _bassBoost.abs() >= dbEps;
-    if (!eqContributes && !bassContributes) return ''; //return null if disabled
+    final chain = <String>[];
+
+    //tempo and pitch, mirrors what media_kit would have written
+    if (_speed != 1.0 || _pitch != 1.0) {
+      chain.add('scaletempo:scale=${(_speed / _pitch).toStringAsFixed(8)}');
+    }
 
     final filters = <String>[];
 
@@ -269,8 +282,14 @@ class AudioEffectsService {
       );
     }
 
-    if (filters.isEmpty) return '';
-    return 'lavfi=[${filters.join(',')}]';
+    if (filters.isNotEmpty) {
+      //android libmpv lacks aresample
+      //using format filters for EQ-compatible samples
+      chain.add('format=format=floatp');
+      chain.add('lavfi=[${filters.join(',')}]');
+    }
+
+    return chain.join(',');
   }
 
   /// Resets all effects to default
@@ -282,9 +301,7 @@ class AudioEffectsService {
     for (int i = 0; i < bandCount; i++) {
       _eqGains[i] = 0.0;
     }
-    await _player?.setRate(1.0);
-    await _player?.setPitch(1.0);
-    await _applyFilterChain();
+    await _applySpeedAndPitch();
     _saveSettings();
   }
 }
