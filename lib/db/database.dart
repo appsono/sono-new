@@ -245,6 +245,25 @@ class SonoDatabase extends _$SonoDatabase {
         .get();
   }
 
+  /// Refavorite artists by name
+  Future<void> restoreFavoritedArtists(
+    List<({String name, DateTime favoritedAt})> snapshot,
+  ) async {
+    if (snapshot.isEmpty) return;
+    final ids = await getArtistIdMap();
+    await batch((b) {
+      for (final a in snapshot) {
+        final id = ids[a.name];
+        if (id == null) continue;
+        b.update(
+          artists,
+          ArtistsCompanion(favoritedAt: Value(a.favoritedAt)),
+          where: (t) => t.id.equals(id),
+        );
+      }
+    });
+  }
+
   ///
   ///
   /// ==== Albums ====
@@ -605,6 +624,15 @@ class SonoDatabase extends _$SonoDatabase {
     return (select(songs)..where((s) => s.id.isIn(ids))).get();
   }
 
+  /// Resolve song paths to local ids in one query
+  Future<Map<String, int>> getSongIdsByPaths(Iterable<String> paths) async {
+    if (paths.isEmpty) return {};
+    final rows = await (select(
+      songs,
+    )..where((s) => s.path.isIn(paths.toList()))).get();
+    return {for (final s in rows) s.path: s.id};
+  }
+
   Future<List<SongWithArtistViewData>> getAllSongsWithArtists({
     bool orderByTitle = false,
   }) {
@@ -733,6 +761,26 @@ class SonoDatabase extends _$SonoDatabase {
           ..where((s) => s.likedAt.isNotNull())
           ..orderBy([(s) => OrderingTerm.desc(s.likedAt)]))
         .get();
+  }
+
+  /// Relike songs by path
+  Future<void> restoreLikedSongs(
+    List<({String path, DateTime likedAt})> snapshot,
+  ) async {
+    if (snapshot.isEmpty) return;
+    final ids = await getSongIdsByPaths(snapshot.map((e) => e.path));
+    if (ids.isEmpty) return;
+    await batch((b) {
+      for (final s in snapshot) {
+        final id = ids[s.path];
+        if (id == null) continue;
+        b.update(
+          songs,
+          SongsCompanion(likedAt: Value(s.likedAt)),
+          where: (t) => t.id.equals(id),
+        );
+      }
+    });
   }
 
   Future<void> removeDeletedSongs(Set<String> presentPaths) async {
@@ -927,6 +975,11 @@ class SonoDatabase extends _$SonoDatabase {
 
   Future<Playlist?> getPlaylistById(int id) =>
       (select(playlists)..where((p) => p.id.equals(id))).getSingleOrNull();
+
+  Future<Set<String>> getPlaylistNames() async {
+    final rows = await select(playlists).get();
+    return {for (final p in rows) p.name};
+  }
 
   Future<int> createPlaylist({
     required String name,
@@ -1138,6 +1191,48 @@ class SonoDatabase extends _$SonoDatabase {
           addedAt: r.readTable(playlistSongs).addedAt,
         ),
     ];
+  }
+
+  /// Create a playlist with timestamps and member order
+  /// Songs missing locally are skipped, positions are renumbered to stay dense
+  Future<int> restorePlaylist({
+    required String name,
+    String? description,
+    String? coverPath,
+    required DateTime createdAt,
+    required List<({String path, int position, DateTime addedAt})> members,
+  }) async {
+    final playlistId = await into(playlists).insert(
+      PlaylistsCompanion.insert(
+        name: name,
+        description: Value(description),
+        coverPath: Value(coverPath),
+        createdAt: createdAt,
+      ),
+    );
+    if (members.isEmpty) return playlistId;
+
+    final ids = await getSongIdsByPaths(members.map((e) => e.path));
+    final ordered = [...members]
+      ..sort((a, b) => a.position.compareTo(b.position));
+    var pos = 0;
+    final rows = <PlaylistSongsCompanion>[];
+    for (final m in ordered) {
+      final songId = ids[m.path];
+      if (songId == null) continue;
+      rows.add(
+        PlaylistSongsCompanion.insert(
+          playlistId: playlistId,
+          songId: songId,
+          position: pos++,
+          addedAt: m.addedAt,
+        ),
+      );
+    }
+    if (rows.isNotEmpty) {
+      await batch((b) => b.insertAll(playlistSongs, rows));
+    }
+    return playlistId;
   }
 }
 

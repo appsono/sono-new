@@ -16,7 +16,6 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:sono/services/scanner/scan_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:file_picker/file_picker.dart';
@@ -25,10 +24,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sono/l10n/localizations.dart';
 import 'package:sono/services/locale_service.dart';
 
+import 'package:sono/services/scanner/scan_service.dart';
 import 'package:sono/services/scanner/scan_settings.dart';
 import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/backup/backup_export_service.dart';
+import 'package:sono/services/backup/backup_import_service.dart';
 import 'package:sono/services/update_service.dart';
 
 import 'package:sono/main.dart';
@@ -51,7 +52,7 @@ const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
 class SettingsPage extends StatefulWidget {
   final SonoDatabase db;
-  final VoidCallback? onRescan;
+  final Future<void> Function()? onRescan;
   const SettingsPage({required this.db, this.onRescan, super.key});
 
   @override
@@ -81,7 +82,9 @@ class _SettingsPageState extends State<SettingsPage> {
   //update state
   bool _updateChecking = false;
 
+  //backup state
   bool _backupExporting = false;
+  bool _backupImporting = false;
 
   @override
   void initState() {
@@ -159,6 +162,83 @@ class _SettingsPageState extends State<SettingsPage> {
       );
     } finally {
       if (mounted) setState(() => _backupExporting = false);
+    }
+  }
+
+  Future<void> _importBackup() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('import backup?'),
+        content: const Text(
+          'this overwrites your settings and runs a full rescan. '
+          'existing likes, favorites and playlists are kept, the backup is '
+          'merges on top.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('import'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+
+    final res = await FilePicker.pickFiles(withData: true);
+    if (res == null || res.files.isEmpty) return;
+    final bytes = res.files.first.bytes;
+    if (bytes == null) return;
+
+    setState(() => _backupImporting = true);
+    try {
+      final result = await BackupImportService(widget.db).importFromJson(
+        utf8.decode(bytes),
+        rescan: () async {
+          if (widget.onRescan != null) {
+            await widget.onRescan!();
+            return;
+          }
+          //settings opened without rescan hook, rescan here
+          await ScanService(widget.db).scan(
+            config: await ScanSettings(widget.db).load(),
+            grouping: await ScanSettings(widget.db).loadAlbumGrouping(),
+            force: true,
+          );
+        },
+      );
+
+      await _load();
+      await _loadProfile();
+
+      if (!mounted) return;
+      final missing = result.likedSongsMissing > 0
+          ? ', ${result.likedSongsMissing} songs not found'
+          : '';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'restored ${result.likedSongs} liked, '
+            '${result.favoriteAlbums} albums, '
+            '${result.favoriteArtists} artists, '
+            '${result.playlists} playlists$missing, ',
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('backup import failed: $e'),
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _backupImporting = false);
     }
   }
 
@@ -702,9 +782,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ],
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
+                    const Divider(),
+                    const SizedBox(height: 12),
 
                     // ==== backup ====
+                    const _SectionHeader(label: 'Backup'),
+                    const SizedBox(height: 12),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: const Text('export backup'),
@@ -720,6 +804,24 @@ class _SettingsPageState extends State<SettingsPage> {
                           : TextButton(
                               onPressed: _exportBackup,
                               child: const Text('Export'),
+                            ),
+                    ),
+                    const SizedBox(height: 12),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('import backup'),
+                      subtitle: const Text(
+                        'merges a backup file, then rescans library.',
+                      ),
+                      trailing: _backupImporting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : TextButton(
+                              onPressed: _importBackup,
+                              child: const Text('Import'),
                             ),
                     ),
 
