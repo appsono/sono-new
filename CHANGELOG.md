@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.10.0+10] - 2026-07-19
+
 - Added backup export, saving liked, favorites, playlists, profile, and settings in one json file
 - Added backup import, merging a backup file into the library after a rescan. Entries whose files are missing are skipped
 
@@ -791,7 +795,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.9.0+8...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.10.0+10...HEAD
+[0.10.0+10]: https://github.com/appsono/sono-new/compare/v0.9.1+9...v0.10.0+10
+[0.9.1+9]: https://github.com/appsono/sono-new/compare/v0.9.0+8...v0.9.1+9
 [0.9.0+8]: https://github.com/appsono/sono-new/compare/v0.8.1+7...v0.9.0+8
 [0.8.1+7]: https://github.com/appsono/sono-new/compare/v0.8.0+6...v0.8.1+7
 [0.8.0+6]: https://github.com/appsono/sono-new/compare/v0.7.2+5...v0.8.0+6
