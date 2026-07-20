@@ -234,6 +234,7 @@ abstract final class SonoSizes {
   static const double borderRadius = 12;
   static const double borderRadiusLg = 16;
   static const double borderRadiusSm = 8;
+  static const double borderWidth = 1.5;
 
   static const double navBarRadius = 30;
 
