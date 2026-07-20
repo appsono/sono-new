@@ -19,21 +19,23 @@ import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 
 /// ==== Pill search field ====
-class SearchField extends StatelessWidget {
+class SonoSearchField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final bool showClear;
+  final String? hintText;
   final ValueChanged<String> onChanged;
   final ValueChanged<String> onSubmitted;
   final VoidCallback onClear;
 
-  const SearchField({
+  const SonoSearchField({
     required this.controller,
     required this.focusNode,
     required this.showClear,
     required this.onChanged,
     required this.onSubmitted,
     required this.onClear,
+    this.hintText,
     super.key,
   });
 
@@ -81,7 +83,7 @@ class SearchField extends StatelessWidget {
                   decoration: InputDecoration(
                     isCollapsed: true,
                     border: InputBorder.none,
-                    hintText: l.searchFieldHint,
+                    hintText: hintText ?? l.searchFieldHint,
                     hintStyle: TextStyle(
                       fontFamily: SonoFonts.primary,
                       fontSize: 15,

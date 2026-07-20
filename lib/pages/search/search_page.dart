@@ -36,7 +36,7 @@ import 'package:sono/pages/library/subpages/genre_detail_page.dart';
 import 'package:sono/pages/library/subpages/genres_page.dart';
 
 //widgets
-import 'package:sono/pages/search/widgets/search_field.dart';
+import 'package:sono/widgets/search_field.dart';
 import 'package:sono/pages/search/widgets/search_filter_chips.dart';
 import 'package:sono/pages/search/widgets/search_section_header.dart';
 import 'package:sono/pages/search/widgets/search_album_rail_card.dart';
@@ -395,7 +395,7 @@ class _SearchPageState extends State<SearchPage> {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                  child: SearchField(
+                  child: SonoSearchField(
                     controller: _controller,
                     focusNode: _focus,
                     showClear: hasQuery,
