@@ -19,6 +19,8 @@ import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
 import 'package:sono/l10n/localizations.dart';
 import 'package:sono/services/covers/cover_memory_pressure.dart';
@@ -85,6 +87,13 @@ void main() async {
   PaintingBinding.instance.imageCache
     ..maximumSize = DeviceProfile.imageCacheEntries
     ..maximumSizeBytes = DeviceProfile.imageCacheBytes;
+
+  //android 13+ uses photo picker, older version need opt-in
+  final picker = ImagePickerPlatform.instance;
+  if (picker is ImagePickerAndroid) {
+    picker.useAndroidPhotoPicker = true;
+  }
+
   runApp(SonoApp(db: db));
 
   //everything below does not affect first paint
