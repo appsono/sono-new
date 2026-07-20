@@ -11,11 +11,13 @@
 // GNU General Public License for more details.
 
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
+import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/locale_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
@@ -43,6 +45,31 @@ class _SettingsPageState extends State<SettingsPage> {
   final _searchCtrl = TextEditingController();
   final _searchFocus = FocusNode();
   String _query = '';
+
+  int? _songCount;
+  String? _discordUser;
+  String? _version;
+  String? _build;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMeta();
+  }
+
+  //root values without notifiers. read once per page open
+  Future<void> _loadMeta() async {
+    final count = await widget.db.countSongs();
+    final discord = await widget.db.getSetting('discord.username');
+    final info = await PackageInfo.fromPlatform();
+    if (!mounted) return;
+    setState(() {
+      _songCount = count;
+      _discordUser = (discord?.isEmpty ?? true) ? null : discord;
+      _version = info.version;
+      _build = info.buildNumber;
+    });
+  }
 
   @override
   void dispose() {
@@ -102,7 +129,14 @@ class _SettingsPageState extends State<SettingsPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
-        children: [_profileGroup(context), _appearanceGroup(context)],
+        children: [
+          _profileGroup(context),
+          _appearanceGroup(context),
+          _playbackGroup(context),
+          _servicesGroup(context),
+          _aboutGroup(context),
+          _footnote(context),
+        ],
       ),
     );
   }
@@ -165,6 +199,115 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () {},
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _playbackGroup(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+    final count = _songCount;
+
+    return SettingsGroup(
+      children: [
+        SettingsRow(
+          icon: IconsSheet.songOutlined,
+          accent: c.accentGreen,
+          label: l.settingsPlayback,
+          //TODO: push playback subpage
+          onTap: () {},
+        ),
+        SettingsRow(
+          icon: IconsSheet.equalizerOutlined,
+          accent: c.accentAmber,
+          label: l.settingsEqualizer,
+          //read once per build (subpage owns real state)
+          value: AudioEffectsService.instance.eqEnabled
+              ? l.settingsEqualizerOn
+              : l.settingsEqualizerOff,
+          //TODO: push equalize subpage
+          onTap: () {},
+        ),
+        SettingsRow(
+          icon: IconsSheet.libraryOutlined,
+          accent: c.accentTeal,
+          label: l.settingsLibrary,
+          value: count == null ? null : l.commonSongsCount(count),
+          //TODO: push library subpage
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget _servicesGroup(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+    final user = _discordUser;
+
+    return SettingsGroup(
+      children: [
+        SettingsRow(
+          icon: SonoBrands.discord,
+          brand: true,
+          accent: c.accentLightBlue,
+          label: l.settingsDiscord,
+          value: user != null ? '@user' : l.settingsDiscordDisconnected,
+          //TODO: push discord subpage
+          onTap: () {},
+        ),
+        SettingsRow(
+          icon: IconsSheet.backupOutlined,
+          accent: c.accentOrange,
+          label: l.settingsBackup,
+          //TODO: push backup subpage
+          onTap: () {},
+        ),
+        SettingsRow(
+          icon: IconsSheet.storageOutlined,
+          accent: c.accentBrown,
+          label: l.settingsStorage,
+          planned: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _aboutGroup(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+
+    return SettingsGroup(
+      children: [
+        SettingsRow(
+          icon: IconsSheet.updateOutlined,
+          accent: c.accentGreen,
+          label: l.settingsUpdates,
+          value: _version,
+          //TODO: force a check and report result
+          onTap: () {},
+        ),
+        SettingsRow(
+          icon: IconsSheet.infoOutlined,
+          accent: c.accentRed,
+          label: l.settingsAbout,
+          //TODO: push about subpage
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget _footnote(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final version = _version;
+    final build = _build;
+
+    return SettingsFootnote(
+      lines: [
+        if (version != null && build != null)
+          l.settingsVersionLine(version, build),
+        l.settingsLicenseLine,
       ],
     );
   }
