@@ -12,11 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new appearance, backup, folder, globus, info, moon, open link, update, and storage icons
 - Added new Brand icon for Discord, and added a new SonoBrands class
 - Added new countSongs() db messages
+- Added a new system theme mode that follows the device brightness, allowing system light/dark schedules to apply to Sono
 
 ### Changed
 
 - Changed ProfileCircle to be public: SonoProfileCircle
 - Changed SearchField to be a global widget: SonoSearchField, with an optional custom hint text
+- Moved theme state management from SonoApp into ThemeService, mirroring LocaleService
+- Existing installs keep their saved light or dark theme choice, while fresh installs now default to the system theme
 
 ## [0.10.1+11] - 2026-07-20
 
