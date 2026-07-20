@@ -298,3 +298,11 @@ abstract final class IconsSheet {
     );
   }
 }
+
+/// Third party brand marks
+///
+/// Kept apart from [IconsSheet] because these are not sono icons and
+/// must not be restyled beyond recolouring
+abstract final class SonoBrands {
+  static const String discord = 'assets/app/brands/discord_symbol.svg';
+}
