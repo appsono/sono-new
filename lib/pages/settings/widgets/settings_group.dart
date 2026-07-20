@@ -56,7 +56,7 @@ class SettingsGroup extends StatelessWidget {
     final c = context.sono;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 22),
+      margin: const EdgeInsets.only(bottom: 16),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: c.bgContainer,

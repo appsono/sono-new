@@ -14,11 +14,18 @@ import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
 
+import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
+import 'package:sono/services/locale_service.dart';
 import 'package:sono/theme/icons.dart';
+import 'package:sono/theme/theme.dart';
+import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/search_field.dart';
 
+import 'package:sono/pages/settings/widgets/settings_group.dart';
+import 'package:sono/pages/settings/widgets/settings_profile_row.dart';
+import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 
 /// Settings root
@@ -81,6 +88,81 @@ class _SettingsPageState extends State<SettingsPage> {
               onSubmitted: _onSearchChanged,
               onClear: _clearSearch,
             ),
+          ),
+        ),
+        SliverToBoxAdapter(child: _content(context)),
+      ],
+    );
+  }
+
+  // ==== content ====
+  // root uses one column adapter
+  // (later groups append here)
+  Widget _content(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [_profileGroup(context), _appearanceGroup(context)],
+      ),
+    );
+  }
+
+  Widget _profileGroup(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return StreamBuilder<Profile?>(
+      stream: widget.db.watchProfile(),
+      builder: (context, snap) {
+        final profile = snap.data;
+        final name = (profile?.username.isEmpty ?? true)
+            ? l.settingsProfileUnnamed
+            : profile!.username;
+
+        return SettingsGroup(
+          children: [
+            SettingsProfileRow(
+              name: name,
+              subtitle: l.settingsProfileSubtitle,
+              avatar: profile?.avatar,
+              //TODO: push profile subpage
+              onTap: () {},
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _appearanceGroup(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+
+    return SettingsGroup(
+      children: [
+        ValueListenableBuilder<SonoColors>(
+          valueListenable: SonoApp.themeNotifier,
+          builder: (context, colors, _) => SettingsRow(
+            icon: IconsSheet.appearanceOutlined,
+            accent: c.accentPurple,
+            label: l.settingsAppearance,
+            value: colors == SonoColors.dark
+                ? l.settingsThemeDark
+                : l.settingsThemeLight,
+            //TODO: push appearance page
+            onTap: () {},
+          ),
+        ),
+        ValueListenableBuilder<Locale?>(
+          valueListenable: LocaleService.notifier,
+          builder: (context, locale, _) => SettingsRow(
+            icon: IconsSheet.globusOutlined,
+            accent: c.accentBlue,
+            label: l.settingsLanguage,
+            value: locale == null
+                ? l.settingsLanguageSystem
+                : LocaleService.nativeNameOf(locale),
+            //TODO: push language subpage
+            onTap: () {},
           ),
         ),
       ],
