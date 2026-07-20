@@ -650,5 +650,57 @@
     "settingsProfilePickBadImage": "die Datei da... ist KEIN gültiges Bild, hmph",
     "@settingsProfilePickBadImage": {
         "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
+    },
+    "settingsThemeSystem": "System",
+    "@settingsThemeSystem": {
+        "description": "Theme option that follows the device light/dark setting. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsAppearanceSectionTheme": "Theme",
+    "@settingsAppearanceSectionTheme": {
+        "description": "Section label above the theme picker on the appearance subpage."
+    },
+    "settingsAppearanceThemeNote": "Übernimmt die Hell-/Dunkel-Einstellung deines Geräts, inklusive eines dort festgelegten Zeitplans.",
+    "@settingsAppearanceThemeNote": {
+        "description": "Note under the theme picker explaining what the System option does. The schedule belongs to the operating system, not to Sono."
+    },
+    "settingsAppearanceSectionPlayer": "Player",
+    "@settingsAppearanceSectionPlayer": {
+        "description": "Section label above the player appearance options on the appearance subpage."
+    },
+    "settingsAppearanceColourFromArt": "Färbe vom Albumcover",
+    "@settingsAppearanceColourFromArt": {
+        "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
+    },
+    "settingsAppearanceColourFromArtSubtitle": "Färbe den gesamten Player mit Coverfarben",
+    "@settingsAppearanceColourFromArtSubtitle": {
+        "description": "Subtitle under the colour from album art row."
+    },
+    "settingsAppearanceBlurredBackdrops": "Unscharfer Hintergrund",
+    "@settingsAppearanceBlurredBackdrops": {
+        "description": "Row that enables blurred cover backdrops behind the player. Currently marked as planned."
+    },
+    "settingsAppearanceBlurredBackdropsSubtitle": "Verbraucht auf älteren Geräten etwas mehr Akku",
+    "@settingsAppearanceBlurredBackdropsSubtitle": {
+        "description": "Subtitle under the blurred backdrops row, warning about the performance cost."
+    },
+    "settingsAppearanceReduceMotion": "Bewegung reduzieren",
+    "@settingsAppearanceReduceMotion": {
+        "description": "Row that disables animations across the app. Currently marked as planned."
+    },
+    "settingsAppearanceReduceMotionSubtitle": "Deaktiviert Tipp-Animationen und Übergänge",
+    "@settingsAppearanceReduceMotionSubtitle": {
+        "description": "Subtitle under the reduce motion row."
+    },
+    "settingsAppearanceSectionLibrary": "Bibliothek",
+    "@settingsAppearanceSectionLibrary": {
+        "description": "Section label above the library appearance options on the appearance subpage."
+    },
+    "settingsAppearanceGridDensity": "Rasterdichte",
+    "@settingsAppearanceGridDensity": {
+        "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
+    },
+    "settingsAppearanceTrackNumbers": "Titelnummern anzeigen",
+    "@settingsAppearanceTrackNumbers": {
+        "description": "Row toggling track numbers in album track lists. Currently marked as planned."
     }
 }
