@@ -565,6 +565,10 @@
   "@settingsLanguage": {
     "description": "Label of the row opening the language subpage, and the title of that subpage."
   },
+  "settingsThemeSystem": "System",
+  "@settingsThemeSystem": {
+    "description": "Theme option that follows the device light/dark setting. Shown as the value on the appearance row and as an option in the theme picker."
+  },
   "settingsThemeDark": "Dark",
   "@settingsThemeDark": {
     "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
