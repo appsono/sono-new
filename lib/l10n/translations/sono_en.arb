@@ -633,6 +633,38 @@
   "@settingsLicenseLine": {
     "description": "Second footnote line at the bottom of the settings root."
   },
+  "settingsProfileTitle": "Profile",
+  "@settingsProfileTitle": {
+    "description": "Title of the profile subpage in settings."
+  },
+  "settingsProfileName": "Name",
+  "@settingsProfileName": {
+    "description": "Label of the row showing the display name, and the label of the text field in the rename sheet."
+  },
+  "settingsProfileNameUnset": "Not set",
+  "@settingsProfileNameUnset": {
+    "description": "Value on the name row when no display name has been chosen yet."
+  },
+  "settingsProfileNameSheetTitle": "Your name",
+  "@settingsProfileNameSheetTitle": {
+    "description": "Title of the sheet for editing the display name. This name appears in the greeting on the home page."
+  },
+  "settingsProfilePhotoHint": "Tap the picture to change it",
+  "@settingsProfilePhotoHint": {
+    "description": "Caption under the large avatar on the profile subpage, explaining that tapping it opens the image picker."
+  },
+  "settingsProfileRemovePhoto": "Remove photo",
+  "@settingsProfileRemovePhoto": {
+    "description": "Row that clears the profile picture. Only shown when a picture is set."
+  },
+  "settingsProfileStats": "Listening stats",
+  "@settingsProfileStats": {
+    "description": "Row for play counts and listening history. Currently marked as planned."
+  },
+  "settingsProfilePickBadImage": "that file there..is NOT a valid image, hmph",
+  "@settingsProfilePickBadImage": {
+    "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
