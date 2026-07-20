@@ -256,6 +256,11 @@ abstract final class IconsSheet {
   static const String storageFilled =
       'assets/app/icons/filled/storage_filled.svg';
 
+  static const String updateOutlined =
+      'assets/app/icons/outlined/update_outlined.svg';
+  static const String updateFilled =
+      'assets/app/icons/filled/update_filled.svg';
+
   static const String volumeOutlined =
       'assets/app/icons/outlined/volume_outlined.svg';
   static const String volumeFilled =
