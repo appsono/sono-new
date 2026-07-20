@@ -39,9 +39,19 @@ abstract final class IconsSheet {
   static const String addToPlaylistFilled =
       'assets/app/icons/filled/add_to_playlist_filled.svg';
 
+  static const String appearanceOutlined =
+      'assets/app/icons/outlined/appearance_outlined.svg';
+  static const String appearanceFilled =
+      'assets/app/icons/filled/appearance_filled.svg';
+
   static const String backOutlined =
       'assets/app/icons/outlined/back_outlined.svg';
   static const String backFilled = 'assets/app/icons/filled/back_filled.svg';
+
+  static const String backupOutlined =
+      'assets/app/icons/outlined/backup_outlined.svg';
+  static const String backupFilled =
+      'assets/app/icons/filled/backup_filled.svg';
 
   static const String bellOutlined =
       'assets/app/icons/outlined/bell_outlined.svg';
@@ -102,9 +112,19 @@ abstract final class IconsSheet {
   static const String favoriteArtistFilled =
       'assets/app/icons/filled/favorite_artist_filled.svg';
 
+  static const String folderOutlined =
+      'assets/app/icons/outlined/folder_outlined.svg';
+  static const String folderFilled =
+      'assets/app/icons/filled/folder_filled.svg';
+
   static const String genreOutlined =
       'assets/app/icons/outlined/genre_outlined.svg';
   static const String genreFilled = 'assets/app/icons/filled/genre_filled.svg';
+
+  static const String globusOutlined =
+      'assets/app/icons/outlined/globus_outlined.svg';
+  static const String globusFilled =
+      'assets/app/icons/filled/globus_filled.svg';
 
   static const String heartOutlined =
       'assets/app/icons/outlined/heart_outlined.svg';
@@ -113,6 +133,10 @@ abstract final class IconsSheet {
   static const String homeOutlined =
       'assets/app/icons/outlined/home_outlined.svg';
   static const String homeFilled = 'assets/app/icons/filled/home_filled.svg';
+
+  static const String infoOutlined =
+      'assets/app/icons/outlined/info_outlined.svg';
+  static const String infoFilled = 'assets/app/icons/filled/info_filled.svg';
 
   static const String lastPlayedOutlined =
       'assets/app/icons/outlined/last_played_outlined.svg';
@@ -129,6 +153,10 @@ abstract final class IconsSheet {
   static const String lyricsFilled =
       'assets/app/icons/filled/lyrics_filled.svg';
 
+  static const String moonOutlined =
+      'assets/app/icons/outlined/moon_outlined.svg';
+  static const String moonFilled = 'assets/app/icons/filled/moon_filled.svg';
+
   static const String moreOptionsOutlined =
       'assets/app/icons/outlined/more_options_outlined.svg';
   static const String moreOptionsFilled =
@@ -143,6 +171,11 @@ abstract final class IconsSheet {
       'assets/app/icons/outlined/now_playing_outlined.svg';
   static const String nowPlayingFilled =
       'assets/app/icons/filled/now_playing_filled.svg';
+
+  static const String openLinkOutlined =
+      'assets/app/icons/outlined/open_link_outlined.svg';
+  static const String openLinkFilled =
+      'assets/app/icons/filled/open_link_filled.svg';
 
   static const String pauseOutlined =
       'assets/app/icons/outlined/pause_outlined.svg';
@@ -217,6 +250,11 @@ abstract final class IconsSheet {
   static const String sortOutlined =
       'assets/app/icons/outlined/sort_outlined.svg';
   static const String sortFilled = 'assets/app/icons/filled/sort_filled.svg';
+
+  static const String storageOutlined =
+      'assets/app/icons/outlined/storage_outlined.svg';
+  static const String storageFilled =
+      'assets/app/icons/filled/storage_filled.svg';
 
   static const String volumeOutlined =
       'assets/app/icons/outlined/volume_outlined.svg';

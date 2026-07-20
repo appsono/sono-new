@@ -2,6 +2,6 @@
 <path d="M4 5.25H14.5C16.3 5.25 17.5 6.45 17.5 8.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M7.25 2L4 5.25L7.25 8.5V2Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M18.5 18.25H8C6.2 18.25 5 17.05 5 15.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M15.25 21.5L18.5 18.25L15.25 15V21.5Z" fill="black" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15.25 21.5L18.5 18.25L15.25 15V21.5Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M10 10L12 9V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
