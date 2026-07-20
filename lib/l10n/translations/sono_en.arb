@@ -577,6 +577,62 @@
   "@settingsLanguageSystem": {
     "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
   },
+  "settingsPlayback": "Playback",
+  "@settingsPlayback": {
+    "description": "Label of the row opening the playback subpage, and the title of that subpage."
+  },
+  "settingsEqualizer": "Equalizer & effects",
+  "@settingsEqualizer": {
+    "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
+  },
+  "settingsEqualizerOn": "On",
+  "@settingsEqualizerOn": {
+    "description": "Value on the equalizer row when the equalizer is enabled."
+  },
+  "settingsEqualizerOff": "Off",
+  "@settingsEqualizerOff": {
+    "description": "Value on the equalizer row when the equalizer is disabled."
+  },
+  "settingsLibrary": "Library & scanning",
+  "@settingsLibrary": {
+    "description": "Label of the row opening the library subpage, and the title of that subpage."
+  },
+  "settingsDiscord": "Discord presence",
+  "@settingsDiscord": {
+    "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
+  },
+  "settingsDiscordDisconnected": "Not connected",
+  "@settingsDiscordDisconnected": {
+    "description": "Value on the Discord row when no Discord account is linked."
+  },
+  "settingsBackup": "Backup & restore",
+  "@settingsBackup": {
+    "description": "Label of the row opening the backup subpage, and the title of that subpage."
+  },
+  "settingsStorage": "Storage",
+  "@settingsStorage": {
+    "description": "Label of the storage row. Currently marked as planned."
+  },
+  "settingsUpdates": "Updates",
+  "@settingsUpdates": {
+    "description": "Label of the row that checks for a newer release. Its value is the installed version."
+  },
+  "settingsAbout": "About Sono",
+  "@settingsAbout": {
+    "description": "Label of the row opening the about subpage, and the title of that subpage."
+  },
+  "settingsVersionLine": "Sono {version} • build {build}",
+  "@settingsVersionLine": {
+    "description": "First footnote line at the bottom of the settings root, showing the installed version and build number.",
+    "placeholders": {
+      "version": { "type": "String" },
+      "build": { "type": "String" }
+    }
+  },
+  "settingsLicenseLine": "Free software under GPL-3.0",
+  "@settingsLicenseLine": {
+    "description": "Second footnote line at the bottom of the settings root."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
