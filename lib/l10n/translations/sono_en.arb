@@ -521,6 +521,14 @@
 
   "authSignIn": "Sign in",
 
+  "settingsPageTitle": "Settings",
+  "@settingsPageTitle": {
+    "description": "Title shown in the header of the settings root page."
+  },
+  "settingsSearchTooltip": "Search settings",
+  "@settingsSearchTooltip": {
+    "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
