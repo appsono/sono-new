@@ -744,6 +744,85 @@
   "@settingsLanguageHelpTranslateSubtitle": {
     "description": "Subtitle under the help translate row."
   },
+  "settingsPlaybackSectionTransitions": "Transitions",
+  "@settingsPlaybackSectionTransitions": {
+    "description": "Section label above gapless, crossfade and fade options on the playback subpage."
+  },
+  "settingsPlaybackGapless": "Gapless playback",
+  "@settingsPlaybackGapless": {
+    "description": "Toggle that preloads the next track so it starts without a gap."
+  },
+  "settingsPlaybackGaplessSubtitle": "Preloads the next song",
+  "@settingsPlaybackGaplessSubtitle": {
+    "description": "Subtitle under the gapless playback row."
+  },
+  "settingsPlaybackCrossfade": "Crossfade",
+  "@settingsPlaybackCrossfade": {
+    "description": "Row for fading one song into the next. Currently marked as planned."
+  },
+  "settingsPlaybackFadeOnPause": "Fade on pause",
+  "@settingsPlaybackFadeOnPause": {
+    "description": "Row for fading out on pause rather than cutting. Currently marked as planned."
+  },
+  "settingsPlaybackFadeOnPauseSubtitle": "Short fade instead of a hard cut",
+  "@settingsPlaybackFadeOnPauseSubtitle": {
+    "description": "Subtitle under the fade on pause row."
+  },
+  "settingsPlaybackSectionSound": "Sound",
+  "@settingsPlaybackSectionSound": {
+    "description": "Section label above the equalizer, normalisation and volume options on the playback subpage."
+  },
+  "settingsPlaybackNormalisation": "Volume normalisation",
+  "@settingsPlaybackNormalisation": {
+    "description": "Row for evening out loudness between tracks using ReplayGain tags. Currently marked as planned."
+  },
+  "settingsPlaybackVolume": "In-app volume",
+  "@settingsPlaybackVolume": {
+    "description": "Slider controlling Sono's own output volume, separate from the device volume."
+  },
+  "settingsPlaybackVolumeValue": "{value}%",
+  "@settingsPlaybackVolumeValue": {
+    "description": "Value shown next to the in-app volume slider.",
+    "placeholders": {
+      "value": { "type": "int" }
+    }
+  },
+  "settingsPlaybackSectionBehaviour": "Behaviour",
+  "@settingsPlaybackSectionBehaviour": {
+    "description": "Section label above the sleep timer and headphone options on the playback subpage."
+  },
+  "settingsPlaybackSleepTimer": "Sleep timer",
+  "@settingsPlaybackSleepTimer": {
+    "description": "Row for stopping playback after a set time. Currently marked as planned."
+  },
+  "settingsPlaybackResumeOnConnect": "Resume when headphones connect",
+  "@settingsPlaybackResumeOnConnect": {
+    "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+  },
+  "settingsPlaybackPauseOnDisconnect": "Pause when disconnected",
+  "@settingsPlaybackPauseOnDisconnect": {
+    "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+  },
+  "settingsEqPresetFlat": "Flat",
+  "@settingsEqPresetFlat": {
+    "description": "Equalizer preset with every band at zero."
+  },
+  "settingsEqPresetBass": "Bass",
+  "@settingsEqPresetBass": {
+    "description": "Equalizer preset that lifts the low frequencies."
+  },
+  "settingsEqPresetVocal": "Vocal",
+  "@settingsEqPresetVocal": {
+    "description": "Equalizer preset that lifts the mid frequencies where voices sit."
+  },
+  "settingsEqPresetRock": "Rock",
+  "@settingsEqPresetRock": {
+    "description": "Equalizer preset that lifts both the low and high frequencies."
+  },
+  "settingsEqPresetCustom": "Custom",
+  "@settingsEqPresetCustom": {
+    "description": "Shown instead of a preset name when the equalizer curve matches none of the presets."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
