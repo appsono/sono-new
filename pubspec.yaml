@@ -39,6 +39,7 @@ dependencies:
   # image stuff
   image_picker: ^1.2.3
   image_picker_android: ^0.8.13+17
+  image_picker_platform_interface: ^2.11.1
 
   # other stuff
   flutter_dotenv: ^6.0.0
