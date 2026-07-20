@@ -55,6 +55,19 @@ ThemeData buildSonoTheme(SonoColors colors) {
       scrolledUnderElevation: 0,
       toolbarHeight: SonoSizes.headerHeight,
     ),
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: ZoomPageTransitionsBuilder(
+          backgroundColor: colors.bgPrimary,
+        ),
+        TargetPlatform.linux: ZoomPageTransitionsBuilder(
+          backgroundColor: colors.bgPrimary,
+        ),
+        TargetPlatform.windows: ZoomPageTransitionsBuilder(
+          backgroundColor: colors.bgPrimary,
+        ),
+      },
+    ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: colors.bgContainer,
       indicatorColor: colors.bgSurfaceHover,
