@@ -618,5 +618,37 @@
     "settingsLicenseLine": "Freie Software unter GPL-3.0",
     "@settingsLicenseLine": {
         "description": "Second footnote line at the bottom of the settings root."
+    },
+    "settingsProfileTitle": "Profil",
+    "@settingsProfileTitle": {
+        "description": "Title of the profile subpage in settings."
+    },
+    "settingsProfileName": "Name",
+    "@settingsProfileName": {
+        "description": "Label of the row showing the display name, and the label of the text field in the rename sheet."
+    },
+    "settingsProfileNameUnset": "Nicht festgelegt",
+    "@settingsProfileNameUnset": {
+        "description": "Value on the name row when no display name has been chosen yet."
+    },
+    "settingsProfileNameSheetTitle": "Dein Name",
+    "@settingsProfileNameSheetTitle": {
+        "description": "Title of the sheet for editing the display name. This name appears in the greeting on the home page."
+    },
+    "settingsProfilePhotoHint": "Tippe auf das Bild, um es zu ändern",
+    "@settingsProfilePhotoHint": {
+        "description": "Caption under the large avatar on the profile subpage, explaining that tapping it opens the image picker."
+    },
+    "settingsProfileRemovePhoto": "Foto entfernen",
+    "@settingsProfileRemovePhoto": {
+        "description": "Row that clears the profile picture. Only shown when a picture is set."
+    },
+    "settingsProfileStats": "Wiedergabestatistiken",
+    "@settingsProfileStats": {
+        "description": "Row for play counts and listening history. Currently marked as planned."
+    },
+    "settingsProfilePickBadImage": "die Datei da... ist KEIN gültiges Bild, hmph",
+    "@settingsProfilePickBadImage": {
+        "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
     }
 }
