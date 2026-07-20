@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added new appearance, backup, folder, globus, info, moon, open link, and storage icons
+- Added new appearance, backup, folder, globus, info, moon, open link, update, and storage icons
+- Added new Brand icon for Discord, and added a new SonoBrands class
+- Added new countSongs() db messages
+
+### Changed
+
+- Changed ProfileCircle to be public: SonoProfileCircle
+- Changed SearchField to be a global widget: SonoSearchField, with an optional custom hint text
 
 ## [0.10.1+11] - 2026-07-20
 
