@@ -30,6 +30,8 @@ import 'package:sono/pages/settings/widgets/settings_profile_row.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 
+import 'package:sono/pages/settings/subpages/settings_profile_page.dart';
+
 /// Settings root
 class SettingsPage extends StatefulWidget {
   final SonoDatabase db;
@@ -158,8 +160,11 @@ class _SettingsPageState extends State<SettingsPage> {
               name: name,
               subtitle: l.settingsProfileSubtitle,
               avatar: profile?.avatar,
-              //TODO: push profile subpage
-              onTap: () {},
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => SettingsProfilePage(db: widget.db),
+                ),
+              ),
             ),
           ],
         );
