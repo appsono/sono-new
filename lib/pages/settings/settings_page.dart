@@ -30,6 +30,7 @@ import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 
 import 'package:sono/pages/settings/subpages/settings_profile_page.dart';
+import 'package:sono/pages/settings/subpages/settings_appearance_page.dart';
 
 /// Settings root
 class SettingsPage extends StatefulWidget {
@@ -188,8 +189,11 @@ class _SettingsPageState extends State<SettingsPage> {
               SonoThemeMode.light => l.settingsThemeLight,
               SonoThemeMode.dark => l.settingsThemeDark,
             },
-            //TODO: push appearance page
-            onTap: () {},
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsAppearancePage(db: widget.db),
+              ),
+            ),
           ),
         ),
         ValueListenableBuilder<Locale?>(
