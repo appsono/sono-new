@@ -604,6 +604,14 @@ class SonoDatabase extends _$SonoDatabase {
     return rows.map((row) => row.read(songs.path)!).toSet();
   }
 
+  /// Total number of songs in library
+  Future<int> countSongs() async {
+    final exp = songs.id.count();
+    final q = selectOnly(songs)..addColumns([exp]);
+    final row = await q.getSingle();
+    return row.read(exp) ?? 0;
+  }
+
   /// path -> "mtimeMs:size" for every song that has a stored fingerprint
   /// passed to sono_query so unchanged files skip metadata re-reads
   Future<Map<String, String>> getSongFingerprints() async {
