@@ -24,6 +24,8 @@ import 'package:sono/pages/settings/widgets/settings_planned_sheet.dart';
 
 const double _rowMinHeight = 56;
 const double _tileSize = 30;
+//solid glyphs lack viewbox padding, so they look heavier at same size
+const double _tileBrandIconSize = 16;
 const double _tileIconSize = 19;
 const double _tileTintAlpha = 0.18;
 const double _plannedOpacity = 0.55;
@@ -37,6 +39,7 @@ class SettingsRow extends StatelessWidget {
   final String icon;
   final Color accent;
   final String label;
+  final bool brand;
   final String? subtitle;
   final String? value;
   final bool external;
@@ -49,6 +52,7 @@ class SettingsRow extends StatelessWidget {
     required this.icon,
     required this.accent,
     required this.label,
+    this.brand = false,
     this.subtitle,
     this.value,
     this.external = false,
@@ -65,7 +69,7 @@ class SettingsRow extends StatelessWidget {
 
     final body = Row(
       children: [
-        _Tile(icon: icon, accent: accent),
+        _Tile(icon: icon, accent: accent, brand: brand),
         const SizedBox(width: 14),
         Expanded(
           child: Column(
@@ -193,8 +197,9 @@ class SettingsRow extends StatelessWidget {
 class _Tile extends StatelessWidget {
   final String icon;
   final Color accent;
+  final bool brand;
 
-  const _Tile({required this.icon, required this.accent});
+  const _Tile({required this.icon, required this.accent, this.brand = false});
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +211,11 @@ class _Tile extends StatelessWidget {
         color: accent.withValues(alpha: _tileTintAlpha),
         borderRadius: BorderRadius.circular(SonoSizes.borderRadiusSm),
       ),
-      child: IconsSheet.svg(icon, size: _tileIconSize, color: accent),
+      child: IconsSheet.svg(
+        icon,
+        size: brand ? _tileBrandIconSize : _tileIconSize,
+        color: accent,
+      ),
     );
   }
 }
