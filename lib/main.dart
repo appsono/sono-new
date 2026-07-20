@@ -35,8 +35,8 @@ import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/smtc_service.dart';
 import 'package:sono/services/update_service.dart';
+import 'package:sono/services/theme_service.dart';
 
-import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 
 late AudioHandler audioHandler;
@@ -73,15 +73,12 @@ void main() async {
   sono.AudioService.instance.attachDb(db);
   AudioEffectsService.instance.attachDb(db);
   LocaleService.instance.attachDb(db);
+  ThemeService.instance.attachDb(db);
 
   //only locale and theme gate first frame
   await Future.wait([
     LocaleService.instance.loadSaved(),
-    db.getSetting('theme.mode').then((saved) {
-      SonoApp.themeNotifier.value = saved == 'light'
-          ? SonoColors.light
-          : SonoColors.dark;
-    }),
+    ThemeService.instance.loadSaved(),
   ]);
 
   PaintingBinding.instance.imageCache
@@ -124,43 +121,36 @@ class SonoApp extends StatefulWidget {
   final SonoDatabase db;
   const SonoApp({required this.db, super.key});
 
-  /// Global toggle
-  static final themeNotifier = ValueNotifier<SonoColors>(SonoColors.dark);
-
   static final messengerKey = GlobalKey<ScaffoldMessengerState>();
-
-  static void toggleTheme() {
-    themeNotifier.value = themeNotifier.value == SonoColors.dark
-        ? SonoColors.light
-        : SonoColors.dark;
-  }
 
   @override
   State<SonoApp> createState() => _SonoAppState();
 }
 
-class _SonoAppState extends State<SonoApp> {
+class _SonoAppState extends State<SonoApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    SonoApp.themeNotifier.addListener(_saveTheme);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    SonoApp.themeNotifier.removeListener(_saveTheme);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  void _saveTheme() {
-    final isDark = SonoApp.themeNotifier.value == SonoColors.dark;
-    widget.db.setSetting('theme.mode', isDark ? 'dark' : 'light');
+  //fires when device flips light/dark, inclding on whatever
+  //schedule user set in system settings
+  @override
+  void didChangePlatformBrightness() {
+    ThemeService.instance.resolve();
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: SonoApp.themeNotifier,
+      valueListenable: ThemeService.colorsNotifier,
       builder: (_, colors, _) {
         return ValueListenableBuilder<Locale?>(
           valueListenable: LocaleService.notifier,

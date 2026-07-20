@@ -14,14 +14,13 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:sono/l10n/localizations.dart';
+import 'package:sono/services/theme_service.dart';
 
-import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/locale_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
-import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/search_field.dart';
 
@@ -178,15 +177,17 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return SettingsGroup(
       children: [
-        ValueListenableBuilder<SonoColors>(
-          valueListenable: SonoApp.themeNotifier,
-          builder: (context, colors, _) => SettingsRow(
+        ValueListenableBuilder<SonoThemeMode>(
+          valueListenable: ThemeService.modeNotifier,
+          builder: (context, mode, _) => SettingsRow(
             icon: IconsSheet.appearanceOutlined,
             accent: c.accentPurple,
             label: l.settingsAppearance,
-            value: colors == SonoColors.dark
-                ? l.settingsThemeDark
-                : l.settingsThemeLight,
+            value: switch (mode) {
+              SonoThemeMode.system => l.settingsThemeSystem,
+              SonoThemeMode.light => l.settingsThemeLight,
+              SonoThemeMode.dark => l.settingsThemeDark,
+            },
             //TODO: push appearance page
             onTap: () {},
           ),
