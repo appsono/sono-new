@@ -61,7 +61,10 @@ class SettingsGroup extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.bgContainer,
         borderRadius: BorderRadius.circular(SonoSizes.borderRadiusLg),
-        border: Border.all(color: c.borderLight10),
+        border: Border.all(
+          color: c.borderLight10,
+          width: SonoSizes.borderWidth,
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

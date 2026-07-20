@@ -225,7 +225,10 @@ class _PlannedBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.bgSurface,
         borderRadius: BorderRadius.circular(SonoSizes.borderRadiusSm),
-        border: Border.all(color: c.borderLight10),
+        border: Border.all(
+          color: c.borderLight10,
+          width: SonoSizes.borderWidth,
+        ),
       ),
       child: Text(
         l.settingsPlannedBadge,
