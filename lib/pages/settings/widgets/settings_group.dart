@@ -48,8 +48,9 @@ class SettingsGroupLabel extends StatelessWidget {
 // container that stacks settings rows with inset dividers
 class SettingsGroup extends StatelessWidget {
   final List<Widget> children;
+  final String? note;
 
-  const SettingsGroup({required this.children, super.key});
+  const SettingsGroup({required this.children, this.note, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,26 +58,46 @@ class SettingsGroup extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: c.bgContainer,
-        borderRadius: BorderRadius.circular(SonoSizes.borderRadiusLg),
-        border: Border.all(
-          color: c.borderLight10,
-          width: SonoSizes.borderWidth,
-        ),
-      ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (var i = 0; i < children.length; i++) ...[
-            if (i > 0)
-              Padding(
-                padding: const EdgeInsets.only(left: _dividerInset),
-                child: Container(height: 1, color: c.borderLight10),
+          Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: c.bgContainer,
+              borderRadius: BorderRadius.circular(SonoSizes.borderRadiusLg),
+              border: Border.all(
+                color: c.borderLight10,
+                width: SonoSizes.borderWidth,
               ),
-            children[i],
-          ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var i = 0; i < children.length; i++) ...[
+                  if (i > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(left: _dividerInset),
+                      child: Container(height: 1, color: c.borderLight10),
+                    ),
+                  children[i],
+                ],
+              ],
+            ),
+          ),
+          if (note != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 10, 4, 0),
+              child: Text(
+                note!,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 12,
+                  height: 1.6,
+                  color: c.textTertiary,
+                ),
+              ),
+            ),
         ],
       ),
     );
