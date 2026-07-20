@@ -193,6 +193,84 @@ class SettingsRow extends StatelessWidget {
   }
 }
 
+// ==== check row ====
+/// Selection row without an icon
+///
+/// Keeps tick space to prevent shifting
+class SettingsCheckRow extends StatelessWidget {
+  final String label;
+  final String? subtitle;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const SettingsCheckRow({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.subtitle,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+
+    return _RowTap(
+      onTap: onTap,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: _rowMinHeight),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: SonoFonts.heading,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      height: 1.3,
+                      color: c.textPrimary,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle!,
+                      style: TextStyle(
+                        fontFamily: SonoFonts.primary,
+                        fontSize: 12.5,
+                        height: 1.4,
+                        color: c.textSecondary,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            AnimatedOpacity(
+              opacity: selected ? 1 : 0,
+              duration: SonoDurations.fast,
+              child: IconsSheet.svg(
+                IconsSheet.checkOutlined,
+                size: SonoSizes.iconSm,
+                color: c.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // ==== icon tile ====
 class _Tile extends StatelessWidget {
   final String icon;

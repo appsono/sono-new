@@ -31,6 +31,7 @@ import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 
 import 'package:sono/pages/settings/subpages/settings_profile_page.dart';
 import 'package:sono/pages/settings/subpages/settings_appearance_page.dart';
+import 'package:sono/pages/settings/subpages/settings_language_page.dart';
 
 /// Settings root
 class SettingsPage extends StatefulWidget {
@@ -205,8 +206,11 @@ class _SettingsPageState extends State<SettingsPage> {
             value: locale == null
                 ? l.settingsLanguageSystem
                 : LocaleService.nativeNameOf(locale),
-            //TODO: push language subpage
-            onTap: () {},
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsLanguagePage(db: widget.db),
+              ),
+            ),
           ),
         ),
       ],
