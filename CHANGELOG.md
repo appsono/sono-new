@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.10.1+11] - 2026-07-20
+
 ### Fixed
 
 - Fixed EQ and bass boost having no effect on some songs, and being dropped when speed or pitch changed
@@ -797,7 +801,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.10.0+10...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.10.1+11...HEAD
+[0.10.1+11]: https://github.com/appsono/sono-new/compare/v0.10.0+10...v0.10.1+11
 [0.10.0+10]: https://github.com/appsono/sono-new/compare/v0.9.1+9...v0.10.0+10
 [0.9.1+9]: https://github.com/appsono/sono-new/compare/v0.9.0+8...v0.9.1+9
 [0.9.0+8]: https://github.com/appsono/sono-new/compare/v0.8.1+7...v0.9.0+8
