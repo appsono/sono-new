@@ -669,6 +669,54 @@
   "@settingsProfilePickBadImage": {
     "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
   },
+  "settingsAppearanceSectionTheme": "Theme",
+  "@settingsAppearanceSectionTheme": {
+    "description": "Section label above the theme picker on the appearance subpage."
+  },
+  "settingsAppearanceThemeNote": "Follows the light or dark setting on your device, including any schedule you set there.",
+  "@settingsAppearanceThemeNote": {
+    "description": "Note under the theme picker explaining what the System option does. The schedule belongs to the operating system, not to Sono."
+  },
+  "settingsAppearanceSectionPlayer": "Player",
+  "@settingsAppearanceSectionPlayer": {
+    "description": "Section label above the player appearance options on the appearance subpage."
+  },
+  "settingsAppearanceColourFromArt": "Colour from album art",
+  "@settingsAppearanceColourFromArt": {
+    "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
+  },
+  "settingsAppearanceColourFromArtSubtitle": "Tint the full player with cover colours",
+  "@settingsAppearanceColourFromArtSubtitle": {
+    "description": "Subtitle under the colour from album art row."
+  },
+  "settingsAppearanceBlurredBackdrops": "Blurred backdrops",
+  "@settingsAppearanceBlurredBackdrops": {
+    "description": "Row that enables blurred cover backdrops behind the player. Currently marked as planned."
+  },
+  "settingsAppearanceBlurredBackdropsSubtitle": "Costs a little battery on older devices",
+  "@settingsAppearanceBlurredBackdropsSubtitle": {
+    "description": "Subtitle under the blurred backdrops row, warning about the performance cost."
+  },
+  "settingsAppearanceReduceMotion": "Reduce motion",
+  "@settingsAppearanceReduceMotion": {
+    "description": "Row that disables animations across the app. Currently marked as planned."
+  },
+  "settingsAppearanceReduceMotionSubtitle": "Turn off bouncy taps and slide transitions",
+  "@settingsAppearanceReduceMotionSubtitle": {
+    "description": "Subtitle under the reduce motion row."
+  },
+  "settingsAppearanceSectionLibrary": "Library",
+  "@settingsAppearanceSectionLibrary": {
+    "description": "Section label above the library appearance options on the appearance subpage."
+  },
+  "settingsAppearanceGridDensity": "Grid density",
+  "@settingsAppearanceGridDensity": {
+    "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
+  },
+  "settingsAppearanceTrackNumbers": "Show track numbers",
+  "@settingsAppearanceTrackNumbers": {
+    "description": "Row toggling track numbers in album track lists. Currently marked as planned."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
