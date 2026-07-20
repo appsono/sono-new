@@ -558,5 +558,65 @@
     "settingsLanguageSystem": "Systemstandard",
     "@settingsLanguageSystem": {
         "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
+    },
+    "settingsPlayback": "Wiedergabe",
+    "@settingsPlayback": {
+        "description": "Label of the row opening the playback subpage, and the title of that subpage."
+    },
+    "settingsEqualizer": "Equalizer & Effekte",
+    "@settingsEqualizer": {
+        "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
+    },
+    "settingsEqualizerOn": "An",
+    "@settingsEqualizerOn": {
+        "description": "Value on the equalizer row when the equalizer is enabled."
+    },
+    "settingsEqualizerOff": "Aus",
+    "@settingsEqualizerOff": {
+        "description": "Value on the equalizer row when the equalizer is disabled."
+    },
+    "settingsLibrary": "Bibliothek & Scannen",
+    "@settingsLibrary": {
+        "description": "Label of the row opening the library subpage, and the title of that subpage."
+    },
+    "settingsDiscord": "Discord-Aktivität",
+    "@settingsDiscord": {
+        "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
+    },
+    "settingsDiscordDisconnected": "Nicht verbunden",
+    "@settingsDiscordDisconnected": {
+        "description": "Value on the Discord row when no Discord account is linked."
+    },
+    "settingsBackup": "Backup & Wiederherstellung",
+    "@settingsBackup": {
+        "description": "Label of the row opening the backup subpage, and the title of that subpage."
+    },
+    "settingsStorage": "Speicher",
+    "@settingsStorage": {
+        "description": "Label of the storage row. Currently marked as planned."
+    },
+    "settingsUpdates": "Updates",
+    "@settingsUpdates": {
+        "description": "Label of the row that checks for a newer release. Its value is the installed version."
+    },
+    "settingsAbout": "Über Sono",
+    "@settingsAbout": {
+        "description": "Label of the row opening the about subpage, and the title of that subpage."
+    },
+    "settingsVersionLine": "Sono {version} • Build {build}",
+    "@settingsVersionLine": {
+        "description": "First footnote line at the bottom of the settings root, showing the installed version and build number.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLicenseLine": "Freie Software unter GPL-3.0",
+    "@settingsLicenseLine": {
+        "description": "Second footnote line at the bottom of the settings root."
     }
 }
