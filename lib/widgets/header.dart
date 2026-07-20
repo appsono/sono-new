@@ -20,6 +20,7 @@ import 'package:sono/l10n/localizations.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/icons.dart';
+import 'package:sono/widgets/profile_circle.dart';
 
 const double _headerElementHeight = 52;
 
@@ -74,7 +75,7 @@ class SonoHeader extends StatelessWidget {
       children: [
         backButton
             ? _BackButton(onTap: onBackTap)
-            : _ProfileCircle(avatar: avatar, onTap: onProfileTap),
+            : SonoProfileCircle(avatar: avatar, onTap: onProfileTap),
         const SizedBox(width: 12),
         Expanded(
           child: isHomePage
@@ -86,60 +87,6 @@ class SonoHeader extends StatelessWidget {
           _ActionPill(actions: actions),
         ],
       ],
-    );
-  }
-}
-
-// ==== profile circle ====
-
-class _ProfileCircle extends StatelessWidget {
-  final Uint8List? avatar;
-  final VoidCallback? onTap;
-
-  static const double _size = _headerElementHeight;
-
-  const _ProfileCircle({this.avatar, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.sono;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: _size,
-        height: _size,
-        decoration: avatar == null
-            ? BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: colors.borderLight20, width: 2),
-              )
-            : null,
-        foregroundDecoration: avatar != null
-            ? BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: SonoColors.light.borderLight20,
-                  width: 2,
-                ),
-              )
-            : null,
-        child: ClipOval(
-          child: avatar != null
-              ? Image.memory(avatar!, fit: BoxFit.cover)
-              : Container(
-                  color: colors.primary,
-                  child: Align(
-                    alignment: const Alignment(0, 2.5),
-                    child: IconsSheet.svg(
-                      IconsSheet.profileFilled,
-                      size: 45,
-                      color: colors.textLight,
-                    ),
-                  ),
-                ),
-        ),
-      ),
     );
   }
 }
