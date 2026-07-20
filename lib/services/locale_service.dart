@@ -10,6 +10,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sono/db/database.dart';
@@ -152,5 +153,15 @@ class LocaleService {
     final db = _db;
     if (db == null) return;
     await db.setSetting(_settingKey, locale?.toLanguageTag() ?? '');
+  }
+
+  /// Which supported locale the device settings resolve to
+  static Locale resolveSystem() {
+    for (final device in PlatformDispatcher.instance.locales) {
+      for (final supported in supportedLocales) {
+        if (supported.languageCode == device.languageCode) return supported;
+      }
+    }
+    return const Locale('en');
   }
 }
