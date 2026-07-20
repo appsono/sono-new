@@ -56,6 +56,13 @@ class ThemeService {
     resolve();
   }
 
+  /// Persists [mode] and repaints
+  Future<void> setMode(SonoThemeMode mode) async {
+    modeNotifier.value = mode;
+    resolve();
+    await _db?.setSetting(_settingKey, mode.name);
+  }
+
   /// Recomuptes [colorsNotifier] from current mode
   /// Call when device brightness changes
   void resolve() {
