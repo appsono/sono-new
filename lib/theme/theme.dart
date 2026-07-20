@@ -101,6 +101,16 @@ ThemeData buildSonoTheme(SonoColors colors) {
       trackHeight: 2,
       thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
     ),
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStatePropertyAll(colors.textLight),
+      trackColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected)
+            ? colors.primary
+            : colors.borderLight20,
+      ),
+      trackOutlineWidth: const WidgetStatePropertyAll(0),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    ),
     iconTheme: IconThemeData(color: colors.textSecondary),
     textTheme: TextTheme(
       //titles
