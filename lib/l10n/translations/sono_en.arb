@@ -529,6 +529,26 @@
   "@settingsSearchTooltip": {
     "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
   },
+  "settingsSearchHint": "Search settings",
+  "@settingsSearchHint": {
+    "description": "Placeholder inside the search field at the top of the settings root page."
+  },
+  "settingsPlannedBadge": "Planned",
+  "@settingsPlannedBadge": {
+    "description": "Small badge on a settings row whose feature is on the roadmap but not built yet."
+  },
+  "settingsPlannedBody": "This feature is planned but isn't available yet.",
+  "@settingsPlannedBody": {
+    "description": "Explanation shown in the sheet that opens when a planned settings row is tapped."
+  },
+  "settingsPlannedFollow": "Follow development on GitHub",
+  "@settingsPlannedFollow": {
+    "description": "Action in the planned feature sheet that opens the project repository."
+  },
+  "settingsPlannedFollowSubtitle": "Opens the repository in your browser",
+  "@settingsPlannedFollowSubtitle": {
+    "description": "Subtitle under the GitHub action in the planned feature sheet."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
