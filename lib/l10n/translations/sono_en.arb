@@ -717,6 +717,33 @@
   "@settingsAppearanceTrackNumbers": {
     "description": "Row toggling track numbers in album track lists. Currently marked as planned."
   },
+  "settingsLanguageSearchHint": "Search languages",
+  "@settingsLanguageSearchHint": {
+    "description": "Placeholder inside the search field on the language subpage."
+  },
+  "settingsLanguageSystemSubtitle": "Currently {language}",
+  "@settingsLanguageSystemSubtitle": {
+    "description": "Subtitle under the system default option, naming the language the device settings currently resolve to. The language name is in its own language, e.g. Deutsch.",
+    "placeholders": {
+      "language": { "type": "String" }
+    }
+  },
+  "settingsLanguageSectionAvailable": "Available",
+  "@settingsLanguageSectionAvailable": {
+    "description": "Section label above the list of translated languages on the language subpage."
+  },
+  "settingsLanguageNoMatches": "No languages match that",
+  "@settingsLanguageNoMatches": {
+    "description": "Shown on the language subpage when the search field filters out every language."
+  },
+  "settingsLanguageHelpTranslate": "Help translate Sono",
+  "@settingsLanguageHelpTranslate": {
+    "description": "Row that opens the Weblate project where translations are contributed."
+  },
+  "settingsLanguageHelpTranslateSubtitle": "Opens Weblate in your browser",
+  "@settingsLanguageHelpTranslateSubtitle": {
+    "description": "Subtitle under the help translate row."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
