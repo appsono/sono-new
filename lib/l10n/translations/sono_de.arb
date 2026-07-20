@@ -502,5 +502,61 @@
     "searchBrowseGenres": "Genres durchsuchen",
     "@searchBrowseGenres": {
         "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
+    },
+    "settingsPageTitle": "Einstellungen",
+    "@settingsPageTitle": {
+        "description": "Title shown in the header of the settings root page."
+    },
+    "settingsSearchTooltip": "Einstellungen durchsuchen",
+    "@settingsSearchTooltip": {
+        "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
+    },
+    "settingsSearchHint": "Einstellungen durchsuchen",
+    "@settingsSearchHint": {
+        "description": "Placeholder inside the search field at the top of the settings root page."
+    },
+    "settingsPlannedBadge": "Geplant",
+    "@settingsPlannedBadge": {
+        "description": "Small badge on a settings row whose feature is on the roadmap but not built yet."
+    },
+    "settingsPlannedBody": "Diese Funktion ist geplant, aber noch nicht verfügbar.",
+    "@settingsPlannedBody": {
+        "description": "Explanation shown in the sheet that opens when a planned settings row is tapped."
+    },
+    "settingsPlannedFollow": "Folge der Entwicklung auf GitHub",
+    "@settingsPlannedFollow": {
+        "description": "Action in the planned feature sheet that opens the project repository."
+    },
+    "settingsPlannedFollowSubtitle": "Öffnet das Repository in deinem Browser",
+    "@settingsPlannedFollowSubtitle": {
+        "description": "Subtitle under the GitHub action in the planned feature sheet."
+    },
+    "settingsProfileUnnamed": "Dein Profil",
+    "@settingsProfileUnnamed": {
+        "description": "Name shown on the profile row in settings when no username has been set yet."
+    },
+    "settingsProfileSubtitle": "Name und Avatar",
+    "@settingsProfileSubtitle": {
+        "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
+    },
+    "settingsAppearance": "Darstellung",
+    "@settingsAppearance": {
+        "description": "Label of the row opening the appearance subpage, and the title of that subpage."
+    },
+    "settingsLanguage": "Sprache",
+    "@settingsLanguage": {
+        "description": "Label of the row opening the language subpage, and the title of that subpage."
+    },
+    "settingsThemeDark": "Dunkel",
+    "@settingsThemeDark": {
+        "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeLight": "Hell",
+    "@settingsThemeLight": {
+        "description": "Name of the light theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsLanguageSystem": "Systemstandard",
+    "@settingsLanguageSystem": {
+        "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
     }
 }
