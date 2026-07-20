@@ -549,6 +549,34 @@
   "@settingsPlannedFollowSubtitle": {
     "description": "Subtitle under the GitHub action in the planned feature sheet."
   },
+  "settingsProfileUnnamed": "Your profile",
+  "@settingsProfileUnnamed": {
+    "description": "Name shown on the profile row in settings when no username has been set yet."
+  },
+  "settingsProfileSubtitle": "Name and avatar",
+  "@settingsProfileSubtitle": {
+    "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
+  },
+  "settingsAppearance": "Appearance",
+  "@settingsAppearance": {
+    "description": "Label of the row opening the appearance subpage, and the title of that subpage."
+  },
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Label of the row opening the language subpage, and the title of that subpage."
+  },
+  "settingsThemeDark": "Dark",
+  "@settingsThemeDark": {
+    "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
+  },
+  "settingsThemeLight": "Light",
+  "@settingsThemeLight": {
+    "description": "Name of the light theme. Shown as the value on the appearance row and as an option in the theme picker."
+  },
+  "settingsLanguageSystem": "System default",
+  "@settingsLanguageSystem": {
+    "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
