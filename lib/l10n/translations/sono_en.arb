@@ -1191,7 +1191,7 @@
   "@settingsBackupImportChoose": {
     "description": "Action in the import confirmation sheet that opens the file picker."
   },
-  "settingsBackupImportDone": "Restored {liked} liked, {albums} albums, {artists} artists, {playlists} playlists",
+  "settingsBackupImportDone": "Restored {liked, plural, =0{no likes} =1{1 like} other{{liked} likes}}, {albums, plural, =0{no albums} =1{1 album} other{{albums} albums}}, {artists, plural, =0{no artists} =1{1 artist} other{{artists} artists}}, {playlists, plural, =0{no playlists} =1{1 playlist} other{{playlists} playlists}}",
   "@settingsBackupImportDone": {
     "description": "Snackbar summarising a successful import.",
     "placeholders": {
@@ -1201,7 +1201,7 @@
       "playlists": { "type": "int" }
     }
   },
-  "settingsBackupImportSkipped": "{songs} songs and {playlists} playlists were not found on this device",
+  "settingsBackupImportSkipped": "{songs, plural, =0{No songs} =1{1 song} other{{songs} songs}} and {playlists, plural, =0{no playlists were} =1{1 playlist was} other{{playlists} playlists were}} not found on this device",
   "@settingsBackupImportSkipped": {
     "description": "Second snackbar after an import, listing what could not be matched to local files.",
     "placeholders": {
