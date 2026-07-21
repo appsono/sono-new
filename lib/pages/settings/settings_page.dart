@@ -39,6 +39,7 @@ import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
 import 'package:sono/pages/settings/subpages/settings_library_page.dart';
 import 'package:sono/pages/settings/subpages/settings_discord_page.dart';
 import 'package:sono/pages/settings/subpages/settings_backup_page.dart';
+import 'package:sono/pages/settings/subpages/settings_about_page.dart';
 
 import 'package:sono/pages/settings/eq_labels.dart';
 
@@ -379,8 +380,9 @@ class _SettingsPageState extends State<SettingsPage> {
           icon: IconsSheet.infoOutlined,
           accent: c.accentRed,
           label: l.settingsAbout,
-          //TODO: push about subpage
-          onTap: () {},
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => SettingsAboutPage(db: widget.db)),
+          ),
         ),
       ],
     );
