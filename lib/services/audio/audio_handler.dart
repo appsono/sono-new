@@ -111,6 +111,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
     //handle audio becoming noisy (headphones unplugged)
     session.becomingNoisyEventStream.listen((_) {
+      if (!_audio.pauseOnDisconnect) return;
       if (_audio.isPlaying) _audio.pause();
     });
   }

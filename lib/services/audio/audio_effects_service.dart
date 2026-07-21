@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'dart:developer' as dev;
 import 'package:media_kit/media_kit.dart';
 import 'package:sono/db/database.dart';
+import 'package:sono/services/audio/eq_presets.dart';
 
 /// 10-band superequalizer center frequencies and octave widths
 /// > uses ffmpegs parametric equalizer
@@ -59,6 +60,9 @@ class AudioEffectsService {
   double get bassBoost => _bassBoost;
   double get speed => _speed;
   double get pitch => _pitch;
+
+  /// Which preset current curve matches, null when custom
+  EqPreset? get currentPreset => EqPresets.matching(_eqGains);
 
   /// Bind Player instance :D
   /// (gets  called once after player creation)

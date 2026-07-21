@@ -89,6 +89,9 @@ class AudioService {
   int _currentIndex = -1;
   bool _shuffle = false;
   RepeatMode _repeat = RepeatMode.off;
+  bool _gapless = true;
+  bool _pauseOnDisconnect = true;
+  double _volume = 100.0;
 
   QueueOrigin _origin = QueueOrigin.allSongs;
   final _originController = StreamController<QueueOrigin>.broadcast();
@@ -233,6 +236,10 @@ class AudioService {
   bool get shuffle => _shuffle;
   RepeatMode get repeat => _repeat;
 
+  bool get gapless => _gapless;
+
+  bool get pauseOnDisconnect => _pauseOnDisconnect;
+
   int get _effectiveIndex {
     if (_shuffle && _shuffleOrder.isNotEmpty && _currentIndex >= 0) {
       return _shuffleOrder[_currentIndex.clamp(0, _shuffleOrder.length - 1)];
@@ -293,7 +300,7 @@ class AudioService {
 
       //playback behavior
       await platform.setProperty('idle-active', 'yes');
-      await platform.setProperty('gapless-audio', 'yes');
+      await platform.setProperty('gapless-audio', _gapless ? 'yes' : 'no');
       //await platform.setProperty('prefetch-playlist', 'yes');
     }
 
@@ -358,6 +365,12 @@ class AudioService {
       'one' => RepeatMode.one,
       _ => RepeatMode.off,
     };
+    _gapless = all['playback.gapless'] != 'false';
+    _pauseOnDisconnect = all['playback.pause_on_disconnect'] != 'false';
+    _volume = double.tryParse(all['playback.volume'] ?? '') ?? 100.0;
+
+    await _applyGapless();
+    await _player.setVolume(_volume);
 
     _shuffleController.add(_shuffle);
     _repeatController.add(_repeat);
@@ -446,6 +459,13 @@ class AudioService {
     await db.transaction(() async {
       await db.setSetting('playback.shuffle', _shuffle.toString());
       await db.setSetting('playback.repeat', _repeat.name);
+      await db.setSetting('playback.gapless', _gapless.toString());
+      await db.setSetting(
+        'playback.pause_on_disconnect',
+        _pauseOnDisconnect.toString(),
+      );
+      await db.setSetting('playback.volume', _volume.toString());
+
       //queue membership/order only rewritten when actually changed
       //plain skips only touch index row
       if (_queueDirty) {
@@ -506,8 +526,31 @@ class AudioService {
   Future<void> seek(Duration position) => _player.seek(position);
 
   /// Set volume (0.0-100.0)
-  Future<void> setVolume(double volume) =>
-      _player.setVolume(volume.clamp(0.0, 100.0));
+  Future<void> setVolume(double volume) async {
+    _volume = volume.clamp(0.0, 100.0);
+    await _player.setVolume(_volume);
+    _scheduleStateSave();
+  }
+
+  /// Toggle gapless preloading
+  Future<void> setGapless(bool enabled) async {
+    _gapless = enabled;
+    await _applyGapless();
+    _scheduleStateSave();
+  }
+
+  /// Toggle pausing hen audio output disconnects
+  Future<void> setPauseOnDisconnect(bool enabled) async {
+    _pauseOnDisconnect = enabled;
+    _scheduleStateSave();
+  }
+
+  Future<void> _applyGapless() async {
+    final platform = _player.platform;
+    if (platform is NativePlayer) {
+      await platform.setProperty('gapless-audio', _gapless ? 'yes' : 'no');
+    }
+  }
 
   /// Stop playback and clear queue
   Future<void> stop() async {
