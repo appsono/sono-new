@@ -823,6 +823,60 @@
   "@settingsEqPresetCustom": {
     "description": "Shown instead of a preset name when the equalizer curve matches none of the presets."
   },
+  "settingsEqTitle": "Equalizer",
+  "@settingsEqTitle": {
+    "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+  },
+  "settingsEqEnable": "Equalizer",
+  "@settingsEqEnable": {
+    "description": "Toggle that switches the equalizer on and off."
+  },
+  "settingsEqEnableSubtitle": "Applied through the mpv filter chain",
+  "@settingsEqEnableSubtitle": {
+    "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
+  },
+  "settingsEqSectionPreset": "Preset",
+  "@settingsEqSectionPreset": {
+    "description": "Section label above the preset chips on the equalizer subpage."
+  },
+  "settingsEqSectionEffects": "Effects",
+  "@settingsEqSectionEffects": {
+    "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
+  },
+  "settingsEqBassBoost": "Bass boost",
+  "@settingsEqBassBoost": {
+    "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
+  },
+  "settingsEqSpeed": "Speed",
+  "@settingsEqSpeed": {
+    "description": "Slider controlling playback rate without changing pitch."
+  },
+  "settingsEqPitch": "Pitch",
+  "@settingsEqPitch": {
+    "description": "Slider controlling pitch without changing playback rate."
+  },
+  "settingsEqValueDb": "{value} dB",
+  "@settingsEqValueDb": {
+    "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "settingsEqValueRate": "{value}x",
+  "@settingsEqValueRate": {
+    "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "settingsEqResetAll": "Reset all effects",
+  "@settingsEqResetAll": {
+    "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
+  },
+  "settingsEqResetTooltip": "Reset the equalizer",
+  "@settingsEqResetTooltip": {
+    "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
