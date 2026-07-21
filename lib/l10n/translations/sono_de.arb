@@ -136,10 +136,6 @@
     "authSignIn": "Einloggen",
     "settingsSupportKofi": "Supporte mich",
     "settingsContributors": "Mitwirkende",
-    "contributorsTitle": "Mitwirkende",
-    "@contributorsTitle": {
-        "description": "Title of the contributors bottom sheet"
-    },
     "contributorsMaintainer": "Maintainer",
     "contributorsCodeSection": "Code",
     "contributorsTranslatorSection": "Übersetzungen",

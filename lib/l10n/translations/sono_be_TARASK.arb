@@ -136,10 +136,6 @@
     "authSignIn": "Увайсьці",
     "settingsSupportKofi": "Падтрымаць мяне",
     "settingsContributors": "Удзельнікі",
-    "contributorsTitle": "Удзельнікі",
-    "@contributorsTitle": {
-        "description": "Title of the contributors bottom sheet"
-    },
     "contributorsMaintainer": "Аўтар",
     "contributorsCodeSection": "Распрацоўка",
     "contributorsTranslatorSection": "Пераклады",

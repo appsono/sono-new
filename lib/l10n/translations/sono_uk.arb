@@ -136,10 +136,6 @@
     "authSignIn": "Увійти",
     "settingsSupportKofi": "Підтримати мене",
     "settingsContributors": "Вкладники",
-    "contributorsTitle": "Вкладники",
-    "@contributorsTitle": {
-        "description": "Title of the contributors bottom sheet"
-    },
     "contributorsMaintainer": "Автор",
     "contributorsCodeSection": "Код",
     "contributorsTranslatorSection": "Перекладачі",
