@@ -29,6 +29,7 @@ const double _tileBrandIconSize = 16;
 const double _tileIconSize = 19;
 const double _tileTintAlpha = 0.18;
 const double _plannedOpacity = 0.55;
+const double _disabledOpacity = 0.45;
 const double _valueMaxWidth = 130;
 
 // ==== row ====
@@ -44,6 +45,7 @@ class SettingsRow extends StatelessWidget {
   final String? value;
   final bool external;
   final bool planned;
+  final bool enabled;
   final bool? toggle;
   final ValueChanged<bool>? onToggle;
   final VoidCallback? onTap;
@@ -57,6 +59,7 @@ class SettingsRow extends StatelessWidget {
     this.value,
     this.external = false,
     this.planned = false,
+    this.enabled = true,
     this.toggle,
     this.onToggle,
     this.onTap,
@@ -110,19 +113,22 @@ class SettingsRow extends StatelessWidget {
       //planned rows always show their explanation
       onTap: planned
           ? () => SettingsPlannedSheet.show(context, feature: label)
-          : onTap,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: _rowMinHeight),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-        child: Row(
-          children: [
-            Expanded(
-              child: planned
-                  ? Opacity(opacity: _plannedOpacity, child: body)
-                  : body,
-            ),
-            ..._trailing(context),
-          ],
+          : (enabled ? onTap : null),
+      child: Opacity(
+        opacity: enabled ? 1 : _disabledOpacity,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: _rowMinHeight),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          child: Row(
+            children: [
+              Expanded(
+                child: planned
+                    ? Opacity(opacity: _plannedOpacity, child: body)
+                    : body,
+              ),
+              ..._trailing(context),
+            ],
+          ),
         ),
       ),
     );
@@ -159,7 +165,7 @@ class SettingsRow extends StatelessWidget {
     if (toggle != null) {
       out.addAll([
         const SizedBox(width: 10),
-        Switch(value: toggle!, onChanged: onToggle),
+        Switch(value: toggle!, onChanged: enabled ? onToggle : null),
       ]);
       return out;
     }
