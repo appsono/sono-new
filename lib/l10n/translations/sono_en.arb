@@ -1031,11 +1031,33 @@
   "@settingsLibraryRescanRunning": {
     "description": "Replaces the rescan label while a scan is in progress."
   },
-  "settingsLibraryLastScan": "Last scan {date}",
+  "settingsLibraryLastScan": "Last scan {date} at {time}",
   "@settingsLibraryLastScan": {
     "description": "First footer line on the library subpage, showing when the last scan finished.",
     "placeholders": {
-      "date": { "type": "DateTime", "format": "yMMMd" }
+      "date": { "type": "DateTime", "format": "yMMMd" },
+      "time": { "type": "DateTime", "format": "jm" }
+    }
+  },
+  "settingsLibraryCountSongs": "{count, plural, =0{no songs} =1{1 song} other{{count} songs}}",
+  "@settingsLibraryCountSongs": {
+    "description": "Song total in the library footer. Written out in full, not abbreviated.",
+    "placeholders": {
+      "count": { "type": "int", "format": "decimalPattern" }
+    }
+  },
+  "settingsLibraryCountAlbums": "{count, plural, =0{no albums} =1{1 album} other{{count} albums}}",
+  "@settingsLibraryCountAlbums": {
+    "description": "Album total in the library footer. Written out in full, not abbreviated.",
+    "placeholders": {
+      "count": { "type": "int", "format": "decimalPattern" }
+    }
+  },
+  "settingsLibraryCountArtists": "{count, plural, =0{no artists} =1{1 artist} other{{count} artists}}",
+  "@settingsLibraryCountArtists": {
+    "description": "Artist total in the library footer. Written out in full, not abbreviated.",
+    "placeholders": {
+      "count": { "type": "int", "format": "decimalPattern" }
     }
   },
   "settingsSupportKofi": "Support me",
