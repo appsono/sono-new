@@ -65,7 +65,7 @@ class DiscordRpcService {
   SonoDatabase? _db;
 
   bool get isEnabled => _enabled;
-  bool get showAt => _showArt;
+  bool get showArt => _showArt;
   bool get showElapsed => _showElapsed;
   bool get showButton => _showButton;
   bool get onlyWhilePlaying => _onlyWhilePlaying;
