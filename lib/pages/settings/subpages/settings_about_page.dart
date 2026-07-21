@@ -17,7 +17,7 @@ import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 // ==== links ====
 const String _repoSlug = 'appsono/sono-new';
 const String _repoUrl = 'https://github.com/$_repoSlug';
-const String _kofiUrl = 'https://ko-fi/mathiiis/';
+const String _kofiUrl = 'https://ko-fi.com/mathiiis/';
 
 // ==== layout constants ====
 const double _appIconSize = 84;
