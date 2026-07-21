@@ -12,6 +12,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sono_query/sono_query.dart';
 
 import 'package:sono/l10n/localizations.dart';
 import 'package:sono/services/theme_service.dart';
@@ -34,9 +35,9 @@ import 'package:sono/pages/settings/subpages/settings_language_page.dart';
 import 'package:sono/pages/settings/subpages/settings_playback_page.dart';
 import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
 import 'package:sono/pages/settings/subpages/settings_library_page.dart';
+import 'package:sono/pages/settings/subpages/settings_discord_page.dart';
 
 import 'package:sono/pages/settings/eq_labels.dart';
-import 'package:sono_query/sono_query.dart';
 
 /// Settings root
 class SettingsPage extends StatefulWidget {
@@ -297,9 +298,15 @@ class _SettingsPageState extends State<SettingsPage> {
           brand: true,
           accent: c.accentLightBlue,
           label: l.settingsDiscord,
-          value: user != null ? '@user' : l.settingsDiscordDisconnected,
-          //TODO: push discord subpage
-          onTap: () {},
+          value: user != null ? '@$user' : l.settingsDiscordDisconnected,
+          onTap: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsDiscordPage(db: widget.db),
+              ),
+            );
+            if (mounted) _loadMeta();
+          },
         ),
         SettingsRow(
           icon: IconsSheet.backupOutlined,
