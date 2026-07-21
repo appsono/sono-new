@@ -161,6 +161,14 @@ class SonoDatabase extends _$SonoDatabase {
     };
   }
 
+  /// Total number of artists in library
+  Future<int> countArtists() async {
+    final exp = artists.id.count();
+    final q = selectOnly(artists)..addColumns([exp]);
+    final row = await q.getSingle();
+    return row.read(exp) ?? 0;
+  }
+
   Future<int> getOrCreateArtist(String name) async {
     final existing = await (select(
       artists,
@@ -287,6 +295,14 @@ class SonoDatabase extends _$SonoDatabase {
         cover: Value(cover),
       ),
     );
+  }
+
+  /// Total number of albums in library
+  Future<int> countAlbums() async {
+    final exp = albums.id.count();
+    final q = selectOnly(artists)..addColumns([exp]);
+    final row = await q.getSingle();
+    return row.read(exp) ?? 0;
   }
 
   Future<Map<(String, int), int>> ensureAlbumsExist(
