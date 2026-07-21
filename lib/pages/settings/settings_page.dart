@@ -23,11 +23,13 @@ import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/search_field.dart';
+import 'package:sono/services/update_service.dart';
 
 import 'package:sono/pages/settings/widgets/settings_group.dart';
 import 'package:sono/pages/settings/widgets/settings_profile_row.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
+import 'package:sono/pages/settings/widgets/settings_update_sheet.dart';
 
 import 'package:sono/pages/settings/subpages/settings_profile_page.dart';
 import 'package:sono/pages/settings/subpages/settings_appearance_page.dart';
@@ -66,6 +68,9 @@ class _SettingsPageState extends State<SettingsPage> {
   String? _discordUser;
   String? _version;
   String? _build;
+  String? _updateStatus;
+  String? _updateLatest;
+  bool _checkingUpdate = false;
 
   @override
   void initState() {
@@ -78,12 +83,18 @@ class _SettingsPageState extends State<SettingsPage> {
     final count = await widget.db.countSongs();
     final discord = await widget.db.getSetting('discord.username');
     final info = await PackageInfo.fromPlatform();
+    final updateStatus = await widget.db.getSetting('update.last_status');
+    final updateLatest = await widget.db.getSetting(
+      'update.last_available_version',
+    );
     if (!mounted) return;
     setState(() {
       _songCount = count;
       _discordUser = (discord?.isEmpty ?? true) ? null : discord;
       _version = info.version;
       _build = info.buildNumber;
+      _updateStatus = updateStatus;
+      _updateLatest = updateLatest;
     });
   }
 
@@ -102,6 +113,22 @@ class _SettingsPageState extends State<SettingsPage> {
   void _clearSearch() {
     _searchCtrl.clear();
     _onSearchChanged('');
+  }
+
+  Future<void> _checkForUpdate() async {
+    if (_checkingUpdate) return;
+    setState(() => _checkingUpdate = true);
+
+    final result = await UpdateService.instance.check(force: true);
+    if (!mounted) return;
+    setState(() => _checkingUpdate = false);
+
+    await SettingsUpdateSheet.show(
+      context,
+      result: result,
+      installedVersion: _version ?? '',
+    );
+    if (mounted) _loadMeta();
   }
 
   @override
@@ -345,9 +372,8 @@ class _SettingsPageState extends State<SettingsPage> {
           icon: IconsSheet.updateOutlined,
           accent: c.accentGreen,
           label: l.settingsUpdates,
-          value: _version,
-          //TODO: force a check and report result
-          onTap: () {},
+          value: _updateValue(l),
+          onTap: _checkForUpdate,
         ),
         SettingsRow(
           icon: IconsSheet.infoOutlined,
@@ -372,5 +398,16 @@ class _SettingsPageState extends State<SettingsPage> {
         l.settingsLicenseLine,
       ],
     );
+  }
+
+  //falls back to installed version until check has run
+  String? _updateValue(AppLocalizations l) {
+    if (_checkingUpdate) return l.settingsUpdatesChecking;
+
+    return switch (_updateStatus) {
+      'upToDate' => l.settingsUpdatesUpToDate,
+      'available' => l.settingsUpdatesAvailable(_updateLatest ?? ''),
+      _ => _version,
+    };
   }
 }
