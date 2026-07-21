@@ -731,5 +731,86 @@
     "settingsLanguageHelpTranslateSubtitle": "Öffnet Weblate in deinem Browser",
     "@settingsLanguageHelpTranslateSubtitle": {
         "description": "Subtitle under the help translate row."
+    },
+    "settingsPlaybackSectionTransitions": "Übergänge",
+    "@settingsPlaybackSectionTransitions": {
+        "description": "Section label above gapless, crossfade and fade options on the playback subpage."
+    },
+    "settingsPlaybackGapless": "Lückenlose Wiedergabe",
+    "@settingsPlaybackGapless": {
+        "description": "Toggle that preloads the next track so it starts without a gap."
+    },
+    "settingsPlaybackGaplessSubtitle": "Lädt den nächsten Song vor",
+    "@settingsPlaybackGaplessSubtitle": {
+        "description": "Subtitle under the gapless playback row."
+    },
+    "settingsPlaybackCrossfade": "Überblenden",
+    "@settingsPlaybackCrossfade": {
+        "description": "Row for fading one song into the next. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPause": "Beim Pausieren ausblenden",
+    "@settingsPlaybackFadeOnPause": {
+        "description": "Row for fading out on pause rather than cutting. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPauseSubtitle": "Kurzes Ausblenden statt eines abrupten Stopps",
+    "@settingsPlaybackFadeOnPauseSubtitle": {
+        "description": "Subtitle under the fade on pause row."
+    },
+    "settingsPlaybackSectionSound": "Ton",
+    "@settingsPlaybackSectionSound": {
+        "description": "Section label above the equalizer, normalisation and volume options on the playback subpage."
+    },
+    "settingsPlaybackNormalisation": "Lautstärke ausgleichen",
+    "@settingsPlaybackNormalisation": {
+        "description": "Row for evening out loudness between tracks using ReplayGain tags. Currently marked as planned."
+    },
+    "settingsPlaybackVolume": "App-Lautstärke",
+    "@settingsPlaybackVolume": {
+        "description": "Slider controlling Sono's own output volume, separate from the device volume."
+    },
+    "settingsPlaybackVolumeValue": "{value}%",
+    "@settingsPlaybackVolumeValue": {
+        "description": "Value shown next to the in-app volume slider.",
+        "placeholders": {
+            "value": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsPlaybackSectionBehaviour": "Verhalten",
+    "@settingsPlaybackSectionBehaviour": {
+        "description": "Section label above the sleep timer and headphone options on the playback subpage."
+    },
+    "settingsPlaybackSleepTimer": "Schlaftimer",
+    "@settingsPlaybackSleepTimer": {
+        "description": "Row for stopping playback after a set time. Currently marked as planned."
+    },
+    "settingsPlaybackResumeOnConnect": "Bei Kopfhörerverbindung fortsetzen",
+    "@settingsPlaybackResumeOnConnect": {
+        "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+    },
+    "settingsPlaybackPauseOnDisconnect": "Beim Trennen pausieren",
+    "@settingsPlaybackPauseOnDisconnect": {
+        "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+    },
+    "settingsEqPresetFlat": "Linear",
+    "@settingsEqPresetFlat": {
+        "description": "Equalizer preset with every band at zero."
+    },
+    "settingsEqPresetBass": "Bass",
+    "@settingsEqPresetBass": {
+        "description": "Equalizer preset that lifts the low frequencies."
+    },
+    "settingsEqPresetVocal": "Gesang",
+    "@settingsEqPresetVocal": {
+        "description": "Equalizer preset that lifts the mid frequencies where voices sit."
+    },
+    "settingsEqPresetRock": "Rock",
+    "@settingsEqPresetRock": {
+        "description": "Equalizer preset that lifts both the low and high frequencies."
+    },
+    "settingsEqPresetCustom": "Benutzerdefiniert",
+    "@settingsEqPresetCustom": {
+        "description": "Shown instead of a preset name when the equalizer curve matches none of the presets."
     }
 }
