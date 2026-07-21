@@ -26,6 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved theme state management from SonoApp into ThemeService, mirroring LocaleService
 - Existing installs keep their saved light or dark theme choice, while fresh installs now default to the system theme
 - Changed Discord avatar storage to save usernames without the leading `@`
+- Removed scan.lastCompletedAt from backups, as it could restore scan state from another device
+- Added support for exporting gapless playback, pause on disconnect, and in-app volume settings
+- Improved backup safety by excluding settings that mix preferences with machine state or account identity
+
+### Fixed
+
+- Fixed backup settings export by replacing the prefix allowlist with an explicit list of exportable keys
+- Fixed missing exports for album grouping, theme mode, playback settings, and Discord display settings
+- Fixed imports to use the same export key list instead of maintaining a separate list
 
 ## [0.10.1+11] - 2026-07-20
 
