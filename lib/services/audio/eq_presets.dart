@@ -37,6 +37,11 @@ abstract final class EqPresets {
     gains: [6, 5, 4, 2, 0, 0, 0, 0, 0, 0],
   );
 
+  static const treble = EqPreset(
+    id: 'treble',
+    gains: [0, 0, 0, 0, 0, 1, 2, 4, 5, 6],
+  );
+
   static const vocal = EqPreset(
     id: 'vocal',
     gains: [-2, -1, 0, 2, 4, 4, 3, 1, 0, -1],
@@ -47,7 +52,31 @@ abstract final class EqPresets {
     gains: [5, 4, 3, 1, -1, -1, 1, 3, 4, 4],
   );
 
-  static const all = <EqPreset>[flat, bass, vocal, rock];
+  static const electronic = EqPreset(
+    id: 'electronic',
+    gains: [5, 4, 1, 0, -2, 1, 1, 2, 4, 5],
+  );
+
+  static const brainFryer = EqPreset(
+    id: 'brain_fryer',
+    gains: [12, 11, 7, 0, -5, -5, 0, 7, 11, 12],
+  );
+
+  static const fryerUltimate = EqPreset(
+    id: 'fryer_ultimate',
+    gains: [12, 12, 12, 12, 12, 12, 12, 12, 12, 12],
+  );
+
+  static const all = <EqPreset>[
+    flat,
+    bass,
+    treble,
+    vocal,
+    rock,
+    electronic,
+    brainFryer,
+    fryerUltimate,
+  ];
 
   /// Preset [gains] corresponds to, or null for a custom curve
   static EqPreset? matching(List<double> gains) {

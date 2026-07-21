@@ -22,8 +22,12 @@ String eqPresetName(AppLocalizations l, EqPreset preset) {
   return switch (preset.id) {
     'flat' => l.settingsEqPresetFlat,
     'bass' => l.settingsEqPresetBass,
+    'treble' => l.settingsEqPresetTreble,
     'vocal' => l.settingsEqPresetVocal,
     'rock' => l.settingsEqPresetRock,
+    'electronic' => l.settingsEqPresetElectronic,
+    'brain_fryer' => l.settingsEqPresetBrainFryer,
+    'fryer_ultimate' => l.settingsEqPresetFryerUltimate,
     _ => preset.id,
   };
 }

@@ -521,6 +521,7 @@
 
   "authSignIn": "Sign in",
 
+
   "settingsPageTitle": "Settings",
   "@settingsPageTitle": {
     "description": "Title shown in the header of the settings root page."
@@ -803,26 +804,46 @@
   "@settingsPlaybackPauseOnDisconnect": {
     "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
   },
+
+
   "settingsEqPresetFlat": "Flat",
   "@settingsEqPresetFlat": {
-    "description": "Equalizer preset with every band at zero."
+    "description": "Equalizer preset, every band at zero."
   },
   "settingsEqPresetBass": "Bass",
   "@settingsEqPresetBass": {
-    "description": "Equalizer preset that lifts the low frequencies."
+    "description": "Equalizer preset, lifts the lows."
+  },
+  "settingsEqPresetTreble": "Treble",
+  "@settingsEqPresetTreble": {
+    "description": "Equalizer preset, lifts the highs."
   },
   "settingsEqPresetVocal": "Vocal",
   "@settingsEqPresetVocal": {
-    "description": "Equalizer preset that lifts the mid frequencies where voices sit."
+    "description": "Equalizer preset, lifts the mids where voices sit."
   },
   "settingsEqPresetRock": "Rock",
   "@settingsEqPresetRock": {
-    "description": "Equalizer preset that lifts both the low and high frequencies."
+    "description": "Equalizer preset, lifts the lows and highs."
+  },
+  "settingsEqPresetElectronic": "Electronic",
+  "@settingsEqPresetElectronic": {
+    "description": "Equalizer preset for electronic music, lifts the lows and highs."
+  },
+  "settingsEqPresetBrainFryer": "Brain Fryer",
+  "@settingsEqPresetBrainFryer": {
+    "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
+  },
+  "settingsEqPresetFryerUltimate": "Fryer Ultimate",
+  "@settingsEqPresetFryerUltimate": {
+    "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
   },
   "settingsEqPresetCustom": "Custom",
   "@settingsEqPresetCustom": {
-    "description": "Shown instead of a preset name when the equalizer curve matches none of the presets."
+    "description": "Shown instead of a preset name when the curve matches none of them."
   },
+
+
   "settingsEqTitle": "Equalizer",
   "@settingsEqTitle": {
     "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
