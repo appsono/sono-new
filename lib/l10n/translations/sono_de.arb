@@ -1238,5 +1238,35 @@
                 "format": "jm"
             }
         }
+    },
+    "settingsBackupImportDone": "{liked, plural, =0{keine Likes} =1{1 Like} other{{liked} Likes}}, {albums, plural, =0{keine Alben} =1{1 Album} other{{albums} Alben}}, {artists, plural, =0{keine Künstler} =1{1 Künstler} other{{artists} Künstler}}, {playlists, plural, =0{keine Playlists} =1{1 Playlist} other{{playlists} Playlists}} wiederhergestellt",
+    "@settingsBackupImportDone": {
+        "description": "Snackbar summarising a successful import.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportSkipped": "{songs, plural, =0{Keine Songs} =1{1 Song} other{{songs} Songs}} und {playlists, plural, =0{keine Playlisten} =1{1 Playlist} other{{playlists} Playlisten}} wurden auf diesem Gerät nicht gefunden",
+    "@settingsBackupImportSkipped": {
+        "description": "Second snackbar after an import, listing what could not be matched to local files.",
+        "placeholders": {
+            "songs": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
     }
 }
