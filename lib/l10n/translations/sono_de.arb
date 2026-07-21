@@ -870,5 +870,21 @@
     "settingsEqResetTooltip": "Equalizer zurücksetzen",
     "@settingsEqResetTooltip": {
         "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
+    },
+    "settingsEqPresetTreble": "Treble",
+    "@settingsEqPresetTreble": {
+        "description": "Equalizer preset, lifts the highs."
+    },
+    "settingsEqPresetElectronic": "Electronic",
+    "@settingsEqPresetElectronic": {
+        "description": "Equalizer preset for electronic music, lifts the lows and highs."
+    },
+    "settingsEqPresetBrainFryer": "Hirn-Fritteuse",
+    "@settingsEqPresetBrainFryer": {
+        "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
+    },
+    "settingsEqPresetFryerUltimate": "Gehirngrill 9000",
+    "@settingsEqPresetFryerUltimate": {
+        "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
     }
 }
