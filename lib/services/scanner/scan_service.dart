@@ -155,6 +155,12 @@ class ScanService {
     await db.removeOrphanedAlbums();
     await db.removeOrphanedArtists();
     if (force) await db.restoreFavoritedAlbums(favSnapshot);
+
+    //only written after a completed scan, so failed scans keep old timestamps
+    await db.setSetting(
+      'scan.lastCompletedAt',
+      DateTime.now().toIso8601String(),
+    );
   }
 
   Future<(Map<String, int>, Map<(String, int), int>, Map<String, int>)>
