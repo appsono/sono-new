@@ -98,6 +98,11 @@ class DiscordRpcService {
         await _secure.write(key: 'discord.session_token', value: legacySession);
         await db.removeSetting('discord.session_token');
       }
+      //old settings stored this with the @ already on it
+      final storedUser = await db.getSetting('discord.username');
+      if (storedUser != null && storedUser.startsWith('@')) {
+        await db.setSetting('discord.username', storedUser.substring(1));
+      }
 
       _userToken = legacyToken ?? await _secure.read(key: 'discord.token');
       _enabled = (await db.getSetting('discord.enabled')) == 'true';
