@@ -49,6 +49,10 @@ class DiscordRpcService {
   Timer? _debounceTimer;
   DateTime? _rateLimitUntil;
   bool _enabled = false;
+  bool _showArt = true;
+  bool _showElapsed = true;
+  bool _showButton = true;
+  bool _onlyWhilePlaying = true;
 
   final Completer<void> _ready = Completer<void>();
 
@@ -61,6 +65,10 @@ class DiscordRpcService {
   SonoDatabase? _db;
 
   bool get isEnabled => _enabled;
+  bool get showAt => _showArt;
+  bool get showElapsed => _showElapsed;
+  bool get showButton => _showButton;
+  bool get onlyWhilePlaying => _onlyWhilePlaying;
 
   /// Wether a discord token is loaded (user logged in)
   bool get isConnected => _userToken != null;
@@ -93,6 +101,11 @@ class DiscordRpcService {
 
       _userToken = legacyToken ?? await _secure.read(key: 'discord.token');
       _enabled = (await db.getSetting('discord.enabled')) == 'true';
+      _showArt = (await db.getSetting('discord.show_art')) != 'false';
+      _showElapsed = (await db.getSetting('discord.show_elapsed')) != 'false';
+      _showButton = (await db.getSetting('discord.show_button')) != 'false';
+      _onlyWhilePlaying =
+          (await db.getSetting('discord.only_while_playig')) != 'false';
       _sessionToken =
           legacySession ?? await _secure.read(key: 'discord.session_token');
     } on PlatformException catch (e) {
@@ -125,6 +138,8 @@ class DiscordRpcService {
 
     final details = await _getUserDetails();
     final id = details['id'] as String;
+    final name = (details['global_name'] ?? details['username']) as String;
+    final username = details['username'] as String;
     final avatar = details['avatar'] as String?;
     final avatarUrl = avatar != null
         ? 'https://cdn.discordapp.com/avatars/$id/$avatar'
@@ -133,15 +148,18 @@ class DiscordRpcService {
     //persist
     await _secure.write(key: 'discord.token', value: userToken);
     await db.setSetting('discord.enabled', 'true');
+    await db.setSetting('discord.username', username);
+    await db.setSetting('discord.name', name);
+    if (avatarUrl != null) {
+      await db.setSetting('discord.avatar_url', avatarUrl);
+    } else {
+      await db.removeSetting('discord.avatar_url');
+    }
     _enabled = true;
 
     _start();
 
-    return (
-      name: (details['global_name'] ?? details['username']) as String,
-      username: details['username'] as String,
-      avatarUrl: avatarUrl,
-    );
+    return (name: name, username: username, avatarUrl: avatarUrl);
   }
 
   /// Disconnect discord rpc
@@ -171,6 +189,8 @@ class DiscordRpcService {
       await _secure.delete(key: 'discord.access_token');
       await _secure.delete(key: 'discord.session_token');
       await db.removeSetting('discord.username');
+      await db.removeSetting('discord.name');
+      await db.removeSetting('discord.avatar_url');
       await db.removeSetting('discord.enabled');
     }
   }
@@ -186,6 +206,36 @@ class DiscordRpcService {
       await _clearPresence();
       _stop();
     }
+  }
+
+  /// Toggle wether cover is sent
+  Future<void> setShowArt(bool value) async {
+    _showArt = value;
+    await _db?.setSetting('discord.show_art', value.toString());
+    _scheduleUpdate();
+  }
+
+  /// Toggle wether playback timestamps are sent
+  Future<void> setShowElapsed(bool value) async {
+    _showElapsed = value;
+    await _db?.setSetting('discord.show_elapsed', value.toString());
+    _scheduleUpdate();
+  }
+
+  /// Toggle wether cover is sent
+  Future<void> setShowButton(bool value) async {
+    _showButton = value;
+    await _db?.setSetting('discord.show_button', value.toString());
+    _scheduleUpdate();
+  }
+
+  /// Toggle clearing presence after a minute paused
+  Future<void> setOnlyWhilePlaying(bool value) async {
+    _onlyWhilePlaying = value;
+    await _db?.setSetting('discord.only_while_playig', value.toString());
+    //cancel pending clear if this was just switched off
+    if (!value) _clearTimer?.cancel();
+    _scheduleUpdate();
   }
 
   // ==== stream listeners ====
@@ -310,11 +360,15 @@ class DiscordRpcService {
       statusDisplayType: 1, //show artist
       details: song.title,
       state: artistName ?? 'Unknown artist',
-      assets: DiscordAssets(largeImage: coverURL),
-      timestamps: isPlaying
+      assets: _showArt ? DiscordAssets(largeImage: coverURL) : null,
+      timestamps: !_showElapsed
+          ? null
+          : isPlaying
           ? DiscordTimestamps(start: startTs, end: endTs)
           : DiscordTimestamps(start: now),
-      buttons: const [DiscordButton(label: 'Try Sono', url: _appUrl)],
+      buttons: _showButton
+          ? const [DiscordButton(label: 'Try Sono', url: _appUrl)]
+          : null,
     );
 
     try {
@@ -325,6 +379,7 @@ class DiscordRpcService {
 
     //if paused, schedule clearing after timeout
     if (!isPlaying) {
+      if (!_onlyWhilePlaying) return;
       _clearTimer = Timer(_pauseClearDisplay, () async {
         try {
           await _clearPresence();
