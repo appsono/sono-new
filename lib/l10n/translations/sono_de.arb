@@ -1340,7 +1340,7 @@
     "@settingsAboutTitle": {
         "description": "Title of the about subpage. Shorter than the row label, which is 'About Sono'."
     },
-    "settingsAboutVersion": "{version} · Build {build}",
+    "settingsAboutVersion": "{version} • Build {build}",
     "@settingsAboutVersion": {
         "description": "Version line under the app name in the about hero. Does not repeat the app name, unlike settingsVersionLine.",
         "placeholders": {
