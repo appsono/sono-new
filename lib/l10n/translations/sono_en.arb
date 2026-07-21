@@ -1144,6 +1144,99 @@
   "@settingsDiscordPreviewButton": {
     "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
   },
+  "settingsBackupExport": "Export backup",
+  "@settingsBackupExport": {
+    "description": "Row that writes a backup file."
+  },
+  "settingsBackupExporting": "Exporting…",
+  "@settingsBackupExporting": {
+    "description": "Replaces the export label while a backup is being written."
+  },
+  "settingsBackupExportSubtitle": "Likes, favourites, playlists, profile and settings",
+  "@settingsBackupExportSubtitle": {
+    "description": "Subtitle under the export row, listing what a backup contains."
+  },
+  "settingsBackupExportSaved": "Saved to {path}",
+  "@settingsBackupExportSaved": {
+    "description": "Snackbar confirming where the backup file was written.",
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "settingsBackupExportFailed": "Backup export failed",
+  "@settingsBackupExportFailed": {
+    "description": "Snackbar shown when writing the backup failed. The error follows after a colon."
+  },
+  "settingsBackupImport": "Import backup",
+  "@settingsBackupImport": {
+    "description": "Row that reads a backup file back in."
+  },
+  "settingsBackupImporting": "Importing…",
+  "@settingsBackupImporting": {
+    "description": "Replaces the import label while a backup is being restored."
+  },
+  "settingsBackupImportSubtitle": "Merges into your library, then rescans",
+  "@settingsBackupImportSubtitle": {
+    "description": "Subtitle under the import row."
+  },
+  "settingsBackupImportConfirmTitle": "Import a backup?",
+  "@settingsBackupImportConfirmTitle": {
+    "description": "Title of the sheet shown before choosing a backup file."
+  },
+  "settingsBackupImportConfirmBody": "Your settings are overwritten and a full rescan runs. Likes, favourites and playlists you already have are kept, the backup is merged on top.",
+  "@settingsBackupImportConfirmBody": {
+    "description": "Explanation in the import confirmation sheet."
+  },
+  "settingsBackupImportChoose": "Choose a file",
+  "@settingsBackupImportChoose": {
+    "description": "Action in the import confirmation sheet that opens the file picker."
+  },
+  "settingsBackupImportDone": "Restored {liked} liked, {albums} albums, {artists} artists, {playlists} playlists",
+  "@settingsBackupImportDone": {
+    "description": "Snackbar summarising a successful import.",
+    "placeholders": {
+      "liked": { "type": "int" },
+      "albums": { "type": "int" },
+      "artists": { "type": "int" },
+      "playlists": { "type": "int" }
+    }
+  },
+  "settingsBackupImportSkipped": "{songs} songs and {playlists} playlists were not found on this device",
+  "@settingsBackupImportSkipped": {
+    "description": "Second snackbar after an import, listing what could not be matched to local files.",
+    "placeholders": {
+      "songs": { "type": "int" },
+      "playlists": { "type": "int" }
+    }
+  },
+  "settingsBackupImportFailed": "Backup import failed",
+  "@settingsBackupImportFailed": {
+    "description": "Snackbar shown when reading the backup failed. The error follows after a colon."
+  },
+  "settingsBackupNote": "Importing keeps everything you already have. Songs that are not on this device are skipped and reported at the end.",
+  "@settingsBackupNote": {
+    "description": "Note under the export and import rows, clarifying that importing is not destructive."
+  },
+  "settingsBackupSectionAutomatic": "Automatic",
+  "@settingsBackupSectionAutomatic": {
+    "description": "Section label above the scheduled backup option."
+  },
+  "settingsBackupWeekly": "Weekly backup",
+  "@settingsBackupWeekly": {
+    "description": "Toggle for writing a backup once a week. Currently marked as planned."
+  },
+  "settingsBackupWeeklySubtitle": "Written to your music folder",
+  "@settingsBackupWeeklySubtitle": {
+    "description": "Subtitle under the weekly backup row."
+  },
+  "settingsBackupLastExport": "Last export {date} at {time}",
+  "@settingsBackupLastExport": {
+    "description": "Footer line showing when a backup was last written. Both placeholders receive the same timestamp.",
+    "placeholders": {
+      "date": { "type": "DateTime", "format": "yMMMd" },
+      "time": { "type": "DateTime", "format": "jm" }
+    }
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
