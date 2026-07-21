@@ -300,7 +300,7 @@ class SonoDatabase extends _$SonoDatabase {
   /// Total number of albums in library
   Future<int> countAlbums() async {
     final exp = albums.id.count();
-    final q = selectOnly(artists)..addColumns([exp]);
+    final q = selectOnly(albums)..addColumns([exp]);
     final row = await q.getSingle();
     return row.read(exp) ?? 0;
   }
