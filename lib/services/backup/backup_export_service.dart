@@ -25,9 +25,26 @@ class BackupExportService {
 
   static const formatVersion = 1;
 
-  /// Setting prefixes safe to carry across devices
-  static const _exportableSettingPrefixes = ['scan.', 'fx.', '.library'];
-  static const _exportableSettingKeys = {'app.locale'};
+  //fx.* is safe as effects, other prefixes mix settings with state
+  static const exportableSettingPrefixes = ['fx.'];
+  static const exportableSettingKeys = {
+    'app.locale',
+    'theme.mode',
+    'library.albumGrouping',
+    'scan.excludedPaths',
+    'scan.additionalPaths',
+    'scan.minDurationMs',
+    'scan.additionalDelimiters',
+    'scan.excludedArtists',
+    'scan.artistParserOn',
+    'playback.gapless',
+    'playnacl.pause_on_disconnect',
+    'playback.volume',
+    'discord.show_art',
+    'discord.show_elapsed',
+    'discord.show_button',
+    'discord.only_while_playing',
+  };
 
   Future<String> exportToJson() async {
     final map = await exportToMap();
@@ -59,11 +76,11 @@ class BackupExportService {
     };
   }
 
-  //drop session state (playback.*), auth secrets (discord tokens),
-  //machine noise (update.*)
+  //excludes queue, scan.lastCompletedAt, update.*, discord acccount,
+  //and tokens
   bool _isExportableSetting(String key) {
-    if (_exportableSettingKeys.contains(key)) return true;
-    return _exportableSettingPrefixes.any(key.startsWith);
+    if (exportableSettingKeys.contains(key)) return true;
+    return exportableSettingPrefixes.any(key.startsWith);
   }
 
   Future<Map<String, dynamic>?> _exportProfile() async {

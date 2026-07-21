@@ -55,8 +55,10 @@ class BackupImportService {
 
   /// Settings importer may write
   /// Ignores unknown backup keys
-  static const _importableSettingPrefixes = ['scan.', 'fx.', 'library.'];
-  static const _importableSettingKeys = {'app.locale', 'theme.mode'};
+  static const _importableSettingPrefixes =
+      BackupExportService.exportableSettingPrefixes;
+  static const _importableSettingKeys =
+      BackupExportService.exportableSettingKeys;
 
   /// [rescan] must run a forced rescan and complete before it returns
   Future<BackupImportResult> importFromJson(
