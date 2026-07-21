@@ -1237,6 +1237,67 @@
       "time": { "type": "DateTime", "format": "jm" }
     }
   },
+  "settingsUpdatesChecking": "Checking…",
+  "@settingsUpdatesChecking": {
+    "description": "Value on the updates row while a check is running."
+  },
+  "settingsUpdatesUpToDate": "Up to date",
+  "@settingsUpdatesUpToDate": {
+    "description": "Value on the updates row when the installed version is the newest release."
+  },
+  "settingsUpdatesAvailable": "{version} available",
+  "@settingsUpdatesAvailable": {
+    "description": "Value on the updates row when a newer release exists.",
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "settingsUpdateSheetUpToDateTitle": "You're up to date :D",
+  "@settingsUpdateSheetUpToDateTitle": {
+    "description": "Title of the update sheet when no newer release exists."
+  },
+  "settingsUpdateSheetUpToDateBody": "Sono {version} is the newest release.",
+  "@settingsUpdateSheetUpToDateBody": {
+    "description": "Body of the update sheet when no newer release exists.",
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "settingsUpdateSheetAvailableTitle": "Sono {version} is available",
+  "@settingsUpdateSheetAvailableTitle": {
+    "description": "Title of the update sheet when a newer release was found.",
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "settingsUpdateSheetFrom": "You're on {current}, the newest is {latest}.",
+  "@settingsUpdateSheetFrom": {
+    "description": "Line above the release notes comparing the installed and newest versions.",
+    "placeholders": {
+      "current": { "type": "String" },
+      "latest": { "type": "String" }
+    }
+  },
+  "settingsUpdateSheetOpen": "Open the release",
+  "@settingsUpdateSheetOpen": {
+    "description": "Action that opens the GitHub release page in the browser."
+  },
+  "settingsUpdateSheetSkip": "Skip this version",
+  "@settingsUpdateSheetSkip": {
+    "description": "Action that dismisses a release so it stops being announced."
+  },
+  "settingsUpdateSheetSkipSubtitle": "Stops the banner for this release",
+  "@settingsUpdateSheetSkipSubtitle": {
+    "description": "Subtitle under the skip action in the update sheet."
+  },
+  "settingsUpdateSheetFailedTitle": "Couldn't check for updates",
+  "@settingsUpdateSheetFailedTitle": {
+    "description": "Title of the update sheet when the check could not reach GitHub."
+  },
+  "settingsUpdateSheetFailedBody": "Sono couldn't reach GitHub. Check your connection and try again.",
+  "@settingsUpdateSheetFailedBody": {
+    "description": "Body of the update sheet when the check failed."
+  },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
 
