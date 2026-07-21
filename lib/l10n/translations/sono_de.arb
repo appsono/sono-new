@@ -1071,5 +1071,81 @@
                 "format": "decimalPattern"
             }
         }
+    },
+    "settingsDiscordTitle": "Discord",
+    "@settingsDiscordTitle": {
+        "description": "Title of the Discord subpage. Shorter than the row label, which is 'Discord presence'."
+    },
+    "settingsDiscordConnect": "Discord verbinden",
+    "@settingsDiscordConnect": {
+        "description": "Action that opens the Discord login flow."
+    },
+    "settingsDiscordConnecting": "Verbinde…",
+    "@settingsDiscordConnecting": {
+        "description": "Replaces the connect label while the login is in progress."
+    },
+    "settingsDiscordConnected": "Verbunden",
+    "@settingsDiscordConnected": {
+        "description": "Status under the Discord account name when a token is loaded."
+    },
+    "settingsDiscordDisconnect": "Trennen",
+    "@settingsDiscordDisconnect": {
+        "description": "Destructive action that logs out of Discord and clears the presence."
+    },
+    "settingsDiscordLoginFailed": "Discord-Anmeldung fehlgeschlagen",
+    "@settingsDiscordLoginFailed": {
+        "description": "Snackbar shown when the Discord login could not be completed. The error follows after a colon."
+    },
+    "settingsDiscordSectionVisible": "Was andere sehen",
+    "@settingsDiscordSectionVisible": {
+        "description": "Section label above the toggles controlling what the presence card shows."
+    },
+    "settingsDiscordShowSong": "Zeige aktuellen song",
+    "@settingsDiscordShowSong": {
+        "description": "Master toggle for the presence. Off means nothing is shown on Discord at all."
+    },
+    "settingsDiscordShowArt": "Zeige Albumcover",
+    "@settingsDiscordShowArt": {
+        "description": "Toggle for sending the cover with the presence."
+    },
+    "settingsDiscordShowElapsed": "Zeige verstrichende Zeit",
+    "@settingsDiscordShowElapsed": {
+        "description": "Toggle for sending playback timestamps, which Discord draws as a progress bar."
+    },
+    "settingsDiscordShowButton": "Zeige Link Button",
+    "@settingsDiscordShowButton": {
+        "description": "Toggle for the button under the presence card."
+    },
+    "settingsDiscordShowButtonSubtitle": "Fügt unter der Karte „Try Sono“ hinzu",
+    "@settingsDiscordShowButtonSubtitle": {
+        "description": "Subtitle under the link button row. The quoted text is the button's own label and is not translated."
+    },
+    "settingsDiscordOnlyWhilePlaying": "Nur während des Spielens",
+    "@settingsDiscordOnlyWhilePlaying": {
+        "description": "Toggle that clears the presence shortly after playback pauses."
+    },
+    "settingsDiscordOnlyWhilePlayingSubtitle": "Entfernt Status nach einer Minute Pause",
+    "@settingsDiscordOnlyWhilePlayingSubtitle": {
+        "description": "Subtitle under the only while playing row."
+    },
+    "settingsDiscordNote": "Der Status läuft über eine Headless-Session. Sobald du die Verbindung trennst, wird sie beendet und es werden keine Daten auf einem Server gespeichert.",
+    "@settingsDiscordNote": {
+        "description": "Note explaining how the Discord connection works and that no data is kept remotely."
+    },
+    "settingsDiscordPreview": "Vorschau",
+    "@settingsDiscordPreview": {
+        "description": "Heading of the card showing how the presence will look. Rendered in uppercase."
+    },
+    "settingsDiscordPreviewHeading": "Hört Sono zu",
+    "@settingsDiscordPreviewHeading": {
+        "description": "First line of the preview card, matching what Discord displays above the song."
+    },
+    "settingsDiscordPreviewIdle": "Keine Wiedergabe",
+    "@settingsDiscordPreviewIdle": {
+        "description": "Shown in the preview card in place of a song title when nothing is playing."
+    },
+    "settingsDiscordPreviewButton": "Try Sono",
+    "@settingsDiscordPreviewButton": {
+        "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
     }
 }
