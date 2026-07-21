@@ -1298,13 +1298,37 @@
   "@settingsUpdateSheetFailedBody": {
     "description": "Body of the update sheet when the check failed."
   },
+  "settingsAboutTitle": "About",
+  "@settingsAboutTitle": {
+    "description": "Title of the about subpage. Shorter than the row label, which is 'About Sono'."
+  },
+  "settingsAboutVersion": "{version} · build {build}",
+  "@settingsAboutVersion": {
+    "description": "Version line under the app name in the about hero. Does not repeat the app name, unlike settingsVersionLine.",
+    "placeholders": {
+      "version": { "type": "String" },
+      "build": { "type": "String" }
+    }
+  },
+  "settingsAboutSourceCode": "Source code",
+  "@settingsAboutSourceCode": {
+    "description": "Row that opens the GitHub repository. Its subtitle is the repository path and is not translated."
+  },
+  "settingsAboutLicences": "Licences",
+  "@settingsAboutLicences": {
+    "description": "Row that opens the licence list, covering Sono and every dependency."
+  },
   "settingsSupportKofi": "Support me",
+  "settingsAboutKofiSubtitle": "Pays for the signing key and a lot of coffee",
+  "@settingsAboutKofiSubtitle": {
+    "description": "Subtitle under the Ko-fi row."
+  },
+  "settingsAboutFooterBuilt": "Built by mathiiiiiis",
+  "@settingsAboutFooterBuilt": {
+    "description": "First footer line on the about page. The name is a username and stays as is."
+  },
   "settingsContributors": "Contributors",
 
-  "contributorsTitle": "Contributors",
-  "@contributorsTitle": {
-    "description": "Title of the contributors bottom sheet"
-  },
   "contributorsMaintainer": "Maintainer",
   "contributorsCodeSection": "Code",
   "contributorsTranslatorSection": "Translations",
