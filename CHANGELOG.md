@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new countSongs() db messages
 - Added a new system theme mode that follows the device brightness, allowing system light/dark schedules to apply to Sono
 - Added EQ presets and configurable playback behaviour (gapless-playback, stop on disconnected, in-app volume)
+- Added configurable Discord presence settings for album art, elapsed time, link button, and clearing presence on pause (all enabled by default)
+- Added Discord username and avatar persistence during login instead of the settings page
 
 ### Changed
 
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed sliderTheme to use M3 Expressive
 - Moved theme state management from SonoApp into ThemeService, mirroring LocaleService
 - Existing installs keep their saved light or dark theme choice, while fresh installs now default to the system theme
+- Changed Discord avatar storage to save usernames without the leading `@`
 
 ## [0.10.1+11] - 2026-07-20
 
