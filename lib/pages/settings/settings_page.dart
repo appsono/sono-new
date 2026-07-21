@@ -17,7 +17,6 @@ import 'package:sono/l10n/localizations.dart';
 import 'package:sono/services/theme_service.dart';
 
 import 'package:sono/db/database.dart';
-import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/locale_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
@@ -32,6 +31,9 @@ import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 import 'package:sono/pages/settings/subpages/settings_profile_page.dart';
 import 'package:sono/pages/settings/subpages/settings_appearance_page.dart';
 import 'package:sono/pages/settings/subpages/settings_language_page.dart';
+import 'package:sono/pages/settings/subpages/settings_playback_page.dart';
+
+import 'package:sono/pages/settings/eq_labels.dart';
 
 /// Settings root
 class SettingsPage extends StatefulWidget {
@@ -228,17 +230,22 @@ class _SettingsPageState extends State<SettingsPage> {
           icon: IconsSheet.songOutlined,
           accent: c.accentGreen,
           label: l.settingsPlayback,
-          //TODO: push playback subpage
-          onTap: () {},
+          onTap: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsPlaybackPage(db: widget.db),
+              ),
+            );
+            //effects are not reactive, refresh eq value on return
+            if (mounted) setState(() {});
+          },
         ),
         SettingsRow(
           icon: IconsSheet.equalizerOutlined,
           accent: c.accentAmber,
           label: l.settingsEqualizer,
           //read once per build (subpage owns real state)
-          value: AudioEffectsService.instance.eqEnabled
-              ? l.settingsEqualizerOn
-              : l.settingsEqualizerOff,
+          value: eqSummary(l),
           //TODO: push equalize subpage
           onTap: () {},
         ),

@@ -271,6 +271,83 @@ class SettingsCheckRow extends StatelessWidget {
   }
 }
 
+// ==== slider row ====
+/// Row with label, value and slider
+///
+/// [value] is preformatted by caller
+class SettingsSlideRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final double current;
+  final double min;
+  final double max;
+  final int? divisions;
+  final ValueChanged<double> onChanged;
+
+  const SettingsSlideRow({
+    required this.label,
+    required this.value,
+    required this.current,
+    required this.min,
+    required this.max,
+    required this.onChanged,
+    this.divisions,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: SonoFonts.heading,
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w600,
+                    color: c.textPrimary,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                value,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 12.5,
+                  color: c.textTertiary,
+                  //stop row twitching while dragging
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Slider(
+            value: current.clamp(min, max),
+            min: min,
+            max: max,
+            divisions: divisions,
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ==== icon tile ====
 class _Tile extends StatelessWidget {
   final String icon;
