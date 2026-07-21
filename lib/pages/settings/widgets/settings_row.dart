@@ -364,7 +364,7 @@ class SettingsActionRow extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.destructive = false,
-    this.progress = null,
+    this.progress,
     super.key,
   });
 
