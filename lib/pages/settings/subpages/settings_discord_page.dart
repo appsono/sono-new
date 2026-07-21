@@ -314,7 +314,7 @@ class _SettingsDiscordPageState extends State<SettingsDiscordPage> {
           return StreamBuilder<bool>(
             stream: audio.playingStream,
             builder: (context, playSnap) {
-              final playing = playSnap.data ?? false;
+              final playing = playSnap.data ?? audio.isPlaying;
               final showBar = _showElapsed && playing && total > 0;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
