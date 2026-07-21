@@ -36,6 +36,17 @@ class UpdateInfo {
   });
 }
 
+/// Outcome of an update check
+enum UpdateStatus { upToDate, available, dismissed, cooledDown, failed }
+
+/// Check result, with [info] set when there is something to show
+class UpdateCheck {
+  final UpdateStatus status;
+  final UpdateInfo? info;
+
+  const UpdateCheck(this.status, {this.info});
+}
+
 /// checks the GitHub releases page for a newer version and lets the UI layer decide
 /// how to notify the user. this service does not auto update anything, for now.
 /// It just reports.
@@ -46,6 +57,8 @@ class UpdateInfo {
 /// ==== KEYS ====
 /// > update.dismissed_version: latest release tag user dismissed (e.g. v0.0.4+1)
 /// > update.last_checked_at: iso timestamp of last successful check
+/// > update.last_status: outcome of last check that reached github
+/// > update.last_available_version: tag from that chek, when newer
 class UpdateService {
   UpdateService._();
   static final UpdateService instance = UpdateService._();
@@ -65,27 +78,20 @@ class UpdateService {
 
   void attachDb(SonoDatabase db) => _db = db;
 
-  /// Checks GitHub for a newer release. returns null if:
-  /// - no newer version exists
-  /// - the newer version has already been dismissed (unless force=true)
-  /// - the request failed (network, rate limit, whatever)
+  /// Checks GitHub and reports what happened
   ///
-  /// when force=true, the cooldown is ignored and dismissed versions are
-  /// reported anyway
-  Future<UpdateInfo?> checkForUpdates({bool force = false}) async {
+  /// Only successful GitHub checks update saved result
+  Future<UpdateCheck> check({bool force = false}) async {
     final db = _db;
-    if (db == null) return null;
+    if (db == null) return const UpdateCheck(UpdateStatus.failed);
 
-    //respect cooldown unless forced
     if (!force) {
       final last = await db.getSetting('update.last_checked_at');
       if (last != null) {
         final lastAt = DateTime.tryParse(last);
         if (lastAt != null &&
             DateTime.now().difference(lastAt) < _checkCooldown) {
-          //still re-evaluate cached dismissed state against current
-          //version in case user downgraded or verson changed
-          return null;
+          return const UpdateCheck(UpdateStatus.cooledDown);
         }
       }
     }
@@ -101,11 +107,12 @@ class UpdateService {
             },
           )
           .timeout(_timeout);
+
       if (resp.statusCode != 200) {
         if (kDebugMode) {
           debugPrint('[update] github api returned ${resp.statusCode}');
         }
-        return null;
+        return const UpdateCheck(UpdateStatus.failed);
       }
 
       final json = jsonDecode(resp.body) as Map<String, dynamic>;
@@ -113,7 +120,9 @@ class UpdateService {
       final url = json['html_url'] as String?;
       final notes = json['body'] as String?;
       final publishedRaw = json['published_at'] as String?;
-      if (tag == null || url == null) return null;
+      if (tag == null || url == null) {
+        return const UpdateCheck(UpdateStatus.failed);
+      }
 
       await db.setSetting(
         'update.last_checked_at',
@@ -121,19 +130,11 @@ class UpdateService {
       );
 
       if (_compareVersions(tag, currentVersion) <= 0) {
-        //no newer version
-        return null;
+        await _rememberResult(db, UpdateStatus.upToDate, null);
+        return const UpdateCheck(UpdateStatus.upToDate);
       }
 
-      if (!force) {
-        final dismissed = await db.getSetting('update.dismissed_version');
-        if (dismissed != null && _compareVersions(tag, dismissed) <= 0) {
-          //user already said no thanks to this one (or newer)
-          return null;
-        }
-      }
-
-      return UpdateInfo(
+      final info = UpdateInfo(
         currentVersion: currentVersion,
         latestVersion: tag,
         releaseUrl: url,
@@ -142,10 +143,42 @@ class UpdateService {
             ? DateTime.tryParse(publishedRaw)
             : null,
       );
+
+      await _rememberResult(db, UpdateStatus.available, tag);
+
+      if (!force) {
+        final dismissed = await db.getSetting('update.dismissed_version');
+        if (dismissed != null && _compareVersions(tag, dismissed) <= 0) {
+          return UpdateCheck(UpdateStatus.dismissed, info: info);
+        }
+      }
+
+      return UpdateCheck(UpdateStatus.available, info: info);
     } catch (e) {
       if (kDebugMode) debugPrint('[update] check failed: $e');
-      return null;
+      return const UpdateCheck(UpdateStatus.failed);
     }
+  }
+
+  Future<void> _rememberResult(
+    SonoDatabase db,
+    UpdateStatus status,
+    String? version,
+  ) async {
+    await db.setSetting('update.last_status', status.name);
+    if (version == null) {
+      await db.removeSetting('update.last_available_version');
+    } else {
+      await db.setSetting('update.last_available_version', version);
+    }
+  }
+
+  /// Legacy entry point for app shell
+  ///
+  /// Returns updates worth showing in the banner
+  Future<UpdateInfo?> checkForUpdates({bool force = false}) async {
+    final result = await check(force: force);
+    return result.status == UpdateStatus.available ? result.info : null;
   }
 
   /// Mark version as dismissed so it doesn't get shown again,
