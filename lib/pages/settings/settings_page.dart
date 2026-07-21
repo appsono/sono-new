@@ -36,6 +36,7 @@ import 'package:sono/pages/settings/subpages/settings_playback_page.dart';
 import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
 import 'package:sono/pages/settings/subpages/settings_library_page.dart';
 import 'package:sono/pages/settings/subpages/settings_discord_page.dart';
+import 'package:sono/pages/settings/subpages/settings_backup_page.dart';
 
 import 'package:sono/pages/settings/eq_labels.dart';
 
@@ -312,8 +313,17 @@ class _SettingsPageState extends State<SettingsPage> {
           icon: IconsSheet.backupOutlined,
           accent: c.accentOrange,
           label: l.settingsBackup,
-          //TODO: push backup subpage
-          onTap: () {},
+          onTap: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsBackupPage(
+                  db: widget.db,
+                  onRescan: widget.onRescan,
+                ),
+              ),
+            );
+            if (mounted) _loadMeta();
+          },
         ),
         SettingsRow(
           icon: IconsSheet.storageOutlined,
