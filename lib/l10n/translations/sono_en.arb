@@ -1096,9 +1096,17 @@
   "@settingsDiscordShowArt": {
     "description": "Toggle for sending the cover with the presence."
   },
-  "settingsDiscordShowElapsed": "Show elapsed time",
+  "settingsDiscordShowArtSubtitle": "Discord shows a placeholder instead",
+  "@settingsDiscordShowArtSubtitle": {
+    "description": "Subtitle under the album art row, explaining that turning it off does not remove the image, Discord substitutes a generic one."
+  },
+  "settingsDiscordShowElapsed": "Show a progress bar",
   "@settingsDiscordShowElapsed": {
     "description": "Toggle for sending playback timestamps, which Discord draws as a progress bar."
+  },
+  "settingsDiscordShowElapsedSubtitle": "Discord counts up from the start instead",
+  "@settingsDiscordShowElapsedSubtitle": {
+    "description": "Subtitle under the progress bar row, explaining that turning it off leaves Discord's own timer running."
   },
   "settingsDiscordShowButton": "Show a link button",
   "@settingsDiscordShowButton": {
