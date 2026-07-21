@@ -137,7 +137,7 @@ class _ContributorsSheetState extends State<ContributorsSheet> {
     final l = AppLocalizations.of(context);
 
     return BottomModalSheet(
-      title: l.contributorsTitle,
+      title: l.settingsContributors,
       itemsBuilder: () => _buildItems(l),
       background: c.bgContainer,
       surface: c.bgSurface,
