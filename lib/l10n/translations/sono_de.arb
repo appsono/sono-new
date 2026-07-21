@@ -1155,5 +1155,88 @@
     "settingsDiscordShowElapsedSubtitle": "Discord zählt stattdessen ab dem Start hoch",
     "@settingsDiscordShowElapsedSubtitle": {
         "description": "Subtitle under the progress bar row, explaining that turning it off leaves Discord's own timer running."
+    },
+    "settingsBackupExport": "Backup exportieren",
+    "@settingsBackupExport": {
+        "description": "Row that writes a backup file."
+    },
+    "settingsBackupExporting": "Exportiere…",
+    "@settingsBackupExporting": {
+        "description": "Replaces the export label while a backup is being written."
+    },
+    "settingsBackupExportSubtitle": "Likes, Favoriten, Playlisten, Profil und Einstellungen",
+    "@settingsBackupExportSubtitle": {
+        "description": "Subtitle under the export row, listing what a backup contains."
+    },
+    "settingsBackupExportSaved": "Gespeichert unter {path}",
+    "@settingsBackupExportSaved": {
+        "description": "Snackbar confirming where the backup file was written.",
+        "placeholders": {
+            "path": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsBackupExportFailed": "Backup-Export fehlgeschlagen",
+    "@settingsBackupExportFailed": {
+        "description": "Snackbar shown when writing the backup failed. The error follows after a colon."
+    },
+    "settingsBackupImport": "Backup importieren",
+    "@settingsBackupImport": {
+        "description": "Row that reads a backup file back in."
+    },
+    "settingsBackupImporting": "Importiere…",
+    "@settingsBackupImporting": {
+        "description": "Replaces the import label while a backup is being restored."
+    },
+    "settingsBackupImportSubtitle": "Fügt sie deiner Bibliothek hinzu und scannt danach erneut",
+    "@settingsBackupImportSubtitle": {
+        "description": "Subtitle under the import row."
+    },
+    "settingsBackupImportConfirmTitle": "Ein Backup importieren?",
+    "@settingsBackupImportConfirmTitle": {
+        "description": "Title of the sheet shown before choosing a backup file."
+    },
+    "settingsBackupImportConfirmBody": "Deine Einstellungen werden überschrieben und ein vollständiger Scan wird durchgeführt. Bereits vorhandene Likes, Favoriten und Playlisten bleiben erhalten, das Backup wird darübergelegt.",
+    "@settingsBackupImportConfirmBody": {
+        "description": "Explanation in the import confirmation sheet."
+    },
+    "settingsBackupImportChoose": "Datei auswählen",
+    "@settingsBackupImportChoose": {
+        "description": "Action in the import confirmation sheet that opens the file picker."
+    },
+    "settingsBackupImportFailed": "Backup Import fehlgeschlagen",
+    "@settingsBackupImportFailed": {
+        "description": "Snackbar shown when reading the backup failed. The error follows after a colon."
+    },
+    "settingsBackupNote": "Beim Importieren bleibt alles erhalten, was du bereits hast. Songs, die sich nicht auf diesem Gerät befinden, werden übersprungen und am Ende aufgelistet.",
+    "@settingsBackupNote": {
+        "description": "Note under the export and import rows, clarifying that importing is not destructive."
+    },
+    "settingsBackupSectionAutomatic": "Automatisch",
+    "@settingsBackupSectionAutomatic": {
+        "description": "Section label above the scheduled backup option."
+    },
+    "settingsBackupWeekly": "Wöchentliche Backups",
+    "@settingsBackupWeekly": {
+        "description": "Toggle for writing a backup once a week. Currently marked as planned."
+    },
+    "settingsBackupWeeklySubtitle": "Wird in deinen Musikordner geschrieben",
+    "@settingsBackupWeeklySubtitle": {
+        "description": "Subtitle under the weekly backup row."
+    },
+    "settingsBackupLastExport": "Zuletzt exportiert am {date} um {time}",
+    "@settingsBackupLastExport": {
+        "description": "Footer line showing when a backup was last written. Both placeholders receive the same timestamp.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
     }
 }
