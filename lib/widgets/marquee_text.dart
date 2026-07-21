@@ -83,26 +83,26 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
     }
   }
 
-  double _measureText(String text, TextStyle style, BuildContext context) {
+  double _measureText(String text, TextStyle style, TextScaler textScaler) {
     final tp = TextPainter(
       text: TextSpan(text: text, style: style),
       maxLines: 1,
       textDirection: TextDirection.ltr,
-      textScaler: MediaQuery.textScalerOf(context),
+      textScaler: textScaler,
     )..layout();
     return tp.width;
   }
 
-  void _onLayout(double width, BuildContext context) {
+  void _onLayout(double width, TextScaler textScaler) {
     if (_measured && _containerWidth == width) return;
     _containerWidth = width;
     _measured = true;
 
-    _titleWidth = _measureText(widget.title, widget.titleStyle, context);
+    _titleWidth = _measureText(widget.title, widget.titleStyle, textScaler);
     _subtitleWidth = _measureText(
       widget.subtitle,
       widget.subtitleStyle,
-      context,
+      textScaler,
     );
 
     final longestWidth = _titleWidth > _subtitleWidth
@@ -207,12 +207,13 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
   Widget build(BuildContext context) {
     final titleHeight = widget.titleStyle.fontSize! * 1.4;
     final subtitleHeight = widget.subtitleStyle.fontSize! * 1.4;
+    final textScaler = MediaQuery.textScalerOf(context);
 
     return SizedBox(
       height: titleHeight + subtitleHeight,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          _onLayout(constraints.maxWidth, context);
+          _onLayout(constraints.maxWidth, textScaler);
 
           return Column(
             mainAxisSize: MainAxisSize.min,
