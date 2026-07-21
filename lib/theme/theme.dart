@@ -106,13 +106,20 @@ ThemeData buildSonoTheme(SonoColors colors) {
     ),
     dividerTheme: DividerThemeData(color: colors.borderLight10, thickness: 1),
     sliderTheme: SliderThemeData(
-      activeTrackColor: colors.textPrimary,
+      // ignore: deprecated_member_use
+      year2023: false,
+      padding: EdgeInsets.zero,
+      thumbSize: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.pressed)
+            ? const Size(6, 30)
+            : const Size(4, 26),
+      ),
+      trackHeight: 12,
+      activeTrackColor: colors.primary,
       inactiveTrackColor: colors.borderLight20,
-      thumbColor: colors.textPrimary,
+      thumbColor: colors.primary,
       disabledThumbColor: colors.textPlaceholder,
-      disabledActiveTrackColor: colors.textPlaceholder,
-      trackHeight: 2,
-      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+      disabledActiveTrackColor: colors.borderLight10,
     ),
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStatePropertyAll(colors.textLight),
