@@ -121,6 +121,7 @@ class _AppShellState extends State<AppShell> {
         builder: (_) => SettingsPage(
           db: widget.db,
           onRescan: () => _checkPermissionAndScan(force: true),
+          scanProgress: _scanProgress,
         ),
       ),
     );

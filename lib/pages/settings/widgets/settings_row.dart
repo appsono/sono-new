@@ -357,34 +357,58 @@ class SettingsActionRow extends StatelessWidget {
   final bool destructive;
   final VoidCallback onTap;
 
+  /// 0 to 1 fills row left to right, null draws no fill
+  final double? progress;
+
   const SettingsActionRow({
     required this.label,
     required this.onTap,
     this.destructive = false,
+    this.progress = null,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     final c = context.sono;
+    final fraction = progress;
+
+    final content = Container(
+      constraints: const BoxConstraints(minHeight: 52),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: SonoFonts.heading,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          color: destructive ? c.errorText : c.primary,
+        ),
+      ),
+    );
 
     return _RowTap(
       onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 52),
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: SonoFonts.heading,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: destructive ? c.errorText : c.primary,
-          ),
-        ),
-      ),
+      child: fraction == null
+          ? content
+          : Stack(
+              children: [
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: LinearProgressIndicator(
+                    value: fraction > 0 ? fraction.clamp(0.0, 1.0) : null,
+                    minHeight: 3,
+                    color: c.primary,
+                    backgroundColor: c.borderLight10,
+                  ),
+                ),
+                content,
+              ],
+            ),
     );
   }
 }

@@ -33,15 +33,23 @@ import 'package:sono/pages/settings/subpages/settings_appearance_page.dart';
 import 'package:sono/pages/settings/subpages/settings_language_page.dart';
 import 'package:sono/pages/settings/subpages/settings_playback_page.dart';
 import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
+import 'package:sono/pages/settings/subpages/settings_library_page.dart';
 
 import 'package:sono/pages/settings/eq_labels.dart';
+import 'package:sono_query/sono_query.dart';
 
 /// Settings root
 class SettingsPage extends StatefulWidget {
   final SonoDatabase db;
   final Future<void> Function()? onRescan;
+  final ValueNotifier<ScanProgress?>? scanProgress;
 
-  const SettingsPage({required this.db, this.onRescan, super.key});
+  const SettingsPage({
+    required this.db,
+    this.onRescan,
+    this.scanProgress,
+    super.key,
+  });
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -260,8 +268,18 @@ class _SettingsPageState extends State<SettingsPage> {
           accent: c.accentTeal,
           label: l.settingsLibrary,
           value: count == null ? null : l.commonSongsCount(count),
-          //TODO: push library subpage
-          onTap: () {},
+          onTap: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsLibraryPage(
+                  db: widget.db,
+                  onRescan: widget.onRescan,
+                  scanProgress: widget.scanProgress,
+                ),
+              ),
+            );
+            if (mounted) _loadMeta();
+          },
         ),
       ],
     );
