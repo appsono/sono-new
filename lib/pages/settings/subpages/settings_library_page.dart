@@ -164,6 +164,7 @@ class _SettingsLibraryPageState extends State<SettingsLibraryPage> {
           autofocus: true,
           textInputAction: TextInputAction.done,
           onSubmitted: save,
+          disposeController: true,
         ),
         BottomSheetAction(
           icon: IconsSheet.checkOutlined,
@@ -174,8 +175,6 @@ class _SettingsLibraryPageState extends State<SettingsLibraryPage> {
         ),
       ],
     );
-
-    controller.dispose();
   }
 
   // ==== build ====

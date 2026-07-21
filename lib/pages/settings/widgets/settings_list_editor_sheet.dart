@@ -60,6 +60,7 @@ abstract final class SettingsListEditorSheet {
           controller: controller,
           textInputAction: TextInputAction.done,
           onSubmitted: add,
+          disposeController: true,
         ),
         BottomSheetAction(
           icon: IconsSheet.addOutlined,
@@ -83,7 +84,5 @@ abstract final class SettingsListEditorSheet {
             ),
       ],
     );
-
-    controller.dispose();
   }
 }

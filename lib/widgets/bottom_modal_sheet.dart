@@ -151,6 +151,7 @@ class BottomSheetTextField extends BottomSheetItem {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onSubmitted;
   final bool autofocus;
+  final bool disposeController;
 
   const BottomSheetTextField({
     required this.label,
@@ -162,6 +163,7 @@ class BottomSheetTextField extends BottomSheetItem {
     this.onChanged,
     this.onSubmitted,
     this.autofocus = false,
+    this.disposeController = false,
   });
 }
 
@@ -219,14 +221,29 @@ class BottomModalSheet extends StatefulWidget {
 }
 
 class _BottomModalSheetState extends State<BottomModalSheet> {
+  final Set<TextEditingController> _ownedControllers = {};
+
   void _refresh() {
     if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    for (final c in _ownedControllers) {
+      c.dispose();
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final muted = widget.onBackground.withValues(alpha: 0.55);
     final items = widget.itemsBuilder();
+    for (final item in items) {
+      if (item is BottomSheetTextField && item.disposeController) {
+        _ownedControllers.add(item.controller);
+      }
+    }
     final maxHeight = MediaQuery.sizeOf(context).height * 0.85;
 
     return Padding(
