@@ -24,6 +24,8 @@ import 'package:sono/pages/settings/widgets/settings_group.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 
+import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
+
 /// Playback subpage
 class SettingsPlaybackPage extends StatefulWidget {
   final SonoDatabase db;
@@ -101,8 +103,15 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
                       accent: c.accentAmber,
                       label: l.settingsEqualizer,
                       value: eqSummary(l),
-                      //TODO: push EQ subpage
-                      onTap: () {},
+                      onTap: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                SettingsEqualizerPage(db: widget.db),
+                          ),
+                        );
+                        if (mounted) setState(() {});
+                      },
                     ),
                     SettingsRow(
                       icon: IconsSheet.volumeOutlined,
@@ -110,7 +119,7 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
                       label: l.settingsPlaybackNormalisation,
                       planned: true,
                     ),
-                    SettingsSlideRow(
+                    SettingsSliderRow(
                       label: l.settingsPlaybackVolume,
                       value: l.settingsPlaybackVolumeValue(_volume.round()),
                       current: _volume,

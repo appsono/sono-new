@@ -275,7 +275,7 @@ class SettingsCheckRow extends StatelessWidget {
 /// Row with label, value and slider
 ///
 /// [value] is preformatted by caller
-class SettingsSlideRow extends StatelessWidget {
+class SettingsSliderRow extends StatelessWidget {
   final String label;
   final String value;
   final double current;
@@ -284,7 +284,7 @@ class SettingsSlideRow extends StatelessWidget {
   final int? divisions;
   final ValueChanged<double> onChanged;
 
-  const SettingsSlideRow({
+  const SettingsSliderRow({
     required this.label,
     required this.value,
     required this.current,
@@ -343,6 +343,47 @@ class SettingsSlideRow extends StatelessWidget {
             onChanged: onChanged,
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ==== action row ====
+/// Centered group action
+///
+/// USed for standalone actions without icon or chevron
+class SettingsActionRow extends StatelessWidget {
+  final String label;
+  final bool destructive;
+  final VoidCallback onTap;
+
+  const SettingsActionRow({
+    required this.label,
+    required this.onTap,
+    this.destructive = false,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+
+    return _RowTap(
+      onTap: onTap,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 52),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: SonoFonts.heading,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: destructive ? c.errorText : c.primary,
+          ),
+        ),
       ),
     );
   }

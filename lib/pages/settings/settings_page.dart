@@ -32,6 +32,7 @@ import 'package:sono/pages/settings/subpages/settings_profile_page.dart';
 import 'package:sono/pages/settings/subpages/settings_appearance_page.dart';
 import 'package:sono/pages/settings/subpages/settings_language_page.dart';
 import 'package:sono/pages/settings/subpages/settings_playback_page.dart';
+import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
 
 import 'package:sono/pages/settings/eq_labels.dart';
 
@@ -236,7 +237,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 builder: (_) => SettingsPlaybackPage(db: widget.db),
               ),
             );
-            //effects are not reactive, refresh eq value on return
             if (mounted) setState(() {});
           },
         ),
@@ -246,8 +246,14 @@ class _SettingsPageState extends State<SettingsPage> {
           label: l.settingsEqualizer,
           //read once per build (subpage owns real state)
           value: eqSummary(l),
-          //TODO: push equalize subpage
-          onTap: () {},
+          onTap: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsEqualizerPage(db: widget.db),
+              ),
+            );
+            if (mounted) setState(() {});
+          },
         ),
         SettingsRow(
           icon: IconsSheet.libraryOutlined,
