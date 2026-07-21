@@ -13,6 +13,20 @@
       "count": { "type": "int", "format": "compact" }
     }
   },
+  "commonAlbumsCount": "{count, plural, =0{no albums} =1{1 album} other{{count} albums}}",
+  "@commonAlbumsCount": {
+    "description": "Number of albums, used in library totals",
+    "placeholders": {
+      "count": { "type": "int", "format": "compact" }
+    }
+  },
+  "commonArtistsCount": "{count, plural, =0{no artists} =1{1 artist} other{{count} artists}}",
+  "@commonArtistsCount": {
+    "description": "Number of artists, used in library totals",
+    "placeholders": {
+      "count": { "type": "int", "format": "compact" }
+    }
+  },
   "commonDurationLong": "{hours}h {minutes}m",
   "@commonDurationLong": {
     "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
@@ -733,7 +747,7 @@
   "@settingsLanguageSectionAvailable": {
     "description": "Section label above the list of translated languages on the language subpage."
   },
-  "settingsLanguageNoMatches": "No languages match that",
+  "settingsLanguageNoMatches": "No languages match that :/",
   "@settingsLanguageNoMatches": {
     "description": "Shown on the language subpage when the search field filters out every language."
   },
@@ -897,6 +911,132 @@
   "settingsEqResetTooltip": "Reset the equalizer",
   "@settingsEqResetTooltip": {
     "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
+  },
+  "settingsLibrarySectionSources": "Sources",
+  "@settingsLibrarySectionSources": {
+    "description": "Section label above folder and length options on the library subpage."
+  },
+  "settingsLibraryMusicFolders": "Music folders",
+  "@settingsLibraryMusicFolders": {
+    "description": "Extra folders to scan. Desktop only, Android uses MediaStore."
+  },
+  "settingsLibraryMusicFoldersEmpty": "No extra folders yet",
+  "@settingsLibraryMusicFoldersEmpty": {
+    "description": "Shown in the music folders editor when the list is empty."
+  },
+  "settingsLibraryExcludedFolders": "Excluded folders",
+  "@settingsLibraryExcludedFolders": {
+    "description": "Folders skipped when scanning."
+  },
+  "settingsLibraryExcludedFoldersEmpty": "Nothing excluded yet",
+  "@settingsLibraryExcludedFoldersEmpty": {
+    "description": "Shown in the excluded folders editor when the list is empty."
+  },
+  "settingsLibraryFolderField": "Folder path",
+  "@settingsLibraryFolderField": {
+    "description": "Label of the text field in the folder editors."
+  },
+  "settingsLibraryFolderAdd": "Add folder",
+  "@settingsLibraryFolderAdd": {
+    "description": "Action that adds the typed path to the folder list."
+  },
+  "settingsLibraryMinLength": "Minimum length",
+  "@settingsLibraryMinLength": {
+    "description": "Files shorter than this are skipped when scanning."
+  },
+  "settingsLibraryMinLengthHelp": "Files shorter than this are skipped. Leave empty to keep everything.",
+  "@settingsLibraryMinLengthHelp": {
+    "description": "Explanation at the top of the minimum length sheet."
+  },
+  "settingsLibraryMinLengthField": "Seconds",
+  "@settingsLibraryMinLengthField": {
+    "description": "Label of the text field in the minimum length sheet."
+  },
+  "settingsLibraryMinLengthValue": "{seconds}s",
+  "@settingsLibraryMinLengthValue": {
+    "description": "Minimum length shown on the row, in seconds.",
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "settingsLibraryMinLengthOff": "Off",
+  "@settingsLibraryMinLengthOff": {
+    "description": "Shown when no minimum length is set."
+  },
+  "settingsLibrarySectionGrouping": "Grouping",
+  "@settingsLibrarySectionGrouping": {
+    "description": "Section label above album grouping and sorting options."
+  },
+  "settingsLibraryGroupByFolder": "Group albums by folder",
+  "@settingsLibraryGroupByFolder": {
+    "description": "Toggle that groups albums by the song's folder instead of its album tag."
+  },
+  "settingsLibraryGroupByFolderSubtitle": "Use the song folder instead of the album tag",
+  "@settingsLibraryGroupByFolderSubtitle": {
+    "description": "Subtitle under the group albums by folder row."
+  },
+  "settingsLibraryIgnoreLeadingThe": "Ignore leading \"The\"",
+  "@settingsLibraryIgnoreLeadingThe": {
+    "description": "Sorts artists ignoring a leading 'The'. Currently marked as planned. Keep the English article in quotes."
+  },
+  "settingsLibraryIgnoreLeadingTheSubtitle": "When sorting artists",
+  "@settingsLibraryIgnoreLeadingTheSubtitle": {
+    "description": "Subtitle under the ignore leading The row."
+  },
+  "settingsLibrarySectionArtistParsing": "Artist parsing",
+  "@settingsLibrarySectionArtistParsing": {
+    "description": "Section label above the multi-artist splitting options."
+  },
+  "settingsLibrarySplitArtists": "Split multi-artist tags",
+  "@settingsLibrarySplitArtists": {
+    "description": "Toggle that splits an artist tag into several artists at the delimiters."
+  },
+  "settingsLibraryDelimiters": "Delimiters",
+  "@settingsLibraryDelimiters": {
+    "description": "Characters that separate artists in a tag, such as a comma or a slash."
+  },
+  "settingsLibraryDelimitersEmpty": "Using the defaults",
+  "@settingsLibraryDelimitersEmpty": {
+    "description": "Shown in the delimiter editor when the list is empty, meaning the built-in delimiters apply."
+  },
+  "settingsLibraryDelimiterField": "Delimiter",
+  "@settingsLibraryDelimiterField": {
+    "description": "Label of the text field in the delimiter editor."
+  },
+  "settingsLibraryDelimiterAdd": "Add delimiter",
+  "@settingsLibraryDelimiterAdd": {
+    "description": "Action that adds the typed delimiter to the list."
+  },
+  "settingsLibraryProtectedArtists": "Protected artists",
+  "@settingsLibraryProtectedArtists": {
+    "description": "Artist names never split, for acts whose name contains a delimiter."
+  },
+  "settingsLibraryProtectedArtistsEmpty": "No protected artists yet",
+  "@settingsLibraryProtectedArtistsEmpty": {
+    "description": "Shown in the protected artists editor when the list is empty."
+  },
+  "settingsLibraryProtectedArtistField": "Artist name",
+  "@settingsLibraryProtectedArtistField": {
+    "description": "Label of the text field in the protected artists editor."
+  },
+  "settingsLibraryProtectedArtistAdd": "Add artist",
+  "@settingsLibraryProtectedArtistAdd": {
+    "description": "Action that adds the typed artist to the protected list."
+  },
+  "settingsLibraryRescan": "Rescan library",
+  "@settingsLibraryRescan": {
+    "description": "Action that runs a full rescan of the music library."
+  },
+  "settingsLibraryRescanRunning": "Scanning…",
+  "@settingsLibraryRescanRunning": {
+    "description": "Replaces the rescan label while a scan is in progress."
+  },
+  "settingsLibraryLastScan": "Last scan {date}",
+  "@settingsLibraryLastScan": {
+    "description": "First footer line on the library subpage, showing when the last scan finished.",
+    "placeholders": {
+      "date": { "type": "DateTime", "format": "yMMMd" }
+    }
   },
   "settingsSupportKofi": "Support me",
   "settingsContributors": "Contributors",
