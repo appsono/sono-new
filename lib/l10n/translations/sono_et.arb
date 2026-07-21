@@ -136,10 +136,6 @@
     "authSignIn": "Logi sisse",
     "settingsSupportKofi": "Toeta arendajat",
     "settingsContributors": "Kaasautorid",
-    "contributorsTitle": "Kaasautorid",
-    "@contributorsTitle": {
-        "description": "Title of the contributors bottom sheet"
-    },
     "contributorsMaintainer": "Hooldaja",
     "contributorsCodeSection": "Lähtekood",
     "contributorsTranslatorSection": "Tõlked",
