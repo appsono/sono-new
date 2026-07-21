@@ -310,4 +310,5 @@ abstract final class IconsSheet {
 /// must not be restyled beyond recolouring
 abstract final class SonoBrands {
   static const String discord = 'assets/app/brands/discord_symbol.svg';
+  static const String kofi = 'assets/app/brands/kofi_symbol.svg';
 }
