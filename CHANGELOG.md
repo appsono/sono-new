@@ -13,11 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new Brand icon for Discord, and added a new SonoBrands class
 - Added new countSongs() db messages
 - Added a new system theme mode that follows the device brightness, allowing system light/dark schedules to apply to Sono
+- Added EQ presets and configurable playback behaviour (gapless-playback, stop on disconnected, in-app volume)
 
 ### Changed
 
 - Changed ProfileCircle to be public: SonoProfileCircle
 - Changed SearchField to be a global widget: SonoSearchField, with an optional custom hint text
+- Changed \_FilterChip to be a globale widget: SonoChip, with an optional height attribute
+- Changed sliderTheme to use M3 Expressive
 - Moved theme state management from SonoApp into ThemeService, mirroring LocaleService
 - Existing installs keep their saved light or dark theme choice, while fresh installs now default to the system theme
 
