@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added new appearance, backup, folder, globus, info, moon, open link, update, and storage icons
 - Added new Brand icon for Discord, and added a new SonoBrands class
-- Added new countSongs() db messages
+- Added new countSongs(), countAlbums(), countArtists() db queries
 - Added a new system theme mode that follows the device brightness, allowing system light/dark schedules to apply to Sono
 - Added EQ presets and configurable playback behaviour (gapless-playback, stop on disconnected, in-app volume)
 - Added configurable Discord presence settings for album art, elapsed time, link button, and clearing presence on pause (all enabled by default)
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed ProfileCircle to be public: SonoProfileCircle
 - Changed SearchField to be a global widget: SonoSearchField, with an optional custom hint text
-- Changed \_FilterChip to be a globale widget: SonoChip, with an optional height attribute
+- Changed \_FilterChip to be a global widget: SonoChip, with an optional height attribute
 - Changed sliderTheme to use M3 Expressive
 - Moved theme state management from SonoApp into ThemeService, mirroring LocaleService
 - Existing installs keep their saved light or dark theme choice, while fresh installs now default to the system theme
@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed scan.lastCompletedAt from backups, as it could restore scan state from another device
 - Added support for exporting gapless playback, pause on disconnect, and in-app volume settings
 - Improved backup safety by excluding settings that mix preferences with machine state or account identity
+- Changed UpdateService to report why a check found nothing, distinguishing up to date, available, dismissed, cooling down and failed
+- Changed update state to persist between launches, so the settings row shows whether Sono is up to date instead of the installed version
 
 ### Fixed
 
