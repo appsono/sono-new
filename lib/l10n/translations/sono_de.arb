@@ -1108,7 +1108,7 @@
     "@settingsDiscordShowArt": {
         "description": "Toggle for sending the cover with the presence."
     },
-    "settingsDiscordShowElapsed": "Zeige verstrichende Zeit",
+    "settingsDiscordShowElapsed": "Zeige Fortschrittsbalken an",
     "@settingsDiscordShowElapsed": {
         "description": "Toggle for sending playback timestamps, which Discord draws as a progress bar."
     },
@@ -1147,5 +1147,13 @@
     "settingsDiscordPreviewButton": "Try Sono",
     "@settingsDiscordPreviewButton": {
         "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
+    },
+    "settingsDiscordShowArtSubtitle": "Discord zeigt stattdessen einen Platzhalter an",
+    "@settingsDiscordShowArtSubtitle": {
+        "description": "Subtitle under the album art row, explaining that turning it off does not remove the image, Discord substitutes a generic one."
+    },
+    "settingsDiscordShowElapsedSubtitle": "Discord zählt stattdessen ab dem Start hoch",
+    "@settingsDiscordShowElapsedSubtitle": {
+        "description": "Subtitle under the progress bar row, explaining that turning it off leaves Discord's own timer running."
     }
 }
