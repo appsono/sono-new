@@ -14,8 +14,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
 
-import 'package:sono/theme/theme.dart';
-import 'package:sono/theme/tokens.dart';
+import 'package:sono/widgets/chip.dart';
 
 enum SearchFilter { all, songs, albums, artists, playlists, genres }
 
@@ -53,63 +52,12 @@ class SearchFilterChips extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, i) {
           final f = order[i];
-          return _FilterChip(
+          return SonoChip(
             label: label(f),
             selected: f == selected,
             onTap: () => onSelected(f),
           );
         },
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _FilterChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sono;
-
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: SonoDurations.normal,
-        curve: Curves.easeOut,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: selected
-              ? c.primary
-              : Color.alphaBlend(c.bgSurface, c.bgPrimary),
-          borderRadius: selected
-              ? BorderRadius.circular(8)
-              : BorderRadius.circular(100),
-          border: Border.all(
-            color: selected ? Colors.transparent : c.borderLight10,
-            width: 1.5,
-          ),
-        ),
-        child: AnimatedDefaultTextStyle(
-          duration: SonoDurations.fast,
-          curve: Curves.easeOut,
-          style: TextStyle(
-            fontFamily: SonoFonts.primary,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: selected ? c.textLight : c.textSecondary,
-          ),
-          child: Text(label),
-        ),
       ),
     );
   }
