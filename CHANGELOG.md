@@ -57,6 +57,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the contributors bottom sheet, replaced by the contributors page
 - Removed the standalone Ko-fi button, replaced by a row on the about page
 
+### Translation
+
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+
 ## [0.10.1+11] - 2026-07-20
 
 ### Fixed
