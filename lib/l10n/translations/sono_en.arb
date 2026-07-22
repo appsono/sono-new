@@ -1336,6 +1336,80 @@
   "@contributorsPlaceholder": {
     "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
   },
-  "contributorsLoadFailed": "Couldn't load contributors :/"
+  "contributorsLoadFailed": "Couldn't load contributors :/",
+
+  "migrationFoundTitle": "Data from the old Sono",
+  "@migrationFoundTitle": {
+    "description": "Title of the sheet offering to import data from the previous Sono install."
+  },
+  "migrationFoundBody": "Your previous install still has data on this device.",
+  "@migrationFoundBody": {
+    "description": "Body text above the counts in the migration sheet."
+  },
+  "migrationCountLiked": "{count, plural, =0{no likes} =1{1 like} other{{count} likes}}",
+  "@migrationCountLiked": {
+    "description": "Liked song count listed in the migration sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationCountAlbums": "{count, plural, =0{no albums} =1{1 album} other{{count} albums}}",
+  "@migrationCountAlbums": {
+    "description": "Favorite album count listed in the migration sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationCountArtists": "{count, plural, =0{no artists} =1{1 artist} other{{count} artists}}",
+  "@migrationCountArtists": {
+    "description": "Favorite artist count listed in the migration sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationCountPlaylists": "{count, plural, =0{no playlists} =1{1 playlist} other{{count} playlists}}",
+  "@migrationCountPlaylists": {
+    "description": "Playlist count listed in the migration sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationImport": "Import",
+  "@migrationImport": {
+    "description": "Action confirming the import in the migration sheet."
+  },
+  "migrationLater": "Not now",
+  "@migrationLater": {
+    "description": "Action dismissing the migration sheet until the next launch."
+  },
+  "migrationNever": "Never ask again",
+  "@migrationNever": {
+    "description": "Action permanently dismissing the migration sheet without importing."
+  },
+  "migrationDone": "Imported {liked, plural, =0{no likes} =1{1 like} other{{liked} likes}}, {albums, plural, =0{no albums} =1{1 album} other{{albums} albums}}, {artists, plural, =0{no artists} =1{1 artist} other{{artists} artists}}, {playlists, plural, =0{no playlists} =1{1 playlist} other{{playlists} playlists}} :D",
+  "@migrationDone": {
+    "description": "Snackbar summarising a successful migration from the old Sono.",
+    "placeholders": {
+      "liked": { "type": "int" },
+      "albums": { "type": "int" },
+      "artists": { "type": "int" },
+      "playlists": { "type": "int" }
+    }
+  },
+  "migrationDoneNothing": "Nothing could be imported from the old Sono :/",
+  "@migrationDoneNothing": {
+    "description": "Snackbar shown when a migration ran but matched nothing on this device."
+  },
+  "migrationUnresolved": "{count, plural, =1{1 song was} other{{count} songs were}} no longer on this device",
+  "@migrationUnresolved": {
+    "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationFailed": "Import from the old Sono failed :/",
+  "@migrationFailed": {
+    "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
+  }
 }
 
