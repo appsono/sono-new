@@ -139,7 +139,6 @@
     "contributorsMaintainer": "Maintainer",
     "contributorsCodeSection": "Code",
     "contributorsTranslatorSection": "Übersetzungen",
-    "contributorsLoading": "Lade…",
     "contributorsLoadFailed": "Konnte Mitwirkende nicht laden :/",
     "commonFavorite": "Favorisieren",
     "commonFavorited": "Favorit",
@@ -562,10 +561,6 @@
     "settingsEqualizer": "Equalizer & Effekte",
     "@settingsEqualizer": {
         "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
-    },
-    "settingsEqualizerOn": "An",
-    "@settingsEqualizerOn": {
-        "description": "Value on the equalizer row when the equalizer is enabled."
     },
     "settingsEqualizerOff": "Aus",
     "@settingsEqualizerOff": {

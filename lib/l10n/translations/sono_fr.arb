@@ -139,7 +139,6 @@
     "contributorsMaintainer": "Responsable de la maintenance",
     "contributorsCodeSection": "Code",
     "contributorsTranslatorSection": "Traductions",
-    "contributorsLoading": "Chargement…",
     "contributorsLoadFailed": "Impossible de charger les contributeurs :/",
     "commonDurationLong": "{hours}h {minutes}min",
     "@commonDurationLong": {
