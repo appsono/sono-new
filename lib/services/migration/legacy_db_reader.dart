@@ -102,7 +102,7 @@ abstract final class LegacyDbReader {
     final skipped = <String>[];
     return LegacyDump(
       schemaVersion: _userVersion(db),
-      likedSongs: _read(db, 'favorite', skipped, _likedSongs),
+      likedSongs: _read(db, 'favorites', skipped, _likedSongs),
       favoriteAlbums: _read(db, 'favorite_albums', skipped, _favoriteAlbums),
       favoriteArtists: _read(db, 'favorite_artists', skipped, _favoriteArtists),
       playlists: _read(db, 'app_playlists', skipped, _playlists),
@@ -245,7 +245,7 @@ abstract final class LegacyDbReader {
   // ==== inrospection ====
 
   static bool _hasTable(Database db, String name) => db.select(
-    "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name ? LIMIT 1",
+    "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ? LIMIT 1",
     [name],
   ).isNotEmpty;
 
