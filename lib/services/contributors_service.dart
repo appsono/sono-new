@@ -21,12 +21,16 @@ class Contributor {
   final String? username;
   final String? avatarUrl;
   final String? profileUrl;
+  final String? githubLogin;
+  final bool isCodeContributor;
 
   const Contributor({
     required this.name,
     this.username,
     this.avatarUrl,
     this.profileUrl,
+    this.githubLogin,
+    this.isCodeContributor = false,
   });
 }
 
@@ -48,7 +52,9 @@ class ContributorsService {
   static const _excludedLogins = {'weblate'};
   static const _timeout = Duration(seconds: 10);
 
-  static Future<List<Contributor>> fetchContributors() async {
+  static Future<List<Contributor>> fetchContributors({
+    Set<String> excludeLogins = const {},
+  }) async {
     try {
       final res = await http
           .get(
@@ -78,6 +84,7 @@ class ContributorsService {
           continue;
         }
         if (_excludedLogins.contains(loginLower)) continue;
+        if (excludeLogins.contains(loginLower)) continue;
         if (type == 'Bot' || login.endsWith('[bot]')) continue;
 
         out.add(
@@ -121,6 +128,8 @@ class ContributorsService {
               username: username,
               avatarUrl: avatarUrl,
               profileUrl: item['profileUrl'] as String?,
+              githubLogin: item['github'] as String?,
+              isCodeContributor: item['codeContributor'] == true,
             ),
           );
         }
@@ -130,5 +139,23 @@ class ContributorsService {
     } catch (_) {
       return {};
     }
+  }
+
+  /// github logins for translator-only contributors
+  ///
+  /// Linking a github account on weblate makes translation commits land
+  /// under that identity, so github counts them as contributors
+  static Future<Set<String>> translatorGithubLogins() async {
+    final map = await loadTranslators();
+    final out = <String>{};
+    for (final people in map.values) {
+      for (final person in people) {
+        final login = person.githubLogin;
+        if (login != null && !person.isCodeContributor) {
+          out.add(login.toLowerCase());
+        }
+      }
+    }
+    return out;
   }
 }
