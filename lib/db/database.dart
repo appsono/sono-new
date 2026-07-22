@@ -627,6 +627,30 @@ class SonoDatabase extends _$SonoDatabase {
     return rows.map((row) => row.read(songs.path)!).toSet();
   }
 
+  /// One song path for the album titled [title]
+  ///
+  /// Falls back to lowest album id when titles are shared
+  Future<String?> getSongPathForAlbumTitle(String title) async {
+    final album =
+        await (select(albums)
+              ..where((a) => a.title.lower().equals(title.toLowerCase()))
+              ..orderBy([(a) => OrderingTerm.asc(a.id)])
+              ..limit(1))
+            .getSingleOrNull();
+    if (album == null) return null;
+
+    final song =
+        await (select(songs)
+              ..where((s) => s.albumId.equals(album.id))
+              ..orderBy([
+                (s) => OrderingTerm.asc(s.trackNumber),
+                (s) => OrderingTerm.asc(s.path),
+              ])
+              ..limit(1))
+            .getSingleOrNull();
+    return song?.path;
+  }
+
   /// Total number of songs in library
   Future<int> countSongs() async {
     final exp = songs.id.count();

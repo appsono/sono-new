@@ -1150,11 +1150,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.8.3"
-      resolved-ref: "194f50357a73a8e5f48e7d63fd37968006e79db0"
+      ref: "v0.8.4"
+      resolved-ref: "1221ad26f4d63e82a9ae20506fdb87711631acdc"
       url: "https://github.com/appsono/sono_query.git"
     source: git
-    version: "0.8.3"
+    version: "0.8.4"
   source_gen:
     dependency: transitive
     description:
@@ -1228,7 +1228,7 @@ packages:
     source: hosted
     version: "2.4.0"
   sqlite3:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sqlite3
       sha256: f8f8ba7f9454f2761d4b416e030c4528ebc45e9290798d848f4dc08890c42a7c
