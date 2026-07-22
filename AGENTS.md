@@ -47,8 +47,8 @@ The icon system is `IconsSheet` in `lib/theme/icons.dart`. The Drift schema is
 - `flutter pub get` - Install dependencies
 - `flutter run --flavor dev` - Run in dev mode on a connected device or emulator
 - `flutter run --flavor prod` - Run in production mode
-- `dart run build_runner build --delete-conflicting-output` - Regenerate Drift
-  code after any change to `lib/db/tables.dart`
+- `dart run build_runner build --delete-conflicting-outputs` - Regenerate Drift
+  code after any change to `lib/db/tables.dart` (or `flutter pub run build_runner build --delete-conflicting-outputs`)
 - `dart run scripts/compute_translation_progress.dart` - Recompute translation progress
   (CI runs this before every build).
   NOT REQUIRED TO RUN - Unless there is a need for up-to-date translation progress

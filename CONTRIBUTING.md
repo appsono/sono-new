@@ -43,6 +43,12 @@ the generated file:
 dart run build_runner build --delete-conflicting-outputs
 ```
 
+or
+
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
 ---
 
 ## Project structure
