@@ -110,7 +110,7 @@ class DiscordRpcService {
       _showElapsed = (await db.getSetting('discord.show_elapsed')) != 'false';
       _showButton = (await db.getSetting('discord.show_button')) != 'false';
       _onlyWhilePlaying =
-          (await db.getSetting('discord.only_while_playig')) != 'false';
+          (await db.getSetting('discord.only_while_playing')) != 'false';
       _sessionToken =
           legacySession ?? await _secure.read(key: 'discord.session_token');
     } on PlatformException catch (e) {
@@ -237,7 +237,7 @@ class DiscordRpcService {
   /// Toggle clearing presence after a minute paused
   Future<void> setOnlyWhilePlaying(bool value) async {
     _onlyWhilePlaying = value;
-    await _db?.setSetting('discord.only_while_playig', value.toString());
+    await _db?.setSetting('discord.only_while_playing', value.toString());
     //cancel pending clear if this was just switched off
     if (!value) _clearTimer?.cancel();
     _scheduleUpdate();

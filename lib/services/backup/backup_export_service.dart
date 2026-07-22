@@ -38,7 +38,7 @@ class BackupExportService {
     'scan.excludedArtists',
     'scan.artistParserOn',
     'playback.gapless',
-    'playnacl.pause_on_disconnect',
+    'playback.pause_on_disconnect',
     'playback.volume',
     'discord.show_art',
     'discord.show_elapsed',
