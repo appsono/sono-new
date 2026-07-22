@@ -19,15 +19,20 @@ import 'package:sono_query/sono_query.dart';
 /// [id] is the MediaStore album id, [name] is the cached title
 typedef LegacyAlbumRef = ({int id, String name});
 
+/// Resolved paths plus ids that only matched by name
+typedef LegacyResolution = ({Map<int, String> paths, Set<int> viaFallback});
+
+const _empty = (paths: <int, String>{}, viaFallback: <int>{});
+
 /// Resolves old ids into library paths
 ///
 /// Old database only stored MediaStore ids, so they need resolving
 abstract interface class LegacyIdResolver {
   /// MediaStore song ids to file paths
-  Future<Map<int, String>> resolveSongs(List<int> songIds);
+  Future<LegacyResolution> resolveSongs(List<int> songIds);
 
   /// MediaStore album ids to one song path
-  Future<Map<int, String>> resolveAlbums(List<LegacyAlbumRef> albums);
+  Future<LegacyResolution> resolveAlbums(List<LegacyAlbumRef> albums);
 }
 
 /// Fallback album lookup by [title]
@@ -47,41 +52,52 @@ class MediaStoreResolver implements LegacyIdResolver {
   final LegacyAlbumFallback? albumFallback;
 
   @override
-  Future<Map<int, String>> resolveSongs(List<int> songIds) async {
-    if (songIds.isEmpty) return const {};
+  Future<LegacyResolution> resolveSongs(List<int> songIds) async {
+    if (songIds.isEmpty) return _empty;
     try {
-      return await SonoQuery.resolveMediaStoreIds(songIds);
+      final paths = await SonoQuery.resolveMediaStoreIds(songIds);
+      //no fallback exists for songs
+      return (paths: paths, viaFallback: const <int>{});
     } catch (e) {
       debugPrint('LegacyIdResolver: song resolution failed: $e');
-      return const {};
+      return _empty;
     }
   }
 
   @override
-  Future<Map<int, String>> resolveAlbums(List<LegacyAlbumRef> albums) async {
-    if (albums.isEmpty) return const {};
+  Future<LegacyResolution> resolveAlbums(List<LegacyAlbumRef> albums) async {
+    if (albums.isEmpty) return _empty;
 
-    var resolved = <int, String>{};
+    var paths = <int, String>{};
     try {
-      resolved = await SonoQuery.resolveMediaStoreAlbumIds([
-        for (final a in albums) a.id,
-      ]);
+      paths.addAll(
+        await SonoQuery.resolveMediaStoreAlbumIds([
+          for (final a in albums) a.id,
+        ]),
+      );
     } catch (e) {
       debugPrint('LegacyIdResolver: album resolution failed: $e');
     }
 
     final fallback = albumFallback;
-    if (fallback == null) return resolved;
+    if (fallback == null) return (paths: paths, viaFallback: const <int>{});
 
-    //only missing albums
+    final viaFallback = <int>{};
     for (final album in albums) {
-      if (resolved.containsKey(album.id)) continue;
+      if (paths.containsKey(album.id)) continue;
       if (album.name.trim().isEmpty) continue;
 
       final path = await fallback.pathForAlbumTitle(album.name);
-      if (path != null) resolved[album.id] = path;
+      if (path == null) continue;
+
+      paths[album.id] = path;
+      viaFallback.add(album.id);
+      debugPrint(
+        'LegacyIdResolver: album ${album.id} matched by name '
+        '"${album.name}" > $path',
+      );
     }
-    return resolved;
+    return (paths: paths, viaFallback: viaFallback);
   }
 }
 
@@ -103,18 +119,27 @@ class DbTitleAlbumFallback implements LegacyAlbumFallback {
 /// Fixed resolver for migration tests
 @visibleForTesting
 class StaticIdResolver implements LegacyIdResolver {
-  const StaticIdResolver({this.songs = const {}, this.albums = const {}});
+  const StaticIdResolver({
+    this.songs = const {},
+    this.albums = const {},
+    this.albumsViaFallback = const {},
+  });
 
   final Map<int, String> songs;
   final Map<int, String> albums;
 
-  @override
-  Future<Map<int, String>> resolveSongs(List<int> songIds) async => {
-    for (final id in songIds) id: ?songs[id],
-  };
+  /// Album ids to report as name matches
+  final Set<int> albumsViaFallback;
 
   @override
-  Future<Map<int, String>> resolveAlbums(List<LegacyAlbumRef> refs) async => {
-    for (final ref in refs) ref.id: ?albums[ref.id],
-  };
+  Future<LegacyResolution> resolveSongs(List<int> songIds) async => (
+    paths: {for (final id in songIds) id: ?songs[id]},
+    viaFallback: const <int>{},
+  );
+
+  @override
+  Future<LegacyResolution> resolveAlbums(List<LegacyAlbumRef> refs) async => (
+    paths: {for (final ref in refs) ref.id: ?albums[ref.id]},
+    viaFallback: const <int>{},
+  );
 }
