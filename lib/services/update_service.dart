@@ -17,6 +17,8 @@ import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/services/build_flavor.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Info about an available update, returned from checkForUpdats when
 /// a newer release is found on Github and the user hasn't dismissed it
@@ -37,7 +39,14 @@ class UpdateInfo {
 }
 
 /// Outcome of an update check
-enum UpdateStatus { upToDate, available, dismissed, cooledDown, failed }
+enum UpdateStatus {
+  upToDate,
+  available,
+  dismissed,
+  cooledDown,
+  failed,
+  unsupported,
+}
 
 /// Check result, with [info] set when there is something to show
 class UpdateCheck {
@@ -68,6 +77,11 @@ class UpdateService {
   static const _apiUrl = 'https://api.github.com/repos/$_repo/releases/latest';
   static const _timeout = Duration(seconds: 8);
 
+  /// Play listing, market:// hands off to store app when installed
+  static const playMarketUrl = 'market://details?id=${BuildFlavor.playPackage}';
+  static const playWebUrl =
+      'https://play.google.com/store/apps/details?id=${BuildFlavor.playPackage}';
+
   // minimum delay between automatic checks
   // can later be cofigured by user
   static const _checkCooldown = Duration(hours: 6);
@@ -82,6 +96,10 @@ class UpdateService {
   ///
   /// Only successful GitHub checks update saved result
   Future<UpdateCheck> check({bool force = false}) async {
+    //play distros updates itself
+    if (await BuildFlavor.isPlay) {
+      return const UpdateCheck(UpdateStatus.unsupported);
+    }
     final db = _db;
     if (db == null) return const UpdateCheck(UpdateStatus.failed);
 
@@ -185,6 +203,18 @@ class UpdateService {
   /// usr can still trigger manual check later
   Future<void> dismiss(String version) async {
     await _db?.setSetting('update.dismissed_version', version);
+  }
+
+  /// Opens play listing, web url when store app is missing
+  Future<void> openPlayListing() async {
+    try {
+      final market = Uri.parse(playMarketUrl);
+      if (await launchUrl(market, mode: LaunchMode.externalApplication)) return;
+    } catch (_) {}
+    await launchUrl(
+      Uri.parse(playWebUrl),
+      mode: LaunchMode.externalApplication,
+    );
   }
 
   /// Read current app version from platform

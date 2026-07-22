@@ -636,6 +636,10 @@
   "@settingsUpdates": {
     "description": "Label of the row that checks for a newer release. Its value is the installed version."
   },
+  "settingsUpdatesViaPlay": "Managed",
+  "@settingsUpdatesViaPlay": {
+    "description": "Value on the Updates row for Play builds, which open the store listing instead of checking GitHub."
+  },
   "settingsAbout": "About Sono",
   "@settingsAbout": {
     "description": "Label of the row opening the about subpage, and the title of that subpage."
@@ -1337,6 +1341,7 @@
     "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
   },
   "contributorsLoadFailed": "Couldn't load contributors :/",
+
 
   "migrationFoundTitle": "Data from the old Sono",
   "@migrationFoundTitle": {

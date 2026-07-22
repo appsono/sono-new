@@ -16,8 +16,8 @@ import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:sono/services/build_flavor.dart';
 import 'package:sono/services/migration/legacy_dump.dart';
 
 /// Reads a sono_app.db by old Sono
@@ -31,8 +31,6 @@ import 'package:sono/services/migration/legacy_dump.dart';
 abstract final class LegacyDbReader {
   static const fileName = 'sono_app.db';
   static const legacyPackage = 'wtf.sono.app';
-
-  static bool? _isLegacyPackage;
 
   // ==== locating ====
 
@@ -48,25 +46,12 @@ abstract final class LegacyDbReader {
   /// true when there is an old install to migrate
   static Future<bool> exists() async {
     if (!Platform.isAndroid) return false;
-    if (!await sharesLegacyPackage()) return false;
+    if (!await BuildFlavor.isPlay) return false;
     try {
       return File(await defaultPath()).exists();
     } catch (e) {
       debugPrint('LegacyDbReader: stat failed: $e');
       return false;
-    }
-  }
-
-  // true when this build shared old applicationId
-  static Future<bool> sharesLegacyPackage() async {
-    if (_isLegacyPackage case final cached?) return cached;
-    try {
-      final name = (await PackageInfo.fromPlatform()).packageName;
-      return _isLegacyPackage =
-          name == legacyPackage || name.startsWith('$legacyPackage.');
-    } catch (e) {
-      debugPrint('LegacyDbReader: package check failed: $e');
-      return _isLegacyPackage = false;
     }
   }
 

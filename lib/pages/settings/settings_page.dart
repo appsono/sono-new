@@ -20,6 +20,7 @@ import 'package:sono/services/theme_service.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/locale_service.dart';
+import 'package:sono/services/build_flavor.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/widgets/header.dart';
@@ -74,6 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
   String? _updateStatus;
   String? _updateLatest;
   bool _checkingUpdate = false;
+  bool _isPlay = false;
 
   @override
   void initState() {
@@ -90,6 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final updateLatest = await widget.db.getSetting(
       'update.last_available_version',
     );
+    final isPlay = await BuildFlavor.isPlay;
     if (!mounted) return;
     setState(() {
       _songCount = count;
@@ -98,6 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
       _build = info.buildNumber;
       _updateStatus = updateStatus;
       _updateLatest = updateLatest;
+      _isPlay = isPlay;
     });
   }
 
@@ -451,7 +455,10 @@ class _SettingsPageState extends State<SettingsPage> {
           accent: c.accentGreen,
           label: l.settingsUpdates,
           value: _updateValue(l),
-          onTap: _checkForUpdate,
+          external: _isPlay,
+          onTap: _isPlay
+              ? () => UpdateService.instance.openPlayListing()
+              : _checkForUpdate,
         ),
         SettingsRow(
           icon: IconsSheet.infoOutlined,
@@ -481,6 +488,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   //falls back to installed version until check has run
   String? _updateValue(AppLocalizations l) {
+    if (_isPlay) return l.settingsUpdatesViaPlay;
     if (_checkingUpdate) return l.settingsUpdatesChecking;
 
     return switch (_updateStatus) {
