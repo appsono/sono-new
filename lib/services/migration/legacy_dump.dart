@@ -36,7 +36,6 @@ class LegacyPlaylist {
     required this.songs,
     this.description,
     this.customCoverPath,
-    this.coverSongId,
   });
 
   final int id;
@@ -45,9 +44,6 @@ class LegacyPlaylist {
 
   /// Old custom cover path
   final String? customCoverPath;
-
-  /// Song id used for auto cover fallback
-  final int? coverSongId;
 
   final DateTime createdAt;
   final List<LegacyPlaylistSong> songs;
@@ -102,7 +98,6 @@ class LegacyDump {
     for (final l in likedSongs) l.songId,
     for (final p in playlists)
       for (final s in p.songs) s.songId,
-    for (final p in playlists) ?p.coverSongId,
   }.toList();
 
   int get totalSongEntries =>

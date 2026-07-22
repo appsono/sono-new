@@ -178,7 +178,6 @@ abstract final class LegacyDbReader {
       'id',
       'name',
       if (hasDescription) 'description',
-      'cover_song_id',
       if (hasCover) 'custom_cover_path',
       'created_at',
     ].join(', ');
@@ -194,7 +193,6 @@ abstract final class LegacyDbReader {
             name: _text(r['name']) ?? 'Playlist $id',
             description: hasDescription ? _text(r['description']) : null,
             customCoverPath: hasCover ? _text(r['custom_cover_path']) : null,
-            coverSongId: _int(r['cover_song_id']),
             createdAt: _time(r['created_at']),
             songs: entries[id] ?? const [],
           ),

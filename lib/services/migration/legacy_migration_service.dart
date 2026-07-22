@@ -187,11 +187,17 @@ class LegacyMigrationService {
             (path: path, position: s.position, addedAt: s.addedAt),
       ];
 
+      //old covers sit in shared data dir, so path still resolves
+      final custom = playlist.customCoverPath;
+      final cover = custom != null && await File(custom).exists()
+          ? custom
+          : null;
+
       try {
         await db.restorePlaylist(
           name: playlist.name,
           description: playlist.description,
-          coverPath: await _coverFor(playlist, paths),
+          coverPath: cover,
           createdAt: playlist.createdAt,
           members: songs,
         );
@@ -202,18 +208,6 @@ class LegacyMigrationService {
       }
     }
     return (created, members);
-  }
-
-  /// Resolved old custom covers from shared data dir
-  ///
-  /// Auto cover are derived from song
-  Future<String?> _coverFor(
-    LegacyPlaylist playlist,
-    Map<int, String> paths,
-  ) async {
-    final custom = playlist.customCoverPath;
-    if (custom != null && await File(custom).exists()) return custom;
-    return null;
   }
 
   /// Returns (applied, parked)
