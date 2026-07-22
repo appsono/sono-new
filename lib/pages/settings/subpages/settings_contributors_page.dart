@@ -199,7 +199,7 @@ class _PersonGrid extends StatelessWidget {
         children: [
           for (final person in people)
             _PersonTile(person: person, onTap: () => onTap(person)),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );
