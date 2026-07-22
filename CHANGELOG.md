@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.11.0+12] - 2026-07-22
+
+(unreleased until new translation updates roll in)
+
 ### Added
 
 - Added new appearance, backup, folder, globus, info, moon, open link, update, and storage icons
