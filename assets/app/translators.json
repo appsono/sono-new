@@ -3,6 +3,8 @@
     {
       "name": "Sasha Glazko",
       "username": "lenify",
+      "github": "1enify",
+      "codeContributor": false,
       "profileUrl": "https://hosted.weblate.org/user/lenify/"
     }
   ],
@@ -10,6 +12,8 @@
     {
       "name": "Sasha Glazko",
       "username": "lenify",
+      "github": "1enify",
+      "codeContributor": false,
       "profileUrl": "https://hosted.weblate.org/user/lenify/"
     }
   ],
@@ -17,6 +21,7 @@
     {
       "name": "Priit Jõerüüt",
       "username": "jrthwlate",
+      "codeContributor": false,
       "profileUrl": "https://hosted.weblate.org/user/jrthwlate/"
     }
   ],
@@ -24,6 +29,8 @@
     {
       "name": "Zartiny",
       "username": "Zartiny",
+      "github": "Zartiny",
+      "codeContributor": false,
       "profileUrl": "https://hosted.weblate.org/user/Zartiny/"
     }
   ],
@@ -31,6 +38,8 @@
     {
       "name": "mathis",
       "username": "mathiiiiiis",
+      "github": "mathiiiiiis",
+      "codeContributor": true,
       "profileUrl": "https://hosted.weblate.org/user/mathiiiiiis/"
     }
   ],
@@ -38,6 +47,7 @@
     {
       "name": "Ado Listener",
       "username": "Ado_Listener",
+      "codeContributor": false,
       "profileUrl": "https://hosted.weblate.org/user/Ado_Listener/"
     }
   ],
@@ -45,6 +55,8 @@
     {
       "name": "prlz",
       "username": "prlz",
+      "github": "praalzzzz",
+      "codeContributor": false,
       "profileUrl": "https://hosted.weblate.org/user/prlz/"
     }
   ],
@@ -52,6 +64,8 @@
     {
       "name": "Dan",
       "username": "kefir2105",
+      "github": "Kefir2105",
+      "codeContributor": false,
       "profileUrl": "https://hosted.weblate.org/user/kefir2105/"
     }
   ]
