@@ -47,6 +47,11 @@ android {
             versionNameSuffix = "-dev"
             manifestPlaceholders["appName"] = "Sono Dev"
         }
+        create("play") {
+            dimension = "env"
+            applicationId = "wtf.sono.app"
+            manifestPlaceholders["appName"] = "Sono"
+        }
     }
 
     signingConfigs {
