@@ -45,8 +45,8 @@ abstract interface class LegacyAlbumFallback {
 /// Primary
 ///
 /// Resolves ids through MediaStore
-class MediaStoreResolver implements LegacyIdResolver {
-  const MediaStoreResolver({this.albumFallback});
+class MediaStoreIdResolver implements LegacyIdResolver {
+  const MediaStoreIdResolver({this.albumFallback});
 
   /// Used when MediaStore misses an album
   final LegacyAlbumFallback? albumFallback;
