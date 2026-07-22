@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added EQ presets and configurable playback behaviour (gapless-playback, stop on disconnected, in-app volume)
 - Added configurable Discord presence settings for album art, elapsed time, link button, and clearing presence on pause (all enabled by default)
 - Added Discord username and avatar persistence during login instead of the settings page
+- Added a redesigned settings page, splitting one long scroll into a root index with nine subpages: profile, appearance, language, playback, equalizer, library, Discord, backup and about
+- Added a "Planned" badge for settings that are on the roadmap but not built yet, with a sheet explaining where to follow development
+- Added a manual update check in settings, showing the result and release notes in a sheet, with an option to skip a release
+- Added a contributors page with an avatar grid, replacing the old bottom sheet
+- Added a Ko-fi brand icon to SonoBrands
+- Added a licence list covering every dependency, not just Sono's own licence
+- Added tracking for when the last library scan finished and when a backup was last exported
+- Added `github` and `codeContributor` fields to translators.json, so translators whose Weblate account is linked to GitHub are no longer listed as code contributors
+- Added the Weblate account to the contributor filter
 
 ### Changed
 
@@ -31,12 +40,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved backup safety by excluding settings that mix preferences with machine state or account identity
 - Changed UpdateService to report why a check found nothing, distinguishing up to date, available, dismissed, cooling down and failed
 - Changed update state to persist between launches, so the settings row shows whether Sono is up to date instead of the installed version
+- Changed avatar picking to use image_picker, so Android 13 and above opens the system photo picker instead of the file browser
+- Changed picked avatars to be capped at 512px instead of stored at full resolution
+- Added a switch theme to the app theme, replacing Material defaults
+- Added a `SonoSizes.borderWidth` token for the 1.5px border used across cards and chips
 
 ### Fixed
 
 - Fixed backup settings export by replacing the prefix allowlist with an explicit list of exportable keys
 - Fixed missing exports for album grouping, theme mode, playback settings, and Discord display settings
 - Fixed imports to use the same export key list instead of maintaining a separate list
+- Fixed a black flash when opening subpages in light mode, caused by the page transition scrim using a translucent overlay colour
+
+### Removed
+
+- Removed the contributors bottom sheet, replaced by the contributors page
+- Removed the standalone Ko-fi button, replaced by a row on the about page
 
 ## [0.10.1+11] - 2026-07-20
 
