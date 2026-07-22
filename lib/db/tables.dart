@@ -155,3 +155,19 @@ class PlaylistSongs extends Table {
   @override
   Set<Column> get primaryKey => {playlistId, songId};
 }
+
+/// Legacy settings from old Sono app
+///
+/// Stored until their matching feature ships
+class LegacySettings extends Table {
+  TextColumn get category => text()();
+  TextColumn get settingKey => text()();
+  TextColumn get value => text()();
+  DateTimeColumn get importedAt => dateTime()();
+
+  /// kept for one release after migration as a record
+  DateTimeColumn get consumedAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {category, settingKey};
+}

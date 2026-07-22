@@ -23,7 +23,7 @@ class BackupExportService {
   BackupExportService(this.db);
   final SonoDatabase db;
 
-  static const formatVersion = 1;
+  static const formatVersion = 2;
 
   //fx.* is safe as effects, other prefixes mix settings with state
   static const exportableSettingPrefixes = ['fx.'];
@@ -65,6 +65,7 @@ class BackupExportService {
       'favoriteAlbums': await _exportFavoriteAlbums(),
       'favoriteArtists': await _exportFavoriteArtists(),
       'playlists': await _exportPlaylists(),
+      'legacySettings': await _exportLegacySettings(),
     };
   }
 
@@ -149,6 +150,17 @@ class BackupExportService {
       });
     }
     return out;
+  }
+
+  /// Legacy settings not yet migrated
+  ///
+  /// Consumed rows are excluded
+  Future<List<Map<String, dynamic>>> _exportLegacySettings() async {
+    final rows = await db.getUnconsumedLegacySettings();
+    return [
+      for (final r in rows)
+        {'category': r.category, 'key': r.settingKey, 'value': r.value},
+    ];
   }
 
   /// File as base64, or null if missing

@@ -17,6 +17,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:path_provider/path_provider.dart';
 
 import 'package:sono/db/database.dart';
+import 'package:sono/services/migration/legacy_settings_map.dart';
 import 'package:sono/services/backup/backup_export_service.dart';
 
 /// What an import managed to apply
@@ -87,6 +88,7 @@ class BackupImportService {
 
     await _importSettings(data['settings']);
     await _importProfile(data['profile']);
+    await _importLegacySettings(data['legacySettings']);
 
     //restored scan paths only take effect once library is rebuilt
     await rescan();
@@ -141,6 +143,20 @@ class BackupImportService {
           ? Value(base64Decode(avatarB64))
           : const Value.absent(),
     );
+  }
+
+  Future<void> _importLegacySettings(dynamic raw) async {
+    if (raw is! List) return;
+    final entries = <LegacySettingRow>[];
+    for (final e in raw) {
+      if (e is! Map) continue;
+      final category = e['category'];
+      final key = e['key'];
+      final value = e['value'];
+      if (category is! String || key is! String || value is! String) continue;
+      entries.add((category: category, key: key, value: value));
+    }
+    await db.parkLegacySettings(entries);
   }
 
   List<({String path, DateTime likedAt})> _parseLikedSongs(dynamic raw) {

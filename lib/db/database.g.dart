@@ -2957,6 +2957,381 @@ class PlaylistSongsCompanion extends UpdateCompanion<PlaylistSong> {
   }
 }
 
+class $LegacySettingsTable extends LegacySettings
+    with TableInfo<$LegacySettingsTable, LegacySetting> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacySettingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _settingKeyMeta = const VerificationMeta(
+    'settingKey',
+  );
+  @override
+  late final GeneratedColumn<String> settingKey = GeneratedColumn<String>(
+    'setting_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _importedAtMeta = const VerificationMeta(
+    'importedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> importedAt = GeneratedColumn<DateTime>(
+    'imported_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _consumedAtMeta = const VerificationMeta(
+    'consumedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> consumedAt = GeneratedColumn<DateTime>(
+    'consumed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    category,
+    settingKey,
+    value,
+    importedAt,
+    consumedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_settings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacySetting> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryMeta);
+    }
+    if (data.containsKey('setting_key')) {
+      context.handle(
+        _settingKeyMeta,
+        settingKey.isAcceptableOrUnknown(data['setting_key']!, _settingKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_settingKeyMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    if (data.containsKey('imported_at')) {
+      context.handle(
+        _importedAtMeta,
+        importedAt.isAcceptableOrUnknown(data['imported_at']!, _importedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_importedAtMeta);
+    }
+    if (data.containsKey('consumed_at')) {
+      context.handle(
+        _consumedAtMeta,
+        consumedAt.isAcceptableOrUnknown(data['consumed_at']!, _consumedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {category, settingKey};
+  @override
+  LegacySetting map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacySetting(
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
+      settingKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}setting_key'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}value'],
+      )!,
+      importedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}imported_at'],
+      )!,
+      consumedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}consumed_at'],
+      ),
+    );
+  }
+
+  @override
+  $LegacySettingsTable createAlias(String alias) {
+    return $LegacySettingsTable(attachedDatabase, alias);
+  }
+}
+
+class LegacySetting extends DataClass implements Insertable<LegacySetting> {
+  final String category;
+  final String settingKey;
+  final String value;
+  final DateTime importedAt;
+
+  /// kept for one release after migration as a record
+  final DateTime? consumedAt;
+  const LegacySetting({
+    required this.category,
+    required this.settingKey,
+    required this.value,
+    required this.importedAt,
+    this.consumedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['category'] = Variable<String>(category);
+    map['setting_key'] = Variable<String>(settingKey);
+    map['value'] = Variable<String>(value);
+    map['imported_at'] = Variable<DateTime>(importedAt);
+    if (!nullToAbsent || consumedAt != null) {
+      map['consumed_at'] = Variable<DateTime>(consumedAt);
+    }
+    return map;
+  }
+
+  LegacySettingsCompanion toCompanion(bool nullToAbsent) {
+    return LegacySettingsCompanion(
+      category: Value(category),
+      settingKey: Value(settingKey),
+      value: Value(value),
+      importedAt: Value(importedAt),
+      consumedAt: consumedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(consumedAt),
+    );
+  }
+
+  factory LegacySetting.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacySetting(
+      category: serializer.fromJson<String>(json['category']),
+      settingKey: serializer.fromJson<String>(json['settingKey']),
+      value: serializer.fromJson<String>(json['value']),
+      importedAt: serializer.fromJson<DateTime>(json['importedAt']),
+      consumedAt: serializer.fromJson<DateTime?>(json['consumedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'category': serializer.toJson<String>(category),
+      'settingKey': serializer.toJson<String>(settingKey),
+      'value': serializer.toJson<String>(value),
+      'importedAt': serializer.toJson<DateTime>(importedAt),
+      'consumedAt': serializer.toJson<DateTime?>(consumedAt),
+    };
+  }
+
+  LegacySetting copyWith({
+    String? category,
+    String? settingKey,
+    String? value,
+    DateTime? importedAt,
+    Value<DateTime?> consumedAt = const Value.absent(),
+  }) => LegacySetting(
+    category: category ?? this.category,
+    settingKey: settingKey ?? this.settingKey,
+    value: value ?? this.value,
+    importedAt: importedAt ?? this.importedAt,
+    consumedAt: consumedAt.present ? consumedAt.value : this.consumedAt,
+  );
+  LegacySetting copyWithCompanion(LegacySettingsCompanion data) {
+    return LegacySetting(
+      category: data.category.present ? data.category.value : this.category,
+      settingKey: data.settingKey.present
+          ? data.settingKey.value
+          : this.settingKey,
+      value: data.value.present ? data.value.value : this.value,
+      importedAt: data.importedAt.present
+          ? data.importedAt.value
+          : this.importedAt,
+      consumedAt: data.consumedAt.present
+          ? data.consumedAt.value
+          : this.consumedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacySetting(')
+          ..write('category: $category, ')
+          ..write('settingKey: $settingKey, ')
+          ..write('value: $value, ')
+          ..write('importedAt: $importedAt, ')
+          ..write('consumedAt: $consumedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(category, settingKey, value, importedAt, consumedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacySetting &&
+          other.category == this.category &&
+          other.settingKey == this.settingKey &&
+          other.value == this.value &&
+          other.importedAt == this.importedAt &&
+          other.consumedAt == this.consumedAt);
+}
+
+class LegacySettingsCompanion extends UpdateCompanion<LegacySetting> {
+  final Value<String> category;
+  final Value<String> settingKey;
+  final Value<String> value;
+  final Value<DateTime> importedAt;
+  final Value<DateTime?> consumedAt;
+  final Value<int> rowid;
+  const LegacySettingsCompanion({
+    this.category = const Value.absent(),
+    this.settingKey = const Value.absent(),
+    this.value = const Value.absent(),
+    this.importedAt = const Value.absent(),
+    this.consumedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacySettingsCompanion.insert({
+    required String category,
+    required String settingKey,
+    required String value,
+    required DateTime importedAt,
+    this.consumedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : category = Value(category),
+       settingKey = Value(settingKey),
+       value = Value(value),
+       importedAt = Value(importedAt);
+  static Insertable<LegacySetting> custom({
+    Expression<String>? category,
+    Expression<String>? settingKey,
+    Expression<String>? value,
+    Expression<DateTime>? importedAt,
+    Expression<DateTime>? consumedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (category != null) 'category': category,
+      if (settingKey != null) 'setting_key': settingKey,
+      if (value != null) 'value': value,
+      if (importedAt != null) 'imported_at': importedAt,
+      if (consumedAt != null) 'consumed_at': consumedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacySettingsCompanion copyWith({
+    Value<String>? category,
+    Value<String>? settingKey,
+    Value<String>? value,
+    Value<DateTime>? importedAt,
+    Value<DateTime?>? consumedAt,
+    Value<int>? rowid,
+  }) {
+    return LegacySettingsCompanion(
+      category: category ?? this.category,
+      settingKey: settingKey ?? this.settingKey,
+      value: value ?? this.value,
+      importedAt: importedAt ?? this.importedAt,
+      consumedAt: consumedAt ?? this.consumedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (settingKey.present) {
+      map['setting_key'] = Variable<String>(settingKey.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    if (importedAt.present) {
+      map['imported_at'] = Variable<DateTime>(importedAt.value);
+    }
+    if (consumedAt.present) {
+      map['consumed_at'] = Variable<DateTime>(consumedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacySettingsCompanion(')
+          ..write('category: $category, ')
+          ..write('settingKey: $settingKey, ')
+          ..write('value: $value, ')
+          ..write('importedAt: $importedAt, ')
+          ..write('consumedAt: $consumedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class SongWithArtistViewData extends DataClass {
   final int id;
   final String path;
@@ -3457,6 +3832,7 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
   late final $ProfilesTable profiles = $ProfilesTable(this);
   late final $PlaylistsTable playlists = $PlaylistsTable(this);
   late final $PlaylistSongsTable playlistSongs = $PlaylistSongsTable(this);
+  late final $LegacySettingsTable legacySettings = $LegacySettingsTable(this);
   late final $SongWithArtistViewView songWithArtistView =
       $SongWithArtistViewView(this);
   late final $AlbumWithArtistViewView albumWithArtistView =
@@ -3474,6 +3850,7 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
     profiles,
     playlists,
     playlistSongs,
+    legacySettings,
     songWithArtistView,
     albumWithArtistView,
   ];
@@ -6315,6 +6692,214 @@ typedef $$PlaylistSongsTableProcessedTableManager =
       PlaylistSong,
       PrefetchHooks Function({bool playlistId, bool songId})
     >;
+typedef $$LegacySettingsTableCreateCompanionBuilder =
+    LegacySettingsCompanion Function({
+      required String category,
+      required String settingKey,
+      required String value,
+      required DateTime importedAt,
+      Value<DateTime?> consumedAt,
+      Value<int> rowid,
+    });
+typedef $$LegacySettingsTableUpdateCompanionBuilder =
+    LegacySettingsCompanion Function({
+      Value<String> category,
+      Value<String> settingKey,
+      Value<String> value,
+      Value<DateTime> importedAt,
+      Value<DateTime?> consumedAt,
+      Value<int> rowid,
+    });
+
+class $$LegacySettingsTableFilterComposer
+    extends Composer<_$SonoDatabase, $LegacySettingsTable> {
+  $$LegacySettingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get settingKey => $composableBuilder(
+    column: $table.settingKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get consumedAt => $composableBuilder(
+    column: $table.consumedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacySettingsTableOrderingComposer
+    extends Composer<_$SonoDatabase, $LegacySettingsTable> {
+  $$LegacySettingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get settingKey => $composableBuilder(
+    column: $table.settingKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get consumedAt => $composableBuilder(
+    column: $table.consumedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacySettingsTableAnnotationComposer
+    extends Composer<_$SonoDatabase, $LegacySettingsTable> {
+  $$LegacySettingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<String> get settingKey => $composableBuilder(
+    column: $table.settingKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get consumedAt => $composableBuilder(
+    column: $table.consumedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$LegacySettingsTableTableManager
+    extends
+        RootTableManager<
+          _$SonoDatabase,
+          $LegacySettingsTable,
+          LegacySetting,
+          $$LegacySettingsTableFilterComposer,
+          $$LegacySettingsTableOrderingComposer,
+          $$LegacySettingsTableAnnotationComposer,
+          $$LegacySettingsTableCreateCompanionBuilder,
+          $$LegacySettingsTableUpdateCompanionBuilder,
+          (
+            LegacySetting,
+            BaseReferences<_$SonoDatabase, $LegacySettingsTable, LegacySetting>,
+          ),
+          LegacySetting,
+          PrefetchHooks Function()
+        > {
+  $$LegacySettingsTableTableManager(
+    _$SonoDatabase db,
+    $LegacySettingsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacySettingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LegacySettingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LegacySettingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> category = const Value.absent(),
+                Value<String> settingKey = const Value.absent(),
+                Value<String> value = const Value.absent(),
+                Value<DateTime> importedAt = const Value.absent(),
+                Value<DateTime?> consumedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacySettingsCompanion(
+                category: category,
+                settingKey: settingKey,
+                value: value,
+                importedAt: importedAt,
+                consumedAt: consumedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String category,
+                required String settingKey,
+                required String value,
+                required DateTime importedAt,
+                Value<DateTime?> consumedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacySettingsCompanion.insert(
+                category: category,
+                settingKey: settingKey,
+                value: value,
+                importedAt: importedAt,
+                consumedAt: consumedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacySettingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$SonoDatabase,
+      $LegacySettingsTable,
+      LegacySetting,
+      $$LegacySettingsTableFilterComposer,
+      $$LegacySettingsTableOrderingComposer,
+      $$LegacySettingsTableAnnotationComposer,
+      $$LegacySettingsTableCreateCompanionBuilder,
+      $$LegacySettingsTableUpdateCompanionBuilder,
+      (
+        LegacySetting,
+        BaseReferences<_$SonoDatabase, $LegacySettingsTable, LegacySetting>,
+      ),
+      LegacySetting,
+      PrefetchHooks Function()
+    >;
 
 class $SonoDatabaseManager {
   final _$SonoDatabase _db;
@@ -6335,4 +6920,6 @@ class $SonoDatabaseManager {
       $$PlaylistsTableTableManager(_db, _db.playlists);
   $$PlaylistSongsTableTableManager get playlistSongs =>
       $$PlaylistSongsTableTableManager(_db, _db.playlistSongs);
+  $$LegacySettingsTableTableManager get legacySettings =>
+      $$LegacySettingsTableTableManager(_db, _db.legacySettings);
 }

@@ -19,6 +19,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:sono/db/tables.dart';
 
+import 'package:sono/services/migration/legacy_settings_map.dart';
+
 part 'database.g.dart';
 
 @DriftDatabase(
@@ -31,6 +33,7 @@ part 'database.g.dart';
     Profiles,
     Playlists,
     PlaylistSongs,
+    LegacySettings,
   ],
   views: [SongWithArtistView, AlbumWithArtistView],
 )
@@ -39,7 +42,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 17;
+  int get schemaVersion => 18;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -131,8 +134,11 @@ class SonoDatabase extends _$SonoDatabase {
         await m.alterTable(TableMigration(lyricsCache));
         await m.alterTable(TableMigration(playlistSongs));
       }
+      if (from < 18) {
+        await m.createTable(legacySettings);
+      }
       //future migrations go here:
-      // if (from < 18) { .. }
+      // if (from < 19) { .. }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -962,6 +968,57 @@ class SonoDatabase extends _$SonoDatabase {
     final rows = await select(settings).get();
     return {for (final s in rows) s.settingKey: s.value};
   }
+
+  ///
+  ///
+  /// ==== Legacy settings ====
+  ///
+  ///
+
+  /// Stores legacy settings until a feature uses them
+  ///
+  /// Existing rows are never overwritten
+  Future<void> parkLegacySettings(List<LegacySettingRow> entries) async {
+    if (entries.isEmpty) return;
+    final now = DateTime.now();
+    await batch((b) {
+      for (final e in entries) {
+        b.insert(
+          legacySettings,
+          LegacySettingsCompanion.insert(
+            category: e.category,
+            settingKey: e.key,
+            value: e.value,
+            importedAt: now,
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
+      }
+    });
+  }
+
+  /// Reads and consumes a parked value
+  ///
+  /// Returns null if missing or already consumed
+  Future<String?> takeLegacySetting(String category, String key) async {
+    final match =
+        legacySettings.category.equals(category) &
+        legacySettings.settingKey.equals(key);
+
+    final row = await (select(
+      legacySettings,
+    )..where((t) => match & t.consumedAt.isNull())).getSingleOrNull();
+    if (row == null) return null;
+
+    await (update(legacySettings)..where((t) => match)).write(
+      LegacySettingsCompanion(consumedAt: Value(DateTime.now())),
+    );
+    return row.value;
+  }
+
+  /// Rows nothing has claimed yet, so a backup can carry them forward
+  Future<List<LegacySetting>> getUnconsumedLegacySettings() =>
+      (select(legacySettings)..where((t) => t.consumedAt.isNull())).get();
 
   ///
   ///
