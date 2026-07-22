@@ -10,8 +10,10 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sono/theme/tokens.dart';
 import 'package:sono_query/sono_query.dart';
 
 import 'package:sono/l10n/localizations.dart';
@@ -42,6 +44,7 @@ import 'package:sono/pages/settings/subpages/settings_backup_page.dart';
 import 'package:sono/pages/settings/subpages/settings_about_page.dart';
 
 import 'package:sono/pages/settings/eq_labels.dart';
+import 'package:sono/pages/settings/settings_search.dart';
 
 /// Settings root
 class SettingsPage extends StatefulWidget {
@@ -107,7 +110,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _onSearchChanged(String value) {
-    //TODO: filter rows once every destination exists
     setState(() => _query = value);
   }
 
@@ -161,9 +163,85 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ),
-        SliverToBoxAdapter(child: _content(context)),
+        SliverToBoxAdapter(
+          child: _query.trim().isEmpty ? _content(context) : _results(context),
+        ),
       ],
     );
+  }
+
+  // ==== search related ====
+  Widget _results(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+    final matches = searchSettings(l, _query);
+
+    if (matches.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40),
+        child: Text(
+          l.settingsSearchNoResults,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: SonoFonts.primary,
+            fontSize: 13,
+            color: c.textTertiary,
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SettingsGroup(
+        children: [
+          for (final entry in matches)
+            SettingsRow(
+              icon: destinationIcon(entry.destination),
+              brand: entry.destination == SettingsDestination.discord,
+              accent: destinationAccent(c, entry.destination),
+              label: entry.label,
+              //includes page name, so identical labels stay distinct
+              subtitle: destinationLabel(l, entry.destination),
+              onTap: () => _openDestination(entry.destination),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _openDestination(SettingsDestination d) async {
+    //root settings have no page, clear query and restore list
+    if (d == SettingsDestination.root) {
+      _clearSearch();
+      _searchFocus.unfocus();
+      return;
+    }
+
+    final db = widget.db;
+    final Widget page = switch (d) {
+      SettingsDestination.profile => SettingsProfilePage(db: db),
+      SettingsDestination.appearance => SettingsAppearancePage(db: db),
+      SettingsDestination.language => SettingsLanguagePage(db: db),
+      SettingsDestination.playback => SettingsPlaybackPage(db: db),
+      SettingsDestination.equalizer => SettingsEqualizerPage(db: db),
+      SettingsDestination.library => SettingsLibraryPage(
+        db: db,
+        onRescan: widget.onRescan,
+        scanProgress: widget.scanProgress,
+      ),
+      SettingsDestination.discord => SettingsDiscordPage(db: db),
+      SettingsDestination.backup => SettingsBackupPage(
+        db: db,
+        onRescan: widget.onRescan,
+      ),
+      SettingsDestination.about => SettingsAboutPage(db: db),
+      SettingsDestination.root => const SizedBox.shrink(),
+    };
+
+    _searchFocus.unfocus();
+    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+    if (mounted) _loadMeta();
   }
 
   // ==== content ====
