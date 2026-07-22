@@ -134,12 +134,11 @@
     "lyricsTooltipBackToPlayer": "Zurück zum Player",
     "lyricsTooltiplMore": "Mehr",
     "authSignIn": "Einloggen",
-    "settingsSupportKofi": "Supporte mich",
+    "settingsSupportKofi": "Unterstütze mich",
     "settingsContributors": "Mitwirkende",
     "contributorsMaintainer": "Maintainer",
     "contributorsCodeSection": "Code",
     "contributorsTranslatorSection": "Übersetzungen",
-    "contributorsLoading": "Lade…",
     "contributorsLoadFailed": "Konnte Mitwirkende nicht laden :/",
     "commonFavorite": "Favorisieren",
     "commonFavorited": "Favorit",
@@ -562,10 +561,6 @@
     "settingsEqualizer": "Equalizer & Effekte",
     "@settingsEqualizer": {
         "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
-    },
-    "settingsEqualizerOn": "An",
-    "@settingsEqualizerOn": {
-        "description": "Value on the equalizer row when the equalizer is enabled."
     },
     "settingsEqualizerOff": "Aus",
     "@settingsEqualizerOff": {
@@ -1360,12 +1355,20 @@
     "@settingsAboutLicences": {
         "description": "Row that opens the licence list, covering Sono and every dependency."
     },
-    "settingsAboutKofiSubtitle": "nanziert den Signierschlüssel und jede Menge Kaffee",
+    "settingsAboutKofiSubtitle": "Finanziert den Signierschlüssel und jede Menge Kaffee",
     "@settingsAboutKofiSubtitle": {
         "description": "Subtitle under the Ko-fi row."
     },
     "settingsAboutFooterBuilt": "Entwickelt von mathiiiiiis",
     "@settingsAboutFooterBuilt": {
         "description": "First footer line on the about page. The name is a username and stays as is."
+    },
+    "settingsSearchNoResults": "Keine Einstellungen passen dazu >_<",
+    "@settingsSearchNoResults": {
+        "description": "Shown on the settings root when the search field matches nothing."
+    },
+    "contributorsPlaceholder": "das könntest du sein",
+    "@contributorsPlaceholder": {
+        "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
     }
 }
