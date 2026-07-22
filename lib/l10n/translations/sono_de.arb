@@ -1362,5 +1362,13 @@
     "settingsAboutFooterBuilt": "Entwickelt von mathiiiiiis",
     "@settingsAboutFooterBuilt": {
         "description": "First footer line on the about page. The name is a username and stays as is."
+    },
+    "settingsSearchNoResults": "Keine Einstellungen passen dazu >_<",
+    "@settingsSearchNoResults": {
+        "description": "Shown on the settings root when the search field matches nothing."
+    },
+    "contributorsPlaceholder": "das könntest du sein",
+    "@contributorsPlaceholder": {
+        "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
     }
 }
