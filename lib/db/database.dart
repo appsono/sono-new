@@ -19,8 +19,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:sono/db/tables.dart';
 
-import 'package:sono/services/migration/legacy_settings_map.dart';
-
 part 'database.g.dart';
 
 @DriftDatabase(
@@ -1002,7 +1000,9 @@ class SonoDatabase extends _$SonoDatabase {
   /// Stores legacy settings until a feature uses them
   ///
   /// Existing rows are never overwritten
-  Future<void> parkLegacySettings(List<LegacySettingRow> entries) async {
+  Future<void> parkLegacySettings(
+    List<({String category, String key, String value})> entries,
+  ) async {
     if (entries.isEmpty) return;
     final now = DateTime.now();
     await batch((b) {

@@ -12,8 +12,7 @@
 
 import 'dart:convert';
 
-/// One old Sono app_settings row
-typedef LegacySettingRow = ({String category, String key, String value});
+import 'package:sono/services/migration/legacy_dump.dart';
 
 /// Result of mapping old settings
 class LegacySettingsMapping {

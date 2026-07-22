@@ -17,7 +17,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:path_provider/path_provider.dart';
 
 import 'package:sono/db/database.dart';
-import 'package:sono/services/migration/legacy_settings_map.dart';
+import 'package:sono/services/migration/legacy_dump.dart';
 import 'package:sono/services/backup/backup_export_service.dart';
 
 /// What an import managed to apply

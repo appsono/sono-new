@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sono/services/migration/legacy_dump.dart';
 import 'package:sono/services/migration/legacy_settings_map.dart';
 
 LegacySettingRow row(String category, String key, String value) =>
