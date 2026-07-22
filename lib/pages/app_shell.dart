@@ -15,6 +15,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sono/l10n/localizations.dart';
+import 'package:sono/services/migration/legacy_migration_service.dart';
+import 'package:sono/widgets/legacy_migration_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
@@ -33,6 +36,8 @@ import 'package:sono/services/scanner/scan_settings.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/bottom_nav.dart';
 import 'package:sono/widgets/update_banner.dart';
+
+import 'package:sono/utils/toast.dart';
 
 class AppShell extends StatefulWidget {
   final SonoDatabase db;
@@ -161,6 +166,56 @@ class _AppShellState extends State<AppShell> {
     }
     _scanProgress.value = null;
     _scanVersion.value++;
+    await _offerLegacyMigration();
+  }
+
+  //runs after scan, album fallback needs populated library
+  Future<void> _offerLegacyMigration() async {
+    final service = LegacyMigrationService(db: widget.db);
+    final dump = await service.discover();
+    if (dump == null || !mounted) return;
+
+    final choice = await LegacyMigrationSheet.show(context, dump);
+    if (choice == LegacyMigrationChoice.later) return;
+    if (choice == LegacyMigrationChoice.never) {
+      await service.dismiss();
+      return;
+    }
+
+    if (!mounted) return;
+    final l = AppLocalizations.of(context);
+    try {
+      final result = await service.migrate(dump);
+      if (!mounted) return;
+
+      _scanVersion.value++;
+      context.toast(
+        result.likedSongs == 0 &&
+                result.favoriteAlbums == 0 &&
+                result.favoriteArtists == 0 &&
+                result.playlists == 0
+            ? l.migrationDoneNothing
+            : l.migrationDone(
+                result.likedSongs,
+                result.favoriteAlbums,
+                result.favoriteArtists,
+                result.playlists,
+              ),
+        seconds: 5,
+      );
+
+      if (result.unresolvedSongs > 0) {
+        await Future.delayed(const Duration(seconds: 5));
+        if (!mounted) return;
+        context.toast(
+          l.migrationUnresolved(result.unresolvedSongs),
+          seconds: 4,
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      context.toast('${l.migrationFailed}: $e', seconds: 4);
+    }
   }
 
   @override
