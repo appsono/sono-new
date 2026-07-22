@@ -604,10 +604,6 @@
   "@settingsEqualizer": {
     "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
   },
-  "settingsEqualizerOn": "On",
-  "@settingsEqualizerOn": {
-    "description": "Value on the equalizer row when the equalizer is enabled."
-  },
   "settingsEqualizerOff": "Off",
   "@settingsEqualizerOff": {
     "description": "Value on the equalizer row when the equalizer is disabled."
@@ -1332,7 +1328,6 @@
   "contributorsMaintainer": "Maintainer",
   "contributorsCodeSection": "Code",
   "contributorsTranslatorSection": "Translations",
-  "contributorsLoading": "Loading…",
   "contributorsPlaceholder": "this could be you",
   "@contributorsPlaceholder": {
     "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
