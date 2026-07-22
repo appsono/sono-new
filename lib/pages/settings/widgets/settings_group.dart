@@ -49,8 +49,14 @@ class SettingsGroupLabel extends StatelessWidget {
 class SettingsGroup extends StatelessWidget {
   final List<Widget> children;
   final String? note;
+  final double dividerInset;
 
-  const SettingsGroup({required this.children, this.note, super.key});
+  const SettingsGroup({
+    required this.children,
+    this.note,
+    this.dividerInset = _dividerInset,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +79,12 @@ class SettingsGroup extends StatelessWidget {
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (var i = 0; i < children.length; i++) ...[
                   if (i > 0)
                     Padding(
-                      padding: const EdgeInsets.only(left: _dividerInset),
+                      padding: EdgeInsets.only(left: dividerInset),
                       child: Container(height: 1, color: c.borderLight10),
                     ),
                   children[i],
