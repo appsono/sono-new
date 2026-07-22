@@ -45,6 +45,7 @@ class ContributorsService {
   static const _githubRepo = 'sono-new';
   static const _maintainerLogin = 'mathiiiiiis';
   static const _maintainerLogin2 = 'mathiiiiiiis';
+  static const _excludedLogins = {'weblate'};
   static const _timeout = Duration(seconds: 10);
 
   static Future<List<Contributor>> fetchContributors() async {
@@ -73,9 +74,10 @@ class ContributorsService {
         if (login == null) continue;
         final loginLower = login.toLowerCase();
         if (loginLower == _maintainerLogin.toLowerCase() ||
-            loginLower == _maintainerLogin2) {
+            loginLower == _maintainerLogin2.toLowerCase()) {
           continue;
         }
+        if (_excludedLogins.contains(loginLower)) continue;
         if (type == 'Bot' || login.endsWith('[bot]')) continue;
 
         out.add(
