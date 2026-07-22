@@ -238,7 +238,7 @@ class BackupImportService {
       await dir.create(recursive: true);
       final safe = playlistName.replaceAll(RegExp(r'[^A-Za-z0-9_-]'), '_');
       final file = File(
-        '${dir.path}(${safe}_${DateTime.now().millisecondsSinceEpoch}',
+        '${dir.path}/${safe}_${DateTime.now().millisecondsSinceEpoch}.jpg',
       );
       await file.writeAsBytes(base64Decode(b64));
       return file.path;
