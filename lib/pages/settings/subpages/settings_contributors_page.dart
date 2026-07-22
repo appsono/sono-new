@@ -398,28 +398,3 @@ class _Avatar extends StatelessWidget {
     );
   }
 }
-
-// ==== states ====
-class _Message extends StatelessWidget {
-  final String text;
-
-  const _Message({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sono;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontFamily: SonoFonts.primary,
-          fontSize: 13,
-          color: c.textTertiary,
-        ),
-      ),
-    );
-  }
-}
