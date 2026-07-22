@@ -13,6 +13,7 @@ import 'package:sono/widgets/changelog_sheet.dart';
 import 'package:sono/pages/settings/widgets/settings_group.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
+import 'package:sono/pages/settings/subpages/settings_contributors_page.dart';
 
 // ==== links ====
 const String _repoSlug = 'appsono/sono-new';
@@ -107,8 +108,12 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
                       icon: IconsSheet.profileOutlined,
                       accent: c.accentBlue,
                       label: l.settingsContributors,
-                      //TODO: push contributors subpage
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              SettingsContributorsPage(db: widget.db),
+                        ),
+                      ),
                     ),
                     SettingsRow(
                       icon: IconsSheet.shareOutlined,
