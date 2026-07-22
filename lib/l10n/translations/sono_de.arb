@@ -134,7 +134,7 @@
     "lyricsTooltipBackToPlayer": "Zurück zum Player",
     "lyricsTooltiplMore": "Mehr",
     "authSignIn": "Einloggen",
-    "settingsSupportKofi": "Supporte mich",
+    "settingsSupportKofi": "Unterstützte mich",
     "settingsContributors": "Mitwirkende",
     "contributorsMaintainer": "Maintainer",
     "contributorsCodeSection": "Code",
@@ -1360,7 +1360,7 @@
     "@settingsAboutLicences": {
         "description": "Row that opens the licence list, covering Sono and every dependency."
     },
-    "settingsAboutKofiSubtitle": "nanziert den Signierschlüssel und jede Menge Kaffee",
+    "settingsAboutKofiSubtitle": "Finanziert den Signierschlüssel und jede Menge Kaffee",
     "@settingsAboutKofiSubtitle": {
         "description": "Subtitle under the Ko-fi row."
     },
