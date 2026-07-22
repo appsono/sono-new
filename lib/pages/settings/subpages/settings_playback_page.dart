@@ -82,7 +82,7 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
                     SettingsRow(
                       icon: IconsSheet.crossfadeOutlined,
                       accent: c.accentBlue,
-                      label: l.settingsPlaybackGapless,
+                      label: l.settingsPlaybackCrossfade,
                       planned: true,
                     ),
                     SettingsRow(
