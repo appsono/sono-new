@@ -27,6 +27,7 @@ import 'package:sono/services/scanner/scan_settings.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/widgets/bottom_modal_sheet.dart';
+import 'package:sono/utils/toast.dart';
 
 import 'package:sono/pages/settings/widgets/settings_group.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
@@ -66,15 +67,6 @@ class _SettingsBackupPageState extends State<SettingsBackupPage> {
     setState(() => _lastExport = raw == null ? null : DateTime.tryParse(raw));
   }
 
-  void _toast(String message, {int seconds = 3}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: seconds),
-      ),
-    );
-  }
-
   Future<void> _export() async {
     final l = AppLocalizations.of(context);
     setState(() => _exporting = true);
@@ -112,10 +104,10 @@ class _SettingsBackupPageState extends State<SettingsBackupPage> {
       await widget.db.setSetting(_lastExportKey, now.toIso8601String());
       if (!mounted) return;
       setState(() => _lastExport = now);
-      _toast(l.settingsBackupExportSaved(saved), seconds: 4);
+      context.toast(l.settingsBackupExportSaved(saved), seconds: 4);
     } catch (e) {
       if (!mounted) return;
-      _toast('${l.settingsBackupExportFailed}: $e');
+      context.toast('${l.settingsBackupExportFailed}: $e');
     } finally {
       if (mounted) setState(() => _exporting = false);
     }
@@ -180,7 +172,7 @@ class _SettingsBackupPageState extends State<SettingsBackupPage> {
       );
 
       if (!mounted) return;
-      _toast(
+      context.toast(
         l.settingsBackupImportDone(
           result.likedSongs,
           result.favoriteAlbums,
@@ -193,7 +185,7 @@ class _SettingsBackupPageState extends State<SettingsBackupPage> {
       if (result.likedSongsMissing > 0 || result.playlistsSkipped > 0) {
         await Future.delayed(const Duration(seconds: 5));
         if (!mounted) return;
-        _toast(
+        context.toast(
           l.settingsBackupImportSkipped(
             result.likedSongsMissing,
             result.playlistsSkipped,
@@ -203,7 +195,7 @@ class _SettingsBackupPageState extends State<SettingsBackupPage> {
       }
     } catch (e) {
       if (!mounted) return;
-      _toast('${l.settingsBackupImportFailed}: $e', seconds: 4);
+      context.toast('${l.settingsBackupImportFailed}: $e', seconds: 4);
     } finally {
       if (mounted) setState(() => _importing = false);
     }
