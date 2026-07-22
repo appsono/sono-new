@@ -548,6 +548,10 @@
   "@settingsSearchHint": {
     "description": "Placeholder inside the search field at the top of the settings root page."
   },
+  "settingsSearchNoResults": "No settings match that",
+  "@settingsSearchNoResults": {
+    "description": "Shown on the settings root when the search field matches nothing."
+  },
   "settingsPlannedBadge": "Planned",
   "@settingsPlannedBadge": {
     "description": "Small badge on a settings row whose feature is on the roadmap but not built yet."
