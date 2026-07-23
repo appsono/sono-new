@@ -39,6 +39,8 @@ import 'package:sono/services/theme_service.dart';
 
 import 'package:sono/theme/theme.dart';
 
+const kShots = bool.fromEnvironment('SONO_SHOTS');
+
 late AudioHandler audioHandler;
 
 void main() async {
@@ -47,7 +49,9 @@ void main() async {
   //display refresh rate
   GestureBinding.instance.resamplingEnabled = true;
   if (Platform.isAndroid) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setEnabledSystemUIMode(
+      kShots ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
+    );
   }
   MediaKit.ensureInitialized();
   await DeviceProfile.detect();
@@ -157,10 +161,24 @@ class _SonoAppState extends State<SonoApp> with WidgetsBindingObserver {
           builder: (_, locale, _) {
             return MaterialApp(
               scaffoldMessengerKey: SonoApp.messengerKey,
+              debugShowCheckedModeBanner: !kShots,
               theme: buildSonoTheme(colors),
               locale: locale,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: LocaleService.supportedLocales,
+              builder: !kShots
+                  ? null
+                  : (context, child) {
+                      const pad = EdgeInsets.only(top: 30, bottom: 18);
+                      return MediaQuery(
+                        data: MediaQuery.of(context).copyWith(
+                          padding: pad,
+                          viewPadding: pad,
+                          viewInsets: EdgeInsets.zero,
+                        ),
+                        child: child!,
+                      );
+                    },
               home: AppShell(db: widget.db),
             );
           },

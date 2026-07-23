@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sono/l10n/localizations.dart';
+import 'package:sono/main.dart';
 import 'package:sono/services/migration/legacy_migration_service.dart';
 import 'package:sono/widgets/legacy_migration_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -64,7 +65,7 @@ class _AppShellState extends State<AppShell> {
     _deleteBrokenGenre();
     _checkPermissionAndScan();
     _checkForUpdates();
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid && !kShots) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => _maybeHideAndroidNavBar(),
       );
