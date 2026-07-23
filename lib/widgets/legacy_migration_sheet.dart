@@ -67,7 +67,7 @@ class LegacyMigrationSheet extends StatelessWidget {
       ),
       const BottomSheetDivider(),
       BottomSheetAction(
-        icon: IconsSheet.backOutlined,
+        icon: IconsSheet.backupOutlined,
         label: l.migrationImport,
         prominent: true,
         onTap: () => Navigator.pop(context, LegacyMigrationChoice.import),
