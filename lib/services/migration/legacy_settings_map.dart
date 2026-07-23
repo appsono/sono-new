@@ -71,10 +71,7 @@ abstract final class LegacySettingsMap {
       }
 
       final mapped = _translate(id, row.value);
-      if (mapped == null) {
-        parked.add(row);
-        continue;
-      }
+      if (mapped == null) continue;
 
       direct[mapped.$1] = mapped.$2;
     }

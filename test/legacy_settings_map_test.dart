@@ -66,9 +66,10 @@ void main() {
       expect(m.parked.first.value, 'true');
     });
 
-    test('unknown keys are parked rather than lost', () {
+    test('unknown keys are ignored', () {
       final m = LegacySettingsMap.map([row('ui', 'some_future_thing', '"x"')]);
-      expect(m.parked, hasLength(1));
+      expect(m.direct, isEmpty);
+      expect(m.parked, isEmpty);
     });
 
     test('a key parked under one category does not shadow another', () {
@@ -103,12 +104,12 @@ void main() {
       expect(m.parked, isEmpty);
     });
 
-    test('malformed json is parked, never thrown on', () {
+    test('malformed json is ignored, never thrown on', () {
       final m = LegacySettingsMap.map([
         row('playback', 'speed', 'not json at all'),
       ]);
       expect(m.direct, isEmpty);
-      expect(m.parked, hasLength(1));
+      expect(m.parked, isEmpty);
     });
   });
 }
