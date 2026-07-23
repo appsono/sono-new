@@ -18,10 +18,10 @@ void main() {
       expect(m.direct['theme.mode'], 'system');
     });
 
-    test('out of range theme mode is parked, not guessed', () {
+    test('out of range theme mode is ignored, not guessed', () {
       final m = LegacySettingsMap.map([row('ui', 'theme_mode', '7')]);
       expect(m.direct, isEmpty);
-      expect(m.parked, hasLength(1));
+      expect(m.parked, isEmpty);
     });
 
     test('excluded folders pass through as a json list', () {
@@ -32,12 +32,12 @@ void main() {
       expect(m.direct['scan.excludedPaths'], raw);
     });
 
-    test('excluded folders that are not a list are parked', () {
+    test('excluded folders that are not a list are ignored', () {
       final m = LegacySettingsMap.map([
         row('library', 'excluded_folders', '"/sdcard/Ringtones"'),
       ]);
       expect(m.direct, isEmpty);
-      expect(m.parked, hasLength(1));
+      expect(m.parked, isEmpty);
     });
 
     test('speed and pitch decode json then restringify', () {
@@ -72,12 +72,16 @@ void main() {
       expect(m.parked, isEmpty);
     });
 
-    test('a key parked under one category does not shadow another', () {
+    test('parked keys from different categories are all kept', () {
       final m = LegacySettingsMap.map([
         row('playback', 'crossfade_enabled', 'true'),
-        row('somethingelse', 'crossfade_enabled', 'false'),
+        row('library', 'cover_rotation', 'true'),
       ]);
       expect(m.parked, hasLength(2));
+      expect(
+        m.parked.map((p) => p.category),
+        containsAll(['playback', 'library']),
+      );
     });
   });
 
