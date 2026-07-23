@@ -31,6 +31,9 @@ Nothing yet.
 - Added tracking for when the last library scan finished and when a backup was last exported
 - Added `github` and `codeContributor` fields to translators.json, so translators whose Weblate account is linked to GitHub are no longer listed as code contributors
 - Added the Weblate account to the contributor filter
+- Added migration from the previous Sono, offered once after the first scan
+- Added import support for backups exported by the previous Sono
+- Added a legacy settings table holding old settings until their features ship
 
 ### Changed
 
@@ -57,6 +60,8 @@ Nothing yet.
 - Fixed missing exports for album grouping, theme mode, playback settings, and Discord display settings
 - Fixed imports to use the same export key list instead of maintaining a separate list
 - Fixed a black flash when opening subpages in light mode, caused by the page transition scrim using a translucent overlay colour
+- Restored playlist covers are written to a usable path again
+- Pause on disconnect and the Discord only-while-playing toggle are now included in backups
 
 ### Removed
 

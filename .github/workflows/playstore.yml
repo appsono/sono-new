@@ -64,7 +64,7 @@ jobs:
           set -euo pipefail
 
           # last code shipped by the old wtf.sono.app, must be beaten
-          LEGACY=2026061513
+          LEGACY=2026072301
           # play rejects anything above this
           CEILING=2100000000
 
