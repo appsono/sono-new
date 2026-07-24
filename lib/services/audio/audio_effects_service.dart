@@ -13,6 +13,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as dev;
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:media_kit/media_kit.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/eq_presets.dart';
@@ -253,6 +254,10 @@ class AudioEffectsService {
       dev.log('AudioEffects: failed to set af: $e', name: 'sono.fx');
     }
   }
+
+  /// Exposed for tests, see _buildAfString
+  @visibleForTesting
+  String buildAfStringForTesting() => _buildAfString();
 
   /// Build full af string
   /// > service owns entire af property
