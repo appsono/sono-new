@@ -11,6 +11,7 @@
 // GNU General Public License for more details.
 
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/foundation.dart' show visibleForTesting;
 
 export 'package:sono/services/changelog/models.dart';
 import 'package:sono/services/changelog/models.dart';
@@ -107,4 +108,8 @@ class ChangelogService {
     out = out.replaceAll('`', '');
     return out.trim();
   }
+
+  /// ==== testing ====
+  @visibleForTesting
+  static ChangelogRelease? parse(String raw) => _parseLatest(raw);
 }
