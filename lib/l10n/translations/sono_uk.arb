@@ -964,7 +964,7 @@
     "@settingsBackupImportChoose": {
         "description": "Action in the import confirmation sheet that opens the file picker."
     },
-    "settingsBackupImportDone": "Відновлено: {liked, plural, =0{0 вподобань} =1{1 вподобання} one{{liked} вподобання} few{{liked} вподобання} many{{liked} вподобань} other{{liked} вподобання}}, {albums, plural, =0{0 альбомів} =1{1 альбом} one{{albums} альбом} few{{albums} альбоми} many{{albums} альбомів} other{{albums} альбому}}, {artists, plural, =0{0 виконавців} =1{1 виконавець} one{{artists} виконавець} few{{artists} виконавці} many{{artists} виконавців} other{{artists} виконавця}}, {playlists, plural, =0{0 список відтворення} =1{1 список відтворення} one{{playlists} список відтворення} few{{playlists} списки відтворення} many{{playlists} списків відтворення} other{{playlists} списки відтворення}}",
+    "settingsBackupImportDone": "Відновлено: {liked, plural, =0{0 вподобань} one{{liked} вподобання} few{{liked} вподобання} many{{liked} вподобань} other{{liked} вподобання}}, {albums, plural, =0{0 альбомів} one{{albums} альбом} few{{albums} альбоми} many{{albums} альбомів} other{{albums} альбому}}, {artists, plural, =0{0 виконавців} one{{artists} виконавець} few{{artists} виконавці} many{{artists} виконавців} other{{artists} виконавця}}, {playlists, plural, =0{0 список відтворення} one{{playlists} список відтворення} few{{playlists} списки відтворення} many{{playlists} списків відтворення} other{{playlists} списки відтворення}}",
     "@settingsBackupImportDone": {
         "description": "Snackbar summarising a successful import.",
         "placeholders": {
@@ -982,7 +982,7 @@
             }
         }
     },
-    "settingsBackupImportSkipped": "{songs, plural, =0{Жодної пісні} =1{1 пісню} one{{songs} пісню} few{{songs} пісні} many{{songs} пісень} other{{songs} пісні}} та {playlists, plural, =0{жодного списку відтворення не було} =1{1 список відтворення було} one{{playlists} список відтворення було} few{{playlists} списки відтворення було} many{{playlists} списків відтворення було} other{{playlists} списки відтворення було}} знайдено на цьому пристрої",
+    "settingsBackupImportSkipped": "{songs, plural, =0{Жодної пісні} one{{songs} пісню} few{{songs} пісні} many{{songs} пісень} other{{songs} пісні}} та {playlists, plural, =0{жодного списку відтворення не було} one{{playlists} список відтворення було} few{{playlists} списки відтворення було} many{{playlists} списків відтворення було} other{{playlists} списки відтворення було}} знайдено на цьому пристрої",
     "@settingsBackupImportSkipped": {
         "description": "Second snackbar after an import, listing what could not be matched to local files.",
         "placeholders": {
@@ -1161,7 +1161,7 @@
             }
         }
     },
-    "migrationCountArtists": "{count, plural, =0{жодного виконавця} =1{1 виконавець} one{{count} виконавець} few{{count} виконавці} many{{count} виконавців} other{{count} виконавця}}",
+    "migrationCountArtists": "{count, plural, =0{жодного виконавця} one{{count} виконавець} few{{count} виконавці} many{{count} виконавців} other{{count} виконавця}}",
     "@migrationCountArtists": {
         "description": "Favorite artist count listed in the migration sheet.",
         "placeholders": {
@@ -1170,7 +1170,7 @@
             }
         }
     },
-    "migrationCountPlaylists": "{count, plural, =0{немає списків відтворення} =1{1 список відтворення} one{{count} список відтворення} few{{count} списки відтворення} many{{count} списків відтворення} other{{count} списків відтворення}}",
+    "migrationCountPlaylists": "{count, plural, =0{немає списків відтворення} one{{count} список відтворення} few{{count} списки відтворення} many{{count} списків відтворення} other{{count} списків відтворення}}",
     "@migrationCountPlaylists": {
         "description": "Playlist count listed in the migration sheet.",
         "placeholders": {
@@ -1191,7 +1191,7 @@
     "@migrationNever": {
         "description": "Action permanently dismissing the migration sheet without importing."
     },
-    "migrationDone": "Імпортовано: {liked, plural, =0{0 вподобань} =1{1 вподобання} one{{liked} вподобання} few{{liked} вподобання} many{{liked} вподобань} other{{liked} вподобання}}, {albums, plural, =0{0 альбомів} =1{1 альбом} one{{albums} альбом} few{{albums} альбоми} many{{albums} альбомів} other{{albums} альбому}}, {artists, plural, =0{0 виконавців} =1{1 виконавець} one{{artists} виконавець} few{{artists} виконавці} many{{artists} виконавців} other{{artists} виконавця}}, {playlists, plural, =0{0 списків відтворення} =1{1 список відтворення} one{{playlists} список відтворення} few{{playlists} списки відтворення} many{{playlists} списків відтворення} other{{playlists} списків відтворення}} :D",
+    "migrationDone": "Імпортовано: {liked, plural, =0{0 вподобань} one{{liked} вподобання} few{{liked} вподобання} many{{liked} вподобань} other{{liked} вподобання}}, {albums, plural, =0{0 альбомів} one{{albums} альбом} few{{albums} альбоми} many{{albums} альбомів} other{{albums} альбому}}, {artists, plural, =0{0 виконавців} one{{artists} виконавець} few{{artists} виконавці} many{{artists} виконавців} other{{artists} виконавця}}, {playlists, plural, =0{0 списків відтворення} one{{playlists} список відтворення} few{{playlists} списки відтворення} many{{playlists} списків відтворення} other{{playlists} списків відтворення}} :D",
     "@migrationDone": {
         "description": "Snackbar summarising a successful migration from the old Sono.",
         "placeholders": {
