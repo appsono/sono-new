@@ -15,58 +15,45 @@ Nothing yet.
 
 ### Added
 
-- Added new appearance, backup, folder, globus, info, moon, open link, update, and storage icons
-- Added new Brand icon for Discord, and added a new SonoBrands class
-- Added new countSongs(), countAlbums(), countArtists() db queries
-- Added a new system theme mode that follows the device brightness, allowing system light/dark schedules to apply to Sono
+- Added a new system theme mode that follows the device brightness, allowing system light/dark schedules to apply to Sono. Fresh installs default to it, existing installs keep their saved light or dark choice
 - Added EQ presets and configurable playback behaviour (gapless-playback, stop on disconnected, in-app volume)
 - Added configurable Discord presence settings for album art, elapsed time, link button, and clearing presence on pause (all enabled by default)
 - Added Discord username and avatar persistence during login instead of the settings page
-- Added a redesigned settings page, splitting one long scroll into a root index with nine subpages: profile, appearance, language, playback, equalizer, library, Discord, backup and about
-- Added a "Planned" badge for settings that are on the roadmap but not built yet, with a sheet explaining where to follow development
+- Added a redesigned settings page, splitting one long scroll into a root index with nine subpages: profile, appearance, language, playback, equalizer, library, Discord, backup and about. Settings that are on the roadmap but not built yet carry a "Planned" badge with a sheet explaining where to follow development
 - Added a manual update check in settings, showing the result and release notes in a sheet, with an option to skip a release
 - Added a contributors page with an avatar grid, replacing the old bottom sheet
-- Added a Ko-fi brand icon to SonoBrands
 - Added a licence list covering every dependency, not just Sono's own licence
 - Added tracking for when the last library scan finished and when a backup was last exported
-- Added `github` and `codeContributor` fields to translators.json, so translators whose Weblate account is linked to GitHub are no longer listed as code contributors
-- Added the Weblate account to the contributor filter
-- Added migration from the previous Sono, offered once after the first scan
-- Added import support for backups exported by the previous Sono
-- Added a legacy settings table holding old settings until their features ship
+- Added migration from the previous Sono, offered once after the first scan, covering import of its backups and a legacy settings table that holds old settings until their features ship
+- Added a switch theme to the app theme and changed sliderTheme to use M3 Expressive, replacing Material defaults
 
 ### Changed
 
-- Changed ProfileCircle to be public: SonoProfileCircle
-- Changed SearchField to be a global widget: SonoSearchField, with an optional custom hint text
-- Changed \_FilterChip to be a global widget: SonoChip, with an optional height attribute
-- Changed sliderTheme to use M3 Expressive
-- Moved theme state management from SonoApp into ThemeService, mirroring LocaleService
-- Existing installs keep their saved light or dark theme choice, while fresh installs now default to the system theme
-- Changed Discord avatar storage to save usernames without the leading `@`
-- Removed scan.lastCompletedAt from backups, as it could restore scan state from another device
-- Added support for exporting gapless playback, pause on disconnect, and in-app volume settings
-- Improved backup safety by excluding settings that mix preferences with machine state or account identity
-- Changed UpdateService to report why a check found nothing, distinguishing up to date, available, dismissed, cooling down and failed
-- Changed update state to persist between launches, so the settings row shows whether Sono is up to date instead of the installed version
-- Changed avatar picking to use image_picker, so Android 13 and above opens the system photo picker instead of the file browser
-- Changed picked avatars to be capped at 512px instead of stored at full resolution
-- Added a switch theme to the app theme, replacing Material defaults
-- Added a `SonoSizes.borderWidth` token for the 1.5px border used across cards and chips
+- Improved backup safety by excluding settings that mix preferences with machine state or account identity, dropping scan.lastCompletedAt so scan state can no longer be restored from another device
+- Changed UpdateService to report why a check found nothing, distinguishing up to date, available, dismissed, cooling down and failed, and to persist that state between launches, so the settings row shows whether Sono is up to date instead of the installed version
+- Changed avatar picking to use image_picker, so Android 13 and above opens the system photo picker instead of the file browser, and capped picked avatars at 512px instead of storing them at full resolution
 
 ### Fixed
 
-- Fixed backup settings export by replacing the prefix allowlist with an explicit list of exportable keys
-- Fixed missing exports for album grouping, theme mode, playback settings, and Discord display settings
-- Fixed imports to use the same export key list instead of maintaining a separate list
+- Fixed backup settings export by replacing the prefix allowlist with an explicit list of exportable keys, now shared by import, so album grouping, theme mode, playback settings (gapless playback, pause on disconnect, in-app volume) and Discord display settings are no longer dropped
 - Fixed a black flash when opening subpages in light mode, caused by the page transition scrim using a translucent overlay colour
 - Restored playlist covers are written to a usable path again
-- Pause on disconnect and the Discord only-while-playing toggle are now included in backups
 
 ### Removed
 
 - Removed the contributors bottom sheet, replaced by the contributors page
 - Removed the standalone Ko-fi button, replaced by a row on the about page
+
+### Internal
+
+- Added new appearance, backup, folder, globus, info, moon, open link, update, and storage icons
+- Added a new SonoBrands class with Discord and Ko-fi brand icons
+- Added new countSongs(), countAlbums(), countArtists() db queries
+- Added a `SonoSizes.borderWidth` token for the 1.5px border used across cards and chips
+- Added `github` and `codeContributor` fields to translators.json and the Weblate account to the contributor filter, so translators whose Weblate account is linked to GitHub are no longer listed as code contributors
+- Promoted ProfileCircle, SearchField and \_FilterChip to global widgets: SonoProfileCircle, SonoSearchField with an optional custom hint text, and SonoChip with an optional height attribute
+- Moved theme state management from SonoApp into ThemeService, mirroring LocaleService
+- Changed Discord avatar storage to save usernames without the leading `@`
 
 ### Translation
 

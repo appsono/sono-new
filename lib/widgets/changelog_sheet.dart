@@ -80,6 +80,7 @@ class _ChangelogSheetState extends State<ChangelogSheet> {
     );
 
     for (final section in release.sections) {
+      if (section.title.toLowerCase() == 'internal') continue;
       items.add(BottomSheetSectionLabel(section.title));
       for (final entry in section.entries) {
         items.add(BottomSheetText(entry, bullet: true));
