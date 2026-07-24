@@ -104,8 +104,14 @@ Nothing yet.
 
 ### Translation
 
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (61%)
+- [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into
+  French (100%)
 - [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
   German (100%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (100%)
 
 ## [0.10.1+11] - 2026-07-20
 
