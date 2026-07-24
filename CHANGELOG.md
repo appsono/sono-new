@@ -95,6 +95,12 @@ Nothing yet.
 - Changed Discord avatar storage to save usernames without the leading `@`
 - Added changelog parser tests covering wrapped entries, release selection,
   and the shipped CHANGELOG.md
+- Added backup tests covering the settings allowlist, import guards, and
+  restore of liked songs, playlists, and favorite artists
+- Added update service tests covering the check status machine, cooldown,
+  dismissal, and version comparison
+- Added filter chain tests covering eq and bass boost surviving speed and
+  pitch changes, and the mpv sample format used for eq
 
 ### Translation
 
