@@ -29,6 +29,7 @@ Nothing yet.
 
 ### Changed
 
+- Updated the privacy policy with contact details, retention periods, data protection rights, and clearer notes on what the Discord and lyrics features send
 - Improved backup safety by excluding settings that mix preferences with machine state or account identity, dropping scan.lastCompletedAt so scan state can no longer be restored from another device
 - Changed UpdateService to report why a check found nothing, distinguishing up to date, available, dismissed, cooling down and failed, and to persist that state between launches, so the settings row shows whether Sono is up to date instead of the installed version
 - Changed avatar picking to use image_picker, so Android 13 and above opens the system photo picker instead of the file browser, and capped picked avatars at 512px instead of storing them at full resolution
@@ -38,6 +39,7 @@ Nothing yet.
 - Fixed backup settings export by replacing the prefix allowlist with an explicit list of exportable keys, now shared by import, so album grouping, theme mode, playback settings (gapless playback, pause on disconnect, in-app volume) and Discord display settings are no longer dropped
 - Fixed a black flash when opening subpages in light mode, caused by the page transition scrim using a translucent overlay colour
 - Restored playlist covers are written to a usable path again
+- Fixed the privacy policy claiming that Play Store builds check GitHub for updates, which they do not
 
 ### Removed
 
