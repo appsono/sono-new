@@ -69,7 +69,20 @@ class UpdateCheck {
 /// > update.last_status: outcome of last check that reached github
 /// > update.last_available_version: tag from that chek, when newer
 class UpdateService {
-  UpdateService._();
+  UpdateService._()
+    : _client = http.Client(),
+      _versionOverride = null,
+      _isPlayOverride = null;
+
+  @visibleForTesting
+  UpdateService.forTesting({
+    required http.Client client,
+    required Future<String> Function() currentVersion,
+    Future<bool> Function()? isPlay,
+  }) : _client = client,
+       _versionOverride = currentVersion,
+       _isPlayOverride = isPlay;
+
   static final UpdateService instance = UpdateService._();
 
   // ==== conf ====
@@ -88,7 +101,9 @@ class UpdateService {
 
   // ==== state ====
   SonoDatabase? _db;
-  final _client = http.Client();
+  final http.Client _client;
+  final Future<String> Function()? _versionOverride;
+  final Future<bool> Function()? _isPlayOverride;
 
   void attachDb(SonoDatabase db) => _db = db;
 
@@ -97,7 +112,7 @@ class UpdateService {
   /// Only successful GitHub checks update saved result
   Future<UpdateCheck> check({bool force = false}) async {
     //play distros updates itself
-    if (await BuildFlavor.isPlay) {
+    if (await (_isPlayOverride?.call() ?? BuildFlavor.isPlay)) {
       return const UpdateCheck(UpdateStatus.unsupported);
     }
     final db = _db;
@@ -220,6 +235,8 @@ class UpdateService {
   /// Read current app version from platform
   /// return in "0.2.9+1" format
   Future<String> _getCurrentVersion() async {
+    final override = _versionOverride;
+    if (override != null) return override();
     final info = await PackageInfo.fromPlatform();
     final build = info.buildNumber;
     if (build.isEmpty) return info.version;
@@ -239,6 +256,10 @@ int _compareVersions(String a, String b) {
   }
   return pa.build.compareTo(pb.build);
 }
+
+/// Exposed for tests, see _compareVersions
+@visibleForTesting
+int compareVersionsForTesting(String a, String b) => _compareVersions(a, b);
 
 class _ParsedVersion {
   final List<int> parts; //alway length 3 (major, minor, patch)
