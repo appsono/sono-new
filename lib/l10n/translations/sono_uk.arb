@@ -751,7 +751,7 @@
     "@settingsLanguageHelpTranslateSubtitle": {
         "description": "Subtitle under the help translate row."
     },
-    "settingsPlaybackSectionTransitions": "Перекладачі",
+    "settingsPlaybackSectionTransitions": "Переходи",
     "@settingsPlaybackSectionTransitions": {
         "description": "Section label above gapless, crossfade and fade options on the playback subpage."
     },
@@ -1258,5 +1258,212 @@
     "settingsPlaybackPauseOnDisconnect": "Призупиняти при від’єднанні",
     "@settingsPlaybackPauseOnDisconnect": {
         "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+    },
+    "settingsEqPresetFlat": "Рівний",
+    "@settingsEqPresetFlat": {
+        "description": "Equalizer preset, every band at zero."
+    },
+    "settingsEqPresetBass": "Бас",
+    "@settingsEqPresetBass": {
+        "description": "Equalizer preset, lifts the lows."
+    },
+    "settingsEqPresetTreble": "Високі частоти",
+    "@settingsEqPresetTreble": {
+        "description": "Equalizer preset, lifts the highs."
+    },
+    "settingsEqPresetVocal": "Вокал",
+    "@settingsEqPresetVocal": {
+        "description": "Equalizer preset, lifts the mids where voices sit."
+    },
+    "settingsEqPresetRock": "Рок",
+    "@settingsEqPresetRock": {
+        "description": "Equalizer preset, lifts the lows and highs."
+    },
+    "settingsEqPresetElectronic": "Електроніка",
+    "@settingsEqPresetElectronic": {
+        "description": "Equalizer preset for electronic music, lifts the lows and highs."
+    },
+    "settingsEqPresetBrainFryer": "Мізкоплав",
+    "@settingsEqPresetBrainFryer": {
+        "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
+    },
+    "settingsEqPresetFryerUltimate": "Ультимативний мізкоплав",
+    "@settingsEqPresetFryerUltimate": {
+        "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
+    },
+    "settingsEqPresetCustom": "Власний",
+    "@settingsEqPresetCustom": {
+        "description": "Shown instead of a preset name when the curve matches none of them."
+    },
+    "settingsEqTitle": "Еквалайзер",
+    "@settingsEqTitle": {
+        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+    },
+    "settingsEqEnable": "Еквалайзер",
+    "@settingsEqEnable": {
+        "description": "Toggle that switches the equalizer on and off."
+    },
+    "settingsEqEnableSubtitle": "Застосовано через ланцюжок фільтрів mpv",
+    "@settingsEqEnableSubtitle": {
+        "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
+    },
+    "settingsEqSectionPreset": "Передустановка",
+    "@settingsEqSectionPreset": {
+        "description": "Section label above the preset chips on the equalizer subpage."
+    },
+    "settingsEqSectionEffects": "Ефекти",
+    "@settingsEqSectionEffects": {
+        "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
+    },
+    "settingsEqBassBoost": "Підсилення басів",
+    "@settingsEqBassBoost": {
+        "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
+    },
+    "settingsEqSpeed": "Швидкість",
+    "@settingsEqSpeed": {
+        "description": "Slider controlling playback rate without changing pitch."
+    },
+    "settingsEqPitch": "Висота звуку",
+    "@settingsEqPitch": {
+        "description": "Slider controlling pitch without changing playback rate."
+    },
+    "settingsEqValueDb": "{value} дБ",
+    "@settingsEqValueDb": {
+        "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsEqValueRate": "{value}x",
+    "@settingsEqValueRate": {
+        "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsEqResetAll": "Скинути всі ефекти",
+    "@settingsEqResetAll": {
+        "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
+    },
+    "settingsEqResetTooltip": "Скинути еквалайзер",
+    "@settingsEqResetTooltip": {
+        "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
+    },
+    "settingsLibrarySectionSources": "Джерела",
+    "@settingsLibrarySectionSources": {
+        "description": "Section label above folder and length options on the library subpage."
+    },
+    "settingsLibraryMusicFolders": "Музичні теки",
+    "@settingsLibraryMusicFolders": {
+        "description": "Extra folders to scan. Desktop only, Android uses MediaStore."
+    },
+    "settingsLibraryMusicFoldersEmpty": "Ще немає додаткових тек",
+    "@settingsLibraryMusicFoldersEmpty": {
+        "description": "Shown in the music folders editor when the list is empty."
+    },
+    "settingsLibraryExcludedFolders": "Виключені теки",
+    "@settingsLibraryExcludedFolders": {
+        "description": "Folders skipped when scanning."
+    },
+    "settingsLibraryExcludedFoldersEmpty": "Ще нічого не виключено",
+    "@settingsLibraryExcludedFoldersEmpty": {
+        "description": "Shown in the excluded folders editor when the list is empty."
+    },
+    "settingsLibraryFolderField": "Шлях до теки",
+    "@settingsLibraryFolderField": {
+        "description": "Label of the text field in the folder editors."
+    },
+    "settingsLibraryFolderAdd": "Додати теку",
+    "@settingsLibraryFolderAdd": {
+        "description": "Action that adds the typed path to the folder list."
+    },
+    "settingsLibraryMinLength": "Мінімальна довжина",
+    "@settingsLibraryMinLength": {
+        "description": "Files shorter than this are skipped when scanning."
+    },
+    "settingsLibraryMinLengthHelp": "Файли, коротші за це значення, пропускаються. Залиште порожнім, щоби зберегти все.",
+    "@settingsLibraryMinLengthHelp": {
+        "description": "Explanation at the top of the minimum length sheet."
+    },
+    "settingsLibraryMinLengthField": "Секунди",
+    "@settingsLibraryMinLengthField": {
+        "description": "Label of the text field in the minimum length sheet."
+    },
+    "settingsLibraryMinLengthValue": "{seconds} с",
+    "@settingsLibraryMinLengthValue": {
+        "description": "Minimum length shown on the row, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsLibraryMinLengthOff": "Вимк",
+    "@settingsLibraryMinLengthOff": {
+        "description": "Shown when no minimum length is set."
+    },
+    "settingsLibrarySectionGrouping": "Групування",
+    "@settingsLibrarySectionGrouping": {
+        "description": "Section label above album grouping and sorting options."
+    },
+    "settingsLibraryGroupByFolder": "Групувати альбоми за теками",
+    "@settingsLibraryGroupByFolder": {
+        "description": "Toggle that groups albums by the song's folder instead of its album tag."
+    },
+    "settingsLibraryGroupByFolderSubtitle": "Використовувати теку пісні замість тегу альбому",
+    "@settingsLibraryGroupByFolderSubtitle": {
+        "description": "Subtitle under the group albums by folder row."
+    },
+    "settingsLibraryIgnoreLeadingThe": "Ігнорувати початкове «The»",
+    "@settingsLibraryIgnoreLeadingThe": {
+        "description": "Sorts artists ignoring a leading 'The'. Currently marked as planned. Keep the English article in quotes."
+    },
+    "settingsLibraryIgnoreLeadingTheSubtitle": "При сортуванні виконавців",
+    "@settingsLibraryIgnoreLeadingTheSubtitle": {
+        "description": "Subtitle under the ignore leading The row."
+    },
+    "settingsLibrarySectionArtistParsing": "Розпізнавання виконавців",
+    "@settingsLibrarySectionArtistParsing": {
+        "description": "Section label above the multi-artist splitting options."
+    },
+    "settingsLibrarySplitArtists": "Розділяти теги кількох виконавців",
+    "@settingsLibrarySplitArtists": {
+        "description": "Toggle that splits an artist tag into several artists at the delimiters."
+    },
+    "settingsLibraryDelimiters": "Розділювачі",
+    "@settingsLibraryDelimiters": {
+        "description": "Characters that separate artists in a tag, such as a comma or a slash."
+    },
+    "settingsLibraryDelimitersEmpty": "Використовувати типові",
+    "@settingsLibraryDelimitersEmpty": {
+        "description": "Shown in the delimiter editor when the list is empty, meaning the built-in delimiters apply."
+    },
+    "settingsLibraryDelimiterField": "Розділювач",
+    "@settingsLibraryDelimiterField": {
+        "description": "Label of the text field in the delimiter editor."
+    },
+    "settingsLibraryDelimiterAdd": "Додати розділювач",
+    "@settingsLibraryDelimiterAdd": {
+        "description": "Action that adds the typed delimiter to the list."
+    },
+    "settingsLibraryProtectedArtists": "Захищені виконавці",
+    "@settingsLibraryProtectedArtists": {
+        "description": "Artist names never split, for acts whose name contains a delimiter."
+    },
+    "settingsLibraryProtectedArtistsEmpty": "Наразі немає захищених виконавців",
+    "@settingsLibraryProtectedArtistsEmpty": {
+        "description": "Shown in the protected artists editor when the list is empty."
+    },
+    "settingsLibraryProtectedArtistField": "Ім’я виконавця",
+    "@settingsLibraryProtectedArtistField": {
+        "description": "Label of the text field in the protected artists editor."
+    },
+    "settingsLibraryProtectedArtistAdd": "Додати виконавця",
+    "@settingsLibraryProtectedArtistAdd": {
+        "description": "Action that adds the typed artist to the protected list."
     }
 }
