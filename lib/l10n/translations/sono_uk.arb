@@ -498,7 +498,7 @@
     "@searchBrowseGenres": {
         "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
     },
-    "commonAlbumsCount": "{count, plural, =0{немає альбомів} =1{1 альбом} one{{count} альбом} few{{count} альбоми} many{{count} альбомів} other{{count} альбомів}}",
+    "commonAlbumsCount": "{count, plural, =0{немає альбомів} one{{count} альбом} few{{count} альбоми} many{{count} альбомів} other{{count} альбомів}}",
     "@commonAlbumsCount": {
         "description": "Number of albums, used in library totals",
         "placeholders": {
@@ -508,7 +508,7 @@
             }
         }
     },
-    "commonArtistsCount": "{count, plural, =0{жодного виконавця} =1{1 виконавець} one{{count} виконавець} few{{count} виконавці} many{{count} виконавців} other{{count} виконавця}}",
+    "commonArtistsCount": "{count, plural, =0{жодного виконавця} one{{count} виконавець} few{{count} виконавці} many{{count} виконавців} other{{count} виконавця}}",
     "@commonArtistsCount": {
         "description": "Number of artists, used in library totals",
         "placeholders": {
@@ -801,7 +801,7 @@
             }
         }
     },
-    "settingsLibraryCountSongs": "{count, plural, =0{жодної пісні} =1{1 пісня} one{{count} пісня} few{{count} пісні} many{{count} пісень} other{{count} пісні}}",
+    "settingsLibraryCountSongs": "{count, plural, =0{жодної пісні} one{{count} пісня} few{{count} пісні} many{{count} пісень} other{{count} пісні}}",
     "@settingsLibraryCountSongs": {
         "description": "Song total in the library footer. Written out in full, not abbreviated.",
         "placeholders": {
@@ -811,7 +811,7 @@
             }
         }
     },
-    "settingsLibraryCountAlbums": "{count, plural, =0{немає альбомів} =1{1 альбом} one{{count} альбом} few{{count} альбоми} many{{count} альбомів} other{{count} альбомів}}",
+    "settingsLibraryCountAlbums": "{count, plural, =0{немає альбомів} one{{count} альбом} few{{count} альбоми} many{{count} альбомів} other{{count} альбомів}}",
     "@settingsLibraryCountAlbums": {
         "description": "Album total in the library footer. Written out in full, not abbreviated.",
         "placeholders": {
@@ -821,7 +821,7 @@
             }
         }
     },
-    "settingsLibraryCountArtists": "{count, plural, =0{жодного виконавця} =1{1 виконавець} one{{count} виконавець} few{{count} виконавці} many{{count} виконавців} other{{count} виконавця}}",
+    "settingsLibraryCountArtists": "{count, plural, =0{жодного виконавця} one{{count} виконавець} few{{count} виконавці} many{{count} виконавців} other{{count} виконавця}}",
     "@settingsLibraryCountArtists": {
         "description": "Artist total in the library footer. Written out in full, not abbreviated.",
         "placeholders": {
@@ -1143,7 +1143,7 @@
     "@migrationFoundBody": {
         "description": "Body text above the counts in the migration sheet."
     },
-    "migrationCountLiked": "{count, plural, =0{жодного вподобання} =1{1 вподобання} one{{count} вподобання} few{{count} вподобання} many{{count} вподобань} other{{count} вподобання}}",
+    "migrationCountLiked": "{count, plural, =0{жодного вподобання} one{{count} вподобання} few{{count} вподобання} many{{count} вподобань} other{{count} вподобання}}",
     "@migrationCountLiked": {
         "description": "Liked song count listed in the migration sheet.",
         "placeholders": {
@@ -1152,7 +1152,7 @@
             }
         }
     },
-    "migrationCountAlbums": "{count, plural, =0{немає альбомів} =1{1 альбом} one{{count} альбом} few{{count} альбоми} many{{count} альбомів} other{{count} альбомів}}",
+    "migrationCountAlbums": "{count, plural, =0{немає списків відтворення} one{{count} список відтворення} few{{count} списки відтворення} many{{count} списків відтворення} other{{count} списків відтворення}}",
     "@migrationCountAlbums": {
         "description": "Favorite album count listed in the migration sheet.",
         "placeholders": {
