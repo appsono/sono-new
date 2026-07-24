@@ -26,7 +26,7 @@
     "@commonAddToPlaylist": {
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
-    "navHome": "Maison",
+    "navHome": "acceuil",
     "navLibrary": "Bibliothèque",
     "navSearch": "Rechercher",
     "homeActionCreatePlaylist": "Créer une playlist",
@@ -39,27 +39,27 @@
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
-    "homeGreetingMorning": "Matin",
+    "homeGreetingMorning": "salut",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
-    "homeGreetingMidday": "Midi",
+    "homeGreetingMidday": "yo",
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
-    "homeGreetingAfternoon": "Après-midi",
+    "homeGreetingAfternoon": "coucou",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
-    "homeGreetingEvening": "Soir",
+    "homeGreetingEvening": "bon soir",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
-    "homeGreetingNight": "Nuit",
+    "homeGreetingNight": "bonne nuit lol",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
-    "homeGreetingLate": "Heyyy dors",
+    "homeGreetingLate": "eh va dormir laaaa",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
@@ -69,7 +69,7 @@
     },
     "homeFallbackPhrase2": "Bonne écoute !",
     "homeFallbackPhrase3": "Qu'est-ce qui est au programme aujourd'hui ?",
-    "homeFallbackPhrase4": "Bienvenue à nouveau :D",
+    "homeFallbackPhrase4": "re-bonjour :D",
     "homeFallbackPhrase5": "b- baka!",
     "homeFallbackPhrase6": "Qu'est-ce qu'on ressent ?",
     "homeFallbackPhrase7": "hehe >:D",
@@ -451,5 +451,89 @@
     "editTagsGenresHint": "Séparés par des virgules",
     "@editTagsGenresHint": {
         "description": "Hint shown inside the genres field on the edit tags page to indicate how to enter multiple genres."
+    },
+    "commonAlbumsCount": "{count, plural, =0{aucun album} =1{1 album} other{{count} albums}}",
+    "@commonAlbumsCount": {
+        "description": "Number of albums, used in library totals",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "commonArtistsCount": "{count, plural, =0{aucun artiste} =1{1 artiste} other{{count} artistes}}",
+    "@commonArtistsCount": {
+        "description": "Number of artists, used in library totals",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "commonSeeAll": "Tout voir",
+    "@commonSeeAll": {
+        "description": "Affordance in a section header that opens the full list of matches for that category."
+    },
+    "changelogTitle": "nouveautés",
+    "@changelogTitle": {
+        "description": "Heading of the changelog modal opened from the news/updates button in the home and library headers. Shows the latest release notes."
+    },
+    "changelogLoading": "Chargement…",
+    "@changelogLoading": {
+        "description": "Placeholder shown in the changelog modal while the bundled changelog file is being read."
+    },
+    "changelogUnavailable": "Impossible de charger le journal des modifications",
+    "@changelogUnavailable": {
+        "description": "Shown in the changelog modal when the changelog file is missing or no release block could be parsed."
+    },
+    "searchPageTitle": "Recherche",
+    "@searchPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "searchFieldHint": "Rechercher quelque chose…",
+    "@searchFieldHint": {
+        "description": "Placeholder text inside the search field on the Search tab. Hints at the local-library categories that can be searched."
+    },
+    "searchFilterAll": "Tout",
+    "@searchFilterAll": {
+        "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
+    },
+    "searchNoResults": "Aucun résultat trouvé :(",
+    "@searchNoResults": {
+        "description": "Shown on the Search tab when a query returns no matching songs, albums, artists, playlists, or genres."
+    },
+    "searchRecentTitle": "Recherches récentes",
+    "@searchRecentTitle": {
+        "description": "Header above the list of the user's recent search terms, shown on the Search tab when the field is empty."
+    },
+    "searchRecentClear": "Effacer",
+    "@searchRecentClear": {
+        "description": "Action that removes all saved recent searches at once."
+    },
+    "searchRecentRemove": "Retirer",
+    "@searchRecentRemove": {
+        "description": "Accessibility label for the button that removes a single recent search term from the list."
+    },
+    "searchBrowseGenres": "Parcourir les genres",
+    "@searchBrowseGenres": {
+        "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
+    },
+    "playlistEditTitle": "Modifier la playlist",
+    "@playlistEditTitle": {
+        "description": "Title of the edit playlist modal (name + description)."
+    },
+    "settingsPageTitle": "Paramètres",
+    "@settingsPageTitle": {
+        "description": "Title shown in the header of the settings root page."
+    },
+    "settingsSearchTooltip": "Paramètres de recherche",
+    "@settingsSearchTooltip": {
+        "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
+    },
+    "settingsSearchHint": "rechercher parametres",
+    "@settingsSearchHint": {
+        "description": "Placeholder inside the search field at the top of the settings root page."
     }
 }
