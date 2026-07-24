@@ -68,6 +68,8 @@ Nothing yet.
 - Restored playlist covers are written to a usable path again
 - Fixed the privacy policy claiming that Play Store builds check GitHub for
   updates, which they do not
+- Fixed multi-line changelog entries being cut off in the changelog sheet,
+  where wrapped lines were dropped instead of joined to the entry above
 
 ### Removed
 
@@ -91,6 +93,8 @@ Nothing yet.
 - Moved theme state management from SonoApp into ThemeService, mirroring
   LocaleService
 - Changed Discord avatar storage to save usernames without the leading `@`
+- Added changelog parser tests covering wrapped entries, release selection,
+  and the shipped CHANGELOG.md
 
 ### Translation
 
