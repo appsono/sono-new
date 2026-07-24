@@ -67,11 +67,11 @@
     "@homeFallbackPhrase1": {
         "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
     },
-    "homeFallbackPhrase2": "Bonne écoute!",
-    "homeFallbackPhrase3": "Qu'est-ce qui est au programme aujourd'hui?",
+    "homeFallbackPhrase2": "Bonne écoute !",
+    "homeFallbackPhrase3": "Qu'est-ce qui est au programme aujourd'hui ?",
     "homeFallbackPhrase4": "re-bonjour :D",
     "homeFallbackPhrase5": "b- baka!",
-    "homeFallbackPhrase6": "Qu'est-ce qu'on ressent?",
+    "homeFallbackPhrase6": "Qu'est-ce qu'on ressent ?",
     "homeFallbackPhrase7": "hehe >:D",
     "homeFallbackPhrase8": "mweh :3",
     "homeFallbackPhrase9": "qui es-tu?!",
