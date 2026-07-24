@@ -88,6 +88,11 @@ class ChangelogService {
       final bullet = _bulletRe.firstMatch(line.trimLeft());
       if (bullet != null && title != null) {
         entries.add(_clean(bullet.group(1)!));
+      } else if (title != null &&
+          entries.isNotEmpty &&
+          line.trim().isNotEmpty) {
+        //wrapped continuation of previous bullet
+        entries[entries.length - 1] = _clean('${entries.last} ${line.trim()}');
       }
     }
     flush();
