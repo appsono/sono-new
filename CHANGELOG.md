@@ -15,31 +15,59 @@ Nothing yet.
 
 ### Added
 
-- Added a new system theme mode that follows the device brightness, allowing system light/dark schedules to apply to Sono. Fresh installs default to it, existing installs keep their saved light or dark choice
-- Added EQ presets and configurable playback behaviour (gapless-playback, stop on disconnected, in-app volume)
-- Added configurable Discord presence settings for album art, elapsed time, link button, and clearing presence on pause (all enabled by default)
-- Added Discord username and avatar persistence during login instead of the settings page
-- Added a redesigned settings page, splitting one long scroll into a root index with nine subpages: profile, appearance, language, playback, equalizer, library, Discord, backup and about. Settings that are on the roadmap but not built yet carry a "Planned" badge with a sheet explaining where to follow development
-- Added a manual update check in settings, showing the result and release notes in a sheet, with an option to skip a release
+- Added a new system theme mode that follows the device brightness, allowing
+  system light/dark schedules to apply to Sono. Fresh installs default to it,
+  existing installs keep their saved light or dark choice
+- Added EQ presets and configurable playback behaviour (gapless-playback, stop
+  on disconnected, in-app volume)
+- Added configurable Discord presence settings for album art, elapsed time, link
+  button, and clearing presence on pause (all enabled by default)
+- Added Discord username and avatar persistence during login instead of the
+  settings page
+- Added a redesigned settings page, splitting one long scroll into a root index
+  with nine subpages: profile, appearance, language, playback, equalizer,
+  library, Discord, backup and about. Settings that are on the roadmap but not
+  built yet carry a "Planned" badge with a sheet explaining where to follow
+  development
+- Added a manual update check in settings, showing the result and release notes
+  in a sheet, with an option to skip a release
 - Added a contributors page with an avatar grid, replacing the old bottom sheet
 - Added a licence list covering every dependency, not just Sono's own licence
-- Added tracking for when the last library scan finished and when a backup was last exported
-- Added migration from the previous Sono, offered once after the first scan, covering import of its backups and a legacy settings table that holds old settings until their features ship
-- Added a switch theme to the app theme and changed sliderTheme to use M3 Expressive, replacing Material defaults
+- Added tracking for when the last library scan finished and when a backup was
+  last exported
+- Added migration from the previous Sono, offered once after the first scan,
+  covering import of its backups and a legacy settings table that holds old
+  settings until their features ship
+- Added a switch theme to the app theme and changed sliderTheme to use M3
+  Expressive, replacing Material defaults
 
 ### Changed
 
-- Updated the privacy policy with contact details, retention periods, data protection rights, and clearer notes on what the Discord and lyrics features send
-- Improved backup safety by excluding settings that mix preferences with machine state or account identity, dropping scan.lastCompletedAt so scan state can no longer be restored from another device
-- Changed UpdateService to report why a check found nothing, distinguishing up to date, available, dismissed, cooling down and failed, and to persist that state between launches, so the settings row shows whether Sono is up to date instead of the installed version
-- Changed avatar picking to use image_picker, so Android 13 and above opens the system photo picker instead of the file browser, and capped picked avatars at 512px instead of storing them at full resolution
+- Updated the privacy policy with contact details, retention periods, data
+  protection rights, and clearer notes on what the Discord and lyrics features
+  send
+- Improved backup safety by excluding settings that mix preferences with machine
+  state or account identity, dropping scan.lastCompletedAt so scan state can no
+  longer be restored from another device
+- Changed UpdateService to report why a check found nothing, distinguishing up
+  to date, available, dismissed, cooling down and failed, and to persist that
+  state between launches, so the settings row shows whether Sono is up to date
+  instead of the installed version
+- Changed avatar picking to use image_picker, so Android 13 and above opens the
+  system photo picker instead of the file browser, and capped picked avatars at
+  512px instead of storing them at full resolution
 
 ### Fixed
 
-- Fixed backup settings export by replacing the prefix allowlist with an explicit list of exportable keys, now shared by import, so album grouping, theme mode, playback settings (gapless playback, pause on disconnect, in-app volume) and Discord display settings are no longer dropped
-- Fixed a black flash when opening subpages in light mode, caused by the page transition scrim using a translucent overlay colour
+- Fixed backup settings export by replacing the prefix allowlist with an
+  explicit list of exportable keys, now shared by import, so album grouping,
+  theme mode, playback settings (gapless playback, pause on disconnect, in-app
+  volume) and Discord display settings are no longer dropped
+- Fixed a black flash when opening subpages in light mode, caused by the page
+  transition scrim using a translucent overlay colour
 - Restored playlist covers are written to a usable path again
-- Fixed the privacy policy claiming that Play Store builds check GitHub for updates, which they do not
+- Fixed the privacy policy claiming that Play Store builds check GitHub for
+  updates, which they do not
 
 ### Removed
 
@@ -48,55 +76,73 @@ Nothing yet.
 
 ### Internal
 
-- Added new appearance, backup, folder, globus, info, moon, open link, update, and storage icons
+- Added new appearance, backup, folder, globus, info, moon, open link, update,
+  and storage icons
 - Added a new SonoBrands class with Discord and Ko-fi brand icons
 - Added new countSongs(), countAlbums(), countArtists() db queries
-- Added a `SonoSizes.borderWidth` token for the 1.5px border used across cards and chips
-- Added `github` and `codeContributor` fields to translators.json and the Weblate account to the contributor filter, so translators whose Weblate account is linked to GitHub are no longer listed as code contributors
-- Promoted ProfileCircle, SearchField and \_FilterChip to global widgets: SonoProfileCircle, SonoSearchField with an optional custom hint text, and SonoChip with an optional height attribute
-- Moved theme state management from SonoApp into ThemeService, mirroring LocaleService
+- Added a `SonoSizes.borderWidth` token for the 1.5px border used across cards
+  and chips
+- Added `github` and `codeContributor` fields to translators.json and the
+  Weblate account to the contributor filter, so translators whose Weblate
+  account is linked to GitHub are no longer listed as code contributors
+- Promoted ProfileCircle, SearchField and \_FilterChip to global widgets:
+  SonoProfileCircle, SonoSearchField with an optional custom hint text, and
+  SonoChip with an optional height attribute
+- Moved theme state management from SonoApp into ThemeService, mirroring
+  LocaleService
 - Changed Discord avatar storage to save usernames without the leading `@`
 
 ### Translation
 
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
 
 ## [0.10.1+11] - 2026-07-20
 
 ### Fixed
 
-- Fixed EQ and bass boost having no effect on some songs, and being dropped when speed or pitch changed
+- Fixed EQ and bass boost having no effect on some songs, and being dropped when
+  speed or pitch changed
 
 ## [0.10.0+10] - 2026-07-19
 
-- Added backup export, saving liked, favorites, playlists, profile, and settings in one json file
-- Added backup import, merging a backup file into the library after a rescan. Entries whose files are missing are skipped
+- Added backup export, saving liked, favorites, playlists, profile, and settings
+  in one json file
+- Added backup import, merging a backup file into the library after a rescan.
+  Entries whose files are missing are skipped
 
 ## [0.9.1+9] - 2026-07-18
 
 ### Added
 
 - Added new now playing icon
-- Added "Play next" and "Add to queue" actions to song, album, artist sheets. Queueing onto an empty queue now starts playback
+- Added "Play next" and "Add to queue" actions to song, album, artist sheets.
+  Queueing onto an empty queue now starts playback
 
 ### Fixed
 
-- Fixed favorite albums being lost after a forced rescan or a change of grouping mode
+- Fixed favorite albums being lost after a forced rescan or a change of grouping
+  mode
 - Fixed the album sheet's shuffle button doing nothing
 - Fixed "Skip to previous" playing the same song with loop-all enabled
 
 ### Translation
 
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
-- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (100%) and Belarusian (be_TARASK) (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (100%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (100%)
 
 ## [0.9.0+8] - 2026-06-26
 
 ### Added
 
-- Added a search page for songs, albums, artists, playlists, and genres, with recent searches and browse-by-genre when empty
+- Added a search page for songs, albums, artists, playlists, and genres, with
+  recent searches and browse-by-genre when empty
 - Added new clock icon
 
 ### Changed
@@ -105,70 +151,106 @@ Nothing yet.
 
 ### Fixed
 
-- Fixed a startup crash on Windows caused by a flutter_rust_bridge version mismatch (pinned to 2.11.1)
-- Fixed Sono failing to launch on Linux because bundled plugin libraries weren't found at runtime. `$ORIGIN/lib` rpath is now baked into plugin `.so` files at build time
-- Fixed crashes and other platform issues on desktop by updating sono_query to 0.8.3
-- Fixed text overflowing on home action buttons, library cards, and lyrics progress bar when system font scaling is increased
+- Fixed a startup crash on Windows caused by a flutter_rust_bridge version
+  mismatch (pinned to 2.11.1)
+- Fixed Sono failing to launch on Linux because bundled plugin libraries weren't
+  found at runtime. `$ORIGIN/lib` rpath is now baked into plugin `.so` files at
+  build time
+- Fixed crashes and other platform issues on desktop by updating sono_query to
+  0.8.3
+- Fixed text overflowing on home action buttons, library cards, and lyrics
+  progress bar when system font scaling is increased
 - Fixed "Go to album" button in queue view doing nothing
 
 ### Translation
 
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (96%) and Belarusian (be_TARASK) (96%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (99%)
-- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (97%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (96%) and Belarusian (be_TARASK) (96%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (99%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (97%)
 
 ## [0.8.1+7] - 2026-06-15
 
 ### Fixed
 
-- Fixed player's lyrics and queue views not respecting bottom safe area on devices with gesture navigation
-- Fixed player sub-views (lyrics, queue) rendering outside safe area and a brief header flash when opening them
+- Fixed player's lyrics and queue views not respecting bottom safe area on
+  devices with gesture navigation
+- Fixed player sub-views (lyrics, queue) rendering outside safe area and a brief
+  header flash when opening them
 - Hid system 3-dot overflow navigation bar
-- Fixed locale picker losing script subtag (e.g. for languages with multiple scripts) when persisting a selection
+- Fixed locale picker losing script subtag (e.g. for languages with multiple
+  scripts) when persisting a selection
 
 ### Translation
 
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
-- [Ado Listener](https://hosted.weblate.org/user/Ado_Listener/) translated Sono into Kazakh (7%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (100%) and Belarusian (be_TARASK) (100%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (100%)
+- [Ado Listener](https://hosted.weblate.org/user/Ado_Listener/) translated Sono
+  into Kazakh (7%)
 
 ## [0.8.0+6] - 2026-06-13
 
 ### Added
 
-- Added a changelog viewer: the news button on the home and library headers now opens the latest release notes in a bottom sheet
+- Added a changelog viewer: the news button on the home and library headers now
+  opens the latest release notes in a bottom sheet
 
 ### Changed
 
-- Capped the Skia GPU resource cache by device memory tier (32 MB on low-RAM devices, 64 MB otherwise)
+- Capped the Skia GPU resource cache by device memory tier (32 MB on low-RAM
+  devices, 64 MB otherwise)
 - Reformatted the changelog to the Keep a Changelog format
 - Backfilled changelog entries for every release back to 0.1.9
-- Playlists can now have their description edited alongside their name (the rename action is now a full edit action)
+- Playlists can now have their description edited alongside their name (the
+  rename action is now a full edit action)
 
 ### Fixed
 
-- Fixed Discord RPC showing as disconnected when reopening settings before the saved login finished loading
-- Fixed "go to artist" doing nothing on the queue, player, and playlist song sheets for songs played from a playlist
+- Fixed Discord RPC showing as disconnected when reopening settings before the
+  saved login finished loading
+- Fixed "go to artist" doing nothing on the queue, player, and playlist song
+  sheets for songs played from a playlist
 
 ## [0.7.2+5] - 2026-06-12
 
 ### Fixed
 
-- Fixed severe memory growth when scrolling large libraries: cover tiles kept full-resolution art pinned in memory long after it was evicted from Sono's own caches, which could reach over 1GB on a few thousand songs. Cover tiles now hold only their small decoded image, and the system image cache is freed when the app goes to the background
+- Fixed severe memory growth when scrolling large libraries: cover tiles kept
+  full-resolution art pinned in memory long after it was evicted from Sono's own
+  caches, which could reach over 1GB on a few thousand songs. Cover tiles now
+  hold only their small decoded image, and the system image cache is freed when
+  the app goes to the background
 
 ## [0.7.1+5] - 2026-06-12
 
 ### Changed
 
-- Sono now detects low-RAM devices and scales itself down: smaller cover caches, smaller audio buffers, lower thumbnail resolution, and a tighter player carousel on weak hardware
-- Cover caches shrink automatically while the app is in the background and release memory when the system asks for it, making background playback much less likely to be killed on low-end devices
-- Player colors are now extracted from cover thumbnails instead of full resolution art, cutting peak memory during song changes from up to ~40MB to ~1MB
-- Cover scanning, thumbnail decoding, and tag-edit file copies no longer run on the Android main thread (sono_query 0.8.0), removing stutters during scrolling and song changes
-- Cover thumbnails now work on devices without MediaStore thumbnails (Android 9 and below, filesystem-scanned libraries) via a memory-bounded native decode
-- Good news: Sono now runs on a Samsung Galaxy Tab A6 from 2016 (slow on boot, but it gets there :D)
-- On Windows, media overlay artwork goes through the thumbnail cache and timeline updates are pushed far less often
+- Sono now detects low-RAM devices and scales itself down: smaller cover caches,
+  smaller audio buffers, lower thumbnail resolution, and a tighter player
+  carousel on weak hardware
+- Cover caches shrink automatically while the app is in the background and
+  release memory when the system asks for it, making background playback much
+  less likely to be killed on low-end devices
+- Player colors are now extracted from cover thumbnails instead of full
+  resolution art, cutting peak memory during song changes from up to ~40MB to
+  ~1MB
+- Cover scanning, thumbnail decoding, and tag-edit file copies no longer run on
+  the Android main thread (sono_query 0.8.0), removing stutters during scrolling
+  and song changes
+- Cover thumbnails now work on devices without MediaStore thumbnails (Android 9
+  and below, filesystem-scanned libraries) via a memory-bounded native decode
+- Good news: Sono now runs on a Samsung Galaxy Tab A6 from 2016 (slow on boot,
+  but it gets there :D)
+- On Windows, media overlay artwork goes through the thumbnail cache and
+  timeline updates are pushed far less often
 
 ### Fixed
 
@@ -176,48 +258,71 @@ Nothing yet.
 
 ### Translation
 
-- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (100%)
 
 ## [0.7.0+5] - 2026-06-11
 
 ### Added
 
-- Incremental rescans: files that haven't changed on disk are skipped using mtime+size fingerprints, so startup scans on an unchanged library finish in a fraction of the time
+- Incremental rescans: files that haven't changed on disk are skipped using
+  mtime+size fingerprints, so startup scans on an unchanged library finish in a
+  fraction of the time
 - Added a disc number field to tag editing
 
 ### Changed
 
-- Tag edits made by other apps are now picked up on normal rescans instead of requiring a force rescan
-- Unified all cover art loads behind a single byte-budgeted in-memory cache. Covers are read from disk once per song instead of up to five times per song change, and the cache can no longer balloon memory on libraries with large embedded art
-- The notification, mini player background, and Discord RPC now use downscaled cover thumbnails instead of full resolution art
-- Discord RPC remembers recently uploaded covers, so listening through an album no longer re-uploads the same image on every track
-- Home page now loads with a fixed number of database queries instead of one per artist
-- Library lists sort in SQL and use fixed-extent rendering for smoother scrolling on large libraries
-- Cover tag parsing moved off the UI thread and concurrent loads are capped, fixing stutter while scrolling through long song and album lists
-- Playback position updates are throttled to 4 per second across the UI, and the hidden lyrics view no longer does per-tick work behind the player
-- The playback queue is only written to the database when it actually changes, and the resume position is persisted every 30 seconds instead of every 5
+- Tag edits made by other apps are now picked up on normal rescans instead of
+  requiring a force rescan
+- Unified all cover art loads behind a single byte-budgeted in-memory cache.
+  Covers are read from disk once per song instead of up to five times per song
+  change, and the cache can no longer balloon memory on libraries with large
+  embedded art
+- The notification, mini player background, and Discord RPC now use downscaled
+  cover thumbnails instead of full resolution art
+- Discord RPC remembers recently uploaded covers, so listening through an album
+  no longer re-uploads the same image on every track
+- Home page now loads with a fixed number of database queries instead of one per
+  artist
+- Library lists sort in SQL and use fixed-extent rendering for smoother
+  scrolling on large libraries
+- Cover tag parsing moved off the UI thread and concurrent loads are capped,
+  fixing stutter while scrolling through long song and album lists
+- Playback position updates are throttled to 4 per second across the UI, and the
+  hidden lyrics view no longer does per-tick work behind the player
+- The playback queue is only written to the database when it actually changes,
+  and the resume position is persisted every 30 seconds instead of every 5
 - The spinning cover and marquee pause when the app is in the background
-- Non-critical services (Discord RPC, EQ restore, desktop media controls) now initialize after the first frame for a faster cold start
+- Non-critical services (Discord RPC, EQ restore, desktop media controls) now
+  initialize after the first frame for a faster cold start
 - Carousel and scan progress no longer trigger unnecessary rebuilds
 
 ### Fixed
 
-- Fixed the startup scan freezing partway through when songs deleted from disk were still referenced by playlists or cached lyrics. Databases migrated up from older versions now get proper ON DELETE CASCADE on those tables
+- Fixed the startup scan freezing partway through when songs deleted from disk
+  were still referenced by playlists or cached lyrics. Databases migrated up
+  from older versions now get proper ON DELETE CASCADE on those tables
 - Fixed songs not loading for some libraries
 - Stopped the tag editor from writing empty genre fields
 
 ### Translation
 
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
-- [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into French (100%)
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (100%) and Belarusian (be_TARASK) (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (100%)
+- [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into
+  French (100%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
 
 ## [0.6.3+4] - 2026-06-08
 
 ### Added
 
-- Added tag editing for songs from the info tab of the song sheet, supporting title, artist, album, track number, year, and genres. Edit button shows on the song sheet from the library, the player, and the queue
+- Added tag editing for songs from the info tab of the song sheet, supporting
+  title, artist, album, track number, year, and genres. Edit button shows on the
+  song sheet from the library, the player, and the queue
 - On Android, the system prompts for permission per file before writing tags
 
 ### Changed
@@ -226,9 +331,12 @@ Nothing yet.
 
 ### Translation
 
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (94%)
-- [Ado Listener](https://hosted.weblate.org/user/Ado_Listener/) started translating Sono into Kazakh (1%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (94%)
+- [Ado Listener](https://hosted.weblate.org/user/Ado_Listener/) started
+  translating Sono into Kazakh (1%)
 
 ## [0.6.2+4] - 2026-06-07
 
@@ -237,9 +345,11 @@ Nothing yet.
 - Added album detail page and artist detail pages
 - Added genre pages and linked genres from the library
 - Added indicators on artist pages
-- Added album type inference and labels for albums, EPs, singles, compilations, and collaborations
+- Added album type inference and labels for albums, EPs, singles, compilations,
+  and collaborations
 - Added stacked cover artwork for collection cards
-- Wired Home page sections, artist rows, song sheets, queue sheets, and player sheets to the new detail pages
+- Wired Home page sections, artist rows, song sheets, queue sheets, and player
+  sheets to the new detail pages
 - Added Kazakh to the language list
 
 ### Removed
@@ -248,56 +358,75 @@ Nothing yet.
 
 ### Fixed
 
-- Fixed artist pages showing stale album favorite state after returning from an album page
-- Fixed in-place regrouping so song rows are preserved when grouping settings change
+- Fixed artist pages showing stale album favorite state after returning from an
+  album page
+- Fixed in-place regrouping so song rows are preserved when grouping settings
+  change
 - Fixed a library sheet key issue
 
 ### Translation
 
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
 
 ## [0.6.1+4] - 2026-06-06
 
 ### Fixed
 
-- Fixed manual rescans (via the rescan button in settings) wiping song likes and emptying playlists. Songs now stay in the database during a regroup and only their album link is recalculated.
-- Database now enforces its own relationships: deleting a song automatically cleans up playlist entries and cached lyrics. Dangling rows left by the previous bug are cleaned up on first launch.
+- Fixed manual rescans (via the rescan button in settings) wiping song likes and
+  emptying playlists. Songs now stay in the database during a regroup and only
+  their album link is recalculated.
+- Database now enforces its own relationships: deleting a song automatically
+  cleans up playlist entries and cached lyrics. Dangling rows left by the
+  previous bug are cleaned up on first launch.
 
 ### Translation
 
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (100%)
 
 ## [0.6.0+4] - 2026-06-06
 
 ### Added
 
-- Added the Library tab with subpages for Songs, Albums, Artists, Liked Songs, Favorite Albums, and Favorite Artists
-- Added Playlists: create, rename, delete, reorder songs, add to playlist from any song sheet, remove from playlist
-- Added playlist detail page with full-width cover, scroll-driven header, and reorder mode
-- Added playlist mosaic cover (2x2 from the first 4 songs) for playlists without a custom cover
+- Added the Library tab with subpages for Songs, Albums, Artists, Liked Songs,
+  Favorite Albums, and Favorite Artists
+- Added Playlists: create, rename, delete, reorder songs, add to playlist from
+  any song sheet, remove from playlist
+- Added playlist detail page with full-width cover, scroll-driven header, and
+  reorder mode
+- Added playlist mosaic cover (2x2 from the first 4 songs) for playlists without
+  a custom cover
 - Added folder-based album grouping as a settings toggle
 - Added desktop OS media controls (Linux MPRIS, Windows SMTC)
-- Added text field rows, keyboard-aware padding, and destructive and prominent action styles to the bottom modal sheet
+- Added text field rows, keyboard-aware padding, and destructive and prominent
+  action styles to the bottom modal sheet
 
 ### Changed
 
-- Sticky page header now only reveals its background when content scrolls underneath
+- Sticky page header now only reveals its background when content scrolls
+  underneath
 - Reduced mini player height from 90 to 70 px
 
 ### Fixed
 
-- Fixed lyrics search using the folder path instead of the album's display title when folder-based album grouping is enabled
+- Fixed lyrics search using the folder path instead of the album's display title
+  when folder-based album grouping is enabled
 - Fixed snackbars staying on screen forever instead of auto-dismissing
 - Fixed long playlist names wrapping to two lines in the page header
 - Fixed playlist 2x2 cover overflowing by a couple of pixels
-- Fixed a race between the song sheet closing and the add-to-playlist picker opening that could trigger a willPop assertion
+- Fixed a race between the song sheet closing and the add-to-playlist picker
+  opening that could trigger a willPop assertion
 - Fixed Discord RPC and secure storage erroring out on Linux
 
 ### Translation
 
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (83%)
-- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (80%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (83%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (80%)
 
 ## [0.5.3+3] - 2026-05-26
 
@@ -311,19 +440,23 @@ Nothing yet.
 
 ### Fixed
 
-- Fixed audio stutter when the app was backgrounded with EQ enabled (the filter chain now skips bands at unity gain instead of running all 11 biquads every sample)
+- Fixed audio stutter when the app was backgrounded with EQ enabled (the filter
+  chain now skips bands at unity gain instead of running all 11 biquads every
+  sample)
 - Fixed "Go to album" action in the queue song sheet using the artist icon
 - Fixed lyrics view not jumping to the current line when opening
 
 ### Translation
 
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into Belarusian (be_TARASK) (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into
+  Belarusian (be_TARASK) (100%)
 
 ## [0.5.2+3] - 2026-05-26
 
 ### Added
 
-- Added new album, artist, favorite album (not filled), favorite artist, last played, and song icons
+- Added new album, artist, favorite album (not filled), favorite artist, last
+  played, and song icons
 
 ### Changed
 
@@ -344,18 +477,24 @@ Nothing yet.
 ### Changed
 
 - Lyrics auto-scroll only follows the active line when it's already in view
-- Lyrics provider credit moved to the end of the scroll area instead of being pinned
+- Lyrics provider credit moved to the end of the scroll area instead of being
+  pinned
 
 ### Fixed
 
-- Fixed missing translation percentage for Belarusian (be_TARASK) in the language picker
+- Fixed missing translation percentage for Belarusian (be_TARASK) in the
+  language picker
 
 ### Translation
 
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (84%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (100%)
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
-- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into
+  Belarusian (100%) and Belarusian (be_TARASK) (84%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (100%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (100%)
 
 ## [0.5.0+3] - 2026-05-24
 
@@ -380,19 +519,27 @@ Nothing yet.
 
 ### Translation
 
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into Belarusian (78%) and Belarusian (be_TARASK) (78%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono into Estonian (78%)
-- [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into French (78%)
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (78%)
-- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (78%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify) translated Sono into
+  Belarusian (78%) and Belarusian (be_TARASK) (78%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (78%)
+- [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into
+  French (78%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (78%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (78%)
 
 ## [0.4.91+2] - 2026-05-22
 
 ### Translation
 
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (100%) and Belarusian (be_TARASK) (100%)
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (100%)
-- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into Ukrainian (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (100%) and Belarusian (be_TARASK) (100%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (100%)
 
 ## [0.4.9+2] - 2026-05-22
 
@@ -400,7 +547,8 @@ Nothing yet.
 
 - Added 4 new languages (Belarusian, Belarusian (be_TARASK), French, Polish)
 - Added two buttons at the bottom of Settings (Contributors, Support Me)
-- Added Contributors modal (code commits from GitHub, translations maintained manually)
+- Added Contributors modal (code commits from GitHub, translations maintained
+  manually)
 - Added a translation progress indicator to the language picker
 
 ### Changed
@@ -410,17 +558,23 @@ Nothing yet.
 
 ### Translation
 
-- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into Belarusian (89%) and Belarusian (be_TARASK) (89%)
-- [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into French (89%)
-- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into German (89%)
-- [prlz](https://hosted.weblate.org/user/prlz/) translated Sono into Polish (89%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (89%) and Belarusian (be_TARASK) (89%)
+- [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into
+  French (89%)
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (89%)
+- [prlz](https://hosted.weblate.org/user/prlz/) translated Sono into Polish
+  (89%)
 
 ## [0.4.8+2] - 2026-05-20
 
 ### Added
 
-- Multi-language support: the app now provides full UI localization in English and German
-- Language selector: new language preference option in Settings to choose your preferred language or follow the system default
+- Multi-language support: the app now provides full UI localization in English
+  and German
+- Language selector: new language preference option in Settings to choose your
+  preferred language or follow the system default
 
 ### Changed
 
@@ -434,7 +588,8 @@ Nothing yet.
 
 ### Added
 
-- Discord cover uploads now use uguu (primary) with a litterbox fallback instead of tmpfiles
+- Discord cover uploads now use uguu (primary) with a litterbox fallback instead
+  of tmpfiles
 
 ### Changed
 
@@ -475,8 +630,10 @@ Nothing yet.
 - Added the lyrics view with synced lines, a page header, and a version switcher
 - Added lyrics preloading and caching (new LyricsCache table, schema v9)
 - Added a lyrics service backed by lrclib
-- Added a queue button row (skip, loop, playlist, pause/play) and a scroll-to-current button
-- Made BouncyTap and the header card global widgets, with an optional border radius on widgets
+- Added a queue button row (skip, loop, playlist, pause/play) and a
+  scroll-to-current button
+- Made BouncyTap and the header card global widgets, with an optional border
+  radius on widgets
 
 ### Changed
 
@@ -658,7 +815,8 @@ Nothing yet.
 
 ### Changed
 
-- Switched the cover cache to a 3-slot LRU and capped the external image cache with LRU eviction
+- Switched the cover cache to a 3-slot LRU and capped the external image cache
+  with LRU eviction
 - Settings writes now use transactions
 
 ### Fixed
@@ -686,13 +844,15 @@ Nothing yet.
 
 ### Added
 
-- Added IconsSheet with all custom SVG icons (bell, heart, pause, play, profile, queue, repeat, settings, shuffle, skip)
+- Added IconsSheet with all custom SVG icons (bell, heart, pause, play, profile,
+  queue, repeat, settings, shuffle, skip)
 - Added SonoHeader with a time-based greeting, profile circle, and action pill
 - Added a local account table
 
 ### Changed
 
-- Migrated icons to IconsSheet and reorganized audio and scanner services into subdirectories
+- Migrated icons to IconsSheet and reorganized audio and scanner services into
+  subdirectories
 
 ## [0.3.0+2] - 2026-04-21
 
@@ -729,11 +889,13 @@ Nothing yet.
 
 ### Added
 
-- Added an iOS build to the release workflow with background audio mode and file sharing for music import
+- Added an iOS build to the release workflow with background audio mode and file
+  sharing for music import
 
 ### Fixed
 
-- Removed the iOS permission check and created the readme in the documents directory
+- Removed the iOS permission check and created the readme in the documents
+  directory
 
 ## [0.2.8+2] - 2026-04-16
 
@@ -836,7 +998,8 @@ Nothing yet.
 
 ### Added
 
-- First tracked build with a playback queue, metadata sheet, and playback controls
+- First tracked build with a playback queue, metadata sheet, and playback
+  controls
 - Persist shuffle and repeat mode across restarts
 - Persist audio effects (EQ) settings via a key-value settings table
 - Chunked scan insertion for the music library
