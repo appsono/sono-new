@@ -8,22 +8,26 @@ The app is new and currently in a very early stage.
 </p>
 
 <p align="center">
-  <img src="assets/github/image.png" width="160">
-  <img src="assets/github/image2.png" width="160">
+  <img src="assets/github/image.png" width="160" alt="Shows preview of Sono">
+  <img src="assets/github/image2.png" width="160" alt="Shows preview of Sono">
 </p>
 
 ## What is Sono?
 
-Sono is yet another local music player, it's cross platform and NOT material design. Yes, I took inspiration from Material Design for the Fullscreen Player, but I just like extracting colors from stuff and make them bouncy :]
+Sono is yet another local music player, it's cross platform and NOT material
+design. Yes, I took inspiration from Material Design for the Fullscreen Player,
+but I just like extracting colors from stuff and make them bouncy :]
 
-It is built with Flutter and and has all the features you need. Not yet, but soon :D
+It is built with Flutter and and has all the features you need.
+Not yet, but soon :D
 
-Good news: Sono even runs on a Samsung Galaxy Tab A6 from 2016 (slow on boot, but it gets there :D)
+Good news: Sono even runs on a Samsung Galaxy Tab A6 from 2016!! :D
 
 ## Contributing
 
-Contributions are welcome.  
-Simply open a pull request with your changes or an issue if you find any bugs that weren't already reported.
+Contributions are welcome.
+Simply open a pull request with your changes or an issue if you find any bugs
+that weren't already reported.
 
 If you're unsure about a change, open an issue first to discuss it.
 
@@ -35,10 +39,13 @@ See [TODO](TODO.md) for current progress and planned work.
 
 ## Translations
 
-<a href="https://hosted.weblate.org/engage/sono/"><img src="https://hosted.weblate.org/widget/sono/sono-app/svg-badge.svg" alt="Translation status"></a>
+<a href="https://hosted.weblate.org/engage/sono/">
+  <img src="https://hosted.weblate.org/widget/sono/sono-app/svg-badge.svg"
+  alt="Translation status">
+</a>
 
-Sono is translated on [Weblate](https://hosted.weblate.org/projects/sono/). Everyone can contribute
-to translations.
+Sono is translated on [Weblate](https://hosted.weblate.org/projects/sono/).
+Everyone can contribute to translations.
 
 - **Source language:** English (`lib/l10n/translations/sono_en.arb`)
 - **Translation format:** [Flutter ARB](https://docs.flutter.dev/ui/internationalization)
@@ -46,21 +53,19 @@ to translations.
 
 ## Why the restart?
 
-```
-
+```md
 Hello everyone,
 
-I have made a decision about the future of Sono. I started making Sono almost a year ago (April 2025). 
-When I first created it, I could not have imagined how many people would be interested in it 
+I have made a decision about the future of Sono. I started making Sono almost a year ago (April 2025).
+When I first created it, I could not have imagined how many people would be interested in it
 and how much work I would end up putting into it.
 
-However, there is an issue with Sono. Bugs are everywhere. Even if you do not notice them, I do. 
-The reason these bugs exist is because I learned Dart and the Flutter framework while developing Sono. 
+However, there is an issue with Sono. Bugs are everywhere. Even if you do not notice them, I do.
+The reason these bugs exist is because I learned Dart and the Flutter framework while developing Sono.
 A lot of the code in Sono is held together with tape and hope.
 
-Before making Sono open source, I rewrote the entire player backend, which improved performance. 
+Before making Sono open source, I rewrote the entire player backend, which improved performance.
 However, doing this was extremely difficult because many parts of the app relied on the old implementation.
-
 
 Because of this, I have decided to drop the current Sono codebase and restart it from scratch.
 This time the project will be open source from the beginning. Do not worry, the UI will not change much.
@@ -72,7 +77,6 @@ I hope you understand this decision, and I will keep you updated.
 
 Much love,
 mathis
-
 ```
 
 Originally announced on the [Discord server](https://discord.gg/48fvsUCNwu).
@@ -82,16 +86,6 @@ Originally announced on the [Discord server](https://discord.gg/48fvsUCNwu).
 Discord: [https://discord.gg/48fvsUCNwu](https://discord.gg/48fvsUCNwu)
 
 Nerimity: [https://nerimity.com/i/sono](https://nerimity.com/i/sono)
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=appsono%2Fsono-new&type=date&legend=bottom-right">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=appsono/sono-new&type=date&theme=dark&legend=bottom-right" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=appsono/sono-new&type=date&legend=bottom-right" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=appsono/sono-new&type=date&legend=bottom-right" />
- </picture>
-</a>
 
 ## LICENSE
 
