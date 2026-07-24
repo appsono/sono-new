@@ -497,5 +497,286 @@
     "searchBrowseGenres": "Переглянути жанри",
     "@searchBrowseGenres": {
         "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
+    },
+    "commonAlbumsCount": "{count, plural, =0{немає альбомів} =1{1 альбом} one{{count} альбом} few{{count} альбоми} many{{count} альбомів} other{{count} альбомів}}",
+    "@commonAlbumsCount": {
+        "description": "Number of albums, used in library totals",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "commonArtistsCount": "{count, plural, =0{жодного виконавця} =1{1 виконавець} one{{count} виконавець} few{{count} виконавці} many{{count} виконавців} other{{count} виконавця}}",
+    "@commonArtistsCount": {
+        "description": "Number of artists, used in library totals",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "settingsPageTitle": "Налаштування",
+    "@settingsPageTitle": {
+        "description": "Title shown in the header of the settings root page."
+    },
+    "settingsSearchTooltip": "Налаштування пошуку",
+    "@settingsSearchTooltip": {
+        "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
+    },
+    "settingsSearchHint": "Налаштування пошуку",
+    "@settingsSearchHint": {
+        "description": "Placeholder inside the search field at the top of the settings root page."
+    },
+    "settingsSearchNoResults": "Налаштувань не знайдено >_<",
+    "@settingsSearchNoResults": {
+        "description": "Shown on the settings root when the search field matches nothing."
+    },
+    "settingsPlannedBadge": "Заплановано",
+    "@settingsPlannedBadge": {
+        "description": "Small badge on a settings row whose feature is on the roadmap but not built yet."
+    },
+    "settingsPlannedBody": "Ця функція запланована, але поки що недоступна.",
+    "@settingsPlannedBody": {
+        "description": "Explanation shown in the sheet that opens when a planned settings row is tapped."
+    },
+    "settingsPlannedFollow": "Слідкувати за розробкою на GitHub",
+    "@settingsPlannedFollow": {
+        "description": "Action in the planned feature sheet that opens the project repository."
+    },
+    "settingsPlannedFollowSubtitle": "Відкриває репозиторій у вашому браузері",
+    "@settingsPlannedFollowSubtitle": {
+        "description": "Subtitle under the GitHub action in the planned feature sheet."
+    },
+    "settingsProfileUnnamed": "Ваш профіль",
+    "@settingsProfileUnnamed": {
+        "description": "Name shown on the profile row in settings when no username has been set yet."
+    },
+    "settingsProfileSubtitle": "Назва й аватар",
+    "@settingsProfileSubtitle": {
+        "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
+    },
+    "settingsAppearance": "Вигляд",
+    "@settingsAppearance": {
+        "description": "Label of the row opening the appearance subpage, and the title of that subpage."
+    },
+    "settingsLanguage": "Мова",
+    "@settingsLanguage": {
+        "description": "Label of the row opening the language subpage, and the title of that subpage."
+    },
+    "settingsThemeSystem": "Системна",
+    "@settingsThemeSystem": {
+        "description": "Theme option that follows the device light/dark setting. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeDark": "Темна",
+    "@settingsThemeDark": {
+        "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeLight": "Світла",
+    "@settingsThemeLight": {
+        "description": "Name of the light theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsLanguageSystem": "Як у системі",
+    "@settingsLanguageSystem": {
+        "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
+    },
+    "settingsPlayback": "Відтворення",
+    "@settingsPlayback": {
+        "description": "Label of the row opening the playback subpage, and the title of that subpage."
+    },
+    "settingsEqualizer": "Еквалайзер та ефекти",
+    "@settingsEqualizer": {
+        "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
+    },
+    "settingsEqualizerOff": "Вимк",
+    "@settingsEqualizerOff": {
+        "description": "Value on the equalizer row when the equalizer is disabled."
+    },
+    "settingsLibrary": "Бібліотека та сканування",
+    "@settingsLibrary": {
+        "description": "Label of the row opening the library subpage, and the title of that subpage."
+    },
+    "settingsDiscord": "Активність у Discord",
+    "@settingsDiscord": {
+        "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
+    },
+    "settingsDiscordDisconnected": "Не прив’язано",
+    "@settingsDiscordDisconnected": {
+        "description": "Value on the Discord row when no Discord account is linked."
+    },
+    "settingsBackup": "Резервне копіювання та відновлення",
+    "@settingsBackup": {
+        "description": "Label of the row opening the backup subpage, and the title of that subpage."
+    },
+    "settingsStorage": "Сховище",
+    "@settingsStorage": {
+        "description": "Label of the storage row. Currently marked as planned."
+    },
+    "settingsUpdates": "Оновлення",
+    "@settingsUpdates": {
+        "description": "Label of the row that checks for a newer release. Its value is the installed version."
+    },
+    "settingsUpdatesViaPlay": "Керовані",
+    "@settingsUpdatesViaPlay": {
+        "description": "Value on the Updates row for Play builds, which open the store listing instead of checking GitHub."
+    },
+    "settingsAbout": "Про Sono",
+    "@settingsAbout": {
+        "description": "Label of the row opening the about subpage, and the title of that subpage."
+    },
+    "settingsVersionLine": "Sono {version} • збірка {build}",
+    "@settingsVersionLine": {
+        "description": "First footnote line at the bottom of the settings root, showing the installed version and build number.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLicenseLine": "Вільне програмне забезпечення згідно з ліцензією GPL-3.0",
+    "@settingsLicenseLine": {
+        "description": "Second footnote line at the bottom of the settings root."
+    },
+    "settingsProfileTitle": "Профіль",
+    "@settingsProfileTitle": {
+        "description": "Title of the profile subpage in settings."
+    },
+    "settingsProfileName": "Ім’я",
+    "@settingsProfileName": {
+        "description": "Label of the row showing the display name, and the label of the text field in the rename sheet."
+    },
+    "settingsProfileNameUnset": "Не вказано",
+    "@settingsProfileNameUnset": {
+        "description": "Value on the name row when no display name has been chosen yet."
+    },
+    "settingsProfileNameSheetTitle": "Ваше ім’я",
+    "@settingsProfileNameSheetTitle": {
+        "description": "Title of the sheet for editing the display name. This name appears in the greeting on the home page."
+    },
+    "settingsProfilePhotoHint": "Торкніться зображення, щоб змінити його",
+    "@settingsProfilePhotoHint": {
+        "description": "Caption under the large avatar on the profile subpage, explaining that tapping it opens the image picker."
+    },
+    "settingsProfileRemovePhoto": "Видалити фото",
+    "@settingsProfileRemovePhoto": {
+        "description": "Row that clears the profile picture. Only shown when a picture is set."
+    },
+    "settingsProfileStats": "Статистика прослуховувань",
+    "@settingsProfileStats": {
+        "description": "Row for play counts and listening history. Currently marked as planned."
+    },
+    "settingsProfilePickBadImage": "той файл онде... НЕ є дійсним зображенням, хм",
+    "@settingsProfilePickBadImage": {
+        "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
+    },
+    "settingsAppearanceSectionTheme": "Тема",
+    "@settingsAppearanceSectionTheme": {
+        "description": "Section label above the theme picker on the appearance subpage."
+    },
+    "settingsAppearanceThemeNote": "Відповідає світлому або темному режиму вашого пристрою, включно з будь-яким встановленим там розкладом.",
+    "@settingsAppearanceThemeNote": {
+        "description": "Note under the theme picker explaining what the System option does. The schedule belongs to the operating system, not to Sono."
+    },
+    "settingsAppearanceSectionPlayer": "Програвач",
+    "@settingsAppearanceSectionPlayer": {
+        "description": "Section label above the player appearance options on the appearance subpage."
+    },
+    "settingsAppearanceColourFromArt": "Колір з обкладинки альбому",
+    "@settingsAppearanceColourFromArt": {
+        "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
+    },
+    "settingsAppearanceColourFromArtSubtitle": "Зафарбувати весь програвач у кольори обкладинки",
+    "@settingsAppearanceColourFromArtSubtitle": {
+        "description": "Subtitle under the colour from album art row."
+    },
+    "settingsAppearanceBlurredBackdrops": "Розмиті фони",
+    "@settingsAppearanceBlurredBackdrops": {
+        "description": "Row that enables blurred cover backdrops behind the player. Currently marked as planned."
+    },
+    "settingsAppearanceBlurredBackdropsSubtitle": "Трохи розряджає акумулятор на старіших пристроях",
+    "@settingsAppearanceBlurredBackdropsSubtitle": {
+        "description": "Subtitle under the blurred backdrops row, warning about the performance cost."
+    },
+    "settingsAppearanceReduceMotion": "Зменшення руху",
+    "@settingsAppearanceReduceMotion": {
+        "description": "Row that disables animations across the app. Currently marked as planned."
+    },
+    "settingsAppearanceReduceMotionSubtitle": "Вимикає ефект пружини та анімацію ковзання",
+    "@settingsAppearanceReduceMotionSubtitle": {
+        "description": "Subtitle under the reduce motion row."
+    },
+    "settingsAppearanceSectionLibrary": "Бібліотека",
+    "@settingsAppearanceSectionLibrary": {
+        "description": "Section label above the library appearance options on the appearance subpage."
+    },
+    "settingsAppearanceGridDensity": "Щільність сітки",
+    "@settingsAppearanceGridDensity": {
+        "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
+    },
+    "settingsAppearanceTrackNumbers": "Показувати номери треку",
+    "@settingsAppearanceTrackNumbers": {
+        "description": "Row toggling track numbers in album track lists. Currently marked as planned."
+    },
+    "settingsLanguageSearchHint": "Мови пошуку",
+    "@settingsLanguageSearchHint": {
+        "description": "Placeholder inside the search field on the language subpage."
+    },
+    "settingsLanguageSystemSubtitle": "Наразі: {language}",
+    "@settingsLanguageSystemSubtitle": {
+        "description": "Subtitle under the system default option, naming the language the device settings currently resolve to. The language name is in its own language, e.g. Deutsch.",
+        "placeholders": {
+            "language": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLanguageSectionAvailable": "Доступно",
+    "@settingsLanguageSectionAvailable": {
+        "description": "Section label above the list of translated languages on the language subpage."
+    },
+    "settingsLanguageNoMatches": "Мов за таким запитом не знайдено :/",
+    "@settingsLanguageNoMatches": {
+        "description": "Shown on the language subpage when the search field filters out every language."
+    },
+    "settingsLanguageHelpTranslate": "Допомогти перекласти Sono",
+    "@settingsLanguageHelpTranslate": {
+        "description": "Row that opens the Weblate project where translations are contributed."
+    },
+    "settingsLanguageHelpTranslateSubtitle": "Відкриває Weblate у вашому браузері",
+    "@settingsLanguageHelpTranslateSubtitle": {
+        "description": "Subtitle under the help translate row."
+    },
+    "settingsPlaybackSectionTransitions": "Перекладачі",
+    "@settingsPlaybackSectionTransitions": {
+        "description": "Section label above gapless, crossfade and fade options on the playback subpage."
+    },
+    "settingsPlaybackGapless": "Безперервне відтворення",
+    "@settingsPlaybackGapless": {
+        "description": "Toggle that preloads the next track so it starts without a gap."
+    },
+    "settingsPlaybackGaplessSubtitle": "Підвантажує наступну пісню",
+    "@settingsPlaybackGaplessSubtitle": {
+        "description": "Subtitle under the gapless playback row."
+    },
+    "settingsPlaybackCrossfade": "Плавний перехід",
+    "@settingsPlaybackCrossfade": {
+        "description": "Row for fading one song into the next. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPause": "Затухання при паузі",
+    "@settingsPlaybackFadeOnPause": {
+        "description": "Row for fading out on pause rather than cutting. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPauseSubtitle": "Плавний перехід замість різкого розриву",
+    "@settingsPlaybackFadeOnPauseSubtitle": {
+        "description": "Subtitle under the fade on pause row."
+    },
+    "settingsPlaybackSectionSound": "Звук",
+    "@settingsPlaybackSectionSound": {
+        "description": "Section label above the equalizer, normalisation and volume options on the playback subpage."
     }
 }
