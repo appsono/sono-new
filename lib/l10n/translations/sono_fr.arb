@@ -535,5 +535,343 @@
     "settingsSearchHint": "rechercher parametres",
     "@settingsSearchHint": {
         "description": "Placeholder inside the search field at the top of the settings root page."
+    },
+    "settingsSearchNoResults": "Aucun paramètre correspond >_<",
+    "@settingsSearchNoResults": {
+        "description": "Shown on the settings root when the search field matches nothing."
+    },
+    "settingsPlannedBadge": "Planifiée",
+    "@settingsPlannedBadge": {
+        "description": "Small badge on a settings row whose feature is on the roadmap but not built yet."
+    },
+    "settingsPlannedBody": "Cette fonctionnalité est prévue mais n'est pas disponible pour le moment.",
+    "@settingsPlannedBody": {
+        "description": "Explanation shown in the sheet that opens when a planned settings row is tapped."
+    },
+    "settingsPlannedFollow": "Suivre le développement sur GitHub",
+    "@settingsPlannedFollow": {
+        "description": "Action in the planned feature sheet that opens the project repository."
+    },
+    "settingsPlannedFollowSubtitle": "Ouvre la repo dans votre navigateur",
+    "@settingsPlannedFollowSubtitle": {
+        "description": "Subtitle under the GitHub action in the planned feature sheet."
+    },
+    "settingsProfileUnnamed": "Votre profil",
+    "@settingsProfileUnnamed": {
+        "description": "Name shown on the profile row in settings when no username has been set yet."
+    },
+    "settingsProfileSubtitle": "Nom et avatar",
+    "@settingsProfileSubtitle": {
+        "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
+    },
+    "settingsAppearance": "Apparence",
+    "@settingsAppearance": {
+        "description": "Label of the row opening the appearance subpage, and the title of that subpage."
+    },
+    "settingsLanguage": "Langue",
+    "@settingsLanguage": {
+        "description": "Label of the row opening the language subpage, and the title of that subpage."
+    },
+    "settingsThemeSystem": "Système",
+    "@settingsThemeSystem": {
+        "description": "Theme option that follows the device light/dark setting. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeDark": "Sombre",
+    "@settingsThemeDark": {
+        "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeLight": "Clair",
+    "@settingsThemeLight": {
+        "description": "Name of the light theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsLanguageSystem": "Par défaut",
+    "@settingsLanguageSystem": {
+        "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
+    },
+    "settingsEqualizer": "Égaliseur & effets",
+    "@settingsEqualizer": {
+        "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
+    },
+    "settingsEqualizerOff": "Désactivé",
+    "@settingsEqualizerOff": {
+        "description": "Value on the equalizer row when the equalizer is disabled."
+    },
+    "settingsLibrary": "Bibliothèque & analyse",
+    "@settingsLibrary": {
+        "description": "Label of the row opening the library subpage, and the title of that subpage."
+    },
+    "settingsDiscord": "Présence Discord",
+    "@settingsDiscord": {
+        "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
+    },
+    "settingsDiscordDisconnected": "Non connecté",
+    "@settingsDiscordDisconnected": {
+        "description": "Value on the Discord row when no Discord account is linked."
+    },
+    "settingsBackup": "Sauvegarde & restoration",
+    "@settingsBackup": {
+        "description": "Label of the row opening the backup subpage, and the title of that subpage."
+    },
+    "settingsStorage": "Stockage",
+    "@settingsStorage": {
+        "description": "Label of the storage row. Currently marked as planned."
+    },
+    "settingsUpdates": "Mises à jour",
+    "@settingsUpdates": {
+        "description": "Label of the row that checks for a newer release. Its value is the installed version."
+    },
+    "settingsAbout": "À propos de Sono",
+    "@settingsAbout": {
+        "description": "Label of the row opening the about subpage, and the title of that subpage."
+    },
+    "settingsVersionLine": "Sono {version} • type {build}",
+    "@settingsVersionLine": {
+        "description": "First footnote line at the bottom of the settings root, showing the installed version and build number.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLicenseLine": "Logiciel libre sous license GPL-3.0",
+    "@settingsLicenseLine": {
+        "description": "Second footnote line at the bottom of the settings root."
+    },
+    "settingsProfileTitle": "Profil",
+    "@settingsProfileTitle": {
+        "description": "Title of the profile subpage in settings."
+    },
+    "settingsProfileName": "Nom",
+    "@settingsProfileName": {
+        "description": "Label of the row showing the display name, and the label of the text field in the rename sheet."
+    },
+    "settingsProfileNameUnset": "Non défini",
+    "@settingsProfileNameUnset": {
+        "description": "Value on the name row when no display name has been chosen yet."
+    },
+    "settingsProfileNameSheetTitle": "Votre nom",
+    "@settingsProfileNameSheetTitle": {
+        "description": "Title of the sheet for editing the display name. This name appears in the greeting on the home page."
+    },
+    "settingsProfilePhotoHint": "Appuyez sur la photo pour la changer",
+    "@settingsProfilePhotoHint": {
+        "description": "Caption under the large avatar on the profile subpage, explaining that tapping it opens the image picker."
+    },
+    "settingsProfileRemovePhoto": "Supprimer la photo",
+    "@settingsProfileRemovePhoto": {
+        "description": "Row that clears the profile picture. Only shown when a picture is set."
+    },
+    "settingsProfileStats": "Statistiques d'écoute",
+    "@settingsProfileStats": {
+        "description": "Row for play counts and listening history. Currently marked as planned."
+    },
+    "settingsProfilePickBadImage": "ce fichier là.. n'est PAS une image valide, hmph",
+    "@settingsProfilePickBadImage": {
+        "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
+    },
+    "settingsAppearanceSectionTheme": "Thème",
+    "@settingsAppearanceSectionTheme": {
+        "description": "Section label above the theme picker on the appearance subpage."
+    },
+    "settingsAppearanceThemeNote": "Suit le réglage clair ou sombre de votre appareil, y compris toute programmation que vous avez définie.",
+    "@settingsAppearanceThemeNote": {
+        "description": "Note under the theme picker explaining what the System option does. The schedule belongs to the operating system, not to Sono."
+    },
+    "settingsUpdatesViaPlay": "Géré",
+    "@settingsUpdatesViaPlay": {
+        "description": "Value on the Updates row for Play builds, which open the store listing instead of checking GitHub."
+    },
+    "settingsAppearanceSectionPlayer": "Lecteur",
+    "@settingsAppearanceSectionPlayer": {
+        "description": "Section label above the player appearance options on the appearance subpage."
+    },
+    "settingsAppearanceColourFromArtSubtitle": "Teinter le lecteur complet avec les couleurs de l'album",
+    "@settingsAppearanceColourFromArtSubtitle": {
+        "description": "Subtitle under the colour from album art row."
+    },
+    "settingsAppearanceBlurredBackdrops": "Arrière-plans flous",
+    "@settingsAppearanceBlurredBackdrops": {
+        "description": "Row that enables blurred cover backdrops behind the player. Currently marked as planned."
+    },
+    "settingsAppearanceBlurredBackdropsSubtitle": "Épuise un peu plus de batterie sur les appareils anciens",
+    "@settingsAppearanceBlurredBackdropsSubtitle": {
+        "description": "Subtitle under the blurred backdrops row, warning about the performance cost."
+    },
+    "settingsAppearanceReduceMotion": "Réduire le mouvement",
+    "@settingsAppearanceReduceMotion": {
+        "description": "Row that disables animations across the app. Currently marked as planned."
+    },
+    "settingsAppearanceReduceMotionSubtitle": "Désactiver les appuis rebondissants et les transitions par glissement",
+    "@settingsAppearanceReduceMotionSubtitle": {
+        "description": "Subtitle under the reduce motion row."
+    },
+    "settingsAppearanceSectionLibrary": "Bibliothèque",
+    "@settingsAppearanceSectionLibrary": {
+        "description": "Section label above the library appearance options on the appearance subpage."
+    },
+    "settingsAppearanceGridDensity": "Densité de la grille",
+    "@settingsAppearanceGridDensity": {
+        "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
+    },
+    "settingsAppearanceTrackNumbers": "Afficher les numéros de piste",
+    "@settingsAppearanceTrackNumbers": {
+        "description": "Row toggling track numbers in album track lists. Currently marked as planned."
+    },
+    "settingsLanguageSearchHint": "Chercher des langues",
+    "@settingsLanguageSearchHint": {
+        "description": "Placeholder inside the search field on the language subpage."
+    },
+    "settingsLanguageSystemSubtitle": "Actuellement {language}",
+    "@settingsLanguageSystemSubtitle": {
+        "description": "Subtitle under the system default option, naming the language the device settings currently resolve to. The language name is in its own language, e.g. Deutsch.",
+        "placeholders": {
+            "language": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLanguageSectionAvailable": "Disponible",
+    "@settingsLanguageSectionAvailable": {
+        "description": "Section label above the list of translated languages on the language subpage."
+    },
+    "settingsLanguageNoMatches": "Aucune langue correspond :/",
+    "@settingsLanguageNoMatches": {
+        "description": "Shown on the language subpage when the search field filters out every language."
+    },
+    "settingsLanguageHelpTranslate": "Aider à traduire Sono",
+    "@settingsLanguageHelpTranslate": {
+        "description": "Row that opens the Weblate project where translations are contributed."
+    },
+    "settingsLanguageHelpTranslateSubtitle": "Ouvre Weblate dans votre navigateur",
+    "@settingsLanguageHelpTranslateSubtitle": {
+        "description": "Subtitle under the help translate row."
+    },
+    "settingsPlaybackSectionTransitions": "Transitions",
+    "@settingsPlaybackSectionTransitions": {
+        "description": "Section label above gapless, crossfade and fade options on the playback subpage."
+    },
+    "settingsPlaybackGapless": "Lecture sans interruption",
+    "@settingsPlaybackGapless": {
+        "description": "Toggle that preloads the next track so it starts without a gap."
+    },
+    "settingsPlaybackGaplessSubtitle": "Précharge la musique suivante",
+    "@settingsPlaybackGaplessSubtitle": {
+        "description": "Subtitle under the gapless playback row."
+    },
+    "settingsPlaybackCrossfade": "Fondu enchaîné",
+    "@settingsPlaybackCrossfade": {
+        "description": "Row for fading one song into the next. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPause": "Fondu sur pause",
+    "@settingsPlaybackFadeOnPause": {
+        "description": "Row for fading out on pause rather than cutting. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPauseSubtitle": "Fondu court au lieu d'une coupure nette",
+    "@settingsPlaybackFadeOnPauseSubtitle": {
+        "description": "Subtitle under the fade on pause row."
+    },
+    "settingsPlaybackSectionSound": "Son",
+    "@settingsPlaybackSectionSound": {
+        "description": "Section label above the equalizer, normalisation and volume options on the playback subpage."
+    },
+    "settingsPlaybackNormalisation": "Normalisation du volume",
+    "@settingsPlaybackNormalisation": {
+        "description": "Row for evening out loudness between tracks using ReplayGain tags. Currently marked as planned."
+    },
+    "settingsPlaybackVolume": "Volume dans l'appli",
+    "@settingsPlaybackVolume": {
+        "description": "Slider controlling Sono's own output volume, separate from the device volume."
+    },
+    "settingsPlaybackVolumeValue": "{value}%",
+    "@settingsPlaybackVolumeValue": {
+        "description": "Value shown next to the in-app volume slider.",
+        "placeholders": {
+            "value": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsPlaybackSectionBehaviour": "Comportement",
+    "@settingsPlaybackSectionBehaviour": {
+        "description": "Section label above the sleep timer and headphone options on the playback subpage."
+    },
+    "settingsPlaybackSleepTimer": "Minuterie de mise en veille",
+    "@settingsPlaybackSleepTimer": {
+        "description": "Row for stopping playback after a set time. Currently marked as planned."
+    },
+    "settingsPlaybackResumeOnConnect": "Reprendre lors de la connection d'écouteurs",
+    "@settingsPlaybackResumeOnConnect": {
+        "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+    },
+    "settingsPlaybackPauseOnDisconnect": "Mettre en pause lorsque déconnecté",
+    "@settingsPlaybackPauseOnDisconnect": {
+        "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+    },
+    "settingsEqPresetFlat": "Plat",
+    "@settingsEqPresetFlat": {
+        "description": "Equalizer preset, every band at zero."
+    },
+    "settingsEqPresetBass": "Basse",
+    "@settingsEqPresetBass": {
+        "description": "Equalizer preset, lifts the lows."
+    },
+    "settingsEqPresetTreble": "Aigus",
+    "@settingsEqPresetTreble": {
+        "description": "Equalizer preset, lifts the highs."
+    },
+    "settingsEqPresetVocal": "Voix",
+    "@settingsEqPresetVocal": {
+        "description": "Equalizer preset, lifts the mids where voices sit."
+    },
+    "settingsEqPresetRock": "Rock",
+    "@settingsEqPresetRock": {
+        "description": "Equalizer preset, lifts the lows and highs."
+    },
+    "settingsEqPresetElectronic": "Électronique",
+    "@settingsEqPresetElectronic": {
+        "description": "Equalizer preset for electronic music, lifts the lows and highs."
+    },
+    "settingsEqPresetBrainFryer": "Grille-cerveau",
+    "@settingsEqPresetBrainFryer": {
+        "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
+    },
+    "settingsEqPresetFryerUltimate": "Grillage Ultime",
+    "@settingsEqPresetFryerUltimate": {
+        "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
+    },
+    "settingsEqPresetCustom": "Personnalisé",
+    "@settingsEqPresetCustom": {
+        "description": "Shown instead of a preset name when the curve matches none of them."
+    },
+    "settingsEqTitle": "Égaliseur",
+    "@settingsEqTitle": {
+        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+    },
+    "settingsEqEnable": "Égaliseur",
+    "@settingsEqEnable": {
+        "description": "Toggle that switches the equalizer on and off."
+    },
+    "settingsEqEnableSubtitle": "Appliqué à partir de la chaîne du filtre mpv",
+    "@settingsEqEnableSubtitle": {
+        "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
+    },
+    "settingsEqSectionPreset": "Préréglage",
+    "@settingsEqSectionPreset": {
+        "description": "Section label above the preset chips on the equalizer subpage."
+    },
+    "settingsEqSectionEffects": "Effets",
+    "@settingsEqSectionEffects": {
+        "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
+    },
+    "settingsEqBassBoost": "Boost de la basse",
+    "@settingsEqBassBoost": {
+        "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
+    },
+    "settingsEqSpeed": "Vitesse",
+    "@settingsEqSpeed": {
+        "description": "Slider controlling playback rate without changing pitch."
     }
 }
