@@ -27,6 +27,13 @@
   ],
   "French": [
     {
+      "name": "Novex",
+      "username": "novex_",
+      "github": "novexd",
+      "codeContributor": false,
+      "profileUrl": "https://hosted.weblate.org/user/novex_/"
+    },
+    {
       "name": "Zartiny",
       "username": "Zartiny",
       "github": "Zartiny",
