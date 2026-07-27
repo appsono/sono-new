@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
       final colors = (bytes == null || bytes.isEmpty)
           ? PlayerColors.fallback
           : await PlayerColors.fromImageBytes(bytes);
-      if (mounted || song.id != _tintSongId) return;
+      if (!mounted || song.id != _tintSongId) return;
 
       setState(() => _tintColors = colors);
     } catch (_) {
