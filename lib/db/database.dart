@@ -384,6 +384,32 @@ class SonoDatabase extends _$SonoDatabase {
     }).toList();
   }
 
+  Future<List<AlbumWithArtistViewData>> getRandomAlbumsWithArtists(
+    int limit,
+  ) async {
+    final rows =
+        await (select(albums).join([
+                leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+              ])
+              ..orderBy([OrderingTerm.random()])
+              ..limit(limit))
+            .get();
+    return rows.map((row) {
+      final a = row.readTable(albums);
+      final ar = row.readTableOrNull(artists);
+      final shown = (a.displayTitle != null && a.displayTitle!.isNotEmpty)
+          ? a.displayTitle!
+          : a.title;
+      return AlbumWithArtistViewData(
+        id: a.id,
+        title: shown,
+        artistId: a.artistId,
+        artistName: ar?.name,
+        favoritedAt: a.favoritedAt,
+      );
+    }).toList();
+  }
+
   /// Fetch as single albums cover on demand
   Future<Uint8List?> getAlbumCover(int albumId) async {
     final row =
