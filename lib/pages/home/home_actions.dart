@@ -72,7 +72,7 @@ class _ActionButton extends StatelessWidget {
 
     final bgColor = filled
         ? (isDark ? colors.textPrimary : colors.textDark)
-        : Colors.transparent;
+        : colors.bgContainer;
     final fgColor = filled
         ? (isDark ? colors.textDark : colors.textLight)
         : colors.textPrimary;
@@ -87,7 +87,7 @@ class _ActionButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(SonoSizes.borderRadius),
           border: filled
               ? null
-              : Border.all(color: colors.borderLight20, width: 1.5),
+              : Border.all(color: colors.borderLight10, width: 2),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
