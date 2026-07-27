@@ -287,7 +287,12 @@ class _HomePageState extends State<HomePage> {
                   child: SonoSection(
                     title: l.homeSectionRecentlyAdded,
                     titleStyle: const TextStyle(fontSize: 20),
-                    onSeeAll: () => _push(SongsPage(db: widget.db)),
+                    onSeeAll: () => _push(
+                      SongsPage(
+                        db: widget.db,
+                        source: SongListSource.recentlyAdded,
+                      ),
+                    ),
                     itemExtent: _recentCardH,
                     children: [
                       for (final (i, s) in _recent!.indexed)
