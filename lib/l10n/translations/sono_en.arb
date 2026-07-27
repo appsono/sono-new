@@ -700,6 +700,14 @@
   "@settingsAppearanceSectionPlayer": {
     "description": "Section label above the player appearance options on the appearance subpage."
   },
+  "settingsAppearanceHomeTint": "Home tint",
+  "@settingsAppearanceHomeTint": {
+    "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
+  },
+  "settingsAppearanceHomeTintSubtitle": "Tint the home top with the current song's colours",
+  "@settingsAppearanceHomeTintSubtitle": {
+    "description": "Subtitle under the home tint row."
+  },
   "settingsAppearanceColourFromArt": "Colour from album art",
   "@settingsAppearanceColourFromArt": {
     "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."

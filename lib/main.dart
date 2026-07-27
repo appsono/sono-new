@@ -36,6 +36,7 @@ import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/smtc_service.dart';
 import 'package:sono/services/update_service.dart';
 import 'package:sono/services/theme_service.dart';
+import 'package:sono/services/appearance_service.dart';
 
 import 'package:sono/theme/theme.dart';
 
@@ -78,6 +79,7 @@ void main() async {
   AudioEffectsService.instance.attachDb(db);
   LocaleService.instance.attachDb(db);
   ThemeService.instance.attachDb(db);
+  AppearanceService.instance.attachDb(db);
 
   //only locale and theme gate first frame
   await Future.wait([
@@ -101,6 +103,7 @@ void main() async {
   //keystore reads (discord) are slow on android
   //and must NOT block startup
   unawaited(AudioEffectsService.instance.loadSettings());
+  unawaited(AppearanceService.instance.loadSaved());
 
   DiscordRpcService.instance.attachDb(db);
   unawaited(DiscordRpcService.instance.loadState());

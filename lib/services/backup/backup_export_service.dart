@@ -30,6 +30,7 @@ class BackupExportService {
   static const exportableSettingKeys = {
     'app.locale',
     'theme.mode',
+    'home.tint',
     'library.albumGrouping',
     'scan.excludedPaths',
     'scan.additionalPaths',

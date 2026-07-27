@@ -20,6 +20,7 @@ import 'package:sono/pages/home/home_actions.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
 import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 import 'package:sono/pages/player/player_colors.dart';
+import 'package:sono/services/appearance_service.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/services/covers/cover_thumbs.dart';
 import 'package:sono/theme/icons.dart';
@@ -122,16 +123,22 @@ class _HomePageState extends State<HomePage> {
         children: [
           // ==== tint ====
           if (tint != null)
-            AnimatedBuilder(
-              animation: _scroll,
-              builder: (context, _) {
-                final offset = _scroll.hasClients ? _scroll.offset : 0.0;
-                return Positioned(
-                  top: -offset,
-                  left: 0,
-                  right: 0,
-                  height: topInset + _gradientReach,
-                  child: IgnorePointer(child: _TopTint(colors: tint)),
+            ValueListenableBuilder<bool>(
+              valueListenable: AppearanceService.homeTintNotifier,
+              builder: (context, enabled, _) {
+                if (!enabled) return const SizedBox.shrink();
+                return AnimatedBuilder(
+                  animation: _scroll,
+                  builder: (context, _) {
+                    final offset = _scroll.hasClients ? _scroll.offset : 0.0;
+                    return Positioned(
+                      top: -offset,
+                      left: 0,
+                      right: 0,
+                      height: topInset + _gradientReach,
+                      child: IgnorePointer(child: _TopTint(colors: tint)),
+                    );
+                  },
                 );
               },
             ),
