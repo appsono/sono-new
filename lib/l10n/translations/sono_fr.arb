@@ -26,7 +26,7 @@
     "@commonAddToPlaylist": {
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
-    "navHome": "acceuil",
+    "navHome": "Acceuil",
     "navLibrary": "Bibliothèque",
     "navSearch": "Rechercher",
     "homeActionCreatePlaylist": "Créer une playlist",
@@ -39,7 +39,7 @@
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
     },
-    "homeGreetingMorning": "salut",
+    "homeGreetingMorning": "Salut",
     "@homeGreetingMorning": {
         "description": "Greeting shown roughly 06:00–11:00"
     },
@@ -47,19 +47,19 @@
     "@homeGreetingMidday": {
         "description": "Greeting shown roughly 11:00–14:00"
     },
-    "homeGreetingAfternoon": "coucou",
+    "homeGreetingAfternoon": "Coucou",
     "@homeGreetingAfternoon": {
         "description": "Greeting shown roughly 14:00–17:00"
     },
-    "homeGreetingEvening": "bon soir",
+    "homeGreetingEvening": "Bonsoir",
     "@homeGreetingEvening": {
         "description": "Greeting shown roughly 17:00–20:00"
     },
-    "homeGreetingNight": "bonne nuit lol",
+    "homeGreetingNight": "Bonne nuit lol",
     "@homeGreetingNight": {
         "description": "Greeting shown roughly 20:00–24:00"
     },
-    "homeGreetingLate": "eh va dormir laaaa",
+    "homeGreetingLate": "Eh va dormir là",
     "@homeGreetingLate": {
         "description": "Greeting shown roughly 00:00–04:00"
     },
@@ -476,7 +476,7 @@
     "@commonSeeAll": {
         "description": "Affordance in a section header that opens the full list of matches for that category."
     },
-    "changelogTitle": "nouveautés",
+    "changelogTitle": "Nouveautés",
     "@changelogTitle": {
         "description": "Heading of the changelog modal opened from the news/updates button in the home and library headers. Shows the latest release notes."
     },
@@ -512,7 +512,7 @@
     "@searchRecentClear": {
         "description": "Action that removes all saved recent searches at once."
     },
-    "searchRecentRemove": "Retirer",
+    "searchRecentRemove": "Supprimer",
     "@searchRecentRemove": {
         "description": "Accessibility label for the button that removes a single recent search term from the list."
     },
@@ -1333,7 +1333,7 @@
     "@settingsUpdateSheetSkip": {
         "description": "Action that dismisses a release so it stops being announced."
     },
-    "settingsUpdateSheetSkipSubtitle": "Arrête la bannière pour cette version",
+    "settingsUpdateSheetSkipSubtitle": "Arrête le pop-up pour cette version",
     "@settingsUpdateSheetSkipSubtitle": {
         "description": "Subtitle under the skip action in the update sheet."
     },
@@ -1368,5 +1368,108 @@
     "settingsAboutLicences": "Licenses",
     "@settingsAboutLicences": {
         "description": "Row that opens the licence list, covering Sono and every dependency."
+    },
+    "settingsAboutKofiSubtitle": "Paie pour la clé de signature et beaucoup de café",
+    "@settingsAboutKofiSubtitle": {
+        "description": "Subtitle under the Ko-fi row."
+    },
+    "settingsAboutFooterBuilt": "Construit par mathiiis",
+    "@settingsAboutFooterBuilt": {
+        "description": "First footer line on the about page. The name is a username and stays as is."
+    },
+    "contributorsPlaceholder": "ça pourrait être toi",
+    "@contributorsPlaceholder": {
+        "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
+    },
+    "migrationFoundTitle": "Données de l'ancien Sono",
+    "@migrationFoundTitle": {
+        "description": "Title of the sheet offering to import data from the previous Sono install."
+    },
+    "migrationFoundBody": "Votre installation précédente a encore des données sur cet appareil.",
+    "@migrationFoundBody": {
+        "description": "Body text above the counts in the migration sheet."
+    },
+    "migrationCountLiked": "{count, plural, =0{aucun j'aime} =1{1 j'aime} other{{count} j'aimes}}",
+    "@migrationCountLiked": {
+        "description": "Liked song count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountAlbums": "{count, plural, =0{aucun album} =1{1 album} other{{count} albums}}",
+    "@migrationCountAlbums": {
+        "description": "Favorite album count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountArtists": "{count, plural, =0{aucun artiste} =1{1 artiste} other{{count} artistes}}",
+    "@migrationCountArtists": {
+        "description": "Favorite artist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountPlaylists": "{count, plural, =0{aucunes playlists} =1{1 playlist} other{{count} playlists}}",
+    "@migrationCountPlaylists": {
+        "description": "Playlist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationImport": "Importer",
+    "@migrationImport": {
+        "description": "Action confirming the import in the migration sheet."
+    },
+    "migrationLater": "Pas maintenant",
+    "@migrationLater": {
+        "description": "Action dismissing the migration sheet until the next launch."
+    },
+    "migrationNever": "Ne plus demander",
+    "@migrationNever": {
+        "description": "Action permanently dismissing the migration sheet without importing."
+    },
+    "migrationDone": "Imported {liked, plural, =0{aucun j'aime} =1{1 j'aime} other{{liked} j'aimes}}, {albums, plural, =0{aucun album} =1{1 album} other{{albums} albums}}, {artists, plural, =0{aucun artiste} =1{1 artiste} other{{artists} artistes}}, {playlists, plural, =0{aucunes playlists} =1{1 playlist} other{{playlists} playlists}} :D",
+    "@migrationDone": {
+        "description": "Snackbar summarising a successful migration from the old Sono.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationDoneNothing": "Rien n'a pu être importé de l'ancien Sono :/",
+    "@migrationDoneNothing": {
+        "description": "Snackbar shown when a migration ran but matched nothing on this device."
+    },
+    "migrationUnresolved": "{count, plural, =1{1 musique n'était} other{{count} musiques n'étaient}} pas sur cet appareil",
+    "@migrationUnresolved": {
+        "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationFailed": "Importation de l'ancien Sono échoué :/",
+    "@migrationFailed": {
+        "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
     }
 }
