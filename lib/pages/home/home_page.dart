@@ -20,16 +20,34 @@ import 'package:sono/pages/home/home_actions.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
 import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 import 'package:sono/pages/player/player_colors.dart';
+
 import 'package:sono/services/appearance_service.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/services/covers/cover_thumbs.dart';
+
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/theme.dart';
+
+import 'package:sono/pages/library/subpages/songs_page.dart';
+
 import 'package:sono/widgets/changelog_sheet.dart';
 import 'package:sono/widgets/header.dart';
+import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/widgets/section.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
-const double _gradientReach = 240;
+const double _gradientReach = 200;
+
+const int _recentLimit = 10;
+const String _newSeenKey = 'home.newSeenId';
+
+//recently added card geometry
+const double _recentCardW = 120;
+const double _recentCardH = 150;
+
+//swap to compare two scrim styles on device
+const bool _recentScrimThemeAware = false;
 
 // WIP HomePage redesign
 class HomePage extends StatefulWidget {
@@ -53,12 +71,16 @@ class _HomePageState extends State<HomePage> {
 
   //backs shuffle all only
   List<SongWithArtistViewData>? _songs;
+  List<SongWithArtistViewData>? _recent;
 
   // ==== top tint ====
   // palette from last played song. null until first play, retained after
   PlayerColors? _tintColors;
   StreamSubscription<Song?>? _songSub;
   int? _tintSongId;
+
+  // ==== recently added ====
+  Set<int> _newIds = {};
 
   @override
   void initState() {
@@ -83,8 +105,32 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _load() async {
     final songs = await widget.db.getAllSongsWithArtists();
+
+    //newest first, capped at section limit
+    final recent = songs.reversed.take(_recentLimit).toList();
+
+    //watermark: unset on first ever load means seed silently
+    final raw = await widget.db.getSetting(_newSeenKey);
+    final seen = int.tryParse(raw ?? '') ?? -1;
+    final maxId = songs.isEmpty
+        ? seen
+        : songs.map((s) => s.id).reduce((a, b) => a > b ? a : b);
+    final newIds = raw == null
+        ? <int>{}
+        : {
+            for (final s in recent)
+              if (s.id > seen) s.id,
+          };
+    if (maxId > seen) {
+      await widget.db.setSetting(_newSeenKey, maxId.toString());
+    }
+
     if (!mounted) return;
-    setState(() => _songs = songs);
+    setState(() {
+      _songs = songs;
+      _recent = recent;
+      _newIds = newIds;
+    });
   }
 
   //cover thumb > palette
@@ -110,6 +156,21 @@ class _HomePageState extends State<HomePage> {
 
   void _push(Widget page) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+  }
+
+  void _playRecent(int index) {
+    final recent = _recent;
+    if (recent == null || recent.isEmpty) return;
+    final l = AppLocalizations.of(context);
+    final queue = [for (final s in recent) s.toSong()];
+    AudioService.instance.play(
+      queue,
+      index,
+      origin: QueueOrigin(
+        source: QueueSource.recentlyAdded,
+        label: l.homeSectionRecentlyAdded,
+      ),
+    );
   }
 
   @override
@@ -211,6 +272,26 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
+              // ==== recently added ====
+              if (_recent != null && _recent!.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.homeSectionRecentlyAdded,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    onSeeAll: () => _push(SongsPage(db: widget.db)),
+                    itemExtent: _recentCardH,
+                    children: [
+                      for (final (i, s) in _recent!.indexed)
+                        _RecentCard(
+                          song: s,
+                          isNew: _newIds.contains(s.id),
+                          unknown: l.commonUnknown,
+                          onTap: () => _playRecent(i),
+                        ),
+                    ],
+                  ),
+                ),
+
               // ==== bottom clearance ====
               const SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
             ],
@@ -242,6 +323,136 @@ class _TopTint extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [top, top.withValues(alpha: 0)],
+        ),
+      ),
+    );
+  }
+}
+
+class _RecentCard extends StatelessWidget {
+  final SongWithArtistViewData song;
+  final bool isNew;
+  final String unknown;
+  final VoidCallback onTap;
+
+  const _RecentCard({
+    required this.song,
+    required this.isNew,
+    required this.unknown,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final radius = BorderRadius.circular(SonoSizes.borderRadiusSm);
+
+    //plain: black > transparent. theme aware: app bg > transparent
+    final scrimBase = _recentScrimThemeAware ? c.bgPrimary : c.textDark;
+    final onScrim = _recentScrimThemeAware ? c.textPrimary : c.textLight;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: _recentCardW,
+        height: _recentCardH,
+        child: ClipRRect(
+          borderRadius: radius,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // ==== cover fill ====
+              OverflowBox(
+                minWidth: _recentCardH,
+                maxWidth: _recentCardH,
+                minHeight: _recentCardH,
+                maxHeight: _recentCardH,
+                child: SonoCoverArt(
+                  path: song.path,
+                  size: _recentCardH,
+                  borderRadius: 0,
+                ),
+              ),
+
+              // ==== bottom scrim ====
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: _recentCardH * 0.6,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [scrimBase.withValues(alpha: 0), scrimBase],
+                    ),
+                  ),
+                ),
+              ),
+
+              // ==== title + artist ====
+              Positioned(
+                left: 8,
+                right: 8,
+                bottom: 8,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      song.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: SonoFonts.heading,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: onScrim,
+                      ),
+                    ),
+                    Text(
+                      song.displayArtist ?? song.artistName ?? unknown,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: SonoFonts.primary,
+                        fontSize: 11,
+                        color: onScrim.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // ==== new badge ====
+              if (isNew)
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: c.textLight,
+                      borderRadius: BorderRadius.circular(
+                        SonoSizes.borderRadiusSm,
+                      ),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context).homeNewBadge,
+                      style: TextStyle(
+                        fontFamily: SonoFonts.primary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                        color: c.textDark,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

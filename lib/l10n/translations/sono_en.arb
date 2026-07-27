@@ -209,6 +209,11 @@
   "homeSectionAlbums": "Albums",
   "homeSectionArtists": "Artists",
 
+  "homeNewBadge": "NEW",
+  "@homeNewBadge": {
+    "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+  },
+
   "homeGreetingEarlyBird": "Wow early bird",
   "homeGreetingMorning": "Morning",
   "homeGreetingMidday": "Midday",
