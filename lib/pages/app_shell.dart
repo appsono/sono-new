@@ -232,7 +232,11 @@ class _AppShellState extends State<AppShell> {
                 scanVersion: _scanVersion,
                 onOpenSettings: _openSettings,
               ),
-              SearchPage(db: widget.db, onOpenSettings: _openSettings),
+              SearchPage(
+                db: widget.db,
+                scanVersion: _scanVersion,
+                onOpenSettings: _openSettings,
+              ),
               LibraryPage(db: widget.db, onOpenSettings: _openSettings),
             ],
           ),

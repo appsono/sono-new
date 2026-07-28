@@ -51,8 +51,14 @@ const int _kGenreBrowseCap = 8;
 
 class SearchPage extends StatefulWidget {
   final SonoDatabase db;
+  final ValueNotifier<int>? scanVersion;
   final VoidCallback? onOpenSettings;
-  const SearchPage({required this.db, this.onOpenSettings, super.key});
+  const SearchPage({
+    required this.db,
+    this.scanVersion,
+    this.onOpenSettings,
+    super.key,
+  });
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -84,8 +90,16 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    widget.scanVersion?.addListener(_onLibraryChanged);
     _loadRecent();
     _loadGenres();
+  }
+
+  void _onLibraryChanged() {
+    _loadGenres();
+    final q = _query;
+    _cachedQuery = null;
+    if (q.isNotEmpty) _runSearch(q);
   }
 
   Future<void> _loadRecent() async {
@@ -107,6 +121,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void dispose() {
+    widget.scanVersion?.removeListener(_onLibraryChanged);
     _debounce?.cancel();
     _focus.dispose();
     _controller.dispose();
