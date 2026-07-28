@@ -30,24 +30,33 @@ import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
 
 import 'package:sono/pages/library/subpages/songs_page.dart';
+import 'package:sono/pages/library/subpages/albums_page.dart';
+import 'package:sono/pages/library/subpages/album_detail_page.dart';
 
 import 'package:sono/widgets/changelog_sheet.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/section.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
+import 'package:sono/widgets/media_card.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
-const double _gradientReach = 175;
+const double _gradientReach = 165;
 
 const int _recentLimit = 10;
 const String _newSeenKey = 'home.newSeenId';
 
-//recently added card geometry
+// ==== recently added ====
 const double _recentCardW = 125;
 const double _recentCardH = 165;
 
-const double _recentScrimMaxAlpha = 0.75;
+// ==== shared cover tiles ====
+const double _tileScrimMaxAlpha = 0.75;
+const double _tileScrimFraction = 0.6;
+
+// ==== albums bento ====
+const int _bentoLimit = 4;
+const double _bentoGap = 10;
 
 // WIP HomePage redesign
 class HomePage extends StatefulWidget {
@@ -81,6 +90,13 @@ class _HomePageState extends State<HomePage> {
 
   // ==== recently added ====
   Set<int> _newIds = {};
+
+  // ==== albums ====
+  // kept for process lifetime
+  static List<AlbumWithArtistViewData>? _bentoAlbums;
+  // when library has too few albums
+  List<AlbumWithArtistViewData>? _albumsFallback;
+  Map<int, String>? _albumCoverPaths;
 
   @override
   void initState() {
@@ -125,11 +141,23 @@ class _HomePageState extends State<HomePage> {
       await widget.db.setSetting(_newSeenKey, maxId.toString());
     }
 
+    //pick once per launch
+    final bento = _bentoAlbums ??= await widget.db.getRandomAlbumsWithArtists(
+      _bentoLimit,
+    );
+    //fewer albums than needed, show plain list instead
+    final fallback = bento.length < _bentoLimit
+        ? await widget.db.getAllAlbumsWithArtists()
+        : null;
+    final albumCovers = await widget.db.getAlbumCoverPaths();
+
     if (!mounted) return;
     setState(() {
       _songs = songs;
       _recent = recent;
       _newIds = newIds;
+      _albumsFallback = fallback;
+      _albumCoverPaths = albumCovers;
     });
   }
 
@@ -171,6 +199,68 @@ class _HomePageState extends State<HomePage> {
         label: l.homeSectionRecentlyAdded,
       ),
     );
+  }
+
+  /// albums section: bento when library has enough, plain list otherwise
+  List<Widget> _albumSlivers(AppLocalizations l) {
+    final covers = _albumCoverPaths;
+    if (covers == null) return const [];
+
+    final bento = _bentoAlbums;
+    final fallback = _albumsFallback;
+
+    Widget body;
+    if (bento != null && bento.length >= _bentoLimit) {
+      body = Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SonoSectionHeader(
+            title: l.homeSectionAlbums,
+            titleStyle: const TextStyle(fontSize: 20),
+            onSeeAll: () => _push(AlbumsPage(db: widget.db)),
+          ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _AlbumBento(
+              albums: bento,
+              coverPaths: covers,
+              unknownArtist: l.commonUnknownArtist,
+              onOpen: (a) =>
+                  _push(AlbumDetailPage(db: widget.db, albumId: a.id)),
+            ),
+          ),
+        ],
+      );
+    } else if (fallback != null && fallback.isNotEmpty) {
+      body = SonoSection(
+        title: l.homeSectionAlbums,
+        titleStyle: const TextStyle(fontSize: 20),
+        onSeeAll: () => _push(AlbumsPage(db: widget.db)),
+        itemExtent: 168,
+        children: [
+          for (final a in fallback)
+            SonoMediaCard(
+              path: covers[a.id] ?? '',
+              title: a.title,
+              subtitle: a.artistName ?? l.commonUnknownArtist,
+              bordered: true,
+              titleStyle: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+              onTap: () => _push(AlbumDetailPage(db: widget.db, albumId: a.id)),
+            ),
+        ],
+      );
+    } else {
+      return const [];
+    }
+
+    return [
+      const SliverToBoxAdapter(child: SizedBox(height: 24)),
+      SliverToBoxAdapter(child: body),
+    ];
   }
 
   @override
@@ -296,15 +386,26 @@ class _HomePageState extends State<HomePage> {
                     itemExtent: _recentCardH,
                     children: [
                       for (final (i, s) in _recent!.indexed)
-                        _RecentCard(
-                          song: s,
-                          isNew: _newIds.contains(s.id),
-                          unknown: l.commonUnknown,
+                        _CoverTile(
+                          coverPath: s.path,
+                          title: s.title,
+                          subtitle:
+                              s.displayArtist ??
+                              s.artistName ??
+                              l.commonUnknown,
+                          width: _recentCardW,
+                          height: _recentCardH,
+                          badge: _newIds.contains(s.id)
+                              ? const _NewBadge()
+                              : null,
                           onTap: () => _playRecent(i),
                         ),
                     ],
                   ),
                 ),
+
+              // ==== albums ====
+              ..._albumSlivers(l),
 
               // ==== bottom clearance ====
               const SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
@@ -343,17 +444,25 @@ class _TopTint extends StatelessWidget {
   }
 }
 
-class _RecentCard extends StatelessWidget {
-  final SongWithArtistViewData song;
-  final bool isNew;
-  final String unknown;
+/// ==== cover tile ====
+/// shared tile for recently added and album bento
+class _CoverTile extends StatelessWidget {
+  final String coverPath;
+  final String title;
+  final String subtitle;
+  final double width;
+  final double height;
+  final Widget? badge;
   final VoidCallback onTap;
 
-  const _RecentCard({
-    required this.song,
-    required this.isNew,
-    required this.unknown,
+  const _CoverTile({
+    required this.coverPath,
+    required this.title,
+    required this.subtitle,
+    required this.width,
+    required this.height,
     required this.onTap,
+    this.badge,
   });
 
   @override
@@ -365,11 +474,14 @@ class _RecentCard extends StatelessWidget {
     final scrimBase = c.textDark;
     final onScrim = c.textLight;
 
+    //cover must use max dimension to fill rect
+    final coverSide = width > height ? width : height;
+
     return BouncyTap(
       onTap: onTap,
       child: SizedBox(
-        width: _recentCardW,
-        height: _recentCardH,
+        width: width,
+        height: height,
         child: Container(
           foregroundDecoration: BoxDecoration(
             borderRadius: radius,
@@ -385,13 +497,13 @@ class _RecentCard extends StatelessWidget {
               children: [
                 // ==== cover fill ====
                 OverflowBox(
-                  minWidth: _recentCardH,
-                  maxWidth: _recentCardH,
-                  minHeight: _recentCardH,
-                  maxHeight: _recentCardH,
+                  minWidth: coverSide,
+                  maxWidth: coverSide,
+                  minHeight: coverSide,
+                  maxHeight: coverSide,
                   child: SonoCoverArt(
-                    path: song.path,
-                    size: _recentCardH,
+                    path: coverPath,
+                    size: coverSide,
                     borderRadius: 0,
                   ),
                 ),
@@ -400,31 +512,31 @@ class _RecentCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: _recentCardH * 0.6,
+                    height: height * _tileScrimFraction,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
                           scrimBase.withValues(alpha: 0),
-                          scrimBase.withValues(alpha: _recentScrimMaxAlpha),
+                          scrimBase.withValues(alpha: _tileScrimMaxAlpha),
                         ],
                       ),
                     ),
                   ),
                 ),
 
-                // ==== title + artist ====
+                // ==== title + subtitle ====
                 Positioned(
-                  left: 8,
-                  right: 8,
+                  left: 10,
+                  right: 10,
                   bottom: 8,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        song.title,
+                        title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -435,7 +547,7 @@ class _RecentCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        song.displayArtist ?? song.artistName ?? unknown,
+                        subtitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -448,39 +560,106 @@ class _RecentCard extends StatelessWidget {
                   ),
                 ),
 
-                // ==== new badge ====
-                if (isNew)
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: c.textLight,
-                        borderRadius: BorderRadius.circular(
-                          SonoSizes.borderRadiusSm,
-                        ),
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context).homeNewBadge,
-                        style: TextStyle(
-                          fontFamily: SonoFonts.primary,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                          color: c.textDark,
-                        ),
-                      ),
-                    ),
-                  ),
+                // ==== badge ====
+                if (badge != null) Positioned(top: 8, left: 8, child: badge!),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+/// ==== New Badge ====
+class _NewBadge extends StatelessWidget {
+  const _NewBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: c.textLight,
+        borderRadius: BorderRadius.circular(SonoSizes.borderRadiusSm),
+      ),
+      child: Text(
+        AppLocalizations.of(context).homeNewBadge,
+        style: TextStyle(
+          fontFamily: SonoFonts.primary,
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.5,
+          color: c.textDark,
+        ),
+      ),
+    );
+  }
+}
+
+/// ==== ALbums Bento ====
+///
+/// fixed for tile bento layout
+/// > large square left
+/// > two stacked half tiles right
+/// > full width bottom strip
+class _AlbumBento extends StatelessWidget {
+  final List<AlbumWithArtistViewData> albums;
+  final Map<int, String> coverPaths;
+  final String unknownArtist;
+  final void Function(AlbumWithArtistViewData album) onOpen;
+
+  const _AlbumBento({
+    required this.albums,
+    required this.coverPaths,
+    required this.unknownArtist,
+    required this.onOpen,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final w = constraints.maxWidth;
+        final big = (w - _bentoGap) / 2;
+        final half = (big - _bentoGap) / 2;
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _tile(albums[0], big, big),
+                SizedBox(width: _bentoGap),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _tile(albums[1], big, half),
+                    SizedBox(height: _bentoGap),
+                    _tile(albums[2], big, half),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: _bentoGap),
+            _tile(albums[3], w, half),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _tile(AlbumWithArtistViewData album, double w, double h) {
+    return _CoverTile(
+      coverPath: coverPaths[album.id] ?? '',
+      title: album.title,
+      subtitle: album.artistName ?? unknownArtist,
+      width: w,
+      height: h,
+      onTap: () => onOpen(album),
     );
   }
 }

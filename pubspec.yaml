@@ -27,6 +27,7 @@ dependencies:
   audio_service: ^0.18.18
   audio_service_mpris: ^0.2.1 #linux MPRIS2 media session
   smtc_windows: ^1.1.0 #windows system media transport controls
+  audio_session: ^0.2.2
 
   # db stuff
   drift: ^2.32.0
@@ -35,7 +36,6 @@ dependencies:
   sqlite3_flutter_libs: ^0.6.0+eol
   path_provider: ^2.1.5
   path: ^1.9.1
-  audio_session: ^0.2.2
   rxdart: ^0.28.0
 
   # image stuff
