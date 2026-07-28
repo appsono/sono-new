@@ -41,7 +41,19 @@ import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/media_card.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
+
 const double _gradientReach = 165;
+
+enum _TintTone { background, surface, accent }
+
+const _TintTone _tintTone = _TintTone.surface;
+
+//tint base plus palettes own matching text color for that one
+({Color base, Color onBase}) _tintPair(PlayerColors c) => switch (_tintTone) {
+  _TintTone.background => (base: c.background, onBase: c.onBackground),
+  _TintTone.surface => (base: c.surface, onBase: c.onSurface),
+  _TintTone.accent => (base: c.accent, onBase: c.onAccent),
+};
 
 const int _recentLimit = 10;
 const String _newSeenKey = 'home.newSeenId';
@@ -427,10 +439,7 @@ class _TopTint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //nudge surface toward accent so album reads through
-    final top = Color.alphaBlend(
-      colors.accent.withValues(alpha: 0.18),
-      colors.surface,
-    );
+    final top = _tintPair(colors).base;
 
     return DecoratedBox(
       decoration: BoxDecoration(
