@@ -31,6 +31,8 @@
 - ~~Create the different views (albums, artists, etc.)~~ **DONE**
 - ~~Create Library Page~~ **DONE**
 - ~~Create Search Page~~ **DONE**
+- ~~Redesign Settings Page~~ **DONE**
+- ~~Redesign Home Page~~ **DONE**
 
 ## Features
 
@@ -41,15 +43,15 @@
 - Sleep timer: fade out or stop after N minutes / end of song / end of queue
 - Volume controls: more options to control song volume
   - ReplayGain
-  - In-app volume slider
+  - ~~In-app volume slider~~ **DONE**
 - Tag editor:
   - Edit multiple songs at once
   - Change album cover
 - Playlists:
   - Add a whole album or queue at once
   - Import / export (M3U)
-- Backup: export / import app data (likes, favorites, playlists, settings,
-  scan paths, etc.)
+- ~~Backup: export / import app data (likes, favorites, playlists, settings,
+  scan paths, etc.)~~ **DONE**
 
 ## Improvements (pre-UI)
 
