@@ -57,7 +57,7 @@
   },
   "commonShuffleAll": "Shuffle all",
   "@commonShuffleAll": {
-    "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form."
+    "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form. Please keep it short, there is limit space to use."
   },
   "commonRepeat": "Repeat",
   "@commonRepeat": {
