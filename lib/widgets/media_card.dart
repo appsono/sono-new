@@ -20,6 +20,7 @@ class SonoMediaCard extends StatefulWidget {
   final double size;
   final CoverShape shape;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
   final bool bordered;
@@ -31,6 +32,7 @@ class SonoMediaCard extends StatefulWidget {
     this.size = 120,
     this.shape = CoverShape.rounded,
     this.onTap,
+    this.onLongPress,
     this.titleStyle,
     this.subtitleStyle,
     this.bordered = false,
@@ -48,6 +50,7 @@ class _SonoMediaCardState extends State<SonoMediaCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
+      onLongPress: widget.onLongPress,
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) async {
         await Future.delayed(const Duration(milliseconds: 100));
