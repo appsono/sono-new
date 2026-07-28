@@ -151,7 +151,7 @@ class ScanService {
       pendingChunk.clear();
     }
 
-    if (!force) await db.removeDeletedSongs(allPaths);
+    await db.removeDeletedSongs(allPaths);
     await db.removeOrphanedAlbums();
     await db.removeOrphanedArtists();
     if (force) await db.restoreFavoritedAlbums(favSnapshot);
