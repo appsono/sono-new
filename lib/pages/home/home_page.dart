@@ -47,6 +47,7 @@ const double _gradientReach = 165;
 enum _TintTone { background, surface, accent }
 
 const _TintTone _tintTone = _TintTone.surface;
+const double _tintFadeDistance = 24;
 
 //tint base plus palettes own matching text color for that one
 ({Color base, Color onBase}) _tintPair(PlayerColors c) => switch (_tintTone) {
@@ -321,31 +322,46 @@ class _HomePageState extends State<HomePage> {
                   return ValueListenableBuilder<bool>(
                     valueListenable: AppearanceService.homeTintNotifier,
                     builder: (context, tintOn, _) {
-                      final fg = (tint != null && tintOn)
-                          ? context.sono.textLight
-                          : null;
-                      return SonoStickyHeader(
-                        child: SonoHeader(
-                          isHomePage: true,
-                          username: username,
-                          avatar: profile?.avatar,
-                          foregroundOverride: fg,
-                          onProfileTap: () {
-                            //will open sidebar later
-                          },
-                          actions: [
-                            SonoHeaderAction(
-                              icon: IconsSheet.bellOutlined,
-                              tooltip: l.homeHeaderNewsAndUpdates,
-                              onTap: () => ChangelogSheet.show(context),
+                      return AnimatedBuilder(
+                        animation: _scroll,
+                        builder: (context, _) {
+                          final offset = _scroll.hasClients
+                              ? _scroll.offset
+                              : 0.0;
+                          final t = (tint != null && tintOn)
+                              ? 1 - (offset / _tintFadeDistance).clamp(0.0, 1.0)
+                              : 0.0;
+                          final fg = t <= 0
+                              ? null
+                              : Color.lerp(
+                                  context.sono.textPrimary,
+                                  _tintPair(tint!).onBase,
+                                  t,
+                                );
+                          return SonoStickyHeader(
+                            child: SonoHeader(
+                              isHomePage: true,
+                              username: username,
+                              avatar: profile?.avatar,
+                              foregroundOverride: fg,
+                              onProfileTap: () {
+                                //will open sidebar later
+                              },
+                              actions: [
+                                SonoHeaderAction(
+                                  icon: IconsSheet.bellOutlined,
+                                  tooltip: l.homeHeaderNewsAndUpdates,
+                                  onTap: () => ChangelogSheet.show(context),
+                                ),
+                                SonoHeaderAction(
+                                  icon: IconsSheet.settingsOutlined,
+                                  tooltip: l.homeHeaderSettings,
+                                  onTap: () => widget.onOpenSettings?.call(),
+                                ),
+                              ],
                             ),
-                            SonoHeaderAction(
-                              icon: IconsSheet.settingsOutlined,
-                              tooltip: l.homeHeaderSettings,
-                              onTap: () => widget.onOpenSettings?.call(),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       );
                     },
                   );
