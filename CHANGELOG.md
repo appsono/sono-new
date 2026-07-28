@@ -7,7 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- Redesigned home page: gradient behind header taken from playing
+  song, Recently Added rail that badges songs added since page was
+  last opened, four album bento grid randomised on each launch, and artists rail
+  carried over from the old page
+- Added long press sheets to home page using LibrarySheets, for song, album,
+  and artists
+- Added home tint toggle to appearance settings
+- Added see all button style picker to appearance settings, offering
+  filled button, plain text, or text with an arrow
+
+### Changed
+
+- Changed status bar icons to follow colour behind them instead
+  of app theme
+
+### Fixed
+
+- Fixed songs excluded in settings staying in library until app restart,
+  because forced rescans skipped a step that removed "deleted" songs
+- Fixed search page keeping stale genres after rescan
+- Fixed an error on startup when playback was started from media
+  notification with app closed, which also skipped the library scan
+
+### Internal
+
+- Added a getRandomAlbumsWithArtists() db query with limit
+- Added SonoStatusBarStyle, which resolves system overlay style from a
+  backdrop colour, applied per page and app wide as a fallback
+- Added an AppearanceService owning appearance settings that are not part of
+  theme palette, mirroring ThemeService
+- Added appearance.home_tint and appearance.section_seeAllStyle to backup
+  allowlist
+- Split SonoSectionHeader and SonoSeeAll out of SonoSection
+- Moved PlayerColorsTween out of player_page into player_colors, shared by
+  fullscreen player and home tint
+- Added onLongPress callback to SonoMediaCard and foregroundOverride to
+  SonoHeader
 
 ## [0.11.0+12] - 2026-07-22
 
