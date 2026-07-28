@@ -45,18 +45,26 @@ const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 
 const double _gradientReach = 155;
 
+//tint source tone
 enum _TintTone { background, surface, accent }
 
-const _TintTone _tintTone = _TintTone.accent;
+const _TintTone _tintToneDark = _TintTone.surface;
+const _TintTone _tintToneLight = _TintTone.accent;
+
+//scroll distance before header text returns to theme colors
 const double _tintFadeDistance = 24;
+
 final ValueNotifier<bool> _tintAtTop = ValueNotifier(true);
 
 //tint base plus palettes own matching text color for that one
-({Color base, Color onBase}) _tintPair(PlayerColors c) => switch (_tintTone) {
-  _TintTone.background => (base: c.background, onBase: c.onBackground),
-  _TintTone.surface => (base: c.surface, onBase: c.onSurface),
-  _TintTone.accent => (base: c.accent, onBase: c.onAccent),
-};
+({Color base, Color onBase}) _tintPair(PlayerColors c, Brightness brightness) {
+  final tone = brightness == Brightness.dark ? _tintToneDark : _tintToneLight;
+  return switch (tone) {
+    _TintTone.background => (base: c.background, onBase: c.onBackground),
+    _TintTone.surface => (base: c.surface, onBase: c.onSurface),
+    _TintTone.accent => (base: c.accent, onBase: c.onAccent),
+  };
+}
 
 const int _recentLimit = 10;
 const String _newSeenKey = 'home.newSeenId';
@@ -345,7 +353,10 @@ class _HomePageState extends State<HomePage> {
                               ? null
                               : Color.lerp(
                                   context.sono.textPrimary,
-                                  _tintPair(tint!).onBase,
+                                  _tintPair(
+                                    tint!,
+                                    Theme.of(context).brightness,
+                                  ).onBase,
                                   t,
                                 );
                           return SonoStickyHeader(
@@ -461,7 +472,7 @@ class _HomePageState extends State<HomePage> {
         child: child,
         builder: (context, atTop, child) => SonoStatusBarStyle(
           background: (tint != null && tintOn && atTop)
-              ? _tintPair(tint).base
+              ? _tintPair(tint, Theme.of(context).brightness).base
               : null,
           child: child!,
         ),
@@ -480,7 +491,7 @@ class _TopTint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //nudge surface toward accent so album reads through
-    final top = _tintPair(colors).base;
+    final top = _tintPair(colors, Theme.of(context).brightness).base;
 
     return DecoratedBox(
       decoration: BoxDecoration(
