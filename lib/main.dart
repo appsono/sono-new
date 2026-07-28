@@ -82,10 +82,11 @@ void main() async {
   ThemeService.instance.attachDb(db);
   AppearanceService.instance.attachDb(db);
 
-  //only locale and theme gate first frame
+  //only locale, theme and appearance gate first frame
   await Future.wait([
     LocaleService.instance.loadSaved(),
     ThemeService.instance.loadSaved(),
+    AppearanceService.instance.loadSaved(),
   ]);
 
   PaintingBinding.instance.imageCache
@@ -104,7 +105,6 @@ void main() async {
   //keystore reads (discord) are slow on android
   //and must NOT block startup
   unawaited(AudioEffectsService.instance.loadSettings());
-  unawaited(AppearanceService.instance.loadSaved());
 
   DiscordRpcService.instance.attachDb(db);
   unawaited(DiscordRpcService.instance.loadState());
