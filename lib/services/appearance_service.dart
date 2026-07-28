@@ -14,17 +14,23 @@ import 'package:flutter/material.dart';
 
 import 'package:sono/db/database.dart';
 
+enum SeeAllStyle { button, text, arrow }
+
 /// Owns user appearance toggles that are not part of the theme palette
-///
-/// Listen to the notifiers to react directly when a toggle or flips
 class AppearanceService {
   AppearanceService._();
   static final AppearanceService instance = AppearanceService._();
 
-  static const _homeTintKey = 'home.tint';
+  static const _homeTintKey = 'appearance.home_tint';
+  static const _seeAllStyleKey = 'appearance.section_seeAllStyle';
 
   /// Wether the home header tint from current song is shown
   static final homeTintNotifier = ValueNotifier<bool>(true);
+
+  /// How every section header draws its see all control
+  static final seeAllStyleNotifier = ValueNotifier<SeeAllStyle>(
+    SeeAllStyle.button,
+  );
 
   SonoDatabase? _db;
   void attachDb(SonoDatabase db) => _db = db;
@@ -33,11 +39,24 @@ class AppearanceService {
   Future<void> loadSaved() async {
     final raw = await _db?.getSetting(_homeTintKey);
     homeTintNotifier.value = raw != 'false';
+
+    final style = await _db?.getSetting(_seeAllStyleKey);
+    seeAllStyleNotifier.value = switch (style) {
+      'text' => SeeAllStyle.text,
+      'arrow' => SeeAllStyle.arrow,
+      _ => SeeAllStyle.button,
+    };
   }
 
   /// Persist home tint toggle and repaint listeners
   Future<void> setHomeTint(bool enabled) async {
     homeTintNotifier.value = enabled;
     await _db?.setSetting(_homeTintKey, enabled.toString());
+  }
+
+  /// Persist see all style and repaint every section header
+  Future<void> setSeeAllStyle(SeeAllStyle style) async {
+    seeAllStyleNotifier.value = style;
+    await _db?.setSetting(_seeAllStyleKey, style.name);
   }
 }
