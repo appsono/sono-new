@@ -61,8 +61,6 @@ const double _tintFadeDistance = 24;
 //cross fade when playing song changes
 const Duration _tintMorphDuration = Duration(milliseconds: 600);
 
-final ValueNotifier<bool> _tintAtTop = ValueNotifier(true);
-
 //tint base plus palettes own matching text color for that one
 ({Color base, Color onBase}) _tintPair(PlayerColors c, Brightness brightness) {
   final tone = brightness == Brightness.dark ? _tintToneDark : _tintToneLight;
@@ -120,6 +118,7 @@ class _HomePageState extends State<HomePage> {
   PlayerColors? _tintColors;
   StreamSubscription<Song?>? _songSub;
   int? _tintSongId;
+  final ValueNotifier<bool> _tintAtTop = ValueNotifier(true);
 
   // ==== recently added ====
   Set<int> _newIds = {};
