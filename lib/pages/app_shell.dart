@@ -48,16 +48,20 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   int _tab = 0;
   final _scanProgress = ValueNotifier<ScanProgress?>(null);
   DateTime _lastProgressPush = DateTime.fromMillisecondsSinceEpoch(0);
   final _scanVersion = ValueNotifier<int>(0);
   UpdateInfo? _update;
 
+  //permission request deferref until next resume
+  bool _scanPending = false;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     AudioService.instance.attachDb(widget.db);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AudioService.instance.loadState();
@@ -96,9 +100,18 @@ class _AppShellState extends State<AppShell> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     SystemChrome.setSystemUIChangeCallback(null);
     _scanProgress.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed || !_scanPending) return;
+    //activity available, permission dialog can show
+    _scanPending = false;
+    _checkPermissionAndScan();
   }
 
   Future<void> _deleteBrokenGenre() async {
@@ -140,12 +153,25 @@ class _AppShellState extends State<AppShell> {
     if (mounted) setState(() => _update = null);
   }
 
-  Future<void> _checkPermissionAndScan({bool force = false}) async {
-    if (Platform.isAndroid) {
+  //permission requests wait until an activity exists
+  Future<bool> _ensureMediaPermission() async {
+    try {
+      if (await Permission.audio.isGranted ||
+          await Permission.storage.isGranted) {
+        return true;
+      }
       final audio = await Permission.audio.request();
       final storage = await Permission.storage.request();
-      if (!audio.isGranted && !storage.isGranted) return;
+      return audio.isGranted || storage.isGranted;
+    } on PlatformException catch (e) {
+      debugPrint('permission request deferred, no activity yet: $e');
+      _scanPending = true;
+      return false;
     }
+  }
+
+  Future<void> _checkPermissionAndScan({bool force = false}) async {
+    if (Platform.isAndroid && !await _ensureMediaPermission()) return;
     final config = await ScanSettings(widget.db).load();
     final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
     try {
@@ -161,7 +187,7 @@ class _AppShellState extends State<AppShell> {
         },
       );
     } catch (e, st) {
-      debugPrint('strtup scan failed: $e\n$st');
+      debugPrint('startup scan failed: $e\n$st');
     } finally {
       _scanProgress.value = null;
     }
