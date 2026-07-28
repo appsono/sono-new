@@ -32,7 +32,8 @@ import 'package:sono/theme/theme.dart';
 import 'package:sono/pages/library/subpages/songs_page.dart';
 import 'package:sono/pages/library/subpages/albums_page.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
-import 'package:sono/utils/status_bar_style.dart';
+import 'package:sono/pages/library/subpages/artists_page.dart';
+import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 
 import 'package:sono/widgets/changelog_sheet.dart';
 import 'package:sono/widgets/header.dart';
@@ -40,6 +41,8 @@ import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/section.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/media_card.dart';
+
+import 'package:sono/utils/status_bar_style.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 
@@ -84,6 +87,9 @@ const double _tileScrimFraction = 0.6;
 const int _bentoLimit = 4;
 const double _bentoGap = 10;
 
+// ====  artists ====
+const int _artistLimit = 10;
+
 // WIP HomePage redesign
 class HomePage extends StatefulWidget {
   final SonoDatabase db;
@@ -123,6 +129,11 @@ class _HomePageState extends State<HomePage> {
   // when library has too few albums
   List<AlbumWithArtistViewData>? _albumsFallback;
   Map<int, String>? _albumCoverPaths;
+
+  // ==== artists ====
+  List<Artist>? _artists;
+  Map<int, int>? _artistSongCounts;
+  Map<int, String>? _artistCoverPaths;
 
   @override
   void initState() {
@@ -185,6 +196,18 @@ class _HomePageState extends State<HomePage> {
         : null;
     final albumCovers = await widget.db.getAlbumCoverPaths();
 
+    final artists = await widget.db.getAllArtists();
+    final artistMeta = await widget.db.getArtistCoverAndCounts();
+    //most songs first
+    final shownArtists =
+        ([...artists]..sort(
+              (a, b) => (artistMeta[b.id]?.count ?? 0).compareTo(
+                artistMeta[a.id]?.count ?? 0,
+              ),
+            ))
+            .take(_artistLimit)
+            .toList();
+
     if (!mounted) return;
     setState(() {
       _songs = songs;
@@ -192,6 +215,13 @@ class _HomePageState extends State<HomePage> {
       _newIds = newIds;
       _albumsFallback = fallback;
       _albumCoverPaths = albumCovers;
+      _artists = shownArtists;
+      _artistCoverPaths = {
+        for (final e in artistMeta.entries) e.key: e.value.path,
+      };
+      _artistSongCounts = {
+        for (final e in artistMeta.entries) e.key: e.value.count,
+      };
     });
   }
 
@@ -465,6 +495,35 @@ class _HomePageState extends State<HomePage> {
 
               // ==== albums ====
               ..._albumSlivers(l),
+
+              // ==== artists ====
+              if (_artists != null && _artists!.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.homeSectionArtists,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    onSeeAll: () => _push(ArtistsPage(db: widget.db)),
+                    itemExtent: 168,
+                    children: _artists!.map((a) {
+                      final count = _artistSongCounts?[a.id] ?? 0;
+                      return SonoMediaCard(
+                        path: _artistCoverPaths?[a.id] ?? '',
+                        title: a.name,
+                        subtitle: l.commonSongsCount(count),
+                        bordered: true,
+                        shape: CoverShape.circle,
+                        titleStyle: Theme.of(
+                          context,
+                        ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+                        onTap: () => _push(
+                          ArtistDetailPage(db: widget.db, artistId: a.id),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
 
               // ==== bottom clearance ====
               const SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
