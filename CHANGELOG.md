@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal
 
 - Added a getRandomAlbumsWithArtists() db query with limit
+- Added a getRecentlyAddedSongs() db query with limit
 - Added SonoStatusBarStyle, which resolves system overlay style from a
   backdrop colour, applied per page and app wide as a fallback
 - Added an AppearanceService owning appearance settings that are not part of

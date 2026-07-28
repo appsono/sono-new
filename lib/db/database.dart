@@ -724,6 +724,16 @@ class SonoDatabase extends _$SonoDatabase {
     return q.get();
   }
 
+  /// Newest songs first, capped at [limit]
+  Future<List<SongWithArtistViewData>> getRecentlyAddedSongs(int limit) {
+    return (select(songWithArtistView)
+          ..orderBy([
+            (v) => OrderingTerm(expression: v.id, mode: OrderingMode.desc),
+          ])
+          ..limit(limit))
+        .get();
+  }
+
   /// case-insensitive LIKE on song title + artist name
   /// pass [limit] for capped sections
   /// raw %/_ in [query] act as LIKE wildcards

@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
 
     // ==== recently added ====
     //newest first, capped at section limit
-    final recent = songs.reversed.take(_recentLimit).toList();
+    final recent = await widget.db.getRecentlyAddedSongs(_recentLimit);
 
     //watermark: unset on first ever load means seed silently
     final raw = await widget.db.getSetting(_newSeenKey);
