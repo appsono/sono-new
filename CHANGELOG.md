@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed search page keeping stale genres after rescan
 - Fixed an error on startup when playback was started from media
   notification with app closed, which also skipped the library scan
+- Fixed mini player and nav bar sometimes sitting mid screen after opening the
+  app or returning from background
 
 ### Internal
 
