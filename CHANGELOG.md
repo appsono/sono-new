@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed mini player and nav bar sometimes sitting mid screen after opening the
   app or returning from background
 - Fixed the queue view briefly flashing into view when returning to the app
+- Fixed long translations of the create playlist label overflowing its button,
+  shuffle now drops to its icon when both labels no longer fit
 
 ### Internal
 
