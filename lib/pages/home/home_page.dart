@@ -168,6 +168,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _load() async {
     final songs = await widget.db.getAllSongsWithArtists();
 
+    // ==== recently added ====
     //newest first, capped at section limit
     final recent = songs.reversed.take(_recentLimit).toList();
 
@@ -187,16 +188,23 @@ class _HomePageState extends State<HomePage> {
       await widget.db.setSetting(_newSeenKey, maxId.toString());
     }
 
+    // ==== albums ====
     //pick once per launch
-    final bento = _bentoAlbums ??= await widget.db.getRandomAlbumsWithArtists(
-      _bentoLimit,
-    );
+    final albumCovers = await widget.db.getAlbumCoverPaths();
+
+    var bento = _bentoAlbums;
+    if (bento != null && !bento.every((a) => albumCovers.containsKey(a.id))) {
+      bento = null;
+    }
+    bento ??= await widget.db.getRandomAlbumsWithArtists(_bentoLimit);
+    _bentoAlbums = bento;
+
     //fewer albums than needed, show plain list instead
     final fallback = bento.length < _bentoLimit
         ? await widget.db.getAllAlbumsWithArtists()
         : null;
-    final albumCovers = await widget.db.getAlbumCoverPaths();
 
+    // ==== artists ====
     final artists = await widget.db.getAllArtists();
     final artistMeta = await widget.db.getArtistCoverAndCounts();
     //most songs first
