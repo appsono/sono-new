@@ -43,14 +43,6 @@ import 'package:sono/utils/status_bar_style.dart';
 
 enum _SubView { none, queue, lyrics }
 
-class _PlayerColorsTween extends Tween<PlayerColors> {
-  _PlayerColorsTween({required PlayerColors begin, required PlayerColors end})
-    : super(begin: begin, end: end);
-
-  @override
-  PlayerColors lerp(double t) => PlayerColors.lerp(begin!, end!, t);
-}
-
 class FullscreenPlayer extends StatefulWidget {
   final SonoDatabase db;
   const FullscreenPlayer({required this.db, super.key});
@@ -402,7 +394,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<PlayerColors>(
-      tween: _PlayerColorsTween(begin: _prevColors, end: _colors),
+      tween: PlayerColorsTween(begin: _prevColors, end: _colors),
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeOutCubic,
       builder: (contex, c, _) {

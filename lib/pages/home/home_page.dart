@@ -54,6 +54,9 @@ const _TintTone _tintToneLight = _TintTone.accent;
 //scroll distance before header text returns to theme colors
 const double _tintFadeDistance = 24;
 
+//cross fade when playing song changes
+const Duration _tintMorphDuration = Duration(milliseconds: 600);
+
 final ValueNotifier<bool> _tintAtTop = ValueNotifier(true);
 
 //tint base plus palettes own matching text color for that one
@@ -318,7 +321,14 @@ class _HomePageState extends State<HomePage> {
                       left: 0,
                       right: 0,
                       height: topInset + _gradientReach,
-                      child: IgnorePointer(child: _TopTint(colors: tint)),
+                      child: IgnorePointer(
+                        child: TweenAnimationBuilder<PlayerColors>(
+                          tween: PlayerColorsTween(begin: tint, end: tint),
+                          duration: _tintMorphDuration,
+                          curve: Curves.easeOutCubic,
+                          builder: (context, c, _) => _TopTint(colors: c),
+                        ),
+                      ),
                     );
                   },
                 );

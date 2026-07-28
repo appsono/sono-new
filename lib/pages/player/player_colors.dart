@@ -183,7 +183,7 @@ class PlayerColors {
 
   /// Linearly interpolates between two PlayerColors
   ///
-  /// Used by _PlayerColorsTween for smooth palette transitions
+  /// Used by [PlayerColorsTween] for smooth palette transitions
   static PlayerColors lerp(PlayerColors a, PlayerColors b, double t) {
     return PlayerColors(
       background: Color.lerp(a.background, b.background, t)!,
@@ -195,4 +195,15 @@ class PlayerColors {
       onAccent: Color.lerp(a.onAccent, b.onAccent, t)!,
     );
   }
+}
+
+/// Tween over a whole palette, so cover changes morph instead of snapping
+class PlayerColorsTween extends Tween<PlayerColors> {
+  PlayerColorsTween({
+    required PlayerColors super.begin,
+    required PlayerColors super.end,
+  });
+
+  @override
+  PlayerColors lerp(double t) => PlayerColors.lerp(begin!, end!, t);
 }
