@@ -19,6 +19,9 @@ import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/services/appearance_service.dart';
 
+const double _seeAllSize = 45;
+const double _seeAllLabelGap = 4;
+
 class SonoSection extends StatelessWidget {
   final String title;
   final TextStyle? titleStyle;
@@ -126,14 +129,20 @@ class SonoSeeAll extends StatelessWidget {
     final colors = context.sono;
     final l = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final labelStyle = TextStyle(
+      fontFamily: SonoFonts.primary,
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: colors.textSecondary,
+    );
 
     return switch (style) {
       // ==== filled circle ====
       SeeAllStyle.button => GestureDetector(
         onTap: onTap,
         child: Container(
-          width: 45,
-          height: 45,
+          width: _seeAllSize,
+          height: _seeAllSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: isDark ? colors.textLight : colors.textDark,
@@ -157,18 +166,8 @@ class SonoSeeAll extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         //keeps row height stable against 45px button
         child: SizedBox(
-          height: 45,
-          child: Center(
-            child: Text(
-              l.commonSeeAll,
-              style: TextStyle(
-                fontFamily: SonoFonts.primary,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: colors.textSecondary,
-              ),
-            ),
-          ),
+          height: _seeAllSize,
+          child: Center(child: Text(l.commonSeeAll, style: labelStyle)),
         ),
       ),
 
@@ -177,20 +176,12 @@ class SonoSeeAll extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: SizedBox(
-          height: 45,
+          height: _seeAllSize,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                l.commonSeeAll,
-                style: TextStyle(
-                  fontFamily: SonoFonts.primary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: colors.textSecondary,
-                ),
-              ),
-              const SizedBox(width: 4),
+              Text(l.commonSeeAll, style: labelStyle),
+              const SizedBox(width: _seeAllLabelGap),
               RotatedBox(
                 quarterTurns: 2,
                 child: IconsSheet.svg(
