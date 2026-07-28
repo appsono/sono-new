@@ -202,6 +202,9 @@
   },
 
   "homeActionCreatePlaylist": "Create Playlist",
+  @homeActionCreatePlaylist: {
+    "description": "Shown on the Home Pages's Create Playlist action. Please keep the string as short as possible."
+  }
   "homeHeaderNewsAndUpdates": "News & Updates",
   "homeHeaderSettings": "Settings",
 
