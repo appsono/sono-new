@@ -38,6 +38,7 @@ import 'package:sono/services/update_service.dart';
 import 'package:sono/services/theme_service.dart';
 import 'package:sono/services/appearance_service.dart';
 
+import 'package:sono/utils/status_bar_style.dart';
 import 'package:sono/theme/theme.dart';
 
 const kShots = bool.fromEnvironment('SONO_SHOTS');
@@ -169,19 +170,21 @@ class _SonoAppState extends State<SonoApp> with WidgetsBindingObserver {
               locale: locale,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: LocaleService.supportedLocales,
-              builder: !kShots
-                  ? null
-                  : (context, child) {
-                      const pad = EdgeInsets.only(top: 30, bottom: 18);
-                      return MediaQuery(
-                        data: MediaQuery.of(context).copyWith(
-                          padding: pad,
-                          viewPadding: pad,
-                          viewInsets: EdgeInsets.zero,
-                        ),
-                        child: child!,
-                      );
-                    },
+              builder: (context, child) {
+                Widget wrapped = SonoStatusBarStyle(child: child!);
+                if (kShots) {
+                  const pad = EdgeInsets.only(top: 30, bottom: 18);
+                  wrapped = MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      padding: pad,
+                      viewPadding: pad,
+                      viewInsets: EdgeInsets.zero,
+                    ),
+                    child: wrapped,
+                  );
+                }
+                return wrapped;
+              },
               home: AppShell(db: widget.db),
             );
           },

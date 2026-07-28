@@ -32,6 +32,7 @@ import 'package:sono/theme/theme.dart';
 import 'package:sono/pages/library/subpages/songs_page.dart';
 import 'package:sono/pages/library/subpages/albums_page.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/utils/status_bar_style.dart';
 
 import 'package:sono/widgets/changelog_sheet.dart';
 import 'package:sono/widgets/header.dart';
@@ -42,12 +43,13 @@ import 'package:sono/widgets/media_card.dart';
 
 const double _bottomInset = SonoSizes.playerHeight * 2 + 22 + 16;
 
-const double _gradientReach = 165;
+const double _gradientReach = 155;
 
 enum _TintTone { background, surface, accent }
 
-const _TintTone _tintTone = _TintTone.surface;
+const _TintTone _tintTone = _TintTone.accent;
 const double _tintFadeDistance = 24;
+final ValueNotifier<bool> _tintAtTop = ValueNotifier(true);
 
 //tint base plus palettes own matching text color for that one
 ({Color base, Color onBase}) _tintPair(PlayerColors c) => switch (_tintTone) {
@@ -116,6 +118,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _load();
     widget.scanVersion?.addListener(_load);
+    _scroll.addListener(_syncTintAtTop);
 
     final current = AudioService.instance.currentSong;
     if (current != null) _applyTint(current);
@@ -129,7 +132,14 @@ class _HomePageState extends State<HomePage> {
     widget.scanVersion?.removeListener(_load);
     _songSub?.cancel();
     _scroll.dispose();
+    _tintAtTop.dispose();
     super.dispose();
+  }
+
+  void _syncTintAtTop() {
+    final offset = _scroll.hasClients ? _scroll.offset : 0.0;
+    final atTop = offset < _tintFadeDistance / 2;
+    if (_tintAtTop.value != atTop) _tintAtTop.value = atTop;
   }
 
   Future<void> _load() async {
@@ -282,7 +292,7 @@ class _HomePageState extends State<HomePage> {
     final topInset = MediaQuery.paddingOf(context).top;
     final tint = _tintColors;
 
-    return Scaffold(
+    final scaffold = Scaffold(
       body: Stack(
         children: [
           // ==== tint ====
@@ -440,6 +450,21 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ],
+      ),
+    );
+
+    return ValueListenableBuilder<bool>(
+      valueListenable: AppearanceService.homeTintNotifier,
+      child: scaffold,
+      builder: (context, tintOn, child) => ValueListenableBuilder<bool>(
+        valueListenable: _tintAtTop,
+        child: child,
+        builder: (context, atTop, child) => SonoStatusBarStyle(
+          background: (tint != null && tintOn && atTop)
+              ? _tintPair(tint).base
+              : null,
+          child: child!,
+        ),
       ),
     );
   }

@@ -39,6 +39,7 @@ import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 import 'package:sono/pages/global/edit_tags_page.dart';
 //utils
 import 'package:sono/utils/format_ms.dart';
+import 'package:sono/utils/status_bar_style.dart';
 
 enum _SubView { none, queue, lyrics }
 
@@ -411,74 +412,77 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
             if (didPop) return;
             if (_subView != _SubView.none) _closeSubView();
           },
-          child: Scaffold(
-            backgroundColor: c.background,
-            body: Stack(
-              children: [
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TopBar(
+          child: SonoStatusBarStyle(
+            background: c.background,
+            child: Scaffold(
+              backgroundColor: c.background,
+              body: Stack(
+                children: [
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TopBar(
+                            c: c,
+                            onCollapse: () => Navigator.maybePop(context),
+                            onMore: _openTopBarMenu,
+                          ),
+                          const SizedBox(height: 42),
+                          CoverCarousel(c: c),
+                          const SizedBox(height: 42),
+                          TitleRow(
+                            c: c,
+                            liked: _liked,
+                            onToggleLike: _toggleLiked,
+                          ),
+                          const SizedBox(height: 34),
+                          ProgressBar(c: c),
+                          const SizedBox(height: 24),
+                          MainControls(c: c),
+                          const SizedBox(height: 60),
+                          SecondaryControls(
+                            c: c,
+                            onOpenQueue: _openQueue,
+                            onOpenLyrics: _openLyrics,
+                          ),
+
+                          const Spacer(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (_queueMounted)
+                    Positioned.fill(
+                      child: SlideTransition(
+                        position: _queueSlide,
+                        child: PlayerQueueView(
                           c: c,
-                          onCollapse: () => Navigator.maybePop(context),
-                          onMore: _openTopBarMenu,
-                        ),
-                        const SizedBox(height: 42),
-                        CoverCarousel(c: c),
-                        const SizedBox(height: 42),
-                        TitleRow(
-                          c: c,
+                          db: widget.db,
+                          slideAnimation: _queueCtrl,
+                          onClose: _closeSubView,
                           liked: _liked,
                           onToggleLike: _toggleLiked,
                         ),
-                        const SizedBox(height: 34),
-                        ProgressBar(c: c),
-                        const SizedBox(height: 24),
-                        MainControls(c: c),
-                        const SizedBox(height: 60),
-                        SecondaryControls(
+                      ),
+                    ),
+                  if (_lyricsMounted)
+                    Positioned.fill(
+                      child: SlideTransition(
+                        position: _lyricsSlide,
+                        child: PlayerLyricsView(
                           c: c,
-                          onOpenQueue: _openQueue,
-                          onOpenLyrics: _openLyrics,
+                          db: widget.db,
+                          slideAnimation: _lyricsCtrl,
+                          onClose: _closeSubView,
+                          liked: _liked,
+                          onToggleLike: _toggleLiked,
                         ),
-
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
-                ),
-                if (_queueMounted)
-                  Positioned.fill(
-                    child: SlideTransition(
-                      position: _queueSlide,
-                      child: PlayerQueueView(
-                        c: c,
-                        db: widget.db,
-                        slideAnimation: _queueCtrl,
-                        onClose: _closeSubView,
-                        liked: _liked,
-                        onToggleLike: _toggleLiked,
                       ),
                     ),
-                  ),
-                if (_lyricsMounted)
-                  Positioned.fill(
-                    child: SlideTransition(
-                      position: _lyricsSlide,
-                      child: PlayerLyricsView(
-                        c: c,
-                        db: widget.db,
-                        slideAnimation: _lyricsCtrl,
-                        onClose: _closeSubView,
-                        liked: _liked,
-                        onToggleLike: _toggleLiked,
-                      ),
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         );
