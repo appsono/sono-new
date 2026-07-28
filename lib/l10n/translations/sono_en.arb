@@ -705,6 +705,22 @@
   "@settingsAppearanceSectionPlayer": {
     "description": "Section label above the player appearance options on the appearance subpage."
   },
+  "settingsAppearanceSeeAll": "See all button",
+  "@settingsAppearanceSeeAll": {
+    "description": "Label for the picker that chooses how the see all control on section headers is drawn."
+  },
+  "settingsAppearanceSeeAllButton": "Button",
+  "@settingsAppearanceSeeAllButton": {
+    "description": "Option name for the see all control drawn as a filled circle with an arrow."
+  },
+  "settingsAppearanceSeeAllText": "Text",
+  "@settingsAppearanceSeeAllText": {
+    "description": "Option name for the see all control drawn as a plain text label."
+  },
+  "settingsAppearanceSeeAllArrow": "Text + arrow",
+  "@settingsAppearanceSeeAllArrow": {
+    "description": "Option name for the see all control drawn as a text label followed by a chevron."
+  },
   "settingsAppearanceHomeTint": "Home tint",
   "@settingsAppearanceHomeTint": {
     "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."

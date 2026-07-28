@@ -23,6 +23,7 @@ import 'package:sono/pages/settings/widgets/settings_group.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 import 'package:sono/pages/settings/widgets/settings_theme_picker.dart';
+import 'package:sono/pages/settings/widgets/settings_see_all_picker.dart';
 
 /// Appearance subpage
 ///
@@ -52,6 +53,8 @@ class SettingsAppearancePage extends StatelessWidget {
                   note: l.settingsAppearanceThemeNote,
                   children: const [SettingsThemePicker()],
                 ),
+                SettingsGroupLabel(text: l.settingsAppearanceSeeAll),
+                SettingsGroup(children: const [SettingsSeeAllPicker()]),
 
                 SettingsGroupLabel(text: l.settingsAppearanceSectionPlayer),
                 SettingsGroup(

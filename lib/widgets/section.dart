@@ -11,7 +11,13 @@
 // GNU General Public License for more details.
 
 import 'package:flutter/material.dart';
+
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:sono/theme/theme.dart';
+import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/icons.dart';
+import 'package:sono/services/appearance_service.dart';
 
 class SonoSection extends StatelessWidget {
   final String title;
@@ -80,8 +86,6 @@ class SonoSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.sono;
-
     return Padding(
       padding: padding,
       child: Row(
@@ -91,29 +95,114 @@ class SonoSectionHeader extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge?.merge(titleStyle),
           ),
           const Spacer(),
-          if (onSeeAll != null)
-            GestureDetector(
-              onTap: onSeeAll,
-              child: Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? colors.textLight
-                      : colors.textDark,
-                ),
-                child: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 18,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? colors.textDark
-                      : colors.textLight,
-                ),
-              ),
-            ),
+          if (onSeeAll != null) SonoSeeAll(onTap: onSeeAll!),
         ],
       ),
     );
+  }
+}
+
+/// See all control for a section header
+///
+/// Pass [style] to override current appearance
+class SonoSeeAll extends StatelessWidget {
+  final VoidCallback onTap;
+  final SeeAllStyle? style;
+
+  const SonoSeeAll({required this.onTap, this.style, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final pinned = style;
+    if (pinned != null) return _build(context, pinned);
+
+    return ValueListenableBuilder<SeeAllStyle>(
+      valueListenable: AppearanceService.seeAllStyleNotifier,
+      builder: (context, current, _) => _build(context, current),
+    );
+  }
+
+  Widget _build(BuildContext context, SeeAllStyle style) {
+    final colors = context.sono;
+    final l = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return switch (style) {
+      // ==== filled circle ====
+      SeeAllStyle.button => GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 45,
+          height: 45,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isDark ? colors.textLight : colors.textDark,
+          ),
+          child: Center(
+            child: RotatedBox(
+              quarterTurns: 2,
+              child: IconsSheet.svg(
+                IconsSheet.backOutlined,
+                size: SonoSizes.iconSm,
+                color: isDark ? colors.textDark : colors.textLight,
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      // ==== plain label ====
+      SeeAllStyle.text => GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        //keeps row height stable against 45px button
+        child: SizedBox(
+          height: 45,
+          child: Center(
+            child: Text(
+              l.commonSeeAll,
+              style: TextStyle(
+                fontFamily: SonoFonts.primary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: colors.textSecondary,
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      // ==== label + chevron ====
+      SeeAllStyle.arrow => GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
+          height: 45,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l.commonSeeAll,
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: colors.textSecondary,
+                ),
+              ),
+              const SizedBox(width: 4),
+              RotatedBox(
+                quarterTurns: 2,
+                child: IconsSheet.svg(
+                  IconsSheet.backOutlined,
+                  size: SonoSizes.iconSm,
+                  color: colors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    };
   }
 }
