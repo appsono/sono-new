@@ -447,29 +447,37 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
                   ),
                   if (_queueMounted)
                     Positioned.fill(
-                      child: SlideTransition(
-                        position: _queueSlide,
-                        child: PlayerQueueView(
-                          c: c,
-                          db: widget.db,
-                          slideAnimation: _queueCtrl,
-                          onClose: _closeSubView,
-                          liked: _liked,
-                          onToggleLike: _toggleLiked,
+                      child: Visibility(
+                        visible: _subView == _SubView.queue,
+                        maintainState: true,
+                        child: SlideTransition(
+                          position: _queueSlide,
+                          child: PlayerQueueView(
+                            c: c,
+                            db: widget.db,
+                            slideAnimation: _queueCtrl,
+                            onClose: _closeSubView,
+                            liked: _liked,
+                            onToggleLike: _toggleLiked,
+                          ),
                         ),
                       ),
                     ),
                   if (_lyricsMounted)
                     Positioned.fill(
-                      child: SlideTransition(
-                        position: _lyricsSlide,
-                        child: PlayerLyricsView(
-                          c: c,
-                          db: widget.db,
-                          slideAnimation: _lyricsCtrl,
-                          onClose: _closeSubView,
-                          liked: _liked,
-                          onToggleLike: _toggleLiked,
+                      child: Visibility(
+                        visible: _subView == _SubView.lyrics,
+                        maintainState: true,
+                        child: SlideTransition(
+                          position: _lyricsSlide,
+                          child: PlayerLyricsView(
+                            c: c,
+                            db: widget.db,
+                            slideAnimation: _lyricsCtrl,
+                            onClose: _closeSubView,
+                            liked: _liked,
+                            onToggleLike: _toggleLiked,
+                          ),
                         ),
                       ),
                     ),

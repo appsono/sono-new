@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   notification with app closed, which also skipped the library scan
 - Fixed mini player and nav bar sometimes sitting mid screen after opening the
   app or returning from background
+- Fixed the queue view briefly flashing into view when returning to the app
 
 ### Internal
 
