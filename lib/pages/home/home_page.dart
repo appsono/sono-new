@@ -34,6 +34,7 @@ import 'package:sono/pages/library/subpages/albums_page.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
 import 'package:sono/pages/library/subpages/artists_page.dart';
 import 'package:sono/pages/library/subpages/artist_detail_page.dart';
+import 'package:sono/pages/library/library_sheets.dart';
 
 import 'package:sono/widgets/changelog_sheet.dart';
 import 'package:sono/widgets/header.dart';
@@ -250,6 +251,19 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
   }
 
+  // ==== long press sheets ====
+  Future<void> _openSongSheet(SongWithArtistViewData song) =>
+      LibrarySheets.openForSong(context: context, db: widget.db, song: song);
+
+  Future<void> _openAlbumSheet(AlbumWithArtistViewData album) =>
+      LibrarySheets.openForAlbum(context: context, db: widget.db, album: album);
+
+  Future<void> _openArtistSheet(Artist artist) => LibrarySheets.openForArtist(
+    context: context,
+    db: widget.db,
+    artist: artist,
+  );
+
   void _playRecent(int index) {
     final recent = _recent;
     if (recent == null || recent.isEmpty) return;
@@ -293,6 +307,7 @@ class _HomePageState extends State<HomePage> {
               unknownArtist: l.commonUnknownArtist,
               onOpen: (a) =>
                   _push(AlbumDetailPage(db: widget.db, albumId: a.id)),
+              onSheet: _openAlbumSheet,
             ),
           ),
         ],
@@ -314,6 +329,7 @@ class _HomePageState extends State<HomePage> {
                 context,
               ).textTheme.headlineSmall?.copyWith(fontSize: 13),
               onTap: () => _push(AlbumDetailPage(db: widget.db, albumId: a.id)),
+              onLongPress: () => _openAlbumSheet(a),
             ),
         ],
       );
@@ -488,6 +504,7 @@ class _HomePageState extends State<HomePage> {
                               ? const _NewBadge()
                               : null,
                           onTap: () => _playRecent(i),
+                          onLongPress: () => _openSongSheet(s),
                         ),
                     ],
                   ),
@@ -519,6 +536,7 @@ class _HomePageState extends State<HomePage> {
                         onTap: () => _push(
                           ArtistDetailPage(db: widget.db, artistId: a.id),
                         ),
+                        onLongPress: () => _openArtistSheet(a),
                       );
                     }).toList(),
                   ),
@@ -584,6 +602,7 @@ class _CoverTile extends StatelessWidget {
   final double height;
   final Widget? badge;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
 
   const _CoverTile({
     required this.coverPath,
@@ -592,6 +611,7 @@ class _CoverTile extends StatelessWidget {
     required this.width,
     required this.height,
     required this.onTap,
+    this.onLongPress,
     this.badge,
   });
 
@@ -609,6 +629,7 @@ class _CoverTile extends StatelessWidget {
 
     return BouncyTap(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: SizedBox(
         width: width,
         height: height,
@@ -740,12 +761,14 @@ class _AlbumBento extends StatelessWidget {
   final Map<int, String> coverPaths;
   final String unknownArtist;
   final void Function(AlbumWithArtistViewData album) onOpen;
+  final void Function(AlbumWithArtistViewData album) onSheet;
 
   const _AlbumBento({
     required this.albums,
     required this.coverPaths,
     required this.unknownArtist,
     required this.onOpen,
+    required this.onSheet,
   });
 
   @override
@@ -790,6 +813,7 @@ class _AlbumBento extends StatelessWidget {
       width: w,
       height: h,
       onTap: () => onOpen(album),
+      onLongPress: () => onSheet(album),
     );
   }
 }
