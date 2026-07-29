@@ -50,6 +50,7 @@
   - Import / export (M3U)
 - Backup: export / import app data (likes, favorites, playlists, settings,
   scan paths, etc.)
+- Scrobbling Support (Last.fm, Libre.fm, etc.)
 
 ## Improvements (pre-UI)
 
