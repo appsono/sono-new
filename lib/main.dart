@@ -43,6 +43,9 @@ import 'package:sono/theme/theme.dart';
 
 const kShots = bool.fromEnvironment('SONO_SHOTS');
 
+const double kShotsTopInset = 30;
+const double kShotsBottomInset = 18;
+
 late AudioHandler audioHandler;
 
 void main() async {
@@ -173,7 +176,10 @@ class _SonoAppState extends State<SonoApp> with WidgetsBindingObserver {
               builder: (context, child) {
                 Widget wrapped = SonoStatusBarStyle(child: child!);
                 if (kShots) {
-                  const pad = EdgeInsets.only(top: 30, bottom: 18);
+                  const pad = EdgeInsets.only(
+                    top: kShotsTopInset,
+                    bottom: kShotsBottomInset,
+                  );
                   wrapped = MediaQuery(
                     data: MediaQuery.of(context).copyWith(
                       padding: pad,
