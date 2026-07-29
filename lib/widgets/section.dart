@@ -165,8 +165,8 @@ class SonoSeeAll extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         //keeps row height stable against 45px button
-        child: SizedBox(
-          height: _seeAllSize,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: _seeAllSize),
           child: Center(child: Text(l.commonSeeAll, style: labelStyle)),
         ),
       ),
