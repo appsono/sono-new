@@ -149,9 +149,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Translation
 
 - [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
-  Belarusian (61%)
+  Belarusian (75%)
 - [Zartiny](https://hosted.weblate.org/user/Zartiny/) and
-  [Novex](https://hosted.weblate.org/user/novex_/) translated Sono into French (64%)
+  [Novex](https://hosted.weblate.org/user/novex_/) translated Sono into French (100%)
 - [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
   German (100%)
 - [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
