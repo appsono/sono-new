@@ -16,10 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
+
+import 'package:sono/main.dart' show kShots;
 import 'package:sono/pages/home/home_actions.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
 import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 import 'package:sono/pages/player/player_colors.dart';
+import 'package:sono/pages/settings/subpages/settings_shots_page.dart';
 
 import 'package:sono/services/appearance_service.dart';
 import 'package:sono/services/audio/audio_service.dart';
@@ -164,6 +167,18 @@ class _HomePageState extends State<HomePage> {
     if (_tintAtTop.value != atTop) _tintAtTop.value = atTop;
   }
 
+  //resolves shots album pins, null when unset or unusable
+  Future<List<AlbumWithArtistViewData>?> _pinnedBento() async {
+    final raw = await widget.db.getSetting(kShotsBentoKey) ?? '';
+    if (raw.isEmpty) return null;
+    final ids = [for (final part in raw.split(',')) ?int.tryParse(part)];
+    if (ids.length < _bentoLimit) return null;
+    final all = await widget.db.getAllAlbumsWithArtists();
+    final byId = {for (final a in all) a.id: a};
+    final picked = [for (final id in ids.take(_bentoLimit)) ?byId[id]];
+    return picked.length == _bentoLimit ? picked : null;
+  }
+
   Future<void> _load() async {
     final songs = await widget.db.getAllSongsWithArtists();
 
@@ -196,6 +211,8 @@ class _HomePageState extends State<HomePage> {
       bento = null;
     }
     bento ??= await widget.db.getRandomAlbumsWithArtists(_bentoLimit);
+    if (kShots) bento = await _pinnedBento() ?? bento;
+
     _bentoAlbums = bento;
 
     //fewer albums than needed, show plain list instead
