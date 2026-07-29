@@ -175,12 +175,12 @@ class SonoSeeAll extends StatelessWidget {
       SeeAllStyle.arrow => GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
-        child: SizedBox(
-          height: _seeAllSize,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: _seeAllSize),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(l.commonSeeAll, style: labelStyle),
+              Flexible(child: Text(l.commonSeeAll, style: labelStyle)),
               const SizedBox(width: _seeAllLabelGap),
               RotatedBox(
                 quarterTurns: 2,
