@@ -45,8 +45,8 @@
 - Playlists:
   - Add a whole album or queue at once
   - Import / export (M3U)
-- [x] Backup: export / import app data (likes, favorites, playlists, settings,
-  scan paths, etc.)
+- [x] ~~Backup: export / import app data (likes, favorites, playlists, settings,
+  scan paths, etc.)~~
 - Scrobbling Support (Last.fm, Libre.fm, etc.)
 
 ## Improvements (pre-UI)
