@@ -21,8 +21,8 @@ class AppearanceService {
   AppearanceService._();
   static final AppearanceService instance = AppearanceService._();
 
-  static const _homeTintKey = 'appearance.home_tint';
-  static const _seeAllStyleKey = 'appearance.section_seeAllStyle';
+  static const _homeTintKey = 'appearance.homeTint';
+  static const _seeAllStyleKey = 'appearance.sectionSeeAllStyle';
 
   /// Wether the home header tint from current song is shown
   static final homeTintNotifier = ValueNotifier<bool>(true);
