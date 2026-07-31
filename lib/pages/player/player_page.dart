@@ -77,6 +77,12 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
   @override
   void initState() {
     super.initState();
+    final warm = _warmColors();
+    if (warm != null) {
+      _colors = warm;
+      _prevColors = warm;
+      _colorsNotifer.value = warm;
+    }
     ThemeService.colorsNotifier.addListener(_onThemeChanged);
     final current = player.AudioService.instance.currentSong;
     if (current != null) _handleSong(current);
@@ -140,6 +146,14 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
       _colors = PlayerColors.fallback;
     });
     _colorsNotifer.value = _colors;
+  }
+
+  PlayerColors? _warmColors() {
+    final song = player.AudioService.instance.currentSong;
+    if (song == null) return null;
+    final bytes = CoverThumbs.peek(song.path);
+    if (bytes == null || bytes.isEmpty) return null;
+    return PlayerColors.peek(bytes);
   }
 
   Future<void> _handleSong(Song song) async {

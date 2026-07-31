@@ -118,6 +118,15 @@ class PlayerColors {
     }
   }
 
+  /// Sync cache hit, null when cover has not been extracted yet
+  static PlayerColors? peek(Uint8List bytes) {
+    if (bytes.isEmpty) return null;
+    final key = coverContentKey(bytes);
+    final cached = _cache[key];
+    if (cached != null) _touchCache(key);
+    return cached;
+  }
+
   /// Wire into CoverMemoryPressure.didHaveMemoryPressure
   static void clearCache() {
     _cache.clear();

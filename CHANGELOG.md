@@ -39,6 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the licences page and other built in Material screens showing on a
   grey wash in light mode
 - Fixed player and home tint colours pulled from album art being inaccurate
+- Fixed the player falling back to dark colours in light theme when a cover
+  has no usable colour to extract
+- Fixed a flash of fallback colours when opening the fullscreen player
 
 ### Internal
 
@@ -64,6 +67,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   package, and quantization to one reusable isolate instead of a fresh
   compute isolate per songs
 - Added PlayerColors.clearCache(), called from CoverMemoryPressure
+- PlayerColors.fallback now resolves from ThemeService instead of a fixed
+  dark palette, with PlayerColors.fromTheme(SonoColors) doing the mapping
+- Added CoverThumbs.peek() and PlayerColors.peek() for synchronous cache
+  reads before first build
 
 ## [0.11.0+12] - 2026-07-22
 
