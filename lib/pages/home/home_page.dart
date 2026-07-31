@@ -27,6 +27,7 @@ import 'package:sono/pages/settings/subpages/settings_shots_page.dart';
 import 'package:sono/services/appearance_service.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/services/covers/cover_thumbs.dart';
+import 'package:sono/services/theme_service.dart';
 
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
@@ -144,6 +145,7 @@ class _HomePageState extends State<HomePage> {
     _load();
     widget.scanVersion?.addListener(_load);
     _scroll.addListener(_syncTintAtTop);
+    ThemeService.colorsNotifier.addListener(_onThemeChanged);
 
     final current = AudioService.instance.currentSong;
     if (current != null) _applyTint(current);
@@ -154,6 +156,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    ThemeService.colorsNotifier.removeListener(_onThemeChanged);
     widget.scanVersion?.removeListener(_load);
     _songSub?.cancel();
     _scroll.dispose();
@@ -253,6 +256,7 @@ class _HomePageState extends State<HomePage> {
   //cover thumb > palette
   Future<void> _applyTint(Song song) async {
     if (song.id == _tintSongId) return;
+    if (!AppearanceService.homeTintNotifier.value) return;
     _tintSongId = song.id;
 
     try {
@@ -269,6 +273,11 @@ class _HomePageState extends State<HomePage> {
       if (!mounted || song.id != _tintSongId) return;
       setState(() => _tintColors = PlayerColors.fallback);
     }
+  }
+
+  void _onThemeChanged() {
+    if (!mounted || _tintSongId != null) return;
+    setState(() => _tintColors = null);
   }
 
   void _push(Widget page) {

@@ -18,6 +18,7 @@ import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/services/covers/cover_thumbs.dart';
+import 'package:sono/services/theme_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/l10n/localizations.dart';
 
@@ -76,6 +77,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
   @override
   void initState() {
     super.initState();
+    ThemeService.colorsNotifier.addListener(_onThemeChanged);
     final current = player.AudioService.instance.currentSong;
     if (current != null) _handleSong(current);
     _songSub = player.AudioService.instance.currentSongStream.listen((s) {
@@ -123,11 +125,21 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
 
   @override
   void dispose() {
+    ThemeService.colorsNotifier.removeListener(_onThemeChanged);
     _songSub?.cancel();
     _colorsNotifer.dispose();
     _queueCtrl.dispose();
     _lyricsCtrl.dispose();
     super.dispose();
+  }
+
+  void _onThemeChanged() {
+    if (!mounted || _lastSongId != null) return;
+    setState(() {
+      _prevColors = _colors;
+      _colors = PlayerColors.fallback;
+    });
+    _colorsNotifer.value = _colors;
   }
 
   Future<void> _handleSong(Song song) async {

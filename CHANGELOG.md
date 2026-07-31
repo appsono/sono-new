@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   shuffle now drops to its icon when both labels no longer fit
 - Fixed the licences page and other built in Material screens showing on a
   grey wash in light mode
+- Fixed player and home tint colours pulled from album art being inaccurate
 
 ### Internal
 
@@ -56,6 +57,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   SonoHeader
 - Mapped colorScheme surface, canvasColor and cardColor to opaque background
   tokens, bgSurface is now only an overlay fill again
+- Rewrote PlayerColors extraction: filters near black, near white, and the
+  red I line before scoring, snaps neutral art to true grey instead of the
+  achromatic hue, and biases base tones toward the artworks own lightness
+- Moved cover decoding to ui.Codec with a target size instead of the image
+  package, and quantization to one reusable isolate instead of a fresh
+  compute isolate per songs
+- Added PlayerColors.clearCache(), called from CoverMemoryPressure
 
 ## [0.11.0+12] - 2026-07-22
 
