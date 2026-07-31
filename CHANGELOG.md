@@ -105,7 +105,7 @@ Nothing yet.
 ### Translation
 
 - [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
-  Belarusian (75%)
+  Belarusian (78%)
 - [Zartiny](https://hosted.weblate.org/user/Zartiny/) and
   [Novex](https://hosted.weblate.org/user/novex_/) translated Sono into French (100%)
 - [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
