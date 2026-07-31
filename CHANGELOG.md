@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the queue view briefly flashing into view when returning to the app
 - Fixed long translations of the create playlist label overflowing its button,
   shuffle now drops to its icon when both labels no longer fit
+- Fixed the licences page and other built in Material screens showing on a
+  grey wash in light mode
 
 ### Internal
 
@@ -45,13 +47,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   backdrop colour, applied per page and app wide as a fallback
 - Added an AppearanceService owning appearance settings that are not part of
   theme palette, mirroring ThemeService
-- Added appearance.home_tint and appearance.section_seeAllStyle to backup
+- Added appearance.homeTint and appearance.sectionSeeAllStyle to backup
   allowlist
 - Split SonoSectionHeader and SonoSeeAll out of SonoSection
 - Moved PlayerColorsTween out of player_page into player_colors, shared by
   fullscreen player and home tint
 - Added onLongPress callback to SonoMediaCard and foregroundOverride to
   SonoHeader
+- Mapped colorScheme surface, canvasColor and cardColor to opaque background
+  tokens, bgSurface is now only an overlay fill again
 
 ## [0.11.0+12] - 2026-07-22
 
