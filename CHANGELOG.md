@@ -11,9 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Redesigned home page: gradient behind header taken from playing
   song, Recently Added rail that badges songs added since page was
-  last opened, four album bento grid randomised on each launch, and artists rail
+  last opened, four-album bento grid randomised on each launch, and artists rail
   carried over from the old page
-- Added long press sheets to home page using LibrarySheets, for song, album,
+- Added long press sheets to home page using LibrarySheets, for songs, albums,
   and artists
 - Added home tint toggle to appearance settings
 - Added see all button style picker to appearance settings, offering
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   because forced rescans skipped a step that removed "deleted" songs
 - Fixed search page keeping stale genres after rescan
 - Fixed an error on startup when playback was started from media
-  notification with app closed, which also skipped the library scan
+  notification with app closed, which also caused the library scan to be skipped
 - Fixed mini player and nav bar sometimes sitting mid screen after opening the
   app or returning from background
 - Fixed the queue view briefly flashing into view when returning to the app
