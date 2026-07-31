@@ -982,5 +982,63 @@
     "settingsLibrarySectionArtistParsing": "Аналіз выканаўцаў",
     "@settingsLibrarySectionArtistParsing": {
         "description": "Section label above the multi-artist splitting options."
+    },
+    "settingsLibrarySplitArtists": "Раздзяляць тэгі некалькіх выканаўцаў",
+    "@settingsLibrarySplitArtists": {
+        "description": "Toggle that splits an artist tag into several artists at the delimiters."
+    },
+    "settingsLibraryDelimiters": "Раздзяляльнікі",
+    "@settingsLibraryDelimiters": {
+        "description": "Characters that separate artists in a tag, such as a comma or a slash."
+    },
+    "settingsLibraryDelimitersEmpty": "Выкаоыстоўваюцца прадвызначэнні",
+    "@settingsLibraryDelimitersEmpty": {
+        "description": "Shown in the delimiter editor when the list is empty, meaning the built-in delimiters apply."
+    },
+    "settingsLibraryDelimiterField": "Раздзяляльнік",
+    "@settingsLibraryDelimiterField": {
+        "description": "Label of the text field in the delimiter editor."
+    },
+    "settingsLibraryDelimiterAdd": "Дадаць раздзяляльнік",
+    "@settingsLibraryDelimiterAdd": {
+        "description": "Action that adds the typed delimiter to the list."
+    },
+    "settingsLibraryProtectedArtists": "Ахаваныя выканаўцы",
+    "@settingsLibraryProtectedArtists": {
+        "description": "Artist names never split, for acts whose name contains a delimiter."
+    },
+    "settingsLibraryProtectedArtistsEmpty": "Ахаваных выканаўцаў пакуль што няма",
+    "@settingsLibraryProtectedArtistsEmpty": {
+        "description": "Shown in the protected artists editor when the list is empty."
+    },
+    "settingsLibraryProtectedArtistField": "Імя выканаўца",
+    "@settingsLibraryProtectedArtistField": {
+        "description": "Label of the text field in the protected artists editor."
+    },
+    "settingsLibraryProtectedArtistAdd": "Дадаць выканаўца",
+    "@settingsLibraryProtectedArtistAdd": {
+        "description": "Action that adds the typed artist to the protected list."
+    },
+    "settingsLibraryRescan": "Перасканіраваць бібліятэку",
+    "@settingsLibraryRescan": {
+        "description": "Action that runs a full rescan of the music library."
+    },
+    "settingsLibraryRescanRunning": "Сканіраванне…",
+    "@settingsLibraryRescanRunning": {
+        "description": "Replaces the rescan label while a scan is in progress."
+    },
+    "settingsLibraryLastScan": "Апошняе сканіраванне {date} а {time}",
+    "@settingsLibraryLastScan": {
+        "description": "First footer line on the library subpage, showing when the last scan finished.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
     }
 }
