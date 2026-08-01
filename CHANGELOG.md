@@ -70,6 +70,8 @@ Nothing yet.
   updates, which they do not
 - Fixed multi-line changelog entries being cut off in the changelog sheet,
   where wrapped lines were dropped instead of joined to the entry above
+- Fixed the queue coming back in a different order after a restart when
+  shuffle was on, including the song that was playing
 
 ### Removed
 
@@ -101,11 +103,13 @@ Nothing yet.
   dismissal, and version comparison
 - Added filter chain tests covering eq and bass boost surviving speed and
   pitch changes, and the mpv sample format used for eq
+- Added playback.shuffle_order and playback.current_id, both excluded from
+  backups
 
 ### Translation
 
 - [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
-  Belarusian (78%)
+  Belarusian (88%)
 - [Zartiny](https://hosted.weblate.org/user/Zartiny/) and
   [Novex](https://hosted.weblate.org/user/novex_/) translated Sono into French (100%)
 - [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
