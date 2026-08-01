@@ -48,7 +48,7 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   int _tab = 0;
   final _scanProgress = ValueNotifier<ScanProgress?>(null);
   DateTime _lastProgressPush = DateTime.fromMillisecondsSinceEpoch(0);
@@ -58,6 +58,7 @@ class _AppShellState extends State<AppShell> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     AudioService.instance.attachDb(widget.db);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AudioService.instance.loadState();
@@ -96,9 +97,19 @@ class _AppShellState extends State<AppShell> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     SystemChrome.setSystemUIChangeCallback(null);
     _scanProgress.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      AudioService.instance.flushState();
+    }
   }
 
   Future<void> _deleteBrokenGenre() async {
