@@ -84,6 +84,7 @@ class AudioService {
   List<Song>? _cachedUnmodifiableQueue;
   List<Song>? _cachedEffectiveQueue;
   bool _queueDirty = true;
+  bool _shuffleOrderDirty = true;
 
   List<int> _shuffleOrder = [];
   int _currentIndex = -1;
@@ -402,14 +403,44 @@ class AudioService {
       final songMap = {for (final s in fetched) s.id: s};
       final ordered = ids.map((id) => songMap[id]).whereType<Song>().toList();
 
-      if (ordered.isEmpty || savedIndex >= ordered.length) return;
+      if (ordered.isEmpty) return;
 
       _queue = ordered;
-      _currentIndex = savedIndex;
 
+      //resolve by song id first
+      //indices shift when songs are removed
+      final savedId = int.tryParse(all['playback.current_id'] ?? '');
+      var rawIndex = savedId == null
+          ? -1
+          : ordered.indexWhere((s) => s.id == savedId);
+      if (rawIndex < 0 && savedIndex < ordered.length) rawIndex = savedIndex;
+      if (rawIndex < 0) return;
+
+      var mustPersistOrder = false;
       if (_shuffle) {
-        _rebuildShuffleOrder(anchorIndex: _queue[savedIndex].id);
-        _currentIndex = 0;
+        //restore previous queue order
+        final restored = _decodeShuffleOrder(
+          all['playback.shuffle_order'],
+          ordered,
+        );
+        if (restored != null) {
+          _shuffleOrder = restored;
+          _shuffleOrderDirty = false;
+        } else {
+          //first launch after update or corrupt value
+          _rebuildShuffleOrder(anchorIndex: rawIndex);
+          mustPersistOrder = true;
+        }
+        final pos = _shuffleOrder.indexOf(rawIndex);
+        _currentIndex = pos >= 0 ? pos : 0;
+      } else {
+        _shuffleOrder = [];
+        _currentIndex = rawIndex;
+      }
+
+      if (mustPersistOrder) {
+        _queueDirty = true;
+        await _savePlaybackState();
       }
 
       _invalidateQueueCache();
@@ -453,7 +484,17 @@ class AudioService {
     );
   }
 
-  void _savePlaybackState() async {
+  /// Saves pending playback state immediately
+  ///
+  /// Used before backgrounding to avoid debounce loss
+  Future<void> flushState() async {
+    _saveStateDebounce?.cancel();
+    _saveStateDebounce = null;
+    await _savePlaybackState();
+    _persistPosition(_player.state.position);
+  }
+
+  Future<void> _savePlaybackState() async {
     final db = _db;
     if (db == null) return;
     await db.transaction(() async {
@@ -466,14 +507,30 @@ class AudioService {
       );
       await db.setSetting('playback.volume', _volume.toString());
 
-      //queue membership/order only rewritten when actually changed
-      //plain skips only touch index row
-      if (_queueDirty) {
-        final ids = _queue.map((s) => s.id).toList();
-        await db.setSetting('playback.queue', jsonEncode(ids));
+      //queue changes shift every raw index, so order row has to follow
+      if (_queueDirty || _shuffleOrderDirty) {
+        if (_queueDirty) {
+          await db.setSetting(
+            'playback.queue',
+            jsonEncode(_queue.map((s) => s.id).toList()),
+          );
+        }
+        await db.setSetting(
+          'playback.shuffle_order',
+          jsonEncode([
+            for (final i in _shuffleOrder)
+              if (i >= 0 && i < _queue.length) _queue[i].id,
+          ]),
+        );
         _queueDirty = false;
+        _shuffleOrderDirty = false;
       }
-      await db.setSetting('playback.current_index', _effectiveIndex.toString());
+      final raw = _effectiveIndex;
+      await db.setSetting('playback.current_index', raw.toString());
+      await db.setSetting(
+        'playback.current_id',
+        raw >= 0 && raw < _queue.length ? _queue[raw].id.toString() : '',
+      );
       await db.setSetting('playback.origin', jsonEncode(_origin.toJson()));
     });
   }
@@ -643,6 +700,7 @@ class AudioService {
       _shuffle = false;
       _currentIndex = actualIndex;
       _shuffleOrder = [];
+      _shuffleOrderDirty = true;
     }
     _invalidateQueueCache();
     _shuffleController.add(_shuffle);
@@ -966,6 +1024,7 @@ class AudioService {
   }
 
   void _rebuildShuffleOrder({int? anchorIndex}) {
+    _shuffleOrderDirty = true;
     if (_queue.isEmpty) {
       _shuffleOrder = [];
       return;
@@ -984,6 +1043,42 @@ class AudioService {
     if (anchor >= 0 && anchor < _queue.length) {
       _shuffleOrder.remove(anchor);
       _shuffleOrder.insert(0, anchor);
+    }
+  }
+
+  /// Rebuild shuffle order from saved song ids
+  ///
+  /// Returns null when nothing valid remains
+  List<int>? _decodeShuffleOrder(String? json, List<Song> queue) {
+    if (json == null || queue.isEmpty) return null;
+    try {
+      final ids = (jsonDecode(json) as List).cast<int>();
+      if (ids.isEmpty) return null;
+
+      //duplicate songs need ordered position matching
+      final byId = <int, List<int>>{};
+      for (var i = 0; i < queue.length; i++) {
+        (byId[queue[i].id] ??= <int>[]).add(i);
+      }
+
+      final order = <int>[];
+      final used = List<bool>.filled(queue.length, false);
+      for (final id in ids) {
+        final bucket = byId[id];
+        if (bucket == null || bucket.isEmpty) continue;
+        final i = bucket.removeAt(0);
+        used[i] = true;
+        order.add(i);
+      }
+      if (order.isEmpty) return null;
+
+      //new queue songs are appended last
+      for (var i = 0; i < queue.length; i++) {
+        if (!used[i]) order.add(i);
+      }
+      return order;
+    } catch (_) {
+      return null;
     }
   }
 }

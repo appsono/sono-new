@@ -108,6 +108,12 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      AudioService.instance.flushState();
+      return;
+    }
     if (state != AppLifecycleState.resumed || !_scanPending) return;
     //activity available, permission dialog can show
     _scanPending = false;
