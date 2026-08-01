@@ -72,6 +72,7 @@ Nothing yet.
   where wrapped lines were dropped instead of joined to the entry above
 - Fixed the queue coming back in a different order after a restart when
   shuffle was on, including the song that was playing
+- Fixed playback not being restored after closing the app from recents
 
 ### Removed
 
