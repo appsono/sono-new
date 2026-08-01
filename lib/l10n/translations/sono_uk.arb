@@ -911,7 +911,7 @@
     "@settingsDiscordPreviewIdle": {
         "description": "Shown in the preview card in place of a song title when nothing is playing."
     },
-    "settingsDiscordPreviewButton": "Спробувати Sono",
+    "settingsDiscordPreviewButton": "Try Sono",
     "@settingsDiscordPreviewButton": {
         "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
     },
