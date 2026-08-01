@@ -508,7 +508,7 @@ class AudioService {
       await db.setSetting('playback.volume', _volume.toString());
 
       //queue changes shift every raw index, so order row has to follow
-      if (_queueDirty || _shuffleOrderDirty) {
+      if ((_queueDirty || _shuffleOrderDirty) && _queue.isNotEmpty) {
         if (_queueDirty) {
           await db.setSetting(
             'playback.queue',
@@ -526,11 +526,10 @@ class AudioService {
         _shuffleOrderDirty = false;
       }
       final raw = _effectiveIndex;
-      await db.setSetting('playback.current_index', raw.toString());
-      await db.setSetting(
-        'playback.current_id',
-        raw >= 0 && raw < _queue.length ? _queue[raw].id.toString() : '',
-      );
+      if (raw >= 0 && raw < _queue.length) {
+        await db.setSetting('playback.current_index', raw.toString());
+        await db.setSetting('playback.current_id', _queue[raw].id.toString());
+      }
       await db.setSetting('playback.origin', jsonEncode(_origin.toJson()));
     });
   }
