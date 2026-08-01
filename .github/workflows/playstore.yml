@@ -13,6 +13,10 @@ on:
         type: choice
         default: draft
         options: [draft, completed]
+      code_override:
+        description: Version code override, use when today's code is taken
+        type: string
+        default: ""
       dry_run:
         description: Build and upload artifact only, skip Play
         type: boolean
@@ -50,6 +54,9 @@ jobs:
 
           # 2 digits, wrapping, keeps the code inside int32 forever
           CODE="$(date -u +%Y%m%d)$(printf '%02d' $((BUILD % 100)))"
+          if [ -n "${{ inputs.code_override }}" ]; then
+            CODE="${{ inputs.code_override }}"
+          fi
           # 0.11.0 > 2.11.0
           PLAY_NAME="2${NAME#0}"
 
