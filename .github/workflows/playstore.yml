@@ -7,12 +7,16 @@ on:
         description: Play track
         type: choice
         default: internal
-        options: [internal, alpha, beta]
+        options: [internal, alpha, beta, production]
       status:
-        description: Release status
+        description: Release status, inProgress and halted need a user fraction
         type: choice
         default: draft
-        options: [draft, completed]
+        options: [draft, completed, inProgress, halted]
+      user_fraction:
+        description: Staged rollout fraction, 0 to 1 exclusive, only for inProgress or halted
+        type: string
+        default: ""
       code_override:
         description: Version code override, use when today's code is taken
         type: string
@@ -30,6 +34,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
+      - name: Validate release inputs
+        env:
+          TRACK: ${{ inputs.track }}
+          STATUS: ${{ inputs.status }}
+          FRACTION: ${{ inputs.user_fraction }}
+        run: |
+          set -euo pipefail
+
+          # the action rejects these combinations, fail before the build instead
+          case "$STATUS" in
+            inProgress|halted)
+              if [ -z "$FRACTION" ]; then
+                echo "::error::status $STATUS requires user_fraction"
+                exit 1
+              fi
+              ;;
+            completed|draft)
+              if [ -n "$FRACTION" ]; then
+                echo "::error::status $STATUS does not accept user_fraction"
+                exit 1
+              fi
+              ;;
+          esac
+
+          if [ -n "$FRACTION" ]; then
+            if ! awk -v f="$FRACTION" 'BEGIN { exit !(f > 0 && f < 1) }' </dev/null; then
+              echo "::error::user_fraction must be between 0 and 1 exclusive, got $FRACTION"
+              exit 1
+            fi
+          fi
+
+          if [ "$TRACK" = production ] && [ "$STATUS" = completed ]; then
+            echo "::warning::production completed ships to 100 percent of users immediately"
+          fi
+
+          echo "track $TRACK, status $STATUS, fraction ${FRACTION:-none}"
 
       - uses: actions/setup-java@v5
         with:
@@ -129,5 +170,6 @@ jobs:
           packageName: wtf.sono.app
           releaseFiles: build/app/outputs/bundle/playRelease/app-play-release.aab
           mappingFile: ${{ steps.mapping.outputs.path }}
-          track: ${{ inputs.track }}
+          tracks: ${{ inputs.track }}
           status: ${{ inputs.status }}
+          userFraction: ${{ inputs.user_fraction }}
