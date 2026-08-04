@@ -883,7 +883,7 @@
     "@settingsDiscordShowButton": {
         "description": "Toggle for the button under the presence card."
     },
-    "settingsDiscordShowButtonSubtitle": "Додає «Спробувати Sono» під карткою",
+    "settingsDiscordShowButtonSubtitle": "Додає «Try Sono» під карткою",
     "@settingsDiscordShowButtonSubtitle": {
         "description": "Subtitle under the link button row. The quoted text is the button's own label and is not translated."
     },
@@ -911,7 +911,7 @@
     "@settingsDiscordPreviewIdle": {
         "description": "Shown in the preview card in place of a song title when nothing is playing."
     },
-    "settingsDiscordPreviewButton": "Спробувати Sono",
+    "settingsDiscordPreviewButton": "Try Sono",
     "@settingsDiscordPreviewButton": {
         "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
     },
