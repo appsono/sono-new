@@ -229,6 +229,13 @@ class AudioService {
     return _player.state.duration;
   }
 
+  //use metadata duration if mpv misses gapless update
+  Duration get currentLength {
+    final ms = currentSong?.duration;
+    if (ms != null && ms > 0) return Duration(milliseconds: ms);
+    return duration;
+  }
+
   double get volume {
     _ensureInitialized();
     return _player.state.volume;

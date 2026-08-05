@@ -1266,6 +1266,7 @@ class _CompactProgressBar extends StatefulWidget {
 class _CompactProgressBarState extends State<_CompactProgressBar> {
   StreamSubscription<Duration>? _posSub;
   StreamSubscription<Duration>? _durSub;
+  StreamSubscription<Song?>? _songSub;
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
   bool _dragging = false;
@@ -1276,13 +1277,21 @@ class _CompactProgressBarState extends State<_CompactProgressBar> {
     super.initState();
     final audio = player.AudioService.instance;
     _position = audio.position;
-    _duration = audio.duration;
+    _duration = audio.currentLength;
+
+    //update duration from metadata on song changes
+    _songSub = audio.currentSongStream.listen((_) {
+      if (!mounted) return;
+      setState(() => _duration = audio.currentLength);
+    });
+
     _posSub = audio.positionStream.listen((p) {
       if (!mounted || _dragging) return;
       setState(() => _position = p);
     });
     _durSub = audio.durationStream.listen((d) {
       if (!mounted) return;
+      if (d <= Duration.zero) return;
       setState(() => _duration = d);
     });
   }
@@ -1291,6 +1300,7 @@ class _CompactProgressBarState extends State<_CompactProgressBar> {
   void dispose() {
     _posSub?.cancel();
     _durSub?.cancel();
+    _songSub?.cancel();
     super.dispose();
   }
 
@@ -1363,6 +1373,7 @@ class _CompactProgressBarState extends State<_CompactProgressBar> {
                       player.AudioService.instance.seek(
                         Duration(milliseconds: v.toInt()),
                       );
+                      setState(() => _dragging = false);
                     }
                   : null,
             ),
