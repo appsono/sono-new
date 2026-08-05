@@ -594,7 +594,7 @@
     "@settingsEqualizerOff": {
         "description": "Value on the equalizer row when the equalizer is disabled."
     },
-    "settingsLibrary": "Бібліятэка і сканаванне",
+    "settingsLibrary": "Бібліятэка і сканіраванне",
     "@settingsLibrary": {
         "description": "Label of the row opening the library subpage, and the title of that subpage."
     },
@@ -991,7 +991,7 @@
     "@settingsLibraryDelimiters": {
         "description": "Characters that separate artists in a tag, such as a comma or a slash."
     },
-    "settingsLibraryDelimitersEmpty": "Выкаоыстоўваюцца прадвызначэнні",
+    "settingsLibraryDelimitersEmpty": "Выкарыстоўваюцца прадвызначэнні",
     "@settingsLibraryDelimitersEmpty": {
         "description": "Shown in the delimiter editor when the list is empty, meaning the built-in delimiters apply."
     },
@@ -1011,11 +1011,11 @@
     "@settingsLibraryProtectedArtistsEmpty": {
         "description": "Shown in the protected artists editor when the list is empty."
     },
-    "settingsLibraryProtectedArtistField": "Імя выканаўца",
+    "settingsLibraryProtectedArtistField": "Імя выканаўцы",
     "@settingsLibraryProtectedArtistField": {
         "description": "Label of the text field in the protected artists editor."
     },
-    "settingsLibraryProtectedArtistAdd": "Дадаць выканаўца",
+    "settingsLibraryProtectedArtistAdd": "Дадаць выканаўцы",
     "@settingsLibraryProtectedArtistAdd": {
         "description": "Action that adds the typed artist to the protected list."
     },
@@ -1041,7 +1041,7 @@
             }
         }
     },
-    "settingsLibraryCountSongs": "{count, plural, =0{песняў няма} one{{count} песня} few{{count} песні} many{{count} песняў} other{{count} песняў}}",
+    "settingsLibraryCountSongs": "{count, plural, =0{песняў няма} one{{count} песня} few{{count} песні} many{{count} песень} other{{count} песень}}",
     "@settingsLibraryCountSongs": {
         "description": "Song total in the library footer. Written out in full, not abbreviated.",
         "placeholders": {
@@ -1103,7 +1103,7 @@
     "@settingsDiscordShowSong": {
         "description": "Master toggle for the presence. Off means nothing is shown on Discord at all."
     },
-    "settingsDiscordShowArt": "Паказваць вокладка альбома",
+    "settingsDiscordShowArt": "Паказваць вокладку альбома",
     "@settingsDiscordShowArt": {
         "description": "Toggle for sending the cover with the presence."
     },
@@ -1163,7 +1163,7 @@
     "@settingsBackupExporting": {
         "description": "Replaces the export label while a backup is being written."
     },
-    "settingsBackupExportSubtitle": "Упадаваныя і абраныя песні, плэй-лісты, профіль і налады",
+    "settingsBackupExportSubtitle": "Упадабаныя і абраныя песні, плэй-лісты, профіль і налады",
     "@settingsBackupExportSubtitle": {
         "description": "Subtitle under the export row, listing what a backup contains."
     },
@@ -1410,7 +1410,7 @@
             }
         }
     },
-    "migrationCountPlaylists": "{count, plural, =0{без плэй-лістаў} one{{count} плэй-ліст} few{{count} плэй-ліст} other{{count} плэй-лістаў}}",
+    "migrationCountPlaylists": "{count, plural, =0{без плэй-лістаў} one{{count} плэй-ліст} few{{count} плэй-ліста} other{{count} плэй-лістаў}}",
     "@migrationCountPlaylists": {
         "description": "Playlist count listed in the migration sheet.",
         "placeholders": {
