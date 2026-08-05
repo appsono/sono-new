@@ -542,7 +542,7 @@
     "@settingsPlannedBody": {
         "description": "Explanation shown in the sheet that opens when a planned settings row is tapped."
     },
-    "settingsPlannedFollow": "Зачыць за распрацоўкай на GitHub",
+    "settingsPlannedFollow": "Сачыць за распрацоўкай на GitHub",
     "@settingsPlannedFollow": {
         "description": "Action in the planned feature sheet that opens the project repository."
     },
@@ -690,7 +690,7 @@
     "@settingsAppearanceColourFromArt": {
         "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
     },
-    "settingsAppearanceColourFromArtSubtitle": "Задаць тон вокладкі альбома усяму прайгравальніку",
+    "settingsAppearanceColourFromArtSubtitle": "Задаць тон вокладкі альбома ўсяму прайгравальніку",
     "@settingsAppearanceColourFromArtSubtitle": {
         "description": "Subtitle under the colour from album art row."
     },
@@ -1203,5 +1203,267 @@
     "settingsBackupImportChoose": "Выбраць файл",
     "@settingsBackupImportChoose": {
         "description": "Action in the import confirmation sheet that opens the file picker."
+    },
+    "settingsBackupImportDone": "Адноўлена {liked, plural, one{{liked} упадабаная песня} few{{liked} упадабаныя песні} other{{liked} убадабаных песень}}, {albums, plural, one{{albums} альбом} few{{albums} альбома} other{{albums} альбомаў}}, {artists, plural, one{{artists} выканаўца} few{{artists} выканаўцы} other{{artists} выканаўцаў}}, {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}}",
+    "@settingsBackupImportDone": {
+        "description": "Snackbar summarising a successful import.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportSkipped": "{songs, plural, one{{songs} песня} few{{songs} песні} other{{songs} песень}} і {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}} не было знойдзена на прыладзе",
+    "@settingsBackupImportSkipped": {
+        "description": "Second snackbar after an import, listing what could not be matched to local files.",
+        "placeholders": {
+            "songs": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportFailed": "Не ўдалося імпартаваць рэзервовую копію",
+    "@settingsBackupImportFailed": {
+        "description": "Snackbar shown when reading the backup failed. The error follows after a colon."
+    },
+    "settingsBackupNote": "Імпартаванне захоўвае ўсё, што ў вас ужо ёсць. Песні, якіх няма на прыладзе, прапускаюцца, аб іх будзе паведамлена ў канцы.",
+    "@settingsBackupNote": {
+        "description": "Note under the export and import rows, clarifying that importing is not destructive."
+    },
+    "settingsBackupSectionAutomatic": "Аўтаматчына",
+    "@settingsBackupSectionAutomatic": {
+        "description": "Section label above the scheduled backup option."
+    },
+    "settingsBackupWeekly": "Рэзервовае капіраванне кожны тыдзень",
+    "@settingsBackupWeekly": {
+        "description": "Toggle for writing a backup once a week. Currently marked as planned."
+    },
+    "settingsBackupWeeklySubtitle": "Запісваецца ў вашу папку з музыкай",
+    "@settingsBackupWeeklySubtitle": {
+        "description": "Subtitle under the weekly backup row."
+    },
+    "settingsBackupLastExport": "Апошяе экспартаванне {date} а {time}",
+    "@settingsBackupLastExport": {
+        "description": "Footer line showing when a backup was last written. Both placeholders receive the same timestamp.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsUpdatesChecking": "Праверка…",
+    "@settingsUpdatesChecking": {
+        "description": "Value on the updates row while a check is running."
+    },
+    "settingsUpdatesUpToDate": "Абноўлена",
+    "@settingsUpdatesUpToDate": {
+        "description": "Value on the updates row when the installed version is the newest release."
+    },
+    "settingsUpdatesAvailable": "Даступна {version}",
+    "@settingsUpdatesAvailable": {
+        "description": "Value on the updates row when a newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetUpToDateTitle": "У вас апошняя версія :D",
+    "@settingsUpdateSheetUpToDateTitle": {
+        "description": "Title of the update sheet when no newer release exists."
+    },
+    "settingsUpdateSheetUpToDateBody": "{version} з'яўляецца найноўшай версіяй Sono.",
+    "@settingsUpdateSheetUpToDateBody": {
+        "description": "Body of the update sheet when no newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetAvailableTitle": "Даступна Sono {version}",
+    "@settingsUpdateSheetAvailableTitle": {
+        "description": "Title of the update sheet when a newer release was found.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetFrom": "У вас {current}, найноўшая версія — {latest}.",
+    "@settingsUpdateSheetFrom": {
+        "description": "Line above the release notes comparing the installed and newest versions.",
+        "placeholders": {
+            "current": {
+                "type": "String"
+            },
+            "latest": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetOpen": "Адкрыць выпуск",
+    "@settingsUpdateSheetOpen": {
+        "description": "Action that opens the GitHub release page in the browser."
+    },
+    "settingsUpdateSheetSkip": "Прапусціць гэту версію",
+    "@settingsUpdateSheetSkip": {
+        "description": "Action that dismisses a release so it stops being announced."
+    },
+    "settingsUpdateSheetSkipSubtitle": "Не паказваць банер для гэтага выпуску",
+    "@settingsUpdateSheetSkipSubtitle": {
+        "description": "Subtitle under the skip action in the update sheet."
+    },
+    "settingsUpdateSheetFailedTitle": "Не ўдалося праверыць на абнаўленні",
+    "@settingsUpdateSheetFailedTitle": {
+        "description": "Title of the update sheet when the check could not reach GitHub."
+    },
+    "settingsUpdateSheetFailedBody": "Sono не ўдалося дасягнуць GitHub. Праверце ваша падключэнне і паспрабуйце яшчэ раз.",
+    "@settingsUpdateSheetFailedBody": {
+        "description": "Body of the update sheet when the check failed."
+    },
+    "settingsAboutTitle": "Пра праграму",
+    "@settingsAboutTitle": {
+        "description": "Title of the about subpage. Shorter than the row label, which is 'About Sono'."
+    },
+    "settingsAboutVersion": "{version} • зборка {build}",
+    "@settingsAboutVersion": {
+        "description": "Version line under the app name in the about hero. Does not repeat the app name, unlike settingsVersionLine.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsAboutSourceCode": "Зыходны код",
+    "@settingsAboutSourceCode": {
+        "description": "Row that opens the GitHub repository. Its subtitle is the repository path and is not translated."
+    },
+    "settingsAboutLicences": "Ліцэнзіі",
+    "@settingsAboutLicences": {
+        "description": "Row that opens the licence list, covering Sono and every dependency."
+    },
+    "settingsAboutKofiSubtitle": "Аплата за подпіс праграмы і мора кавы",
+    "@settingsAboutKofiSubtitle": {
+        "description": "Subtitle under the Ko-fi row."
+    },
+    "settingsAboutFooterBuilt": "Створана mathiiiiiis",
+    "@settingsAboutFooterBuilt": {
+        "description": "First footer line on the about page. The name is a username and stays as is."
+    },
+    "contributorsPlaceholder": "тут можаш быць ты",
+    "@contributorsPlaceholder": {
+        "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
+    },
+    "migrationFoundTitle": "Дадзеныя са старой Sono",
+    "@migrationFoundTitle": {
+        "description": "Title of the sheet offering to import data from the previous Sono install."
+    },
+    "migrationFoundBody": "У вас на прыладзе засталіся дадзеныя з мінулай праграмы.",
+    "@migrationFoundBody": {
+        "description": "Body text above the counts in the migration sheet."
+    },
+    "migrationCountLiked": "{count, plural, =0{без упадабанняў} one{{count} упадабаная песня} few{{count} упадабаныя песні} other{{count} упадабаных песень}}",
+    "@migrationCountLiked": {
+        "description": "Liked song count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountAlbums": "{count, plural, =0{без альбомаў} one{{count} альбом} few{{count} альбома} other{{count} альбомаў}}",
+    "@migrationCountAlbums": {
+        "description": "Favorite album count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountArtists": "{count, plural, =0{без выканаўцаў} one{{count} выканаўца} few{{count} выканаўцы} other{{count} выканаўцаў}}",
+    "@migrationCountArtists": {
+        "description": "Favorite artist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountPlaylists": "{count, plural, =0{без плэй-лістаў} one{{count} плэй-ліст} few{{count} плэй-ліст} other{{count} плэй-лістаў}}",
+    "@migrationCountPlaylists": {
+        "description": "Playlist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationImport": "Імпартаваць",
+    "@migrationImport": {
+        "description": "Action confirming the import in the migration sheet."
+    },
+    "migrationLater": "Не зараз",
+    "@migrationLater": {
+        "description": "Action dismissing the migration sheet until the next launch."
+    },
+    "migrationNever": "Больш не пытацца",
+    "@migrationNever": {
+        "description": "Action permanently dismissing the migration sheet without importing."
+    },
+    "migrationDone": "Імпартавана {liked, plural, one{{liked} упадабаная песня} few{{liked} упадабаныя песні} other{{liked} убадабаных песень}}, {albums, plural, one{{albums} альбом} few{{albums} альбома} other{{albums} альбомаў}}, {artists, plural, one{{artists} выканаўца} few{{artists} выканаўцы} other{{artists} выканаўцаў}}, {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}} :D",
+    "@migrationDone": {
+        "description": "Snackbar summarising a successful migration from the old Sono.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationDoneNothing": "Са старой Sono нічога не імпартавана :/",
+    "@migrationDoneNothing": {
+        "description": "Snackbar shown when a migration ran but matched nothing on this device."
+    },
+    "migrationUnresolved": "{count, plural, one{{count} песня} few{{count} песні} other{{count} песень}} больш не на гэтай прыладзе",
+    "@migrationUnresolved": {
+        "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationFailed": "Не ўдалося імпартаваць са старой Sono :/",
+    "@migrationFailed": {
+        "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
     }
 }
