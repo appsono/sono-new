@@ -72,9 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added CoverThumbs.peek() and PlayerColors.peek() for synchronous cache
   reads before first build
 
-## [0.11.0+12] - 2026-07-22
-
-(unreleased until new translation updates roll in)
+## [0.11.0+12] - 2026-08-04
 
 ### Added
 
@@ -133,6 +131,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   updates, which they do not
 - Fixed multi-line changelog entries being cut off in the changelog sheet,
   where wrapped lines were dropped instead of joined to the entry above
+- Fixed the queue coming back in a different order after a restart when
+  shuffle was on, including the song that was playing
+- Fixed playback not being restored after closing the app from recents
 
 ### Removed
 
@@ -164,11 +165,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dismissal, and version comparison
 - Added filter chain tests covering eq and bass boost surviving speed and
   pitch changes, and the mpv sample format used for eq
+- Added playback.shuffle_order and playback.current_id, both excluded from
+  backups
 
 ### Translation
 
 - [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
-  Belarusian (75%)
+  Belarusian (88%)
 - [Zartiny](https://hosted.weblate.org/user/Zartiny/) and
   [Novex](https://hosted.weblate.org/user/novex_/) translated Sono into French (100%)
 - [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into

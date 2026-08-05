@@ -5,7 +5,7 @@
     },
     "commonUnknown": "Inconnue",
     "commonUnknownArtist": "Artist inconnu",
-    "commonSongsCount": "\"{count, plural, =0{pas de chansons} =1{1 chanson} other{{count} chansons}}\"",
+    "commonSongsCount": "\"{count, plural, =0{pas de musiques} =1{1 musique} other{{count} musiques}}\"",
     "@commonSongsCount": {
         "description": "Number of songs for an artist/album/playlist",
         "placeholders": {
@@ -20,7 +20,7 @@
     "commonShuffle": "Mélanger",
     "commonShuffleAll": "Mélanger tout",
     "commonRepeat": "Répéter",
-    "commonLike": "j'aime",
+    "commonLike": "J'aime",
     "commonLiked": "aimé",
     "commonAddToPlaylist": "Ajouter à la playlist",
     "@commonAddToPlaylist": {
@@ -80,7 +80,7 @@
     "@playerNowPlaying": {
         "description": "Used in the player top bar and on the queue view's collapse button."
     },
-    "playerOriginAllSongs": "Toutes les chansons",
+    "playerOriginAllSongs": "Toutes les musiques",
     "@playerOriginAllSongs": {
         "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
     },
@@ -93,13 +93,13 @@
     "@playerTooltipShuffleOff": {
         "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
     },
-    "playerTooltipRepeatOff": "boucle désactivé",
+    "playerTooltipRepeatOff": "Boucle désactivée",
     "@playerTooltipRepeatOff": {
         "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
     },
     "playerTooltipRepeatAll": "Répète tout",
     "playerTooltipRepeatOne": "Répète une fois",
-    "playerTooltipOpenQueue": "File d'attente ouverte",
+    "playerTooltipOpenQueue": "File d'attente",
     "playerTooltipOpenLyrics": "Voir paroles",
     "queueLabelUpNext": "À suivre",
     "lyricsEmptyNoneFound": "Paroles introuvables :(",
@@ -112,7 +112,7 @@
     "lyricsMenuSectionLyrics": "Paroles",
     "lyricsMenuSectionPlayback": "Lecture",
     "lyricsMenuAdjustSync": "Ajuster la synchronisation",
-    "lyricsMenuAdjustSyncSubtitleZero": "Décaler le rythme des paroles de cette chanson",
+    "lyricsMenuAdjustSyncSubtitleZero": "Décaler le rythme des paroles de cette musique",
     "lyricsMenuAdjustSyncSubtitleOffset": "Actuellement {offset}",
     "@lyricsMenuAdjustSyncSubtitleOffset": {
         "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
@@ -273,7 +273,7 @@
     "@libraryCardPlaylists": {
         "description": "Library page card label. Opens user playlists."
     },
-    "libraryCardLikedSongs": "Chansons aimées",
+    "libraryCardLikedSongs": "Musiques aimées",
     "@libraryCardLikedSongs": {
         "description": "Library page card label. Opens the list of songs the user has liked."
     },
@@ -289,7 +289,7 @@
     "@libraryCardArtists": {
         "description": "Library page card label. Opens the full list of artists in the library."
     },
-    "libraryCardSongs": "Chansons",
+    "libraryCardSongs": "Musiques",
     "@libraryCardSongs": {
         "description": "Library page card label. Opens the full list of songs in the library."
     },
@@ -301,7 +301,7 @@
     "@libraryEmptyPlaylists": {
         "description": "Empty state on the Playlists list page when the user has not created any playlists."
     },
-    "libraryEmptyLikedSongs": "Vous n'avez encore aimé aucune chanson. Allez-y, aimez-en quelques-unes.",
+    "libraryEmptyLikedSongs": "Vous n'avez encore aimé aucune musique. Allez-y et aimez-en quelques-unes.",
     "@libraryEmptyLikedSongs": {
         "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
     },
@@ -313,7 +313,7 @@
     "@libraryEmptyFavoriteArtists": {
         "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
     },
-    "libraryEmptySongs": "Aucune chanson dans votre bibliothèque pour le moment :/",
+    "libraryEmptySongs": "Aucune musique dans votre bibliothèque pour le moment :/",
     "@libraryEmptySongs": {
         "description": "Empty state on the Songs list page when no songs have been scanned."
     },
@@ -354,7 +354,7 @@
     "@playlistEmpty": {
         "description": "Empty state shown on a playlist detail page when no songs have been added yet."
     },
-    "playlistActionReorder": "Réorganiser les chansons",
+    "playlistActionReorder": "Réorganiser les musiques",
     "@playlistActionReorder": {
         "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
     },
@@ -1129,7 +1129,7 @@
     "@settingsDiscordShowButton": {
         "description": "Toggle for the button under the presence card."
     },
-    "settingsDiscordShowButtonSubtitle": "Ajoute \"Essayer Sono\" en-dessous de la carte",
+    "settingsDiscordShowButtonSubtitle": "Ajoute \"Try Sono\" en-dessous de la carte",
     "@settingsDiscordShowButtonSubtitle": {
         "description": "Subtitle under the link button row. The quoted text is the button's own label and is not translated."
     },
@@ -1157,7 +1157,7 @@
     "@settingsDiscordPreviewIdle": {
         "description": "Shown in the preview card in place of a song title when nothing is playing."
     },
-    "settingsDiscordPreviewButton": "Essayer Sono",
+    "settingsDiscordPreviewButton": "Try Sono",
     "@settingsDiscordPreviewButton": {
         "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
     },
@@ -1202,7 +1202,7 @@
     "@settingsBackupImportConfirmTitle": {
         "description": "Title of the sheet shown before choosing a backup file."
     },
-    "settingsBackupImportConfirmBody": "Vos paramètres seront écrasés et une nouvelle analyse complète sera effectuée. Vos j'aime, favoris et playlists que vous possédez déjà seront conservés, la sauvegarde sera fusionnée par-dessus.",
+    "settingsBackupImportConfirmBody": "Vos paramètres seront écrasés et une nouvelle analyse complète sera effectuée. Vos J'aimes, favoris et playlists que vous possédez déjà seront conservés, la sauvegarde sera fusionnée par-dessus.",
     "@settingsBackupImportConfirmBody": {
         "description": "Explanation in the import confirmation sheet."
     },
@@ -1437,7 +1437,7 @@
     "@migrationNever": {
         "description": "Action permanently dismissing the migration sheet without importing."
     },
-    "migrationDone": "Imported {liked, plural, =0{aucun j'aime} =1{1 j'aime} other{{liked} j'aimes}}, {albums, plural, =0{aucun album} =1{1 album} other{{albums} albums}}, {artists, plural, =0{aucun artiste} =1{1 artiste} other{{artists} artistes}}, {playlists, plural, =0{aucunes playlists} =1{1 playlist} other{{playlists} playlists}} :D",
+    "migrationDone": "Importé {liked, plural, =0{aucun j'aime} =1{1 j'aime} other{{liked} j'aimes}}, {albums, plural, =0{aucun album} =1{1 album} other{{albums} albums}}, {artists, plural, =0{aucun artiste} =1{1 artiste} other{{artists} artistes}}, {playlists, plural, =0{aucune playlist} =1{1 playlist} other{{playlists} playlists}} :D",
     "@migrationDone": {
         "description": "Snackbar summarising a successful migration from the old Sono.",
         "placeholders": {

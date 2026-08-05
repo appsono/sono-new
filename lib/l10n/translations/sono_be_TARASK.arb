@@ -497,5 +497,973 @@
     "searchBrowseGenres": "Агляд жанраў",
     "@searchBrowseGenres": {
         "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
+    },
+    "commonAlbumsCount": "{count, plural, =0{альбомаў няма} one{1 альбом} few{{count} альбома} other{{count} альбомаў}}",
+    "@commonAlbumsCount": {
+        "description": "Number of albums, used in library totals",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "commonArtistsCount": "{count, plural, =0{выканаўцаў няма} one{1 выканаўца} few{{count} выканаўцы} other{{count} выканаўцаў}}",
+    "@commonArtistsCount": {
+        "description": "Number of artists, used in library totals",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "settingsPageTitle": "Налады",
+    "@settingsPageTitle": {
+        "description": "Title shown in the header of the settings root page."
+    },
+    "settingsSearchTooltip": "Налады пошуку",
+    "@settingsSearchTooltip": {
+        "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
+    },
+    "settingsSearchHint": "Налады пошуку",
+    "@settingsSearchHint": {
+        "description": "Placeholder inside the search field at the top of the settings root page."
+    },
+    "settingsSearchNoResults": "Такіх налад няма >_<",
+    "@settingsSearchNoResults": {
+        "description": "Shown on the settings root when the search field matches nothing."
+    },
+    "settingsPlannedBadge": "Заплянавана",
+    "@settingsPlannedBadge": {
+        "description": "Small badge on a settings row whose feature is on the roadmap but not built yet."
+    },
+    "settingsPlannedBody": "Гэтая функцыя ёсьць у плянах, але яшчэ недаступная.",
+    "@settingsPlannedBody": {
+        "description": "Explanation shown in the sheet that opens when a planned settings row is tapped."
+    },
+    "settingsPlannedFollow": "Сачыць за распрацоўкаю на GitHub",
+    "@settingsPlannedFollow": {
+        "description": "Action in the planned feature sheet that opens the project repository."
+    },
+    "settingsPlannedFollowSubtitle": "Адкрывае рэпазітор у вашым браўзэры",
+    "@settingsPlannedFollowSubtitle": {
+        "description": "Subtitle under the GitHub action in the planned feature sheet."
+    },
+    "settingsProfileUnnamed": "Ваш профіль",
+    "@settingsProfileUnnamed": {
+        "description": "Name shown on the profile row in settings when no username has been set yet."
+    },
+    "settingsProfileSubtitle": "Імя й аватар",
+    "@settingsProfileSubtitle": {
+        "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
+    },
+    "settingsAppearance": "Выгляд",
+    "@settingsAppearance": {
+        "description": "Label of the row opening the appearance subpage, and the title of that subpage."
+    },
+    "settingsLanguage": "Мова",
+    "@settingsLanguage": {
+        "description": "Label of the row opening the language subpage, and the title of that subpage."
+    },
+    "settingsThemeSystem": "Сыстэмная",
+    "@settingsThemeSystem": {
+        "description": "Theme option that follows the device light/dark setting. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeDark": "Цёмная",
+    "@settingsThemeDark": {
+        "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeLight": "Сьветлая",
+    "@settingsThemeLight": {
+        "description": "Name of the light theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsLanguageSystem": "Як у сыстэме",
+    "@settingsLanguageSystem": {
+        "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
+    },
+    "settingsPlayback": "Прайграваньне",
+    "@settingsPlayback": {
+        "description": "Label of the row opening the playback subpage, and the title of that subpage."
+    },
+    "settingsEqualizer": "Эквалайзэр і эфэкты",
+    "@settingsEqualizer": {
+        "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
+    },
+    "settingsEqualizerOff": "Выключана",
+    "@settingsEqualizerOff": {
+        "description": "Value on the equalizer row when the equalizer is disabled."
+    },
+    "settingsLibrary": "Бібліятэка й сканаваньне",
+    "@settingsLibrary": {
+        "description": "Label of the row opening the library subpage, and the title of that subpage."
+    },
+    "settingsDiscord": "Прысутнасьць Discord",
+    "@settingsDiscord": {
+        "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
+    },
+    "settingsDiscordDisconnected": "Ня злучана",
+    "@settingsDiscordDisconnected": {
+        "description": "Value on the Discord row when no Discord account is linked."
+    },
+    "settingsBackup": "Запаснае капіяваньне і аднаўленьне",
+    "@settingsBackup": {
+        "description": "Label of the row opening the backup subpage, and the title of that subpage."
+    },
+    "settingsStorage": "Сховішча",
+    "@settingsStorage": {
+        "description": "Label of the storage row. Currently marked as planned."
+    },
+    "settingsUpdates": "Абнаўленьні",
+    "@settingsUpdates": {
+        "description": "Label of the row that checks for a newer release. Its value is the installed version."
+    },
+    "settingsUpdatesViaPlay": "Кіруецца",
+    "@settingsUpdatesViaPlay": {
+        "description": "Value on the Updates row for Play builds, which open the store listing instead of checking GitHub."
+    },
+    "settingsAbout": "Аб Sono",
+    "@settingsAbout": {
+        "description": "Label of the row opening the about subpage, and the title of that subpage."
+    },
+    "settingsVersionLine": "Sono {version} • зборка {build}",
+    "@settingsVersionLine": {
+        "description": "First footnote line at the bottom of the settings root, showing the installed version and build number.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLicenseLine": "Вольнае праграмнае забяспечаньне пад GPL-3.0",
+    "@settingsLicenseLine": {
+        "description": "Second footnote line at the bottom of the settings root."
+    },
+    "settingsProfileTitle": "Профіль",
+    "@settingsProfileTitle": {
+        "description": "Title of the profile subpage in settings."
+    },
+    "settingsProfileName": "Імя",
+    "@settingsProfileName": {
+        "description": "Label of the row showing the display name, and the label of the text field in the rename sheet."
+    },
+    "settingsProfileNameUnset": "Ня задана",
+    "@settingsProfileNameUnset": {
+        "description": "Value on the name row when no display name has been chosen yet."
+    },
+    "settingsProfileNameSheetTitle": "Вашае імя",
+    "@settingsProfileNameSheetTitle": {
+        "description": "Title of the sheet for editing the display name. This name appears in the greeting on the home page."
+    },
+    "settingsProfilePhotoHint": "Націсьніце на відарыс, каб зьмяніць",
+    "@settingsProfilePhotoHint": {
+        "description": "Caption under the large avatar on the profile subpage, explaining that tapping it opens the image picker."
+    },
+    "settingsProfileRemovePhoto": "Прыбраць фота",
+    "@settingsProfileRemovePhoto": {
+        "description": "Row that clears the profile picture. Only shown when a picture is set."
+    },
+    "settingsProfileStats": "Статыстыка слуханьня",
+    "@settingsProfileStats": {
+        "description": "Row for play counts and listening history. Currently marked as planned."
+    },
+    "settingsProfilePickBadImage": "гэты файл..НЕСАПРАЎДНЫ, гмх",
+    "@settingsProfilePickBadImage": {
+        "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
+    },
+    "settingsAppearanceSectionTheme": "Тэма",
+    "@settingsAppearanceSectionTheme": {
+        "description": "Section label above the theme picker on the appearance subpage."
+    },
+    "settingsAppearanceThemeNote": "Кіруецца сьветлае або цёмнае тэмы на вашае прыладзе, у тым ліку зададзенага вамі раскладу.",
+    "@settingsAppearanceThemeNote": {
+        "description": "Note under the theme picker explaining what the System option does. The schedule belongs to the operating system, not to Sono."
+    },
+    "settingsAppearanceSectionPlayer": "Прайгравальнік",
+    "@settingsAppearanceSectionPlayer": {
+        "description": "Section label above the player appearance options on the appearance subpage."
+    },
+    "settingsAppearanceColourFromArt": "Колер з вокладкі альбома",
+    "@settingsAppearanceColourFromArt": {
+        "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
+    },
+    "settingsAppearanceColourFromArtSubtitle": "Задаць тон вокладкі альбома ўсяму прайгравальніку",
+    "@settingsAppearanceColourFromArtSubtitle": {
+        "description": "Subtitle under the colour from album art row."
+    },
+    "settingsAppearanceBlurredBackdrops": "Размытыя заднікі",
+    "@settingsAppearanceBlurredBackdrops": {
+        "description": "Row that enables blurred cover backdrops behind the player. Currently marked as planned."
+    },
+    "settingsAppearanceBlurredBackdropsSubtitle": "Будзе каштаваць крыху батарэі на старых прыладах",
+    "@settingsAppearanceBlurredBackdropsSubtitle": {
+        "description": "Subtitle under the blurred backdrops row, warning about the performance cost."
+    },
+    "settingsAppearanceReduceMotion": "Адключыць эфэкты",
+    "@settingsAppearanceReduceMotion": {
+        "description": "Row that disables animations across the app. Currently marked as planned."
+    },
+    "settingsAppearanceReduceMotionSubtitle": "Адключыць жвавыя націсканьні і пераходы",
+    "@settingsAppearanceReduceMotionSubtitle": {
+        "description": "Subtitle under the reduce motion row."
+    },
+    "settingsAppearanceSectionLibrary": "Бібліятэка",
+    "@settingsAppearanceSectionLibrary": {
+        "description": "Section label above the library appearance options on the appearance subpage."
+    },
+    "settingsAppearanceGridDensity": "Шчыльнасьць сеткі",
+    "@settingsAppearanceGridDensity": {
+        "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
+    },
+    "settingsAppearanceTrackNumbers": "Паказваць нумары трэкаў",
+    "@settingsAppearanceTrackNumbers": {
+        "description": "Row toggling track numbers in album track lists. Currently marked as planned."
+    },
+    "settingsLanguageSearchHint": "Пошук моваў",
+    "@settingsLanguageSearchHint": {
+        "description": "Placeholder inside the search field on the language subpage."
+    },
+    "settingsLanguageSystemSubtitle": "Зараз {language}",
+    "@settingsLanguageSystemSubtitle": {
+        "description": "Subtitle under the system default option, naming the language the device settings currently resolve to. The language name is in its own language, e.g. Deutsch.",
+        "placeholders": {
+            "language": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLanguageSectionAvailable": "Даступна",
+    "@settingsLanguageSectionAvailable": {
+        "description": "Section label above the list of translated languages on the language subpage."
+    },
+    "settingsLanguageNoMatches": "Ніводная мова такому не адпавядае :/",
+    "@settingsLanguageNoMatches": {
+        "description": "Shown on the language subpage when the search field filters out every language."
+    },
+    "settingsLanguageHelpTranslate": "Дапамагчы з перакладам Sono",
+    "@settingsLanguageHelpTranslate": {
+        "description": "Row that opens the Weblate project where translations are contributed."
+    },
+    "settingsLanguageHelpTranslateSubtitle": "Адкрывае Weblate у вашым браўзэры",
+    "@settingsLanguageHelpTranslateSubtitle": {
+        "description": "Subtitle under the help translate row."
+    },
+    "settingsPlaybackSectionTransitions": "Пераходы",
+    "@settingsPlaybackSectionTransitions": {
+        "description": "Section label above gapless, crossfade and fade options on the playback subpage."
+    },
+    "settingsPlaybackGapless": "Прайграваньне без затрымкі",
+    "@settingsPlaybackGapless": {
+        "description": "Toggle that preloads the next track so it starts without a gap."
+    },
+    "settingsPlaybackGaplessSubtitle": "Падгружае наступную песьню",
+    "@settingsPlaybackGaplessSubtitle": {
+        "description": "Subtitle under the gapless playback row."
+    },
+    "settingsPlaybackCrossfade": "Плаўны пераход",
+    "@settingsPlaybackCrossfade": {
+        "description": "Row for fading one song into the next. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPause": "Зьмяншаць гучнасьць на паўзе",
+    "@settingsPlaybackFadeOnPause": {
+        "description": "Row for fading out on pause rather than cutting. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPauseSubtitle": "Заціханьне замест рэзкага абрыву",
+    "@settingsPlaybackFadeOnPauseSubtitle": {
+        "description": "Subtitle under the fade on pause row."
+    },
+    "settingsPlaybackSectionSound": "Гук",
+    "@settingsPlaybackSectionSound": {
+        "description": "Section label above the equalizer, normalisation and volume options on the playback subpage."
+    },
+    "settingsPlaybackNormalisation": "Нармалізацыя гучнасьці",
+    "@settingsPlaybackNormalisation": {
+        "description": "Row for evening out loudness between tracks using ReplayGain tags. Currently marked as planned."
+    },
+    "settingsPlaybackVolume": "Гучнасьць у аплікацыі",
+    "@settingsPlaybackVolume": {
+        "description": "Slider controlling Sono's own output volume, separate from the device volume."
+    },
+    "settingsPlaybackVolumeValue": "{value}%",
+    "@settingsPlaybackVolumeValue": {
+        "description": "Value shown next to the in-app volume slider.",
+        "placeholders": {
+            "value": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsPlaybackSectionBehaviour": "Паводзіны",
+    "@settingsPlaybackSectionBehaviour": {
+        "description": "Section label above the sleep timer and headphone options on the playback subpage."
+    },
+    "settingsPlaybackSleepTimer": "Таймэр сну",
+    "@settingsPlaybackSleepTimer": {
+        "description": "Row for stopping playback after a set time. Currently marked as planned."
+    },
+    "settingsPlaybackResumeOnConnect": "Прайграваньне пры падлучэньні навушнікаў",
+    "@settingsPlaybackResumeOnConnect": {
+        "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+    },
+    "settingsPlaybackPauseOnDisconnect": "Паўза пры адлучэньні",
+    "@settingsPlaybackPauseOnDisconnect": {
+        "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+    },
+    "settingsEqPresetFlat": "Роўны",
+    "@settingsEqPresetFlat": {
+        "description": "Equalizer preset, every band at zero."
+    },
+    "settingsEqPresetBass": "Бас",
+    "@settingsEqPresetBass": {
+        "description": "Equalizer preset, lifts the lows."
+    },
+    "settingsEqPresetTreble": "Дыскант",
+    "@settingsEqPresetTreble": {
+        "description": "Equalizer preset, lifts the highs."
+    },
+    "settingsEqPresetVocal": "Вакал",
+    "@settingsEqPresetVocal": {
+        "description": "Equalizer preset, lifts the mids where voices sit."
+    },
+    "settingsEqPresetRock": "Рок",
+    "@settingsEqPresetRock": {
+        "description": "Equalizer preset, lifts the lows and highs."
+    },
+    "settingsEqPresetElectronic": "Электроніка",
+    "@settingsEqPresetElectronic": {
+        "description": "Equalizer preset for electronic music, lifts the lows and highs."
+    },
+    "settingsEqPresetBrainFryer": "Мазґаплаў",
+    "@settingsEqPresetBrainFryer": {
+        "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
+    },
+    "settingsEqPresetFryerUltimate": "Мазґаплаў+",
+    "@settingsEqPresetFryerUltimate": {
+        "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
+    },
+    "settingsEqPresetCustom": "Уласны",
+    "@settingsEqPresetCustom": {
+        "description": "Shown instead of a preset name when the curve matches none of them."
+    },
+    "settingsEqTitle": "Эквалайзэр",
+    "@settingsEqTitle": {
+        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+    },
+    "settingsEqEnable": "Эквалайзэр",
+    "@settingsEqEnable": {
+        "description": "Toggle that switches the equalizer on and off."
+    },
+    "settingsEqEnableSubtitle": "Прыменена праз ланцужок фільтраў mpv",
+    "@settingsEqEnableSubtitle": {
+        "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
+    },
+    "settingsEqSectionPreset": "Набор наладаў",
+    "@settingsEqSectionPreset": {
+        "description": "Section label above the preset chips on the equalizer subpage."
+    },
+    "settingsEqSectionEffects": "Эфэкты",
+    "@settingsEqSectionEffects": {
+        "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
+    },
+    "settingsEqBassBoost": "Узмоцнены бас",
+    "@settingsEqBassBoost": {
+        "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
+    },
+    "settingsEqSpeed": "Хуткасьць",
+    "@settingsEqSpeed": {
+        "description": "Slider controlling playback rate without changing pitch."
+    },
+    "settingsEqPitch": "Вышыня",
+    "@settingsEqPitch": {
+        "description": "Slider controlling pitch without changing playback rate."
+    },
+    "settingsEqValueDb": "{value} дБ",
+    "@settingsEqValueDb": {
+        "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsEqValueRate": "{value}x",
+    "@settingsEqValueRate": {
+        "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsEqResetAll": "Скінуць усе эфэкты",
+    "@settingsEqResetAll": {
+        "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
+    },
+    "settingsEqResetTooltip": "Скінуць эквалайзэр",
+    "@settingsEqResetTooltip": {
+        "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
+    },
+    "settingsLibrarySectionSources": "Крыніцы",
+    "@settingsLibrarySectionSources": {
+        "description": "Section label above folder and length options on the library subpage."
+    },
+    "settingsLibraryMusicFolders": "Тэчкі з музыкаю",
+    "@settingsLibraryMusicFolders": {
+        "description": "Extra folders to scan. Desktop only, Android uses MediaStore."
+    },
+    "settingsLibraryMusicFoldersEmpty": "Дадатковых тэчак пакуль што няма",
+    "@settingsLibraryMusicFoldersEmpty": {
+        "description": "Shown in the music folders editor when the list is empty."
+    },
+    "settingsLibraryExcludedFolders": "Выключаныя тэчкі",
+    "@settingsLibraryExcludedFolders": {
+        "description": "Folders skipped when scanning."
+    },
+    "settingsLibraryExcludedFoldersEmpty": "Пакуль што нічога не выключана",
+    "@settingsLibraryExcludedFoldersEmpty": {
+        "description": "Shown in the excluded folders editor when the list is empty."
+    },
+    "settingsLibraryFolderField": "Шлях да тэчкі",
+    "@settingsLibraryFolderField": {
+        "description": "Label of the text field in the folder editors."
+    },
+    "settingsLibraryFolderAdd": "Дадаць тэчку",
+    "@settingsLibraryFolderAdd": {
+        "description": "Action that adds the typed path to the folder list."
+    },
+    "settingsLibraryMinLength": "Мінімальная даўжыня",
+    "@settingsLibraryMinLength": {
+        "description": "Files shorter than this are skipped when scanning."
+    },
+    "settingsLibraryMinLengthHelp": "Файлы, карацейшыя за гэтае значэньне, прапускаюцца. Пакіньце пустым, каб уключыць усе.",
+    "@settingsLibraryMinLengthHelp": {
+        "description": "Explanation at the top of the minimum length sheet."
+    },
+    "settingsLibraryMinLengthField": "Сэкунды",
+    "@settingsLibraryMinLengthField": {
+        "description": "Label of the text field in the minimum length sheet."
+    },
+    "settingsLibraryMinLengthValue": "{seconds} с",
+    "@settingsLibraryMinLengthValue": {
+        "description": "Minimum length shown on the row, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsLibraryMinLengthOff": "Выкл",
+    "@settingsLibraryMinLengthOff": {
+        "description": "Shown when no minimum length is set."
+    },
+    "settingsLibrarySectionGrouping": "Групы",
+    "@settingsLibrarySectionGrouping": {
+        "description": "Section label above album grouping and sorting options."
+    },
+    "settingsLibraryGroupByFolder": "Групаваць альбомы па тэчкам",
+    "@settingsLibraryGroupByFolder": {
+        "description": "Toggle that groups albums by the song's folder instead of its album tag."
+    },
+    "settingsLibraryGroupByFolderSubtitle": "Выкарыстоўваць тэчку песьні замест тэґа альбому",
+    "@settingsLibraryGroupByFolderSubtitle": {
+        "description": "Subtitle under the group albums by folder row."
+    },
+    "settingsLibraryIgnoreLeadingThe": "Ігнараваць пачатковае «The»",
+    "@settingsLibraryIgnoreLeadingThe": {
+        "description": "Sorts artists ignoring a leading 'The'. Currently marked as planned. Keep the English article in quotes."
+    },
+    "settingsLibraryIgnoreLeadingTheSubtitle": "Пры сартаваньні выканаўцаў",
+    "@settingsLibraryIgnoreLeadingTheSubtitle": {
+        "description": "Subtitle under the ignore leading The row."
+    },
+    "settingsLibrarySectionArtistParsing": "Аналіз выканаўцаў",
+    "@settingsLibrarySectionArtistParsing": {
+        "description": "Section label above the multi-artist splitting options."
+    },
+    "settingsLibrarySplitArtists": "Раздзяляць тэґі некалькіх выканаўцаў",
+    "@settingsLibrarySplitArtists": {
+        "description": "Toggle that splits an artist tag into several artists at the delimiters."
+    },
+    "settingsLibraryDelimiters": "Разьдзяляльнікі",
+    "@settingsLibraryDelimiters": {
+        "description": "Characters that separate artists in a tag, such as a comma or a slash."
+    },
+    "settingsLibraryDelimitersEmpty": "Выкарыстоўваюцца прадвызначэньні",
+    "@settingsLibraryDelimitersEmpty": {
+        "description": "Shown in the delimiter editor when the list is empty, meaning the built-in delimiters apply."
+    },
+    "settingsLibraryDelimiterField": "Разьдзяляльнік",
+    "@settingsLibraryDelimiterField": {
+        "description": "Label of the text field in the delimiter editor."
+    },
+    "settingsLibraryDelimiterAdd": "Дадаць разьдзяляльнік",
+    "@settingsLibraryDelimiterAdd": {
+        "description": "Action that adds the typed delimiter to the list."
+    },
+    "settingsLibraryProtectedArtists": "Ахаваныя выканаўцы",
+    "@settingsLibraryProtectedArtists": {
+        "description": "Artist names never split, for acts whose name contains a delimiter."
+    },
+    "settingsLibraryProtectedArtistsEmpty": "Ахаваных выканаўцаў пакуль што няма",
+    "@settingsLibraryProtectedArtistsEmpty": {
+        "description": "Shown in the protected artists editor when the list is empty."
+    },
+    "settingsLibraryProtectedArtistField": "Імя выканаўцы",
+    "@settingsLibraryProtectedArtistField": {
+        "description": "Label of the text field in the protected artists editor."
+    },
+    "settingsLibraryProtectedArtistAdd": "Дадаць выканаўцы",
+    "@settingsLibraryProtectedArtistAdd": {
+        "description": "Action that adds the typed artist to the protected list."
+    },
+    "settingsLibraryRescan": "Перасканаваць бібліятэку",
+    "@settingsLibraryRescan": {
+        "description": "Action that runs a full rescan of the music library."
+    },
+    "settingsLibraryRescanRunning": "Сканаваньне…",
+    "@settingsLibraryRescanRunning": {
+        "description": "Replaces the rescan label while a scan is in progress."
+    },
+    "settingsLibraryLastScan": "Апошняе сканаваньне {date} а {time}",
+    "@settingsLibraryLastScan": {
+        "description": "First footer line on the library subpage, showing when the last scan finished.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsLibraryCountSongs": "{count, plural, =0{песьняў няма} one{{count} песьня} few{{count} песьні} many{{count} песьняў} other{{count} песьняў}}",
+    "@settingsLibraryCountSongs": {
+        "description": "Song total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryCountAlbums": "{count, plural, =0{альбомаў няма} one{{count} альбом} few{{count} альбома} many{{count} альбомаў} other{{count} альбомаў}}",
+    "@settingsLibraryCountAlbums": {
+        "description": "Album total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryCountArtists": "{count, plural, =0{выканаўцаў няма} one{{count} выканаўца} few{{count} выканаўцы} many{{count} выканаўцаў} other{{count} выканаўцаў}}",
+    "@settingsLibraryCountArtists": {
+        "description": "Artist total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsDiscordTitle": "Discord",
+    "@settingsDiscordTitle": {
+        "description": "Title of the Discord subpage. Shorter than the row label, which is 'Discord presence'."
+    },
+    "settingsDiscordConnect": "Падлучыць Discord",
+    "@settingsDiscordConnect": {
+        "description": "Action that opens the Discord login flow."
+    },
+    "settingsDiscordConnecting": "Падлучэньне…",
+    "@settingsDiscordConnecting": {
+        "description": "Replaces the connect label while the login is in progress."
+    },
+    "settingsDiscordConnected": "Падлучана",
+    "@settingsDiscordConnected": {
+        "description": "Status under the Discord account name when a token is loaded."
+    },
+    "settingsDiscordDisconnect": "Адлучыць",
+    "@settingsDiscordDisconnect": {
+        "description": "Destructive action that logs out of Discord and clears the presence."
+    },
+    "settingsDiscordLoginFailed": "Не ўдалося ўвайсьці ў Discord",
+    "@settingsDiscordLoginFailed": {
+        "description": "Snackbar shown when the Discord login could not be completed. The error follows after a colon."
+    },
+    "settingsDiscordSectionVisible": "Што бачаць людзі",
+    "@settingsDiscordSectionVisible": {
+        "description": "Section label above the toggles controlling what the presence card shows."
+    },
+    "settingsDiscordShowSong": "Паказваць бягучую песьню",
+    "@settingsDiscordShowSong": {
+        "description": "Master toggle for the presence. Off means nothing is shown on Discord at all."
+    },
+    "settingsDiscordShowArt": "Паказваць вокладка альбома",
+    "@settingsDiscordShowArt": {
+        "description": "Toggle for sending the cover with the presence."
+    },
+    "settingsDiscordShowArtSubtitle": "Замест гэтага Discord будзе паказваць замяшчальнік",
+    "@settingsDiscordShowArtSubtitle": {
+        "description": "Subtitle under the album art row, explaining that turning it off does not remove the image, Discord substitutes a generic one."
+    },
+    "settingsDiscordShowElapsed": "Паказваць індыкатар выкананьня",
+    "@settingsDiscordShowElapsed": {
+        "description": "Toggle for sending playback timestamps, which Discord draws as a progress bar."
+    },
+    "settingsDiscordShowElapsedSubtitle": "Замест гэтага Discord будзе лічыць з пачатку",
+    "@settingsDiscordShowElapsedSubtitle": {
+        "description": "Subtitle under the progress bar row, explaining that turning it off leaves Discord's own timer running."
+    },
+    "settingsDiscordShowButton": "Паказваць кнопку са спасылкаю",
+    "@settingsDiscordShowButton": {
+        "description": "Toggle for the button under the presence card."
+    },
+    "settingsDiscordShowButtonSubtitle": "Дадае «Try Sono» пад карткаю",
+    "@settingsDiscordShowButtonSubtitle": {
+        "description": "Subtitle under the link button row. The quoted text is the button's own label and is not translated."
+    },
+    "settingsDiscordOnlyWhilePlaying": "Толькі падчас прайграваньня",
+    "@settingsDiscordOnlyWhilePlaying": {
+        "description": "Toggle that clears the presence shortly after playback pauses."
+    },
+    "settingsDiscordOnlyWhilePlayingSubtitle": "Ачышчае прысутнасьць пасьля хвіліннай паўзы",
+    "@settingsDiscordOnlyWhilePlayingSubtitle": {
+        "description": "Subtitle under the only while playing row."
+    },
+    "settingsDiscordNote": "Прысутнасьць працуе праз сэанс безь інтэрфэйсу. Яна спыняецца адразу пасьля адлучэньня й на сэрвэры нічога не захоўваецца.",
+    "@settingsDiscordNote": {
+        "description": "Note explaining how the Discord connection works and that no data is kept remotely."
+    },
+    "settingsDiscordPreview": "Перадпрагляд",
+    "@settingsDiscordPreview": {
+        "description": "Heading of the card showing how the presence will look. Rendered in uppercase."
+    },
+    "settingsDiscordPreviewHeading": "Слухае Sono",
+    "@settingsDiscordPreviewHeading": {
+        "description": "First line of the preview card, matching what Discord displays above the song."
+    },
+    "settingsDiscordPreviewIdle": "Нічога ня грае",
+    "@settingsDiscordPreviewIdle": {
+        "description": "Shown in the preview card in place of a song title when nothing is playing."
+    },
+    "settingsDiscordPreviewButton": "Try Sono",
+    "@settingsDiscordPreviewButton": {
+        "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
+    },
+    "settingsBackupExport": "Экспрат запаснае копіі",
+    "@settingsBackupExport": {
+        "description": "Row that writes a backup file."
+    },
+    "settingsBackupExporting": "Экспартаваньне…",
+    "@settingsBackupExporting": {
+        "description": "Replaces the export label while a backup is being written."
+    },
+    "settingsBackupExportSubtitle": "Упадабаныя і абраныя песьні, плэй-лісты, профіль і налады",
+    "@settingsBackupExportSubtitle": {
+        "description": "Subtitle under the export row, listing what a backup contains."
+    },
+    "settingsBackupExportSaved": "Захавана ў {path}",
+    "@settingsBackupExportSaved": {
+        "description": "Snackbar confirming where the backup file was written.",
+        "placeholders": {
+            "path": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsBackupExportFailed": "Не ўдалося экспартаваць запасную копію",
+    "@settingsBackupExportFailed": {
+        "description": "Snackbar shown when writing the backup failed. The error follows after a colon."
+    },
+    "settingsBackupImport": "Імпарт запаснае копіі",
+    "@settingsBackupImport": {
+        "description": "Row that reads a backup file back in."
+    },
+    "settingsBackupImporting": "Імпартаваньне…",
+    "@settingsBackupImporting": {
+        "description": "Replaces the import label while a backup is being restored."
+    },
+    "settingsBackupImportSubtitle": "Аб'ядноўвае з вашае бібліятэкаю, потым паўторна скануе",
+    "@settingsBackupImportSubtitle": {
+        "description": "Subtitle under the import row."
+    },
+    "settingsBackupImportConfirmTitle": "Імпартаваць запасную копію?",
+    "@settingsBackupImportConfirmTitle": {
+        "description": "Title of the sheet shown before choosing a backup file."
+    },
+    "settingsBackupImportConfirmBody": "Вашыя налады былі перазапісаныя й выконваецца поўнае паўторнае сканаваньне. Упадабаныя і абраныя песьні, плэй-лісты, якія ў вас ўжо ёсьць, засталіся, запасная копія будзе запісаная зьверху іх.",
+    "@settingsBackupImportConfirmBody": {
+        "description": "Explanation in the import confirmation sheet."
+    },
+    "settingsBackupImportChoose": "Абраць файл",
+    "@settingsBackupImportChoose": {
+        "description": "Action in the import confirmation sheet that opens the file picker."
+    },
+    "settingsBackupImportDone": "Адноўлена {liked, plural, one{{liked} упадабаная песьня} few{{liked} упадабаныя песьні} other{{liked} убадабаных песьняў}}, {albums, plural, one{{albums} альбом} few{{albums} альбома} other{{albums} альбомаў}}, {artists, plural, one{{artists} выканаўца} few{{artists} выканаўцы} other{{artists} выканаўцаў}}, {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}}",
+    "@settingsBackupImportDone": {
+        "description": "Snackbar summarising a successful import.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportSkipped": "{songs, plural, one{{songs} песьня} few{{songs} песьні} other{{songs} песьняў}} і {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}} не было знойдзена на прыладзе",
+    "@settingsBackupImportSkipped": {
+        "description": "Second snackbar after an import, listing what could not be matched to local files.",
+        "placeholders": {
+            "songs": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportFailed": "Не ўдалося імпартаваць запасную копію",
+    "@settingsBackupImportFailed": {
+        "description": "Snackbar shown when reading the backup failed. The error follows after a colon."
+    },
+    "settingsBackupNote": "Імпартаваньне захоўвае ўсё, што ў вас ужо ёсьць. Песьні, якіх няма на прыладзе, прапускаюцца, аб іх будзе паведамлена напрыканцы.",
+    "@settingsBackupNote": {
+        "description": "Note under the export and import rows, clarifying that importing is not destructive."
+    },
+    "settingsBackupSectionAutomatic": "Аўтаматчына",
+    "@settingsBackupSectionAutomatic": {
+        "description": "Section label above the scheduled backup option."
+    },
+    "settingsBackupWeekly": "Запаснае капіяваньне штотыдзень",
+    "@settingsBackupWeekly": {
+        "description": "Toggle for writing a backup once a week. Currently marked as planned."
+    },
+    "settingsBackupWeeklySubtitle": "Запісваецца да вашае тэчкі з музыкаю",
+    "@settingsBackupWeeklySubtitle": {
+        "description": "Subtitle under the weekly backup row."
+    },
+    "settingsBackupLastExport": "Апошяе экспартаваньне {date} а {time}",
+    "@settingsBackupLastExport": {
+        "description": "Footer line showing when a backup was last written. Both placeholders receive the same timestamp.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsUpdatesChecking": "Праверка…",
+    "@settingsUpdatesChecking": {
+        "description": "Value on the updates row while a check is running."
+    },
+    "settingsUpdatesUpToDate": "Абноўлена",
+    "@settingsUpdatesUpToDate": {
+        "description": "Value on the updates row when the installed version is the newest release."
+    },
+    "settingsUpdatesAvailable": "Даступна {version}",
+    "@settingsUpdatesAvailable": {
+        "description": "Value on the updates row when a newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetUpToDateTitle": "У вас апошняя вэрсія :D",
+    "@settingsUpdateSheetUpToDateTitle": {
+        "description": "Title of the update sheet when no newer release exists."
+    },
+    "settingsUpdateSheetUpToDateBody": "{version} з'яўляецца найноўшае вэрсіяю Sono.",
+    "@settingsUpdateSheetUpToDateBody": {
+        "description": "Body of the update sheet when no newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetAvailableTitle": "Даступна Sono {version}",
+    "@settingsUpdateSheetAvailableTitle": {
+        "description": "Title of the update sheet when a newer release was found.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetFrom": "У вас {current}, найноўшая вэрсія — {latest}.",
+    "@settingsUpdateSheetFrom": {
+        "description": "Line above the release notes comparing the installed and newest versions.",
+        "placeholders": {
+            "current": {
+                "type": "String"
+            },
+            "latest": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetOpen": "Адкрыць выпуск",
+    "@settingsUpdateSheetOpen": {
+        "description": "Action that opens the GitHub release page in the browser."
+    },
+    "settingsUpdateSheetSkip": "Прапусціць гэтую вэрсію",
+    "@settingsUpdateSheetSkip": {
+        "description": "Action that dismisses a release so it stops being announced."
+    },
+    "settingsUpdateSheetSkipSubtitle": "Не паказваць банэр для гэтага выпуску",
+    "@settingsUpdateSheetSkipSubtitle": {
+        "description": "Subtitle under the skip action in the update sheet."
+    },
+    "settingsUpdateSheetFailedTitle": "Не ўдалося праверыць на абнаўленьні",
+    "@settingsUpdateSheetFailedTitle": {
+        "description": "Title of the update sheet when the check could not reach GitHub."
+    },
+    "settingsUpdateSheetFailedBody": "Sono не ўдалося дасягнуць GitHub. Праверце вашае падключэньне й паспрабуйце яшчэ раз.",
+    "@settingsUpdateSheetFailedBody": {
+        "description": "Body of the update sheet when the check failed."
+    },
+    "settingsAboutTitle": "Пра аплікацыю",
+    "@settingsAboutTitle": {
+        "description": "Title of the about subpage. Shorter than the row label, which is 'About Sono'."
+    },
+    "settingsAboutVersion": "{version} • зборка {build}",
+    "@settingsAboutVersion": {
+        "description": "Version line under the app name in the about hero. Does not repeat the app name, unlike settingsVersionLine.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsAboutSourceCode": "Зыходны код",
+    "@settingsAboutSourceCode": {
+        "description": "Row that opens the GitHub repository. Its subtitle is the repository path and is not translated."
+    },
+    "settingsAboutLicences": "Ліцэнзыі",
+    "@settingsAboutLicences": {
+        "description": "Row that opens the licence list, covering Sono and every dependency."
+    },
+    "settingsAboutKofiSubtitle": "Аплата за подпіс аплікацыі й мора кавы",
+    "@settingsAboutKofiSubtitle": {
+        "description": "Subtitle under the Ko-fi row."
+    },
+    "settingsAboutFooterBuilt": "Створана mathiiiiiis",
+    "@settingsAboutFooterBuilt": {
+        "description": "First footer line on the about page. The name is a username and stays as is."
+    },
+    "contributorsPlaceholder": "тут можаш быць ты",
+    "@contributorsPlaceholder": {
+        "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
+    },
+    "migrationFoundTitle": "Даныя са старой Sono",
+    "@migrationFoundTitle": {
+        "description": "Title of the sheet offering to import data from the previous Sono install."
+    },
+    "migrationFoundBody": "У вас на прыладзе засталіся даныя з мінулае аплікацыі.",
+    "@migrationFoundBody": {
+        "description": "Body text above the counts in the migration sheet."
+    },
+    "migrationCountLiked": "{count, plural, =0{без упадабаньняў} one{{count} упадабаная песьня} few{{count} упадабаныя песьні} other{{count} упадабаных песьняў}}",
+    "@migrationCountLiked": {
+        "description": "Liked song count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountAlbums": "{count, plural, =0{безь альбомаў} one{{count} альбом} few{{count} альбома} other{{count} альбомаў}}",
+    "@migrationCountAlbums": {
+        "description": "Favorite album count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountArtists": "{count, plural, =0{без выканаўцаў} one{{count} выканаўца} few{{count} выканаўцы} other{{count} выканаўцаў}}",
+    "@migrationCountArtists": {
+        "description": "Favorite artist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountPlaylists": "{count, plural, =0{без плэй-лістаў} one{{count} плэй-ліста} few{{count} плэй-ліст} other{{count} плэй-лістаў}}",
+    "@migrationCountPlaylists": {
+        "description": "Playlist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationImport": "Імпартаваць",
+    "@migrationImport": {
+        "description": "Action confirming the import in the migration sheet."
+    },
+    "migrationLater": "Не зараз",
+    "@migrationLater": {
+        "description": "Action dismissing the migration sheet until the next launch."
+    },
+    "migrationNever": "Больш не пытацца",
+    "@migrationNever": {
+        "description": "Action permanently dismissing the migration sheet without importing."
+    },
+    "migrationDone": "Імпартавана {liked, plural, one{{liked} упадабаная песьня} few{{liked} упадабаныя песьні} other{{liked} убадабаных песьняў}}, {albums, plural, one{{albums} альбом} few{{albums} альбома} other{{albums} альбомаў}}, {artists, plural, one{{artists} выканаўца} few{{artists} выканаўцы} other{{artists} выканаўцаў}}, {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}} :D",
+    "@migrationDone": {
+        "description": "Snackbar summarising a successful migration from the old Sono.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationDoneNothing": "Са старой Sono нічога не імпартавана :/",
+    "@migrationDoneNothing": {
+        "description": "Snackbar shown when a migration ran but matched nothing on this device."
+    },
+    "migrationUnresolved": "{count, plural, one{{count} песьня} few{{count} песьні} other{{count} песьняў}} больш не на гэтае прыладзе",
+    "@migrationUnresolved": {
+        "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationFailed": "Не ўдалося імпартаваць са старой Sono :/",
+    "@migrationFailed": {
+        "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
     }
 }

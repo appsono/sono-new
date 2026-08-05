@@ -542,7 +542,7 @@
     "@settingsPlannedBody": {
         "description": "Explanation shown in the sheet that opens when a planned settings row is tapped."
     },
-    "settingsPlannedFollow": "Зачыць за распрацоўкай на GitHub",
+    "settingsPlannedFollow": "Сачыць за распрацоўкай на GitHub",
     "@settingsPlannedFollow": {
         "description": "Action in the planned feature sheet that opens the project repository."
     },
@@ -594,7 +594,7 @@
     "@settingsEqualizerOff": {
         "description": "Value on the equalizer row when the equalizer is disabled."
     },
-    "settingsLibrary": "Бібліятэка і сканаванне",
+    "settingsLibrary": "Бібліятэка і сканіраванне",
     "@settingsLibrary": {
         "description": "Label of the row opening the library subpage, and the title of that subpage."
     },
@@ -690,7 +690,7 @@
     "@settingsAppearanceColourFromArt": {
         "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
     },
-    "settingsAppearanceColourFromArtSubtitle": "Задаць тон вокладкі альбома усяму прайгравальніку",
+    "settingsAppearanceColourFromArtSubtitle": "Задаць тон вокладкі альбома ўсяму прайгравальніку",
     "@settingsAppearanceColourFromArtSubtitle": {
         "description": "Subtitle under the colour from album art row."
     },
@@ -982,5 +982,488 @@
     "settingsLibrarySectionArtistParsing": "Аналіз выканаўцаў",
     "@settingsLibrarySectionArtistParsing": {
         "description": "Section label above the multi-artist splitting options."
+    },
+    "settingsLibrarySplitArtists": "Раздзяляць тэгі некалькіх выканаўцаў",
+    "@settingsLibrarySplitArtists": {
+        "description": "Toggle that splits an artist tag into several artists at the delimiters."
+    },
+    "settingsLibraryDelimiters": "Раздзяляльнікі",
+    "@settingsLibraryDelimiters": {
+        "description": "Characters that separate artists in a tag, such as a comma or a slash."
+    },
+    "settingsLibraryDelimitersEmpty": "Выкарыстоўваюцца прадвызначэнні",
+    "@settingsLibraryDelimitersEmpty": {
+        "description": "Shown in the delimiter editor when the list is empty, meaning the built-in delimiters apply."
+    },
+    "settingsLibraryDelimiterField": "Раздзяляльнік",
+    "@settingsLibraryDelimiterField": {
+        "description": "Label of the text field in the delimiter editor."
+    },
+    "settingsLibraryDelimiterAdd": "Дадаць раздзяляльнік",
+    "@settingsLibraryDelimiterAdd": {
+        "description": "Action that adds the typed delimiter to the list."
+    },
+    "settingsLibraryProtectedArtists": "Ахаваныя выканаўцы",
+    "@settingsLibraryProtectedArtists": {
+        "description": "Artist names never split, for acts whose name contains a delimiter."
+    },
+    "settingsLibraryProtectedArtistsEmpty": "Ахаваных выканаўцаў пакуль што няма",
+    "@settingsLibraryProtectedArtistsEmpty": {
+        "description": "Shown in the protected artists editor when the list is empty."
+    },
+    "settingsLibraryProtectedArtistField": "Імя выканаўцы",
+    "@settingsLibraryProtectedArtistField": {
+        "description": "Label of the text field in the protected artists editor."
+    },
+    "settingsLibraryProtectedArtistAdd": "Дадаць выканаўцы",
+    "@settingsLibraryProtectedArtistAdd": {
+        "description": "Action that adds the typed artist to the protected list."
+    },
+    "settingsLibraryRescan": "Перасканіраваць бібліятэку",
+    "@settingsLibraryRescan": {
+        "description": "Action that runs a full rescan of the music library."
+    },
+    "settingsLibraryRescanRunning": "Сканіраванне…",
+    "@settingsLibraryRescanRunning": {
+        "description": "Replaces the rescan label while a scan is in progress."
+    },
+    "settingsLibraryLastScan": "Апошняе сканіраванне {date} а {time}",
+    "@settingsLibraryLastScan": {
+        "description": "First footer line on the library subpage, showing when the last scan finished.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsLibraryCountSongs": "{count, plural, =0{песняў няма} one{{count} песня} few{{count} песні} many{{count} песень} other{{count} песень}}",
+    "@settingsLibraryCountSongs": {
+        "description": "Song total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryCountAlbums": "{count, plural, =0{альбомаў няма} one{{count} альбом} few{{count} альбома} many{{count} альбомаў} other{{count} альбомаў}}",
+    "@settingsLibraryCountAlbums": {
+        "description": "Album total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryCountArtists": "{count, plural, =0{выканаўцаў няма} one{{count} выканаўца} few{{count} выканаўцы} many{{count} выканаўцаў} other{{count} выканаўцаў}}",
+    "@settingsLibraryCountArtists": {
+        "description": "Artist total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsDiscordTitle": "Discord",
+    "@settingsDiscordTitle": {
+        "description": "Title of the Discord subpage. Shorter than the row label, which is 'Discord presence'."
+    },
+    "settingsDiscordConnect": "Падлучыць Discord",
+    "@settingsDiscordConnect": {
+        "description": "Action that opens the Discord login flow."
+    },
+    "settingsDiscordConnecting": "Падлучэнне…",
+    "@settingsDiscordConnecting": {
+        "description": "Replaces the connect label while the login is in progress."
+    },
+    "settingsDiscordConnected": "Падлучана",
+    "@settingsDiscordConnected": {
+        "description": "Status under the Discord account name when a token is loaded."
+    },
+    "settingsDiscordDisconnect": "Адлучыць",
+    "@settingsDiscordDisconnect": {
+        "description": "Destructive action that logs out of Discord and clears the presence."
+    },
+    "settingsDiscordLoginFailed": "Не ўдалося ўвайсці ў Discord",
+    "@settingsDiscordLoginFailed": {
+        "description": "Snackbar shown when the Discord login could not be completed. The error follows after a colon."
+    },
+    "settingsDiscordSectionVisible": "Што бачаць людзі",
+    "@settingsDiscordSectionVisible": {
+        "description": "Section label above the toggles controlling what the presence card shows."
+    },
+    "settingsDiscordShowSong": "Паказваць бягучую песню",
+    "@settingsDiscordShowSong": {
+        "description": "Master toggle for the presence. Off means nothing is shown on Discord at all."
+    },
+    "settingsDiscordShowArt": "Паказваць вокладку альбома",
+    "@settingsDiscordShowArt": {
+        "description": "Toggle for sending the cover with the presence."
+    },
+    "settingsDiscordShowArtSubtitle": "Замест гэтага Discord будзе паказваць замяшчальнік",
+    "@settingsDiscordShowArtSubtitle": {
+        "description": "Subtitle under the album art row, explaining that turning it off does not remove the image, Discord substitutes a generic one."
+    },
+    "settingsDiscordShowElapsed": "Паказваць індыкатар выканання",
+    "@settingsDiscordShowElapsed": {
+        "description": "Toggle for sending playback timestamps, which Discord draws as a progress bar."
+    },
+    "settingsDiscordShowElapsedSubtitle": "Замест гэтага Discord будзе лічыць з пачатку",
+    "@settingsDiscordShowElapsedSubtitle": {
+        "description": "Subtitle under the progress bar row, explaining that turning it off leaves Discord's own timer running."
+    },
+    "settingsDiscordShowButton": "Паказваць кнопку са спасылкай",
+    "@settingsDiscordShowButton": {
+        "description": "Toggle for the button under the presence card."
+    },
+    "settingsDiscordShowButtonSubtitle": "Дадае «Try Sono» пад карткай",
+    "@settingsDiscordShowButtonSubtitle": {
+        "description": "Subtitle under the link button row. The quoted text is the button's own label and is not translated."
+    },
+    "settingsDiscordOnlyWhilePlaying": "Толькі падчас прайгравання",
+    "@settingsDiscordOnlyWhilePlaying": {
+        "description": "Toggle that clears the presence shortly after playback pauses."
+    },
+    "settingsDiscordOnlyWhilePlayingSubtitle": "Ачышчае прысутнасць пасля хвіліннай паўзы",
+    "@settingsDiscordOnlyWhilePlayingSubtitle": {
+        "description": "Subtitle under the only while playing row."
+    },
+    "settingsDiscordNote": "Прысутнасць працуе праз сеанс без інтэрфейсу. Яна спыняецца адразу пасля адлучэння і на серверы нічога не захоўваецца.",
+    "@settingsDiscordNote": {
+        "description": "Note explaining how the Discord connection works and that no data is kept remotely."
+    },
+    "settingsDiscordPreview": "Перадпрагляд",
+    "@settingsDiscordPreview": {
+        "description": "Heading of the card showing how the presence will look. Rendered in uppercase."
+    },
+    "settingsDiscordPreviewHeading": "Слухае Sono",
+    "@settingsDiscordPreviewHeading": {
+        "description": "First line of the preview card, matching what Discord displays above the song."
+    },
+    "settingsDiscordPreviewIdle": "Нічога не грае",
+    "@settingsDiscordPreviewIdle": {
+        "description": "Shown in the preview card in place of a song title when nothing is playing."
+    },
+    "settingsDiscordPreviewButton": "Try Sono",
+    "@settingsDiscordPreviewButton": {
+        "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
+    },
+    "settingsBackupExport": "Экспрат рэзервовай копіі",
+    "@settingsBackupExport": {
+        "description": "Row that writes a backup file."
+    },
+    "settingsBackupExporting": "Экспартаванне…",
+    "@settingsBackupExporting": {
+        "description": "Replaces the export label while a backup is being written."
+    },
+    "settingsBackupExportSubtitle": "Упадабаныя і абраныя песні, плэй-лісты, профіль і налады",
+    "@settingsBackupExportSubtitle": {
+        "description": "Subtitle under the export row, listing what a backup contains."
+    },
+    "settingsBackupExportSaved": "Захавана ў {path}",
+    "@settingsBackupExportSaved": {
+        "description": "Snackbar confirming where the backup file was written.",
+        "placeholders": {
+            "path": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsBackupExportFailed": "Не ўдалося экспартаваць рэзервовую копію",
+    "@settingsBackupExportFailed": {
+        "description": "Snackbar shown when writing the backup failed. The error follows after a colon."
+    },
+    "settingsBackupImport": "Імпарт рэзервовай копіі",
+    "@settingsBackupImport": {
+        "description": "Row that reads a backup file back in."
+    },
+    "settingsBackupImporting": "Імпартаванне…",
+    "@settingsBackupImporting": {
+        "description": "Replaces the import label while a backup is being restored."
+    },
+    "settingsBackupImportSubtitle": "Аб'ядноўвае з вашай бібліятэкай, потым паўторна скануе",
+    "@settingsBackupImportSubtitle": {
+        "description": "Subtitle under the import row."
+    },
+    "settingsBackupImportConfirmTitle": "Імпартаваць рэзервовую копію?",
+    "@settingsBackupImportConfirmTitle": {
+        "description": "Title of the sheet shown before choosing a backup file."
+    },
+    "settingsBackupImportConfirmBody": "Вашы налады былі перазапісаныя і выконваецца поўнае паўторнае сканіраванне. Упадабаныя і абраныя песні, плэй-лісты, якія ў вас ўжо ёсць, засталіся, рэзервовая копія будзе запісана зверху іх.",
+    "@settingsBackupImportConfirmBody": {
+        "description": "Explanation in the import confirmation sheet."
+    },
+    "settingsBackupImportChoose": "Выбраць файл",
+    "@settingsBackupImportChoose": {
+        "description": "Action in the import confirmation sheet that opens the file picker."
+    },
+    "settingsBackupImportDone": "Адноўлена {liked, plural, one{{liked} упадабаная песня} few{{liked} упадабаныя песні} other{{liked} убадабаных песень}}, {albums, plural, one{{albums} альбом} few{{albums} альбома} other{{albums} альбомаў}}, {artists, plural, one{{artists} выканаўца} few{{artists} выканаўцы} other{{artists} выканаўцаў}}, {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}}",
+    "@settingsBackupImportDone": {
+        "description": "Snackbar summarising a successful import.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportSkipped": "{songs, plural, one{{songs} песня} few{{songs} песні} other{{songs} песень}} і {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}} не было знойдзена на прыладзе",
+    "@settingsBackupImportSkipped": {
+        "description": "Second snackbar after an import, listing what could not be matched to local files.",
+        "placeholders": {
+            "songs": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportFailed": "Не ўдалося імпартаваць рэзервовую копію",
+    "@settingsBackupImportFailed": {
+        "description": "Snackbar shown when reading the backup failed. The error follows after a colon."
+    },
+    "settingsBackupNote": "Імпартаванне захоўвае ўсё, што ў вас ужо ёсць. Песні, якіх няма на прыладзе, прапускаюцца, аб іх будзе паведамлена ў канцы.",
+    "@settingsBackupNote": {
+        "description": "Note under the export and import rows, clarifying that importing is not destructive."
+    },
+    "settingsBackupSectionAutomatic": "Аўтаматчына",
+    "@settingsBackupSectionAutomatic": {
+        "description": "Section label above the scheduled backup option."
+    },
+    "settingsBackupWeekly": "Рэзервовае капіраванне кожны тыдзень",
+    "@settingsBackupWeekly": {
+        "description": "Toggle for writing a backup once a week. Currently marked as planned."
+    },
+    "settingsBackupWeeklySubtitle": "Запісваецца ў вашу папку з музыкай",
+    "@settingsBackupWeeklySubtitle": {
+        "description": "Subtitle under the weekly backup row."
+    },
+    "settingsBackupLastExport": "Апошяе экспартаванне {date} а {time}",
+    "@settingsBackupLastExport": {
+        "description": "Footer line showing when a backup was last written. Both placeholders receive the same timestamp.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsUpdatesChecking": "Праверка…",
+    "@settingsUpdatesChecking": {
+        "description": "Value on the updates row while a check is running."
+    },
+    "settingsUpdatesUpToDate": "Абноўлена",
+    "@settingsUpdatesUpToDate": {
+        "description": "Value on the updates row when the installed version is the newest release."
+    },
+    "settingsUpdatesAvailable": "Даступна {version}",
+    "@settingsUpdatesAvailable": {
+        "description": "Value on the updates row when a newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetUpToDateTitle": "У вас апошняя версія :D",
+    "@settingsUpdateSheetUpToDateTitle": {
+        "description": "Title of the update sheet when no newer release exists."
+    },
+    "settingsUpdateSheetUpToDateBody": "{version} з'яўляецца найноўшай версіяй Sono.",
+    "@settingsUpdateSheetUpToDateBody": {
+        "description": "Body of the update sheet when no newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetAvailableTitle": "Даступна Sono {version}",
+    "@settingsUpdateSheetAvailableTitle": {
+        "description": "Title of the update sheet when a newer release was found.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetFrom": "У вас {current}, найноўшая версія — {latest}.",
+    "@settingsUpdateSheetFrom": {
+        "description": "Line above the release notes comparing the installed and newest versions.",
+        "placeholders": {
+            "current": {
+                "type": "String"
+            },
+            "latest": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetOpen": "Адкрыць выпуск",
+    "@settingsUpdateSheetOpen": {
+        "description": "Action that opens the GitHub release page in the browser."
+    },
+    "settingsUpdateSheetSkip": "Прапусціць гэту версію",
+    "@settingsUpdateSheetSkip": {
+        "description": "Action that dismisses a release so it stops being announced."
+    },
+    "settingsUpdateSheetSkipSubtitle": "Не паказваць банер для гэтага выпуску",
+    "@settingsUpdateSheetSkipSubtitle": {
+        "description": "Subtitle under the skip action in the update sheet."
+    },
+    "settingsUpdateSheetFailedTitle": "Не ўдалося праверыць на абнаўленні",
+    "@settingsUpdateSheetFailedTitle": {
+        "description": "Title of the update sheet when the check could not reach GitHub."
+    },
+    "settingsUpdateSheetFailedBody": "Sono не ўдалося дасягнуць GitHub. Праверце ваша падключэнне і паспрабуйце яшчэ раз.",
+    "@settingsUpdateSheetFailedBody": {
+        "description": "Body of the update sheet when the check failed."
+    },
+    "settingsAboutTitle": "Пра праграму",
+    "@settingsAboutTitle": {
+        "description": "Title of the about subpage. Shorter than the row label, which is 'About Sono'."
+    },
+    "settingsAboutVersion": "{version} • зборка {build}",
+    "@settingsAboutVersion": {
+        "description": "Version line under the app name in the about hero. Does not repeat the app name, unlike settingsVersionLine.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsAboutSourceCode": "Зыходны код",
+    "@settingsAboutSourceCode": {
+        "description": "Row that opens the GitHub repository. Its subtitle is the repository path and is not translated."
+    },
+    "settingsAboutLicences": "Ліцэнзіі",
+    "@settingsAboutLicences": {
+        "description": "Row that opens the licence list, covering Sono and every dependency."
+    },
+    "settingsAboutKofiSubtitle": "Аплата за подпіс праграмы і мора кавы",
+    "@settingsAboutKofiSubtitle": {
+        "description": "Subtitle under the Ko-fi row."
+    },
+    "settingsAboutFooterBuilt": "Створана mathiiiiiis",
+    "@settingsAboutFooterBuilt": {
+        "description": "First footer line on the about page. The name is a username and stays as is."
+    },
+    "contributorsPlaceholder": "тут можаш быць ты",
+    "@contributorsPlaceholder": {
+        "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
+    },
+    "migrationFoundTitle": "Дадзеныя са старой Sono",
+    "@migrationFoundTitle": {
+        "description": "Title of the sheet offering to import data from the previous Sono install."
+    },
+    "migrationFoundBody": "У вас на прыладзе засталіся дадзеныя з мінулай праграмы.",
+    "@migrationFoundBody": {
+        "description": "Body text above the counts in the migration sheet."
+    },
+    "migrationCountLiked": "{count, plural, =0{без упадабанняў} one{{count} упадабаная песня} few{{count} упадабаныя песні} other{{count} упадабаных песень}}",
+    "@migrationCountLiked": {
+        "description": "Liked song count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountAlbums": "{count, plural, =0{без альбомаў} one{{count} альбом} few{{count} альбома} other{{count} альбомаў}}",
+    "@migrationCountAlbums": {
+        "description": "Favorite album count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountArtists": "{count, plural, =0{без выканаўцаў} one{{count} выканаўца} few{{count} выканаўцы} other{{count} выканаўцаў}}",
+    "@migrationCountArtists": {
+        "description": "Favorite artist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountPlaylists": "{count, plural, =0{без плэй-лістаў} one{{count} плэй-ліст} few{{count} плэй-ліста} other{{count} плэй-лістаў}}",
+    "@migrationCountPlaylists": {
+        "description": "Playlist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationImport": "Імпартаваць",
+    "@migrationImport": {
+        "description": "Action confirming the import in the migration sheet."
+    },
+    "migrationLater": "Не зараз",
+    "@migrationLater": {
+        "description": "Action dismissing the migration sheet until the next launch."
+    },
+    "migrationNever": "Больш не пытацца",
+    "@migrationNever": {
+        "description": "Action permanently dismissing the migration sheet without importing."
+    },
+    "migrationDone": "Імпартавана {liked, plural, one{{liked} упадабаная песня} few{{liked} упадабаныя песні} other{{liked} убадабаных песень}}, {albums, plural, one{{albums} альбом} few{{albums} альбома} other{{albums} альбомаў}}, {artists, plural, one{{artists} выканаўца} few{{artists} выканаўцы} other{{artists} выканаўцаў}}, {playlists, plural, one{{playlists} плэй-ліст} few{{playlists} плэй-ліста} other{{playlists} плэй-лістаў}} :D",
+    "@migrationDone": {
+        "description": "Snackbar summarising a successful migration from the old Sono.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationDoneNothing": "Са старой Sono нічога не імпартавана :/",
+    "@migrationDoneNothing": {
+        "description": "Snackbar shown when a migration ran but matched nothing on this device."
+    },
+    "migrationUnresolved": "{count, plural, one{{count} песня} few{{count} песні} other{{count} песень}} больш не на гэтай прыладзе",
+    "@migrationUnresolved": {
+        "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationFailed": "Не ўдалося імпартаваць са старой Sono :/",
+    "@migrationFailed": {
+        "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
     }
 }
