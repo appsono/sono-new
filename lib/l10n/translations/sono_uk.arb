@@ -1152,7 +1152,7 @@
             }
         }
     },
-    "migrationCountAlbums": "{count, plural, =0{немає добірок} one{{count} добірка} few{{count} добірки} many{{count} добірок} other{{count} добірки}}",
+    "migrationCountAlbums": "{count, plural, =0{немає альбомів} one{{count} альбом} few{{count} альбоми} many{{count} альбомів} other{{count} альбомів}}",
     "@migrationCountAlbums": {
         "description": "Favorite album count listed in the migration sheet.",
         "placeholders": {
