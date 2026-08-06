@@ -1049,7 +1049,9 @@ Nothing yet.
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.10.1+11...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.11.1+13...HEAD
+[0.11.1+13]: https://github.com/appsono/sono-new/compare/v0.11.0+12...v0.11.1+13
+[0.11.0+12]: https://github.com/appsono/sono-new/compare/v0.10.1+11...v0.11.0+12
 [0.10.1+11]: https://github.com/appsono/sono-new/compare/v0.10.0+10...v0.10.1+11
 [0.10.0+10]: https://github.com/appsono/sono-new/compare/v0.9.1+9...v0.10.0+10
 [0.9.1+9]: https://github.com/appsono/sono-new/compare/v0.9.0+8...v0.9.1+9
