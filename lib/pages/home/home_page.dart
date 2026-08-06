@@ -267,6 +267,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  PlayerColors _coverlessTint() {
+    final c = ThemeService.colorsNotifier.value;
+    return PlayerColors(
+      background: c.bgPrimary,
+      surface: c.primary,
+      accent: c.primary,
+      progressBar: c.primary,
+      onBackground: c.textPrimary,
+      onSurface: c.textLight,
+      onAccent: c.textLight,
+    );
+  }
+
   //cover thumb > palette
   Future<void> _applyTint(Song song) async {
     if (song.id == _tintSongId) return;
@@ -278,14 +291,14 @@ class _HomePageState extends State<HomePage> {
       if (!mounted || song.id != _tintSongId) return;
 
       final colors = (bytes == null || bytes.isEmpty)
-          ? PlayerColors.fallback
+          ? _coverlessTint()
           : await PlayerColors.fromImageBytes(bytes);
       if (!mounted || song.id != _tintSongId) return;
 
       setState(() => _tintColors = colors);
     } catch (_) {
       if (!mounted || song.id != _tintSongId) return;
-      setState(() => _tintColors = PlayerColors.fallback);
+      setState(() => _coverlessTint());
     }
   }
 
