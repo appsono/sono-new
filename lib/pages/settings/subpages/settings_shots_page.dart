@@ -9,6 +9,7 @@ import 'package:sono/widgets/header.dart';
 
 const String kShotsBentoKey = 'shots.bentoAlbums';
 const int kShotsBentoSlots = 4;
+final ValueNotifier<int> kShotsBentoVersion = ValueNotifier(0);
 
 // ==== picker row ====
 const double _coverSize = 44;
@@ -55,7 +56,7 @@ class _SettingsShotsPageState extends State<SettingsShotsPage> {
 
     //only rewrite when stored was not already canonical
     final canonical = picked.join(',');
-    if (canonical != raw) {
+    if (canonical != raw && canonical.isNotEmpty) {
       await widget.db.setSetting(kShotsBentoKey, canonical);
     }
 
@@ -76,11 +77,13 @@ class _SettingsShotsPageState extends State<SettingsShotsPage> {
       }
     });
     await widget.db.setSetting(kShotsBentoKey, _picked.join(','));
+    kShotsBentoVersion.value++;
   }
 
   Future<void> _clear() async {
     setState(() => _picked = []);
     await widget.db.setSetting(kShotsBentoKey, '');
+    kShotsBentoVersion.value++;
   }
 
   @override

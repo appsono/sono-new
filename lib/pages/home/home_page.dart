@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
     widget.scanVersion?.addListener(_load);
     _scroll.addListener(_syncTintAtTop);
     ThemeService.colorsNotifier.addListener(_onThemeChanged);
-
+    if (kShots) kShotsBentoVersion.addListener(_reloadBento);
     final current = AudioService.instance.currentSong;
     if (current != null) _applyTint(current);
     _songSub = AudioService.instance.currentSongStream.listen((s) {
@@ -157,11 +157,17 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     ThemeService.colorsNotifier.removeListener(_onThemeChanged);
+    if (kShots) kShotsBentoVersion.removeListener(_reloadBento);
     widget.scanVersion?.removeListener(_load);
     _songSub?.cancel();
     _scroll.dispose();
     _tintAtTop.dispose();
     super.dispose();
+  }
+
+  void _reloadBento() {
+    _bentoAlbums = null;
+    _load();
   }
 
   void _syncTintAtTop() {
