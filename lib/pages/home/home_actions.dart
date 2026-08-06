@@ -184,7 +184,6 @@ class _ActionButton extends StatelessWidget {
                     label,
                     maxLines: _maxLabelLines,
                     style: _kActionLabelStyle.copyWith(color: fgColor),
-                    textScaler: TextScaler.noScaling,
                   ),
                 ),
               ],
