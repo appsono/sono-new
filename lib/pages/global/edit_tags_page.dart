@@ -77,6 +77,8 @@ class _EditTagsPageState extends State<EditTagsPage> {
   late final TextEditingController _yearCtrl;
   late final TextEditingController _genresCtrl;
 
+  DateTime? _origReleaseDate;
+
   bool _saving = false;
 
   @override
@@ -104,6 +106,7 @@ class _EditTagsPageState extends State<EditTagsPage> {
     _yearCtrl = TextEditingController(
       text: meta.releaseDate?.year.toString() ?? '',
     );
+    _origReleaseDate = meta.releaseDate;
     _genresCtrl = TextEditingController(text: meta.genre ?? '');
 
     if (seedDisc == null) {
@@ -144,7 +147,14 @@ class _EditTagsPageState extends State<EditTagsPage> {
 
     //parse numerc/list fields. blanl == leave tag untouched
     final yearInt = int.tryParse(_yearCtrl.text.trim());
-    final year = yearInt != null ? DateTime(yearInt) : null;
+    final DateTime? year;
+    if (yearInt == null) {
+      year = null;
+    } else if (_origReleaseDate?.year == yearInt) {
+      year = _origReleaseDate;
+    } else {
+      year = DateTime(yearInt);
+    }
     final disc = int.tryParse(_discCtrl.text.trim());
     final track = int.tryParse(_trackCtrl.text.trim());
 
