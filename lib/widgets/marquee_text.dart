@@ -93,7 +93,8 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
     return tp.width;
   }
 
-  void _onLayout(double width, TextScaler textScaler) {
+  void _onLayout(double width, TextScaler textScaler, double dpr) {
+    width = (width * dpr).floorToDouble() / dpr;
     if (_measured && _containerWidth == width) return;
     _containerWidth = width;
     _measured = true;
@@ -213,7 +214,11 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
       height: titleHeight + subtitleHeight,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          _onLayout(constraints.maxWidth, textScaler);
+          _onLayout(
+            constraints.maxWidth,
+            textScaler,
+            MediaQuery.devicePixelRatioOf(context),
+          );
 
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -273,8 +278,8 @@ class _SonoMarqueeTextState extends State<SonoMarqueeText>
       child: ShaderMask(
         shaderCallback: (bounds) {
           return const LinearGradient(
-            colors: [Colors.white, Colors.white, Colors.transparent],
-            stops: [0.08, 0.75, 1.0],
+            colors: [Colors.white, Color(0x00FFFFFF)],
+            stops: [0.75, 1.0],
           ).createShader(bounds);
         },
         blendMode: BlendMode.dstIn,
