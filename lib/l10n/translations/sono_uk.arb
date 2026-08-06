@@ -22,7 +22,7 @@
     "commonRepeat": "Повторювати",
     "commonLike": "Подобається",
     "commonLiked": "Уподобано",
-    "commonAddToPlaylist": "Додати до списку відтворення",
+    "commonAddToPlaylist": "Додати в добірку",
     "@commonAddToPlaylist": {
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
@@ -226,7 +226,7 @@
     "@libraryCardGenres": {
         "description": "Library page card label. Opens a list of genres."
     },
-    "libraryCardPlaylists": "Списки відтворення",
+    "libraryCardPlaylists": "Добірки",
     "@libraryCardPlaylists": {
         "description": "Library page card label. Opens user playlists."
     },
@@ -291,7 +291,7 @@
     "@commonMoreOptions": {
         "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
     },
-    "commonCreatePlaylist": "Створити список відтворення",
+    "commonCreatePlaylist": "Створити добірку",
     "@commonCreatePlaylist": {
         "description": "Button and action label for creating a new playlist."
     },
@@ -319,11 +319,11 @@
     "@commonUndo": {
         "description": "Undo action on a snackbar to reverse the last action."
     },
-    "commonRemoveFromPlaylist": "Видалити зі списку відтворення",
+    "commonRemoveFromPlaylist": "Видалити з добірки",
     "@commonRemoveFromPlaylist": {
         "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
     },
-    "libraryEmptyPlaylists": "Поки що немає списку відтворення :/",
+    "libraryEmptyPlaylists": "Поки що немає добірок :/",
     "@libraryEmptyPlaylists": {
         "description": "Empty state on the Playlists list page when the user has not created any playlists."
     },
@@ -351,7 +351,7 @@
     "@playlistDescriptionLabel": {
         "description": "Placeholder text for the optional playlist description field in the create playlist modal."
     },
-    "playlistDefaultName": "Новий список відтворення",
+    "playlistDefaultName": "Нова добірка",
     "@playlistDefaultName": {
         "description": "Fallback name applied when the user creates a playlist without entering one."
     },
@@ -364,7 +364,7 @@
             }
         }
     },
-    "playlistEmpty": "Цей список відтворення порожній… на жаль",
+    "playlistEmpty": "Ця добірка порожня… на жаль",
     "@playlistEmpty": {
         "description": "Empty state shown on a playlist detail page when no songs have been added yet."
     },
@@ -458,7 +458,7 @@
     "@changelogUnavailable": {
         "description": "Shown in the changelog modal when the changelog file is missing or no release block could be parsed."
     },
-    "playlistEditTitle": "Редагувати список відтворення",
+    "playlistEditTitle": "Редагувати добірку",
     "@playlistEditTitle": {
         "description": "Title of the edit playlist modal (name + description)."
     },
@@ -923,7 +923,7 @@
     "@settingsBackupExporting": {
         "description": "Replaces the export label while a backup is being written."
     },
-    "settingsBackupExportSubtitle": "Вподобання, вибране, списки відтворення, профіль та налаштування",
+    "settingsBackupExportSubtitle": "Вподобання, вибране, добірки, профіль та налаштування",
     "@settingsBackupExportSubtitle": {
         "description": "Subtitle under the export row, listing what a backup contains."
     },
@@ -956,7 +956,7 @@
     "@settingsBackupImportConfirmTitle": {
         "description": "Title of the sheet shown before choosing a backup file."
     },
-    "settingsBackupImportConfirmBody": "Ваші налаштування буде перезаписано, і розпочнеться повне сканування. Вподобання, вибране та списки відтворення, які у вас уже є, буде збережено, а дані з резервної копії буде додано поверх них.",
+    "settingsBackupImportConfirmBody": "Ваші налаштування буде перезаписано, і розпочнеться повне сканування. Вподобання, вибране та добірки, які у вас уже є, буде збережено, а дані з резервної копії буде додано поверх них.",
     "@settingsBackupImportConfirmBody": {
         "description": "Explanation in the import confirmation sheet."
     },
@@ -964,7 +964,7 @@
     "@settingsBackupImportChoose": {
         "description": "Action in the import confirmation sheet that opens the file picker."
     },
-    "settingsBackupImportDone": "Відновлено: {liked, plural, =0{0 вподобань} one{{liked} вподобання} few{{liked} вподобання} many{{liked} вподобань} other{{liked} вподобання}}, {albums, plural, =0{0 альбомів} one{{albums} альбом} few{{albums} альбоми} many{{albums} альбомів} other{{albums} альбому}}, {artists, plural, =0{0 виконавців} one{{artists} виконавець} few{{artists} виконавці} many{{artists} виконавців} other{{artists} виконавця}}, {playlists, plural, =0{0 список відтворення} one{{playlists} список відтворення} few{{playlists} списки відтворення} many{{playlists} списків відтворення} other{{playlists} списки відтворення}}",
+    "settingsBackupImportDone": "Відновлено: {liked, plural, =0{0 вподобань} one{{liked} вподобання} few{{liked} вподобання} many{{liked} вподобань} other{{liked} вподобання}}, {albums, plural, =0{0 альбомів} one{{albums} альбом} few{{albums} альбоми} many{{albums} альбомів} other{{albums} альбому}}, {artists, plural, =0{0 виконавців} one{{artists} виконавець} few{{artists} виконавці} many{{artists} виконавців} other{{artists} виконавця}}, {playlists, plural, =0{0 добірок} one{{playlists} добірка} few{{playlists} добірки} many{{playlists} добірок} other{{playlists} добірки}}",
     "@settingsBackupImportDone": {
         "description": "Snackbar summarising a successful import.",
         "placeholders": {
@@ -982,7 +982,7 @@
             }
         }
     },
-    "settingsBackupImportSkipped": "{songs, plural, =0{Жодної пісні} one{{songs} пісню} few{{songs} пісні} many{{songs} пісень} other{{songs} пісні}} та {playlists, plural, =0{жодного списку відтворення не було} one{{playlists} список відтворення було} few{{playlists} списки відтворення було} many{{playlists} списків відтворення було} other{{playlists} списки відтворення було}} знайдено на цьому пристрої",
+    "settingsBackupImportSkipped": "{songs, plural, =0{Жодної пісні} one{{songs} пісню} few{{songs} пісні} many{{songs} пісень} other{{songs} пісні}} та {playlists, plural, =0{жодної добірки не було} one{{playlists} добірку було} few{{playlists} добірки було} many{{playlists} добірок було} other{{playlists} добірки було}} знайдено на цьому пристрої",
     "@settingsBackupImportSkipped": {
         "description": "Second snackbar after an import, listing what could not be matched to local files.",
         "placeholders": {
@@ -1152,7 +1152,7 @@
             }
         }
     },
-    "migrationCountAlbums": "{count, plural, =0{немає списків відтворення} one{{count} список відтворення} few{{count} списки відтворення} many{{count} списків відтворення} other{{count} списків відтворення}}",
+    "migrationCountAlbums": "{count, plural, =0{немає добірок} one{{count} добірка} few{{count} добірки} many{{count} добірок} other{{count} добірки}}",
     "@migrationCountAlbums": {
         "description": "Favorite album count listed in the migration sheet.",
         "placeholders": {
@@ -1170,7 +1170,7 @@
             }
         }
     },
-    "migrationCountPlaylists": "{count, plural, =0{немає списків відтворення} one{{count} список відтворення} few{{count} списки відтворення} many{{count} списків відтворення} other{{count} списків відтворення}}",
+    "migrationCountPlaylists": "{count, plural, =0{немає добірок} one{{count} добірка} few{{count} добірки} many{{count} добірок} other{{count} добірки}}",
     "@migrationCountPlaylists": {
         "description": "Playlist count listed in the migration sheet.",
         "placeholders": {
@@ -1191,7 +1191,7 @@
     "@migrationNever": {
         "description": "Action permanently dismissing the migration sheet without importing."
     },
-    "migrationDone": "Імпортовано: {liked, plural, =0{0 вподобань} one{{liked} вподобання} few{{liked} вподобання} many{{liked} вподобань} other{{liked} вподобання}}, {albums, plural, =0{0 альбомів} one{{albums} альбом} few{{albums} альбоми} many{{albums} альбомів} other{{albums} альбому}}, {artists, plural, =0{0 виконавців} one{{artists} виконавець} few{{artists} виконавці} many{{artists} виконавців} other{{artists} виконавця}}, {playlists, plural, =0{0 списків відтворення} one{{playlists} список відтворення} few{{playlists} списки відтворення} many{{playlists} списків відтворення} other{{playlists} списків відтворення}} :D",
+    "migrationDone": "Імпортовано: {liked, plural, =0{0 вподобань} one{{liked} вподобання} few{{liked} вподобання} many{{liked} вподобань} other{{liked} вподобання}}, {albums, plural, =0{0 альбомів} one{{albums} альбом} few{{albums} альбоми} many{{albums} альбомів} other{{albums} альбому}}, {artists, plural, =0{0 виконавців} one{{artists} виконавець} few{{artists} виконавці} many{{artists} виконавців} other{{artists} виконавця}}, {playlists, plural, =0{0 добірок} one{{playlists} добірку} few{{playlists} добірки} many{{playlists} добірок} other{{playlists} добірки}} :D",
     "@migrationDone": {
         "description": "Snackbar summarising a successful migration from the old Sono.",
         "placeholders": {
