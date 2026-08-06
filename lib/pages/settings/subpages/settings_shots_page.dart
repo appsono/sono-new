@@ -43,11 +43,21 @@ class _SettingsShotsPageState extends State<SettingsShotsPage> {
     final raw = await widget.db.getSetting(kShotsBentoKey) ?? '';
 
     final live = {for (final a in albums) a.id};
-    final ids = [for (final part in raw.split(',')) ?int.tryParse(part)];
-    final picked = [
-      for (final id in ids)
-        if (live.contains(id)) id,
-    ];
+    final picked = <int>[];
+    for (final part in raw.split(',')) {
+      final id = int.tryParse(part.trim());
+      if (id == null) continue;
+      if (!live.contains(id) || !covers.containsKey(id)) continue;
+      if (picked.contains(id)) continue;
+      picked.add(id);
+      if (picked.length == kShotsBentoSlots) break;
+    }
+
+    //only rewrite when stored was not already canonical
+    final canonical = picked.join(',');
+    if (canonical != raw) {
+      await widget.db.setSetting(kShotsBentoKey, canonical);
+    }
 
     if (!mounted) return;
     setState(() {
