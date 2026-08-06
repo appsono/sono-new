@@ -10,6 +10,11 @@ import 'package:sono/widgets/header.dart';
 const String kShotsBentoKey = 'shots.bentoAlbums';
 const int kShotsBentoSlots = 4;
 
+// ==== picker row ====
+const double _coverSize = 44;
+const double _badgeRadius = 13;
+const double _fullOpacity = 0.4;
+
 // ==== shots album picker ====
 // screenshot mode only, so every string here is hardcoded on pupose
 class SettingsShotsPage extends StatefulWidget {
@@ -123,12 +128,12 @@ class _SettingsShotsPageState extends State<SettingsShotsPage> {
                 final full = slot < 0 && _picked.length >= kShotsBentoSlots;
 
                 return Opacity(
-                  opacity: full ? 0.4 : 1,
+                  opacity: full ? _fullOpacity : 1,
                   child: ListTile(
                     onTap: full ? null : () => _toggle(a.id),
                     leading: SonoCoverArt(
                       path: _covers[a.id] ?? '',
-                      size: 44,
+                      size: _coverSize,
                       borderRadius: SonoSizes.borderRadiusSm,
                     ),
                     title: Text(
@@ -154,7 +159,7 @@ class _SettingsShotsPageState extends State<SettingsShotsPage> {
                     trailing: slot < 0
                         ? null
                         : CircleAvatar(
-                            radius: 13,
+                            radius: _badgeRadius,
                             backgroundColor: c.primary,
                             child: Text(
                               '${slot + 1}',
