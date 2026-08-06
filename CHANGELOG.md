@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing yet.
 
+## [0.11.1+13] - 2026-08-06
+
+### Fixed
+
+- Fixed the song length in the lyrics view sometimes showing the previous
+  song's value until the app was restarted
+- Fixed the lyrics view progress bar freezing after dragging the slider
+- Fixed a thin line at the fade edge of scrolling song titles
+
+### Translation
+
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (100%) and Belarusian (be_TARASK) (100%)
+
 ## [0.11.0+12] - 2026-08-04
 
 ### Added
