@@ -291,7 +291,7 @@
     "@commonMoreOptions": {
         "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
     },
-    "commonCreatePlaylist": "Створити добірку",
+    "commonCreatePlaylist": "Нова добірка",
     "@commonCreatePlaylist": {
         "description": "Button and action label for creating a new playlist."
     },
