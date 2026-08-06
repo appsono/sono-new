@@ -42,13 +42,14 @@ packages:
     source: hosted
     version: "2.13.0"
   audio_metadata_reader:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: audio_metadata_reader
-      sha256: "847c7e65ce6c56b684310b90ef165f049a7deca096796ad71a166b9eadd2a1b1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.6.0"
+      path: "."
+      ref: "fix/flac-block-header"
+      resolved-ref: "9ef5ad692e5bcdcad73315a18a05930731bf9ee4"
+      url: "https://github.com/mathiiiiiis/audio_metadata_reader.git"
+    source: git
+    version: "1.7.1"
   audio_service:
     dependency: "direct main"
     description:

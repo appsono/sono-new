@@ -55,6 +55,9 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   final _scanVersion = ValueNotifier<int>(0);
   UpdateInfo? _update;
 
+  //permission request deferref until next resume
+  bool _scanPending = false;
+
   @override
   void initState() {
     super.initState();
@@ -109,7 +112,12 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
       AudioService.instance.flushState();
+      return;
     }
+    if (state != AppLifecycleState.resumed || !_scanPending) return;
+    //activity available, permission dialog can show
+    _scanPending = false;
+    _checkPermissionAndScan();
   }
 
   Future<void> _deleteBrokenGenre() async {
@@ -151,12 +159,25 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     if (mounted) setState(() => _update = null);
   }
 
-  Future<void> _checkPermissionAndScan({bool force = false}) async {
-    if (Platform.isAndroid) {
+  //permission requests wait until an activity exists
+  Future<bool> _ensureMediaPermission() async {
+    try {
+      if (await Permission.audio.isGranted ||
+          await Permission.storage.isGranted) {
+        return true;
+      }
       final audio = await Permission.audio.request();
       final storage = await Permission.storage.request();
-      if (!audio.isGranted && !storage.isGranted) return;
+      return audio.isGranted || storage.isGranted;
+    } on PlatformException catch (e) {
+      debugPrint('permission request deferred, no activity yet: $e');
+      _scanPending = true;
+      return false;
     }
+  }
+
+  Future<void> _checkPermissionAndScan({bool force = false}) async {
+    if (Platform.isAndroid && !await _ensureMediaPermission()) return;
     final config = await ScanSettings(widget.db).load();
     final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
     try {
@@ -172,7 +193,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
         },
       );
     } catch (e, st) {
-      debugPrint('strtup scan failed: $e\n$st');
+      debugPrint('startup scan failed: $e\n$st');
     } finally {
       _scanProgress.value = null;
     }
@@ -233,6 +254,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           IndexedStack(
@@ -243,7 +265,11 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                 scanVersion: _scanVersion,
                 onOpenSettings: _openSettings,
               ),
-              SearchPage(db: widget.db, onOpenSettings: _openSettings),
+              SearchPage(
+                db: widget.db,
+                scanVersion: _scanVersion,
+                onOpenSettings: _openSettings,
+              ),
               LibraryPage(db: widget.db, onOpenSettings: _openSettings),
             ],
           ),

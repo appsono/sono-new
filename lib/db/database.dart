@@ -384,6 +384,32 @@ class SonoDatabase extends _$SonoDatabase {
     }).toList();
   }
 
+  Future<List<AlbumWithArtistViewData>> getRandomAlbumsWithArtists(
+    int limit,
+  ) async {
+    final rows =
+        await (select(albums).join([
+                leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+              ])
+              ..orderBy([OrderingTerm.random()])
+              ..limit(limit))
+            .get();
+    return rows.map((row) {
+      final a = row.readTable(albums);
+      final ar = row.readTableOrNull(artists);
+      final shown = (a.displayTitle != null && a.displayTitle!.isNotEmpty)
+          ? a.displayTitle!
+          : a.title;
+      return AlbumWithArtistViewData(
+        id: a.id,
+        title: shown,
+        artistId: a.artistId,
+        artistName: ar?.name,
+        favoritedAt: a.favoritedAt,
+      );
+    }).toList();
+  }
+
   /// Fetch as single albums cover on demand
   Future<Uint8List?> getAlbumCover(int albumId) async {
     final row =
@@ -696,6 +722,16 @@ class SonoDatabase extends _$SonoDatabase {
       ]);
     }
     return q.get();
+  }
+
+  /// Newest songs first, capped at [limit]
+  Future<List<SongWithArtistViewData>> getRecentlyAddedSongs(int limit) {
+    return (select(songWithArtistView)
+          ..orderBy([
+            (v) => OrderingTerm(expression: v.id, mode: OrderingMode.desc),
+          ])
+          ..limit(limit))
+        .get();
   }
 
   /// case-insensitive LIKE on song title + artist name

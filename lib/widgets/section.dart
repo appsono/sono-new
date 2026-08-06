@@ -11,7 +11,16 @@
 // GNU General Public License for more details.
 
 import 'package:flutter/material.dart';
+
+import 'package:sono/l10n/localizations.dart';
+
 import 'package:sono/theme/theme.dart';
+import 'package:sono/theme/tokens.dart';
+import 'package:sono/theme/icons.dart';
+import 'package:sono/services/appearance_service.dart';
+
+const double _seeAllSize = 45;
+const double _seeAllLabelGap = 4;
 
 class SonoSection extends StatelessWidget {
   final String title;
@@ -35,46 +44,15 @@ class SonoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.sono;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
+        SonoSectionHeader(
+          title: title,
+          titleStyle: titleStyle,
+          onSeeAll: onSeeAll,
           padding: padding,
-          child: Row(
-            children: [
-              Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.merge(titleStyle),
-              ),
-              const Spacer(),
-              if (onSeeAll != null)
-                GestureDetector(
-                  onTap: onSeeAll,
-                  child: Container(
-                    width: 45,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? colors.textLight
-                          : colors.textDark,
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 18,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? colors.textDark
-                          : colors.textLight,
-                    ),
-                  ),
-                ),
-            ],
-          ),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -92,5 +70,130 @@ class SonoSection extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class SonoSectionHeader extends StatelessWidget {
+  final String title;
+  final TextStyle? titleStyle;
+  final VoidCallback? onSeeAll;
+  final EdgeInsetsGeometry padding;
+
+  const SonoSectionHeader({
+    required this.title,
+    this.titleStyle,
+    this.onSeeAll,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16),
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge?.merge(titleStyle),
+          ),
+          const Spacer(),
+          if (onSeeAll != null) SonoSeeAll(onTap: onSeeAll!),
+        ],
+      ),
+    );
+  }
+}
+
+/// See all control for a section header
+///
+/// Pass [style] to override current appearance
+class SonoSeeAll extends StatelessWidget {
+  final VoidCallback onTap;
+  final SeeAllStyle? style;
+
+  const SonoSeeAll({required this.onTap, this.style, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final pinned = style;
+    if (pinned != null) return _build(context, pinned);
+
+    return ValueListenableBuilder<SeeAllStyle>(
+      valueListenable: AppearanceService.seeAllStyleNotifier,
+      builder: (context, current, _) => _build(context, current),
+    );
+  }
+
+  Widget _build(BuildContext context, SeeAllStyle style) {
+    final colors = context.sono;
+    final l = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final labelStyle = TextStyle(
+      fontFamily: SonoFonts.primary,
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: colors.textSecondary,
+    );
+
+    return switch (style) {
+      // ==== filled circle ====
+      SeeAllStyle.button => GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: _seeAllSize,
+          height: _seeAllSize,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isDark ? colors.textLight : colors.textDark,
+          ),
+          child: Center(
+            child: RotatedBox(
+              quarterTurns: 2,
+              child: IconsSheet.svg(
+                IconsSheet.backOutlined,
+                size: SonoSizes.iconSm,
+                color: isDark ? colors.textDark : colors.textLight,
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      // ==== plain label ====
+      SeeAllStyle.text => GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        //keeps row height stable against 45px button
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: _seeAllSize),
+          child: Center(child: Text(l.commonSeeAll, style: labelStyle)),
+        ),
+      ),
+
+      // ==== label + chevron ====
+      SeeAllStyle.arrow => GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: _seeAllSize),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(child: Text(l.commonSeeAll, style: labelStyle)),
+              const SizedBox(width: _seeAllLabelGap),
+              RotatedBox(
+                quarterTurns: 2,
+                child: IconsSheet.svg(
+                  IconsSheet.backOutlined,
+                  size: SonoSizes.iconSm,
+                  color: colors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    };
   }
 }

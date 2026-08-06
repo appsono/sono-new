@@ -43,11 +43,14 @@ ThemeData buildSonoTheme(SonoColors colors) {
     colorScheme:
         (isLight ? const ColorScheme.light() : const ColorScheme.dark())
             .copyWith(
-              surface: colors.bgSurface,
+              surface: colors.bgContainer,
+              onSurface: colors.textPrimary,
               primary: colors.textPrimary,
               secondary: colors.textSecondary,
               error: colors.errorText,
             ),
+    canvasColor: colors.bgPrimary,
+    cardColor: colors.bgContainer,
     appBarTheme: AppBarTheme(
       backgroundColor: colors.bgContainer,
       foregroundColor: colors.textPrimary,

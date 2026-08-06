@@ -36,10 +36,15 @@ import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
 import 'package:sono/services/smtc_service.dart';
 import 'package:sono/services/update_service.dart';
 import 'package:sono/services/theme_service.dart';
+import 'package:sono/services/appearance_service.dart';
 
+import 'package:sono/utils/status_bar_style.dart';
 import 'package:sono/theme/theme.dart';
 
 const kShots = bool.fromEnvironment('SONO_SHOTS');
+
+const double kShotsTopInset = 30;
+const double kShotsBottomInset = 18;
 
 late AudioHandler audioHandler;
 
@@ -78,11 +83,13 @@ void main() async {
   AudioEffectsService.instance.attachDb(db);
   LocaleService.instance.attachDb(db);
   ThemeService.instance.attachDb(db);
+  AppearanceService.instance.attachDb(db);
 
-  //only locale and theme gate first frame
+  //only locale, theme and appearance gate first frame
   await Future.wait([
     LocaleService.instance.loadSaved(),
     ThemeService.instance.loadSaved(),
+    AppearanceService.instance.loadSaved(),
   ]);
 
   PaintingBinding.instance.imageCache
@@ -166,19 +173,24 @@ class _SonoAppState extends State<SonoApp> with WidgetsBindingObserver {
               locale: locale,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: LocaleService.supportedLocales,
-              builder: !kShots
-                  ? null
-                  : (context, child) {
-                      const pad = EdgeInsets.only(top: 30, bottom: 18);
-                      return MediaQuery(
-                        data: MediaQuery.of(context).copyWith(
-                          padding: pad,
-                          viewPadding: pad,
-                          viewInsets: EdgeInsets.zero,
-                        ),
-                        child: child!,
-                      );
-                    },
+              builder: (context, child) {
+                Widget wrapped = SonoStatusBarStyle(child: child!);
+                if (kShots) {
+                  const pad = EdgeInsets.only(
+                    top: kShotsTopInset,
+                    bottom: kShotsBottomInset,
+                  );
+                  wrapped = MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      padding: pad,
+                      viewPadding: pad,
+                      viewInsets: EdgeInsets.zero,
+                    ),
+                    child: wrapped,
+                  );
+                }
+                return wrapped;
+              },
               home: AppShell(db: widget.db),
             );
           },

@@ -18,6 +18,7 @@ import 'package:sono/main.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as player;
 import 'package:sono/services/covers/cover_thumbs.dart';
+import 'package:sono/services/theme_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/l10n/localizations.dart';
 
@@ -39,16 +40,9 @@ import 'package:sono/pages/library/subpages/artist_detail_page.dart';
 import 'package:sono/pages/global/edit_tags_page.dart';
 //utils
 import 'package:sono/utils/format_ms.dart';
+import 'package:sono/utils/status_bar_style.dart';
 
 enum _SubView { none, queue, lyrics }
-
-class _PlayerColorsTween extends Tween<PlayerColors> {
-  _PlayerColorsTween({required PlayerColors begin, required PlayerColors end})
-    : super(begin: begin, end: end);
-
-  @override
-  PlayerColors lerp(double t) => PlayerColors.lerp(begin!, end!, t);
-}
 
 class FullscreenPlayer extends StatefulWidget {
   final SonoDatabase db;
@@ -83,6 +77,13 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
   @override
   void initState() {
     super.initState();
+    final warm = _warmColors();
+    if (warm != null) {
+      _colors = warm;
+      _prevColors = warm;
+      _colorsNotifer.value = warm;
+    }
+    ThemeService.colorsNotifier.addListener(_onThemeChanged);
     final current = player.AudioService.instance.currentSong;
     if (current != null) _handleSong(current);
     _songSub = player.AudioService.instance.currentSongStream.listen((s) {
@@ -130,11 +131,29 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
 
   @override
   void dispose() {
+    ThemeService.colorsNotifier.removeListener(_onThemeChanged);
     _songSub?.cancel();
     _colorsNotifer.dispose();
     _queueCtrl.dispose();
     _lyricsCtrl.dispose();
     super.dispose();
+  }
+
+  void _onThemeChanged() {
+    if (!mounted || _lastSongId != null) return;
+    setState(() {
+      _prevColors = _colors;
+      _colors = PlayerColors.fallback;
+    });
+    _colorsNotifer.value = _colors;
+  }
+
+  PlayerColors? _warmColors() {
+    final song = player.AudioService.instance.currentSong;
+    if (song == null) return null;
+    final bytes = CoverThumbs.peek(song.path);
+    if (bytes == null || bytes.isEmpty) return null;
+    return PlayerColors.peek(bytes);
   }
 
   Future<void> _handleSong(Song song) async {
@@ -401,7 +420,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<PlayerColors>(
-      tween: _PlayerColorsTween(begin: _prevColors, end: _colors),
+      tween: PlayerColorsTween(begin: _prevColors, end: _colors),
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeOutCubic,
       builder: (contex, c, _) {
@@ -411,74 +430,85 @@ class _FullscreenPlayerState extends State<FullscreenPlayer>
             if (didPop) return;
             if (_subView != _SubView.none) _closeSubView();
           },
-          child: Scaffold(
-            backgroundColor: c.background,
-            body: Stack(
-              children: [
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TopBar(
-                          c: c,
-                          onCollapse: () => Navigator.maybePop(context),
-                          onMore: _openTopBarMenu,
-                        ),
-                        const SizedBox(height: 42),
-                        CoverCarousel(c: c),
-                        const SizedBox(height: 42),
-                        TitleRow(
-                          c: c,
-                          liked: _liked,
-                          onToggleLike: _toggleLiked,
-                        ),
-                        const SizedBox(height: 34),
-                        ProgressBar(c: c),
-                        const SizedBox(height: 24),
-                        MainControls(c: c),
-                        const SizedBox(height: 60),
-                        SecondaryControls(
-                          c: c,
-                          onOpenQueue: _openQueue,
-                          onOpenLyrics: _openLyrics,
-                        ),
+          child: SonoStatusBarStyle(
+            background: c.background,
+            child: Scaffold(
+              backgroundColor: c.background,
+              body: Stack(
+                children: [
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TopBar(
+                            c: c,
+                            onCollapse: () => Navigator.maybePop(context),
+                            onMore: _openTopBarMenu,
+                          ),
+                          const SizedBox(height: 42),
+                          CoverCarousel(c: c),
+                          const SizedBox(height: 42),
+                          TitleRow(
+                            c: c,
+                            liked: _liked,
+                            onToggleLike: _toggleLiked,
+                          ),
+                          const SizedBox(height: 34),
+                          ProgressBar(c: c),
+                          const SizedBox(height: 24),
+                          MainControls(c: c),
+                          const SizedBox(height: 60),
+                          SecondaryControls(
+                            c: c,
+                            onOpenQueue: _openQueue,
+                            onOpenLyrics: _openLyrics,
+                          ),
 
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
-                ),
-                if (_queueMounted)
-                  Positioned.fill(
-                    child: SlideTransition(
-                      position: _queueSlide,
-                      child: PlayerQueueView(
-                        c: c,
-                        db: widget.db,
-                        slideAnimation: _queueCtrl,
-                        onClose: _closeSubView,
-                        liked: _liked,
-                        onToggleLike: _toggleLiked,
+                          const Spacer(),
+                        ],
                       ),
                     ),
                   ),
-                if (_lyricsMounted)
-                  Positioned.fill(
-                    child: SlideTransition(
-                      position: _lyricsSlide,
-                      child: PlayerLyricsView(
-                        c: c,
-                        db: widget.db,
-                        slideAnimation: _lyricsCtrl,
-                        onClose: _closeSubView,
-                        liked: _liked,
-                        onToggleLike: _toggleLiked,
+                  if (_queueMounted)
+                    Positioned.fill(
+                      child: Visibility(
+                        visible: _subView == _SubView.queue,
+                        maintainState: true,
+                        child: SlideTransition(
+                          position: _queueSlide,
+                          child: PlayerQueueView(
+                            c: c,
+                            db: widget.db,
+                            slideAnimation: _queueCtrl,
+                            onClose: _closeSubView,
+                            liked: _liked,
+                            onToggleLike: _toggleLiked,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                  if (_lyricsMounted)
+                    Positioned.fill(
+                      child: Visibility(
+                        visible: _subView == _SubView.lyrics,
+                        maintainState: true,
+                        child: SlideTransition(
+                          position: _lyricsSlide,
+                          child: PlayerLyricsView(
+                            c: c,
+                            db: widget.db,
+                            slideAnimation: _lyricsCtrl,
+                            onClose: _closeSubView,
+                            liked: _liked,
+                            onToggleLike: _toggleLiked,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         );

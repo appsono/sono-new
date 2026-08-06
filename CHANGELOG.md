@@ -7,7 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- Redesigned home page: gradient behind header taken from playing
+  song, Recently Added rail that badges songs added since page was
+  last opened, four-album bento grid randomised on each launch, and artists rail
+  carried over from the old page
+- Added long press sheets to home page using LibrarySheets, for songs, albums,
+  and artists
+- Added home tint toggle to appearance settings
+- Added see all button style picker to appearance settings, offering
+  filled button, plain text, or text with an arrow
+
+### Changed
+
+- Changed status bar icons to follow colour behind them instead
+  of app theme
+
+### Fixed
+
+- Fixed songs excluded in settings staying in library until app restart,
+  because forced rescans skipped a step that removed "deleted" songs
+- Fixed search page keeping stale genres after rescan
+- Fixed an error on startup when playback was started from media
+  notification with app closed, which also caused the library scan to be skipped
+- Fixed mini player and nav bar sometimes sitting mid screen after opening the
+  app or returning from background
+- Fixed the queue view briefly flashing into view when returning to the app
+- Fixed long translations of the create playlist label overflowing its button,
+  shuffle now drops to its icon when both labels no longer fit
+- Fixed the licences page and other built in Material screens showing on a
+  grey wash in light mode
+- Fixed player and home tint colours pulled from album art being inaccurate
+- Fixed the player falling back to dark colours in light theme when a cover
+  has no usable colour to extract
+- Fixed a flash of fallback colours when opening the fullscreen player
+
+### Internal
+
+- Added a getRandomAlbumsWithArtists() db query with limit
+- Added a getRecentlyAddedSongs() db query with limit
+- Added SonoStatusBarStyle, which resolves system overlay style from a
+  backdrop colour, applied per page and app wide as a fallback
+- Added an AppearanceService owning appearance settings that are not part of
+  theme palette, mirroring ThemeService
+- Added appearance.homeTint and appearance.sectionSeeAllStyle to backup
+  allowlist
+- Split SonoSectionHeader and SonoSeeAll out of SonoSection
+- Moved PlayerColorsTween out of player_page into player_colors, shared by
+  fullscreen player and home tint
+- Added onLongPress callback to SonoMediaCard and foregroundOverride to
+  SonoHeader
+- Mapped colorScheme surface, canvasColor and cardColor to opaque background
+  tokens, bgSurface is now only an overlay fill again
+- Rewrote PlayerColors extraction: filters near black, near white, and the
+  red I line before scoring, snaps neutral art to true grey instead of the
+  achromatic hue, and biases base tones toward the artworks own lightness
+- Moved cover decoding to ui.Codec with a target size instead of the image
+  package, and quantization to one reusable isolate instead of a fresh
+  compute isolate per songs
+- Added PlayerColors.clearCache(), called from CoverMemoryPressure
+- PlayerColors.fallback now resolves from ThemeService instead of a fixed
+  dark palette, with PlayerColors.fromTheme(SonoColors) doing the mapping
+- Added CoverThumbs.peek() and PlayerColors.peek() for synchronous cache
+  reads before first build
 
 ## [0.11.1+13] - 2026-08-06
 

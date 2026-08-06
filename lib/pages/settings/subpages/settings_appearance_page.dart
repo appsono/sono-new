@@ -17,11 +17,13 @@ import 'package:sono/l10n/localizations.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
+import 'package:sono/services/appearance_service.dart';
 
 import 'package:sono/pages/settings/widgets/settings_group.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 import 'package:sono/pages/settings/widgets/settings_theme_picker.dart';
+import 'package:sono/pages/settings/widgets/settings_see_all_picker.dart';
 
 /// Appearance subpage
 ///
@@ -51,10 +53,23 @@ class SettingsAppearancePage extends StatelessWidget {
                   note: l.settingsAppearanceThemeNote,
                   children: const [SettingsThemePicker()],
                 ),
+                SettingsGroupLabel(text: l.settingsAppearanceSeeAll),
+                SettingsGroup(children: const [SettingsSeeAllPicker()]),
 
                 SettingsGroupLabel(text: l.settingsAppearanceSectionPlayer),
                 SettingsGroup(
                   children: [
+                    ValueListenableBuilder<bool>(
+                      valueListenable: AppearanceService.homeTintNotifier,
+                      builder: (context, enabled, _) => SettingsRow(
+                        icon: IconsSheet.appearanceOutlined,
+                        accent: c.primary,
+                        label: l.settingsAppearanceHomeTint,
+                        subtitle: l.settingsAppearanceHomeTintSubtitle,
+                        toggle: enabled,
+                        onToggle: AppearanceService.instance.setHomeTint,
+                      ),
+                    ),
                     SettingsRow(
                       icon: IconsSheet.appearanceOutlined,
                       accent: c.accentPurple,

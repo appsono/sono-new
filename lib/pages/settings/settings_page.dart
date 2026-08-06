@@ -18,6 +18,7 @@ import 'package:sono_query/sono_query.dart';
 import 'package:sono/l10n/localizations.dart';
 import 'package:sono/services/theme_service.dart';
 
+import 'package:sono/main.dart' show kShots;
 import 'package:sono/db/database.dart';
 import 'package:sono/services/locale_service.dart';
 import 'package:sono/services/build_flavor.dart';
@@ -42,6 +43,7 @@ import 'package:sono/pages/settings/subpages/settings_library_page.dart';
 import 'package:sono/pages/settings/subpages/settings_discord_page.dart';
 import 'package:sono/pages/settings/subpages/settings_backup_page.dart';
 import 'package:sono/pages/settings/subpages/settings_about_page.dart';
+import 'package:sono/pages/settings/subpages/settings_shots_page.dart';
 
 import 'package:sono/pages/settings/eq_labels.dart';
 import 'package:sono/pages/settings/settings_search.dart';
@@ -468,6 +470,18 @@ class _SettingsPageState extends State<SettingsPage> {
             MaterialPageRoute(builder: (_) => SettingsAboutPage(db: widget.db)),
           ),
         ),
+        //screenshot mode: not translated on purpose
+        if (kShots)
+          SettingsRow(
+            icon: IconsSheet.downloadOutlined,
+            accent: c.accentBlue,
+            label: 'Screenshot mode',
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsShotsPage(db: widget.db),
+              ),
+            ),
+          ),
       ],
     );
   }

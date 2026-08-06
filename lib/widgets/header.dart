@@ -55,6 +55,7 @@ class SonoHeader extends StatelessWidget {
   final List<SonoHeaderAction> actions;
   final VoidCallback? onProfileTap;
   final VoidCallback? onBackTap;
+  final Color? foregroundOverride;
 
   const SonoHeader({
     required this.actions,
@@ -65,6 +66,7 @@ class SonoHeader extends StatelessWidget {
     this.username,
     this.onProfileTap,
     this.onBackTap,
+    this.foregroundOverride,
     super.key,
   });
 
@@ -79,8 +81,14 @@ class SonoHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: isHomePage
-              ? _TimeBasedGreeting(username: username)
-              : _PageTitle(title: pageTitle ?? ''),
+              ? _TimeBasedGreeting(
+                  username: username,
+                  foreground: foregroundOverride,
+                )
+              : _PageTitle(
+                  title: pageTitle ?? '',
+                  foreground: foregroundOverride,
+                ),
         ),
         if (actions.isNotEmpty) ...[
           const SizedBox(width: 12),
@@ -93,7 +101,8 @@ class SonoHeader extends StatelessWidget {
 
 class _TimeBasedGreeting extends StatefulWidget {
   final String? username;
-  const _TimeBasedGreeting({this.username});
+  final Color? foreground;
+  const _TimeBasedGreeting({this.username, this.foreground});
 
   @override
   State<_TimeBasedGreeting> createState() => _TimeBasedGreetingState();
@@ -164,6 +173,11 @@ class _TimeBasedGreetingState extends State<_TimeBasedGreeting> {
     final l = AppLocalizations.of(context);
     final greeting = _greetingFor(l, DateTime.now().hour);
     final sub = widget.username ?? _fallbackFor(l, _fallbackIndex);
+    final fg = widget.foreground;
+    final primary = fg ?? colors.textPrimary;
+    final secondary = fg != null
+        ? fg.withValues(alpha: 0.75)
+        : colors.textSecondary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +188,7 @@ class _TimeBasedGreetingState extends State<_TimeBasedGreeting> {
           style: TextStyle(
             fontFamily: SonoFonts.primary,
             fontSize: 13,
-            color: colors.textSecondary,
+            color: secondary,
           ),
         ),
         Text(
@@ -185,7 +199,7 @@ class _TimeBasedGreetingState extends State<_TimeBasedGreeting> {
             fontFamily: SonoFonts.heading,
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: colors.textPrimary,
+            color: primary,
           ),
         ),
       ],
@@ -197,7 +211,8 @@ class _TimeBasedGreetingState extends State<_TimeBasedGreeting> {
 
 class _PageTitle extends StatelessWidget {
   final String title;
-  const _PageTitle({required this.title});
+  final Color? foreground;
+  const _PageTitle({required this.title, this.foreground});
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +225,7 @@ class _PageTitle extends StatelessWidget {
         fontFamily: SonoFonts.heading,
         fontSize: 22,
         fontWeight: FontWeight.w700,
-        color: colors.textPrimary,
+        color: foreground ?? colors.textPrimary,
       ),
     );
   }

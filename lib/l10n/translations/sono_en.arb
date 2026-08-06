@@ -57,7 +57,7 @@
   },
   "commonShuffleAll": "Shuffle all",
   "@commonShuffleAll": {
-    "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form."
+    "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form. Please keep it short, there is limit space to use."
   },
   "commonRepeat": "Repeat",
   "@commonRepeat": {
@@ -202,12 +202,21 @@
   },
 
   "homeActionCreatePlaylist": "Create Playlist",
+  "@homeActionCreatePlaylist": {
+    "description": "Shown on the Home Pages's Create Playlist action. Please keep the string as short as possible."
+  },
+
   "homeHeaderNewsAndUpdates": "News & Updates",
   "homeHeaderSettings": "Settings",
 
   "homeSectionRecentlyAdded": "Recently Added",
   "homeSectionAlbums": "Albums",
   "homeSectionArtists": "Artists",
+
+  "homeNewBadge": "NEW",
+  "@homeNewBadge": {
+    "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+  },
 
   "homeGreetingEarlyBird": "Wow early bird",
   "homeGreetingMorning": "Morning",
@@ -699,6 +708,30 @@
   "settingsAppearanceSectionPlayer": "Player",
   "@settingsAppearanceSectionPlayer": {
     "description": "Section label above the player appearance options on the appearance subpage."
+  },
+  "settingsAppearanceSeeAll": "See all button",
+  "@settingsAppearanceSeeAll": {
+    "description": "Label for the picker that chooses how the see all control on section headers is drawn."
+  },
+  "settingsAppearanceSeeAllButton": "Button",
+  "@settingsAppearanceSeeAllButton": {
+    "description": "Option name for the see all control drawn as a filled circle with an arrow."
+  },
+  "settingsAppearanceSeeAllText": "Text",
+  "@settingsAppearanceSeeAllText": {
+    "description": "Option name for the see all control drawn as a plain text label."
+  },
+  "settingsAppearanceSeeAllArrow": "Text + arrow",
+  "@settingsAppearanceSeeAllArrow": {
+    "description": "Option name for the see all control drawn as a text label followed by a chevron."
+  },
+  "settingsAppearanceHomeTint": "Home tint",
+  "@settingsAppearanceHomeTint": {
+    "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
+  },
+  "settingsAppearanceHomeTintSubtitle": "Tint the home top with the current song's colours",
+  "@settingsAppearanceHomeTintSubtitle": {
+    "description": "Subtitle under the home tint row."
   },
   "settingsAppearanceColourFromArt": "Colour from album art",
   "@settingsAppearanceColourFromArt": {

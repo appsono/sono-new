@@ -12,6 +12,7 @@
 
 import 'package:flutter/widgets.dart';
 
+import 'package:sono/pages/player/player_colors.dart';
 import 'package:sono/services/covers/cover_cache.dart';
 import 'package:sono/services/covers/cover_thumbs.dart';
 import 'package:sono/services/device_profile.dart';
@@ -53,5 +54,6 @@ class CoverMemoryPressure with WidgetsBindingObserver {
     //so notification keeps art
     CoverCache.trimToBytes(0);
     CoverThumbs.trimToEntries(1);
+    PlayerColors.clearCache();
   }
 }

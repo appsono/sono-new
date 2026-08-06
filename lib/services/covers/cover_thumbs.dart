@@ -45,6 +45,14 @@ class CoverThumbs {
     return future.whenComplete(() => _inFlight.remove(path));
   }
 
+  /// Sync read, null when not cached or known missing
+  static Uint8List? peek(String path) {
+    if (path.isEmpty) return null;
+    final bytes = _cache[path];
+    if (bytes != null) _touch(path);
+    return bytes;
+  }
+
   static Future<Uint8List?> _run(String path) async {
     Uint8List? thumb;
     try {
