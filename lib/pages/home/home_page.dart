@@ -174,11 +174,25 @@ class _HomePageState extends State<HomePage> {
   Future<List<AlbumWithArtistViewData>?> _pinnedBento() async {
     final raw = await widget.db.getSetting(kShotsBentoKey) ?? '';
     if (raw.isEmpty) return null;
-    final ids = [for (final part in raw.split(',')) ?int.tryParse(part)];
+
+    final ids = <int>{};
+    for (final part in raw.split(',')) {
+      final id = int.tryParse(part.trim());
+      if (id != null) ids.add(id);
+    }
     if (ids.length < _bentoLimit) return null;
+
     final all = await widget.db.getAllAlbumsWithArtists();
     final byId = {for (final a in all) a.id: a};
-    final picked = [for (final id in ids.take(_bentoLimit)) ?byId[id]];
+
+    final picked = <AlbumWithArtistViewData>[];
+    for (final id in ids) {
+      final album = byId[id];
+      if (album == null) continue;
+      picked.add(album);
+      if (picked.length == _bentoLimit) break;
+    }
+
     return picked.length == _bentoLimit ? picked : null;
   }
 
