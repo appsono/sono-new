@@ -150,7 +150,8 @@ class MediaKitPlayerBackend implements PlayerBackend {
   Future<void> setGapless(bool enabled) async {
     final platform = player.platform;
     if (platform is NativePlayer) {
-      await platform.setProperty('gapless-audio', enabled ? 'yes' : 'no');
+      //weak reopends device on format change, yes resamples instead
+      await platform.setProperty('gapless-audio', enabled ? 'weak' : 'no');
     }
   }
 
