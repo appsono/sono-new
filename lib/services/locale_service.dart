@@ -37,7 +37,7 @@ class LocaleService {
   static const supportedLocales = <Locale>[
     Locale('en'), // ALWAYS FIRST!
     Locale('be'),
-    Locale.fromSubtags(languageCode: 'be', scriptCode: 'Tarask'),
+    Locale.fromSubtags(languageCode: 'be', scriptCode: 'tarask'),
     Locale('de'),
     Locale('et'),
     Locale('fr'),
@@ -96,29 +96,17 @@ class LocaleService {
   SonoDatabase? _db;
   void attachDb(SonoDatabase db) => _db = db;
 
-  /// Parses stored tag a [Locale]
-  static Locale? _parseTag(String raw) {
-    final parts = raw
-        .split(RegExp(r'[-_]'))
-        .where((p) => p.isNotEmpty)
-        .toList();
-    if (parts.isEmpty) return null;
-    String? script;
-    String? country;
-    for (final p in parts.skip(1)) {
-      if (p.length == 4) {
-        //script canonical casing is Titlecase
-        script = p[0].toUpperCase() + p.substring(1).toLowerCase();
-      } else {
-        country = p.toUpperCase();
-      }
+  /// Matches stored locale tags case insensitively
+  static Locale? _localeForTag(String raw) {
+    final normalized = raw.replaceAll('_', '-').toLowerCase();
+    for (final locale in supportedLocales) {
+      if (locale.toLanguageTag().toLowerCase() == normalized) return locale;
     }
-    return Locale.fromSubtags(
-      languageCode: parts.first.toLowerCase(),
-      scriptCode: script,
-      countryCode: country,
-    );
+    return null;
   }
+
+  @visibleForTesting
+  static Locale? debugLocaleForTag(String raw) => _localeForTag(raw);
 
   /// Reads saved locale from db
   /// To avoid flashing this gets called before first build
@@ -131,7 +119,7 @@ class LocaleService {
       return;
     }
 
-    final locale = _parseTag(raw);
+    final locale = _localeForTag(raw);
     //ignore garbage from older builds
     if (locale == null ||
         !supportedLocales.any(
