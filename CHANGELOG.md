@@ -42,6 +42,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the player falling back to dark colours in light theme when a cover
   has no usable colour to extract
 - Fixed a flash of fallback colours when opening the fullscreen player
+- Fixed Belarusian (Taraškievica) showing standard Belarusian text and
+  reverting to the system language after a restart
+- Fixed the tag editor corrupting FLAC files, which then failed to open in
+  other apps
+- Fixed the song length in the lyrics view sometimes showing the previous
+  song's value until the app was restarted
+- Fixed the lyrics view progress bar freezing after dragging the slider
+- Fixed a thin line at the fade edge of scrolling song titles
+- Fixed the tag editor resetting release dates to January 1st when saving
 
 ### Internal
 
@@ -71,6 +80,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dark palette, with PlayerColors.fromTheme(SonoColors) doing the mapping
 - Added CoverThumbs.peek() and PlayerColors.peek() for synchronous cache
   reads before first build
+- Replaced the language tag parser in LocaleService with a case insensitive
+  whole tag match against supportedLocales
+- Added locale_service_test pinning that every supported locale resolves to its
+  own AppLocalizations class and survives a save and restore round trip
+- Added a manual APK workflow with flavor, build mode and signing inputs
+- Added a PlayerBackend abstraction between AudioService and media_kit, with
+  MediaKitPlayerBackend holding the mpv setup
+- Added an audio state test harness with a fake backend, covering queue edits,
+  shuffle, gapless advance and restore
+- AudioService.init() now holds its stream subscriptions and cancels them in
+  dispose(), and the unused player getter is gone
 
 ## [0.11.1+13] - 2026-08-06
 
