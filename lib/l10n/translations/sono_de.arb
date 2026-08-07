@@ -1465,5 +1465,33 @@
     "migrationFailed": "Import aus der alten Sono-App fehlgeschlagen :/",
     "@migrationFailed": {
         "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
+    },
+    "homeNewBadge": "NEU",
+    "@homeNewBadge": {
+        "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+    },
+    "settingsAppearanceSeeAll": "„Alle anzeigen“-Button",
+    "@settingsAppearanceSeeAll": {
+        "description": "Label for the picker that chooses how the see all control on section headers is drawn."
+    },
+    "settingsAppearanceSeeAllButton": "Button",
+    "@settingsAppearanceSeeAllButton": {
+        "description": "Option name for the see all control drawn as a filled circle with an arrow."
+    },
+    "settingsAppearanceSeeAllText": "Text",
+    "@settingsAppearanceSeeAllText": {
+        "description": "Option name for the see all control drawn as a plain text label."
+    },
+    "settingsAppearanceSeeAllArrow": "Text + Pfeil",
+    "@settingsAppearanceSeeAllArrow": {
+        "description": "Option name for the see all control drawn as a text label followed by a chevron."
+    },
+    "settingsAppearanceHomeTint": "Akzentfarbe auf Startseite",
+    "@settingsAppearanceHomeTint": {
+        "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
+    },
+    "settingsAppearanceHomeTintSubtitle": "Färbt den oberen Bereich der Startseite mit den Farben des aktuellen Songs ein",
+    "@settingsAppearanceHomeTintSubtitle": {
+        "description": "Subtitle under the home tint row."
     }
 }

@@ -109,7 +109,7 @@
     "lyricsPillStatic": "Звычайны",
     "lyricsProviderCredit": "Тэкст пастаўляецца lrclib.net",
     "lyricsMenuTitle": "Тэкст і прайграваньне",
-    "lyricsMenuSectionLyrics": "Тэкст",
+    "lyricsMenuSectionLyrics": "Тэкст песьні",
     "lyricsMenuSectionPlayback": "Прайграваньне",
     "lyricsMenuAdjustSync": "Адрэгуляваць сынхранізацыю",
     "lyricsMenuAdjustSyncSubtitleZero": "Наладзіць сынхранізацыю з тэкстам для гэтае песьні",
@@ -546,7 +546,7 @@
     "@settingsPlannedFollow": {
         "description": "Action in the planned feature sheet that opens the project repository."
     },
-    "settingsPlannedFollowSubtitle": "Адкрывае рэпазітор у вашым браўзэры",
+    "settingsPlannedFollowSubtitle": "Адкрывае рэпазітор у вашым аглядальніку",
     "@settingsPlannedFollowSubtitle": {
         "description": "Subtitle under the GitHub action in the planned feature sheet."
     },
@@ -602,7 +602,7 @@
     "@settingsDiscord": {
         "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
     },
-    "settingsDiscordDisconnected": "Ня злучана",
+    "settingsDiscordDisconnected": "Не падлучана",
     "@settingsDiscordDisconnected": {
         "description": "Value on the Discord row when no Discord account is linked."
     },
@@ -747,7 +747,7 @@
     "@settingsLanguageHelpTranslate": {
         "description": "Row that opens the Weblate project where translations are contributed."
     },
-    "settingsLanguageHelpTranslateSubtitle": "Адкрывае Weblate у вашым браўзэры",
+    "settingsLanguageHelpTranslateSubtitle": "Адкрывае Weblate у вашым аглядальніку",
     "@settingsLanguageHelpTranslateSubtitle": {
         "description": "Subtitle under the help translate row."
     },
@@ -804,7 +804,7 @@
     "@settingsPlaybackSleepTimer": {
         "description": "Row for stopping playback after a set time. Currently marked as planned."
     },
-    "settingsPlaybackResumeOnConnect": "Прайграваньне пры падлучэньні навушнікаў",
+    "settingsPlaybackResumeOnConnect": "Прайграваньне з навушнікамі",
     "@settingsPlaybackResumeOnConnect": {
         "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
     },
@@ -1465,5 +1465,33 @@
     "migrationFailed": "Не ўдалося імпартаваць са старой Sono :/",
     "@migrationFailed": {
         "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
+    },
+    "homeNewBadge": "НОВАЕ",
+    "@homeNewBadge": {
+        "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+    },
+    "settingsAppearanceSeeAll": "Кнопка «Прагладзець усе»",
+    "@settingsAppearanceSeeAll": {
+        "description": "Label for the picker that chooses how the see all control on section headers is drawn."
+    },
+    "settingsAppearanceSeeAllButton": "Кнопка",
+    "@settingsAppearanceSeeAllButton": {
+        "description": "Option name for the see all control drawn as a filled circle with an arrow."
+    },
+    "settingsAppearanceSeeAllText": "Тэкст",
+    "@settingsAppearanceSeeAllText": {
+        "description": "Option name for the see all control drawn as a plain text label."
+    },
+    "settingsAppearanceSeeAllArrow": "Тэкст + стрэлка",
+    "@settingsAppearanceSeeAllArrow": {
+        "description": "Option name for the see all control drawn as a text label followed by a chevron."
+    },
+    "settingsAppearanceHomeTint": "Тон на галоўнае старонцы",
+    "@settingsAppearanceHomeTint": {
+        "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
+    },
+    "settingsAppearanceHomeTintSubtitle": "Задаваць колер наверсе галоўнае старонцы, каб ён адпавядаў колерам бягучае песьні",
+    "@settingsAppearanceHomeTintSubtitle": {
+        "description": "Subtitle under the home tint row."
     }
 }

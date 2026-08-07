@@ -291,7 +291,7 @@
     "@commonMoreOptions": {
         "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
     },
-    "commonCreatePlaylist": "Нова добірка",
+    "commonCreatePlaylist": "Створити добірку",
     "@commonCreatePlaylist": {
         "description": "Button and action label for creating a new playlist."
     },
@@ -1465,5 +1465,33 @@
     "settingsLibraryProtectedArtistAdd": "Додати виконавця",
     "@settingsLibraryProtectedArtistAdd": {
         "description": "Action that adds the typed artist to the protected list."
+    },
+    "homeNewBadge": "НОВА",
+    "@homeNewBadge": {
+        "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+    },
+    "settingsAppearanceSeeAll": "Кнопка «Переглянути все»",
+    "@settingsAppearanceSeeAll": {
+        "description": "Label for the picker that chooses how the see all control on section headers is drawn."
+    },
+    "settingsAppearanceSeeAllButton": "Кнопка",
+    "@settingsAppearanceSeeAllButton": {
+        "description": "Option name for the see all control drawn as a filled circle with an arrow."
+    },
+    "settingsAppearanceSeeAllText": "Текст",
+    "@settingsAppearanceSeeAllText": {
+        "description": "Option name for the see all control drawn as a plain text label."
+    },
+    "settingsAppearanceSeeAllArrow": "Текст + стрілка",
+    "@settingsAppearanceSeeAllArrow": {
+        "description": "Option name for the see all control drawn as a text label followed by a chevron."
+    },
+    "settingsAppearanceHomeTint": "Тонування головного екрана",
+    "@settingsAppearanceHomeTint": {
+        "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
+    },
+    "settingsAppearanceHomeTintSubtitle": "Зафарбувати верхню частину головного екрана кольорами поточної пісні",
+    "@settingsAppearanceHomeTintSubtitle": {
+        "description": "Subtitle under the home tint row."
     }
 }
