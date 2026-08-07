@@ -48,7 +48,7 @@
 - [ ] Tag editor:
   - Edit multiple songs at once
   - Change album cover
-- Playlists:
+- [ ] Playlists:
   - Add a whole album or queue at once
   - Import / export (M3U)
 - [x] ~~Backup: export / import app data (likes, favorites, playlists, settings,
