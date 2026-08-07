@@ -13,11 +13,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:media_kit/media_kit.dart';
 
-import 'package:sono/db/database.dart' hide Playlist;
+import 'package:flutter/foundation.dart' show visibleForTesting;
+
+import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_effects_service.dart';
-import 'package:sono/services/device_profile.dart';
+import 'package:sono/services/audio/player_backend.dart';
 
 enum RepeatMode { off, all, one }
 
@@ -70,7 +71,11 @@ class AudioService {
   AudioService._();
   static final AudioService instance = AudioService._();
 
-  late final Player _player;
+  @visibleForTesting
+  static AudioService createForTesting() => AudioService._();
+
+  late final PlayerBackend _player;
+  final List<StreamSubscription<dynamic>> _subs = [];
   bool _initialized = false;
   bool _isAdvancing = false;
   bool _isOpening = false;
@@ -129,7 +134,7 @@ class AudioService {
   Stream<List<Song>> get queueStream => _queueController.stream;
   Stream<bool> get playingStream {
     _ensureInitialized();
-    return _player.stream.playing;
+    return _player.playingStream;
   }
 
   Stream<Duration>? _throttledPositionStream;
@@ -142,7 +147,7 @@ class AudioService {
   /// (seek jumps still instant)
   Stream<Duration> get positionStream {
     _ensureInitialized();
-    return _throttledPositionStream ??= _player.stream.position
+    return _throttledPositionStream ??= _player.positionStream
         .map((p) => Duration(milliseconds: (p.inMilliseconds ~/ 250) * 250))
         .distinct()
         .asBroadcastStream();
@@ -151,22 +156,22 @@ class AudioService {
   /// untouched mpv position stream
   Stream<Duration> get rawPositionStream {
     _ensureInitialized();
-    return _player.stream.position;
+    return _player.positionStream;
   }
 
   Stream<Duration> get durationStream {
     _ensureInitialized();
-    return _player.stream.duration;
+    return _player.durationStream;
   }
 
   Stream<double> get volumeStream {
     _ensureInitialized();
-    return _player.stream.volume;
+    return _player.volumeStream;
   }
 
   Stream<bool> get bufferingStream {
     _ensureInitialized();
-    return _player.stream.buffering;
+    return _player.bufferingStream;
   }
 
   Stream<bool> get shuffleStream => _shuffleController.stream;
@@ -178,11 +183,6 @@ class AudioService {
   /// ===========================
   ///       current state
   /// ===========================
-  Player get player {
-    _ensureInitialized();
-    return _player;
-  }
-
   Song? get currentSong {
     if (_currentIndex < 0 || _queue.isEmpty) return null;
     return _queue[_effectiveIndex];
@@ -198,12 +198,12 @@ class AudioService {
   int get currentQueueIndex => _currentIndex;
   bool get isPlaying {
     _ensureInitialized();
-    return _player.state.playing;
+    return _player.playing;
   }
 
   bool get isBuffering {
     _ensureInitialized();
-    return _player.state.buffering;
+    return _player.buffering;
   }
 
   /// Queue in effective order (respects shuffle)
@@ -221,12 +221,12 @@ class AudioService {
 
   Duration get position {
     _ensureInitialized();
-    return _player.state.position;
+    return _player.position;
   }
 
   Duration get duration {
     _ensureInitialized();
-    return _player.state.duration;
+    return _player.duration;
   }
 
   //use metadata duration if mpv misses gapless update
@@ -238,7 +238,7 @@ class AudioService {
 
   double get volume {
     _ensureInitialized();
-    return _player.state.volume;
+    return _player.volume;
   }
 
   bool get shuffle => _shuffle;
@@ -258,92 +258,75 @@ class AudioService {
   /// ===========================
   ///            init
   /// ===========================
-  Future<void> init() async {
+
+  /// [backend] is only passed by tests, app gets media_kit one
+  Future<void> init({PlayerBackend? backend}) async {
     if (_initialized) return;
     _initialized = true;
 
-    _player = Player(
-      configuration: const PlayerConfiguration(
-        pitch: false,
-        title: 'Sono',
-        bufferSize: 8 * 1024 * 1024, //8mb instead of 32mb default
-        libass: false, //disables subtitle renderer
-      ),
-    );
+    _player = backend ?? MediaKitPlayerBackend();
+    await _player.configure();
+    await _player.setGapless(_gapless);
 
-    //cap mpv memory usage for local playback
-    final platform = _player.platform;
-    if (platform is NativePlayer) {
-      //kill all video & rendering pipelines
-      await platform.setProperty('vid', 'no');
-      await platform.setProperty('vo', 'null');
-      await platform.setProperty('hwdec', 'no');
-      await platform.setProperty('audio-display', 'no');
-
-      //kill unnecessary mpv subsystems
-      await platform.setProperty('load-scripts', 'no');
-      await platform.setProperty('osc', 'no');
-      await platform.setProperty('osd-level', '0');
-      await platform.setProperty('sub', 'no');
-
-      //disable terminal status formatting
-      await platform.setProperty('term-status-msg', '');
-      await platform.setProperty('really-quiet', 'yes');
-
-      //lean demuxer / cache
-      await platform.setProperty('cache', 'no');
-      await platform.setProperty(
-        'demuxer-max-bytes',
-        DeviceProfile.demuxerMaxBytes,
-      );
-      await platform.setProperty(
-        'demuxer-max-back-bytes',
-        DeviceProfile.demuxerBackBytes,
-      );
-      await platform.setProperty(
-        'demuxer-readhead-secs',
-        DeviceProfile.readheadSecs,
-      );
-      await platform.setProperty('audio-buffer', '2');
-
-      //playback behavior
-      await platform.setProperty('idle-active', 'yes');
-      await platform.setProperty('gapless-audio', _gapless ? 'yes' : 'no');
-      //await platform.setProperty('prefetch-playlist', 'yes');
+    //only real backend has mpv af property to own
+    final b = _player;
+    if (b is MediaKitPlayerBackend) {
+      AudioEffectsService.instance.attach(b.player);
     }
 
-    //attach effects
-    AudioEffectsService.instance.attach(_player);
+    _subs.add(
+      _player.playlistIndexStream.listen((index) {
+        if (_isAdvancing || _isOpening) return;
+        if (index > 0) {
+          _onGaplessAdvance(index);
+        }
+      }),
+    );
 
-    _player.stream.playlist.listen((state) {
-      if (_isAdvancing || _isOpening) return;
-      if (state.index > 0) {
-        _onGaplessAdvance(state.index);
-      }
-    });
+    //auto-advance on song complete
+    _subs.add(
+      _player.completedStream.listen((completed) {
+        if (!completed || _isAdvancing || _isOpening) return;
+        if (_player.playlistLength > 1) return;
+        _onTrackCompleted();
+      }),
+    );
 
-    //auto-advance on song completion
-    _player.stream.completed.listen((completed) {
-      if (!completed || _isAdvancing || _isOpening) return;
-      if (_player.state.playlist.medias.length > 1) return;
-      _onTrackCompleted();
-    });
+    _subs.add(
+      _player.positionStream.listen((pos) {
+        if (!_player.playing) return;
+        final now = DateTime.now();
+        if (_lastPositionSave == null ||
+            now.difference(_lastPositionSave!).inSeconds >= 30) {
+          _lastPositionSave = now;
+          _persistPosition(pos);
+        }
+      }),
+    );
 
-    _player.stream.position.listen((pos) {
-      if (!_player.state.playing) return;
-      final now = DateTime.now();
-      if (_lastPositionSave == null ||
-          now.difference(_lastPositionSave!).inSeconds >= 30) {
-        _lastPositionSave = now;
-        _persistPosition(pos);
-      }
-    });
+    _subs.add(
+      _player.playingStream.listen((playing) {
+        if (!playing && !_isRestoringState) {
+          _persistPosition(_player.position);
+        }
+      }),
+    );
+  }
 
-    _player.stream.playing.listen((playing) {
-      if (!playing && !_isRestoringState) {
-        _persistPosition(_player.state.position);
-      }
-    });
+  @visibleForTesting
+  Future<void> dispose() async {
+    _saveStateDebounce?.cancel();
+    for (final sub in _subs) {
+      await sub.cancel();
+    }
+    _subs.clear();
+    if (_initialized) await _player.dispose();
+    await _currentSongController.close();
+    await _queueController.close();
+    await _shuffleController.close();
+    await _repeatController.close();
+    await _artistNameController.close();
+    await _originController.close();
   }
 
   /// Bind database for persisting playback state
@@ -458,7 +441,7 @@ class AudioService {
       try {
         await _openCurrent(play: false);
         if (savedPositionMs > 0) {
-          await _player.stream.duration
+          await _player.durationStream
               .firstWhere((d) => d.inMilliseconds > 0)
               .timeout(
                 const Duration(seconds: 5),
@@ -498,7 +481,7 @@ class AudioService {
     _saveStateDebounce?.cancel();
     _saveStateDebounce = null;
     await _savePlaybackState();
-    _persistPosition(_player.state.position);
+    _persistPosition(_player.position);
   }
 
   Future<void> _savePlaybackState() async {
@@ -608,12 +591,7 @@ class AudioService {
     _scheduleStateSave();
   }
 
-  Future<void> _applyGapless() async {
-    final platform = _player.platform;
-    if (platform is NativePlayer) {
-      await platform.setProperty('gapless-audio', _gapless ? 'yes' : 'no');
-    }
-  }
+  Future<void> _applyGapless() => _player.setGapless(_gapless);
 
   /// Stop playback and clear queue
   Future<void> stop() async {
@@ -676,7 +654,7 @@ class AudioService {
     if (_queue.isEmpty) return;
 
     //only restart song if not currently spamming skips
-    if (!_isOpening && _player.state.position.inSeconds > 3) {
+    if (!_isOpening && _player.position.inSeconds > 3) {
       await _player.seek(Duration.zero);
       return;
     }
@@ -930,21 +908,16 @@ class AudioService {
       _artistNameController.add(_currentArtistName);
     }
 
-    final currentMedia = Media(Uri.file(song.path).toString());
-
     // repeat-one: single-item playlist
     // everything else: always preload next song
     if (_repeat != RepeatMode.one) {
       final nextSong = _peekNextSong();
       if (nextSong != null) {
-        await _player.open(
-          Playlist([currentMedia, Media(Uri.file(nextSong.path).toString())]),
-          play: play,
-        );
+        await _player.open([song.path, nextSong.path], play: play);
         return;
       }
     }
-    await _player.open(Playlist([currentMedia]), play: play);
+    await _player.open([song.path], play: play);
   }
 
   Future<void> _onGaplessAdvance(int passedTracks) async {
@@ -980,15 +953,15 @@ class AudioService {
 
       //drop exact number of old tracks that just played to shift mpv index to 0
       for (int i = 0; i < passedTracks; i++) {
-        if (_player.state.playlist.medias.isNotEmpty) {
-          await _player.remove(0);
+        if (_player.playlistLength > 0) {
+          await _player.removeAt(0);
         }
       }
 
       //append next lookahead track to keep gapless alive
       final nextSong = _peekNextSong();
       if (nextSong != null) {
-        await _player.add(Media(Uri.file(nextSong.path).toString()));
+        await _player.append(nextSong.path);
       }
     } finally {
       _isAdvancing = false;
@@ -999,14 +972,14 @@ class AudioService {
     if (_isAdvancing || _isOpening || _queue.isEmpty) return;
     try {
       //drop every entry beyond current one (index 1+)
-      while (_player.state.playlist.medias.length > 1) {
-        await _player.remove(1);
+      while (_player.playlistLength > 1) {
+        await _player.removeAt(1);
       }
       //re-add correct next entry if relevant
       if (_repeat != RepeatMode.one) {
         final next = _peekNextSong();
         if (next != null) {
-          await _player.add(Media(Uri.file(next.path).toString()));
+          await _player.append(next.path);
         }
       }
     } catch (_) {

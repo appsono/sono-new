@@ -65,6 +65,12 @@ add_dependencies(${BINARY_NAME} flutter_assemble)
 find_library(MIMALLOC_LIBRARY NAMES mimalloc REQUIRED)
 target_link_libraries(${BINARY_NAME} PRIVATE ${MIMALLOC_LIBRARY})
 
+# Since we link the system mimalloc above, stop media_kit_libs_linux from
+# downloading and compiling its own copy for the static-override path. Its
+# option() picks up this normal variable (CMP0077), and it must be set before
+# the plugins are added below.
+set(MIMALLOC_USE_STATIC_LIBS OFF)
+
 # Only the install-generated bundle's copy of the executable will launch
 # correctly, since the resources must in the right relative locations. To avoid
 # people trying to run the unbundled copy, put it in a subdirectory instead of
