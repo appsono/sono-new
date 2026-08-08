@@ -10,6 +10,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+import 'dart:async';
 import 'dart:developer' as dev;
 import 'package:drift/drift.dart';
 import 'package:sono_query/sono_query.dart' as sq;
@@ -55,6 +56,45 @@ class ScanService {
 
   ScanService(this.db);
 
+  static Future<void> _queue = Future<void>.value();
+
+  /// scan/rescan mutate shared album+artist rows, so never overlap
+  static Future<T> _serialize<T>(Future<T> Function() task) {
+    final done = Completer<T>();
+    _queue = _queue.then((_) async {
+      try {
+        done.complete(await task());
+      } catch (e, st) {
+        done.completeError(e, st);
+      }
+    });
+    return done.future;
+  }
+
+  Future<void> scan({
+    sq.ScanConfig config = sq.ScanConfig.none,
+    AlbumGrouping grouping = AlbumGrouping.tag,
+    bool force = false,
+    sq.ScanProgressCallback? onProgress,
+    sq.ScanErrorCallback? onError,
+  }) => _serialize(
+    () => _scan(
+      config: config,
+      grouping: grouping,
+      force: force,
+      onProgress: onProgress,
+      onError: onError,
+    ),
+  );
+
+  Future<bool> rescanSingleSong(
+    String path, {
+    sq.ScanConfig config = sq.ScanConfig.none,
+    AlbumGrouping grouping = AlbumGrouping.tag,
+  }) => _serialize(
+    () => _rescanSingleSong(path, config: config, grouping: grouping),
+  );
+
   /// Scans for songs on device and sync with the database
   ///
   /// [config] controls filtering and artist parsing.
@@ -63,7 +103,7 @@ class ScanService {
   /// [onProgress] is called with live scan progres snapshots.
   /// [onError] is called for each file that fails metadata reading.
   /// The file is skipped and scanning continues.
-  Future<void> scan({
+  Future<void> _scan({
     sq.ScanConfig config = sq.ScanConfig.none,
     AlbumGrouping grouping = AlbumGrouping.tag,
     bool force = false,
@@ -326,7 +366,7 @@ class ScanService {
   /// stored fields from file's tags
   ///
   /// returns true on success, false if song is not in db
-  Future<bool> rescanSingleSong(
+  Future<bool> _rescanSingleSong(
     String path, {
     sq.ScanConfig config = sq.ScanConfig.none,
     AlbumGrouping grouping = AlbumGrouping.tag,
