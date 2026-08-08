@@ -1496,7 +1496,7 @@
     "@settingsAppearanceHomeTint": {
         "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
     },
-    "settingsAppearanceHomeTintSubtitle": "Teintez le haut de l'écran d'accueil aux couleurs de la chanson en cours.",
+    "settingsAppearanceHomeTintSubtitle": "Teintez le haut de l'écran d'accueil aux couleurs de la chanson en cours",
     "@settingsAppearanceHomeTintSubtitle": {
         "description": "Subtitle under the home tint row."
     }
