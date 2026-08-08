@@ -285,7 +285,7 @@ class ScanService {
             albumId: Value(albumId),
             artistId: Value(mainArtistId),
             displayArtist: Value(displayArtistStr),
-            mtimeMs: Value(song.fileSize),
+            mtimeMs: Value(song.mtimeMs),
           ),
         ));
       } else {
