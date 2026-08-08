@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.12.0+14] - 2026-08-09
+
 ### Added
 
 - Redesigned home page: gradient behind header taken from playing
@@ -51,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the lyrics view progress bar freezing after dragging the slider
 - Fixed a thin line at the fade edge of scrolling song titles
 - Fixed the tag editor resetting release dates to January 1st when saving
+- Fixed the release year missing on FLAC, OGG, Opus and APE files
+- Fixed the library scan failing when it overlapped with a tag edit
 
 ### Internal
 
@@ -91,6 +97,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   shuffle, gapless advance and restore
 - AudioService.init() now holds its stream subscriptions and cancels them in
   dispose(), and the unused player getter is gone
+- Scans and rescans no longer run concurrently
+- Song updates write mtime and size, fixing the fingerprint skip
+- Force rescans reuse stored release dates instead of re-reading tags
+
+### Translation
+
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (100%) and Belarusian (be_TARASK) (100%)
+- [Zartiny](https://hosted.weblate.org/user/Zartiny/) translated Sono into
+  French (100%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (100%)
 
 ## [0.11.1+13] - 2026-08-06
 
@@ -1132,7 +1152,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.11.1+13...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.12.0+14...HEAD
+[0.12.0+14]: https://github.com/appsono/sono-new/compare/v0.11.1+13...v0.12.0+14
 [0.11.1+13]: https://github.com/appsono/sono-new/compare/v0.11.0+12...v0.11.1+13
 [0.11.0+12]: https://github.com/appsono/sono-new/compare/v0.10.1+11...v0.11.0+12
 [0.10.1+11]: https://github.com/appsono/sono-new/compare/v0.10.0+10...v0.10.1+11
