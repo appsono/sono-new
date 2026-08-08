@@ -117,9 +117,8 @@ class ScanService {
       await db.clearAllAlbums();
     }
     final existingPaths = await db.getAllSongPaths();
-    final fingerprints = force
-        ? const <String, String>{}
-        : await db.getSongFingerprints();
+    final fingerprints = await db.getSongFingerprints();
+    final storedDates = await db.getSongReleaseDates();
     final allPaths = <String>{};
     final pendingChunk = <sq.Song>[];
 
@@ -136,7 +135,7 @@ class ScanService {
       //desktop/ios: unchanged ils never get their tags re-read
       //android: mediastore is one query anyway, the map gates
       //per-song processing below instead
-      knownFingerprints: force ? null : fingerprints,
+      knownFingerprints: fingerprints,
       onProgress: onProgress,
       onError: onError ?? _defaultOnError,
     )) {
@@ -165,6 +164,7 @@ class ScanService {
             folderCache,
             grouping,
             existingPaths,
+            storedDates,
             force,
           );
           artistCache = caches.$1;
@@ -183,6 +183,7 @@ class ScanService {
         folderCache,
         grouping,
         existingPaths,
+        storedDates,
         force,
       );
       artistCache = caches.$1;
@@ -211,6 +212,7 @@ class ScanService {
     Map<String, int> folderCache,
     AlbumGrouping grouping,
     Set<String> existingPaths,
+    Map<String, DateTime> storedDates,
     bool force,
   ) async {
     final artistNames = <String>{};
@@ -321,7 +323,7 @@ class ScanService {
             trackNumber: Value(trackNumber),
             discNumber: Value(discNumber),
             genre: Value(song.genre),
-            releaseDate: Value(song.releaseDate),
+            releaseDate: Value(song.releaseDate ?? storedDates[song.path]),
             albumId: Value(albumId),
             artistId: Value(mainArtistId),
             displayArtist: Value(displayArtistStr),
@@ -338,7 +340,7 @@ class ScanService {
             trackNumber: Value(trackNumber),
             discNumber: Value(discNumber),
             genre: Value(song.genre),
-            releaseDate: Value(song.releaseDate),
+            releaseDate: Value(song.releaseDate ?? storedDates[song.path]),
             albumId: Value(albumId),
             artistId: Value(mainArtistId),
             displayArtist: Value(displayArtistStr),

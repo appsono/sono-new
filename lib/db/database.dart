@@ -698,6 +698,18 @@ class SonoDatabase extends _$SonoDatabase {
     };
   }
 
+  /// path -> stored release date, for reusing years across a force rescan
+  Future<Map<String, DateTime>> getSongReleaseDates() async {
+    final rows =
+        await (selectOnly(songs)
+              ..addColumns([songs.path, songs.releaseDate])
+              ..where(songs.releaseDate.isNotNull()))
+            .get();
+    return {
+      for (final r in rows) r.read(songs.path)!: r.read(songs.releaseDate)!,
+    };
+  }
+
   Future<List<Song>> getSongsByIds(List<int> ids) {
     if (ids.isEmpty) return Future.value([]);
     return (select(songs)..where((s) => s.id.isIn(ids))).get();
