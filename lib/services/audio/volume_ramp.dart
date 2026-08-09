@@ -11,12 +11,11 @@
 // GNU General Public License for more details.
 
 import 'dart:async';
-import 'dart:math' as math;
 
 /// Ramps gain between levels over time
 ///
 /// Supports two simultaneous ramps for crossfade
-/// Gain is 0.0-1.0 (linear), but ramp uses dB
+/// Gain is 0.0-1.0, ramps lineraly since mpvs volume scale is already cubic
 class VolumeRamp {
   VolumeRamp(this._sink, {Duration? tick})
     : _tick = tick ?? const Duration(milliseconds: 40);
@@ -25,8 +24,6 @@ class VolumeRamp {
 
   /// Timer keeps running when UI rendering stops
   final Duration _tick;
-
-  static const double _floorDb = -60.0;
 
   Timer? _timer;
   Completer<void>? _completer;
@@ -57,8 +54,6 @@ class VolumeRamp {
     final completer = Completer<void>();
     _completer = completer;
 
-    final startDb = _toDb(start);
-    final endDb = _toDb(end);
     final totalMs = over.inMilliseconds;
     var elapsedMs = 0;
 
@@ -69,7 +64,7 @@ class VolumeRamp {
         _finish(end);
         return;
       }
-      _emit(_fromDb(startDb + (endDb - startDb) * t));
+      _emit(start + (end - start) * t);
     });
 
     return completer.future;
@@ -102,16 +97,5 @@ class VolumeRamp {
   void _emit(double gain) {
     _gain = gain;
     _sink(gain);
-  }
-
-  static double _toDb(double gain) {
-    if (gain <= 0.0) return _floorDb;
-    final db = 20 * (math.log(gain) / math.ln10);
-    return db < _floorDb ? _floorDb : db;
-  }
-
-  static double _fromDb(double db) {
-    if (db <= _floorDb) return 0.0;
-    return math.pow(10, db / 20).toDouble();
   }
 }

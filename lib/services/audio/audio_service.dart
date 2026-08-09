@@ -923,7 +923,13 @@ class AudioService {
   }
 
   /// Single place backend volume gets written
-  Future<void> _applyVolume() => _player.setVolume(_userVolume * _fadeGain);
+  Future<void> _applyVolume() =>
+      _player.setVolume(_toBackendVolume(_userVolume * _fadeGain));
+
+  double _toBackendVolume(double percent) {
+    if (percent <= 0) return 0;
+    return 100 * pow(percent / 100, 2 / 3).toDouble();
+  }
 
   /// ===========================
   ///         internals

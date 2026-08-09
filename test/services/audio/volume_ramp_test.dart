@@ -35,7 +35,7 @@ void main() {
     });
   });
 
-  test('db curve sits below the linear midpoint at half way', () {
+  test('sits at the midpoint at half way', () {
     fakeAsync((async) {
       final gains = <double>[];
       VolumeRamp(
@@ -44,7 +44,7 @@ void main() {
       ).run(from: 1.0, to: 0.0, over: const Duration(seconds: 1));
       async.elapse(const Duration(milliseconds: 500));
 
-      expect(gains.last, lessThan(0.5));
+      expect(gains.last, closeTo(0.5, 0.05));
     });
   });
 
