@@ -389,5 +389,112 @@
     "playlistEmpty": "Essa playlist está vazia.. infelizmente",
     "@playlistEmpty": {
         "description": "Empty state shown on a playlist detail page when no songs have been added yet."
+    },
+    "playlistActionReorder": "Reordenar músicas",
+    "@playlistActionReorder": {
+        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
+    },
+    "playlistAdded": "Adicionada a \"{name}\"",
+    "@playlistAdded": {
+        "description": "Snackbar shown after a song has been added to a playlist via the picker.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "playlistAlreadyContains": "Já esta em \"{name}\"",
+    "@playlistAlreadyContains": {
+        "description": "Snackbar shown when the user tries to add a song to a playlist that already contains it.",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "albumTypeAlbum": "Álbum",
+    "@albumTypeAlbum": {
+        "description": "Type label for a standard album shown on the artist detail page."
+    },
+    "albumTypeEp": "EP",
+    "@albumTypeEp": {
+        "description": "Type label for an EP (extended play) album shown on the artist detail page."
+    },
+    "albumTypeSingle": "Single",
+    "@albumTypeSingle": {
+        "description": "Type label for a single-track release shown on the artist detail page."
+    },
+    "albumTypeCompilation": "Compilação",
+    "@albumTypeCompilation": {
+        "description": "Type label for a compilation album (3+ distinct contributing artists) shown on the artist detail page."
+    },
+    "albumTypeCollaboration": "Colaboração",
+    "@albumTypeCollaboration": {
+        "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
+    },
+    "playerNowPlaying": "Agora Tocando",
+    "@playerNowPlaying": {
+        "description": "Used in the player top bar and on the queue view's collapse button."
+    },
+    "playerOriginAllSongs": "Todas As Músicas",
+    "@playerOriginAllSongs": {
+        "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
+    },
+    "playerTooltipSkipNext": "Próximo",
+    "playerTooltipShuffleOn": "Embaralhando músicas",
+    "@playerTooltipShuffleOn": {
+        "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
+    },
+    "playerTooltipShuffleOff": "Embaralhamento desligado",
+    "@playerTooltipShuffleOff": {
+        "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
+    },
+    "playerTooltipRepeatOff": "Repetir desligado",
+    "@playerTooltipRepeatOff": {
+        "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
+    },
+    "playerTooltipRepeatAll": "Repetir tudo",
+    "playerTooltipRepeatOne": "Repetir uma",
+    "playerTooltipOpenQueue": "Abrir fila",
+    "playerTooltipOpenLyrics": "Abrir letras",
+    "queueLabelUpNext": "Próxima",
+    "lyricsEmptyNoneFound": "Sem letras encontradas :(",
+    "lyricsEmptyInstrumental": "Instrumental",
+    "lyricsEmptyNoneInVersion": "Sem letras nessa versão :/",
+    "lyricsPillSynced": "Sincronizado",
+    "lyricsPillStatic": "Estatico",
+    "lyricsProviderCredit": "Letras de lrclib.net",
+    "lyricsMenuTitle": "Letras & Playback",
+    "lyricsMenuSectionLyrics": "Letras",
+    "lyricsMenuSectionPlayback": "Playback",
+    "lyricsMenuAdjustSync": "Ajustar sincronia",
+    "lyricsMenuAdjustSyncSubtitleZero": "Mudar tempo de letras para essa música",
+    "lyricsMenuAdjustSyncSubtitleOffset": "Atualmente {offset}",
+    "@lyricsMenuAdjustSyncSubtitleOffset": {
+        "description": "Subtitle shown when there's a non-zero sync offset. {offset} is a formatted string like '+2s' or '-500ms'.",
+        "placeholders": {
+            "offset": {
+                "type": "String",
+                "example": "+2s"
+            }
+        }
+    },
+    "lyricsMenuResetSaved": "Resetar letras salvas",
+    "lyricsMenuResetSavedSubtitle": "Limpar e atualizar letras em cachê",
+    "lyricsMenuRepeatOff": "Desligado",
+    "@lyricsMenuRepeatOff": {
+        "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
+    },
+    "lyricsMenuRepeatAll": "Repetir todas",
+    "lyricsMenuRepeatOne": "Repetir uma",
+    "lyricsTooltipBackToPlayer": "Voltar para o reprodutor",
+    "lyricsTooltiplMore": "Mais",
+    "songSheetTabOptions": "Opções",
+    "@songSheetTabOptions": {
+        "description": "Bottom toggle on the media options sheet. Switches to the actions grid."
+    },
+    "songSheetTabInfo": "Informações",
+    "@songSheetTabInfo": {
+        "description": "Bottom toggle on the media options sheet. Switches to the metadata view."
     }
 }
