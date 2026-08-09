@@ -285,7 +285,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     //relaunch can race audio_service disposing engine, force cold start
     if (Platform.isAndroid) {
       await _audio.flushState();
-      await Future<void>.delayed(const Duration(milliseconds: 150));
+      //await Future<void>.delayed(const Duration(milliseconds: 150));
       exit(0);
     }
   }
