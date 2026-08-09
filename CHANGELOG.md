@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+### Changed
+
+- Library scans now show a compact progress pill below the status bar instead of
+  a full width bar behind it
+- Available updates are now indicated by a dot on the news and updates bell,
+  replacing the banner that covered the home header
+
+### Removed
+
+- Update banner
+
+### Internal
+
+- Update state moved from `AppShell` to notifiers on `UpdateService`, so any
+  header can watch it without plumbing
+- Enabled `android:enableOnBackInvokedCallback`
 
 ## [0.12.0+14] - 2026-08-09
 
