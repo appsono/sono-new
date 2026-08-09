@@ -156,6 +156,33 @@ class PlaylistSongs extends Table {
   Set<Column> get primaryKey => {playlistId, songId};
 }
 
+/// Listening history
+/// > metadata copied in so it doesn't get deleted
+/// > songID is a soft link, null once song gone
+@TableIndex(name: 'plays_started_at', columns: {#startedAt})
+@TableIndex(name: 'plays_song_id', columns: {#songId})
+class Plays extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get songId => integer().nullable().references(
+    Songs,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
+
+  TextColumn get title => text()();
+  TextColumn get artist => text().nullable()();
+  TextColumn get album => text().nullable()();
+
+  /// as tagged when it played
+  IntColumn get durationMs => integer().nullable()();
+
+  /// also scrobble timestamp
+  DateTimeColumn get startedAt => dateTime()();
+
+  /// excludes pauses and rewound stretches
+  IntColumn get playedMs => integer()();
+}
+
 /// Legacy settings from old Sono app
 ///
 /// Stored until their matching feature ships

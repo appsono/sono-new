@@ -31,6 +31,7 @@ part 'database.g.dart';
     Profiles,
     Playlists,
     PlaylistSongs,
+    Plays,
     LegacySettings,
   ],
   views: [SongWithArtistView, AlbumWithArtistView],
@@ -40,7 +41,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 18;
+  int get schemaVersion => 19;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -135,8 +136,18 @@ class SonoDatabase extends _$SonoDatabase {
       if (from < 18) {
         await m.createTable(legacySettings);
       }
+      if (from < 19) {
+        await m.createTable(plays);
+        //createTable may not create annotated indexes
+        await customStatement(
+          'CREATE INDEX IF NOT EXISTS plays_started_at ON plays (started_at)',
+        );
+        await customStatement(
+          'CREATE INDEX IF NOT EXISTS plays_song_id ON plays (song_id)',
+        );
+      }
       //future migrations go here:
-      // if (from < 19) { .. }
+      // if (from < 20) { .. }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -1388,6 +1399,58 @@ class SonoDatabase extends _$SonoDatabase {
     }
     return playlistId;
   }
+
+  ///
+  ///
+  /// ==== Plays ====
+  ///
+  ///
+  Future<int> recorPlay({
+    int? songId,
+    required String title,
+    String? artist,
+    String? album,
+    int? durationMs,
+    required DateTime startedAt,
+    required int playedMs,
+  }) => into(plays).insert(
+    PlaysCompanion.insert(
+      songId: Value(songId),
+      title: title,
+      artist: Value(artist),
+      album: Value(album),
+      durationMs: Value(durationMs),
+      startedAt: startedAt,
+      playedMs: playedMs,
+    ),
+  );
+
+  Stream<List<Play>> watchRecentPlays({int limit = 50}) =>
+      (select(plays)
+            ..orderBy([(p) => OrderingTerm.desc(p.startedAt)])
+            ..limit(limit))
+          .watch();
+
+  Future<List<Play>> getRecentPlays({int limit = 50}) =>
+      (select(plays)
+            ..orderBy([(p) => OrderingTerm.desc(p.startedAt)])
+            ..limit(limit))
+          .get();
+
+  Future<int> getPlayCountSince(DateTime since) async {
+    final countExp = plays.id.count();
+    final row =
+        await (selectOnly(plays)
+              ..addColumns([countExp])
+              ..where(plays.startedAt.isBiggerOrEqualValue(since)))
+            .getSingle();
+    return row.read(countExp) ?? 0;
+  }
+
+  /// Returns rows removed
+  Future<int> deletePlaysBefore(DateTime cutoff) => (delete(
+    plays,
+  )..where((p) => p.startedAt.isSmallerThanValue(cutoff))).go();
 }
 
 extension AlbumDisplayTitle on Album {
