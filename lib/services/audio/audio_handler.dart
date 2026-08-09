@@ -276,18 +276,10 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   @override
   Future<void> onTaskRemoved() async {
-    await _audio.flushState();
     await stop();
     final session = await AudioSession.instance;
     await session.setActive(false);
     _broadcastState();
-
-    //relaunch can race audio_service disposing engine, force cold start
-    if (Platform.isAndroid) {
-      await _audio.flushState();
-      //await Future<void>.delayed(const Duration(milliseconds: 150));
-      exit(0);
-    }
   }
 
   @override
