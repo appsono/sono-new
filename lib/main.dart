@@ -23,6 +23,7 @@ import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
 import 'package:sono/l10n/localizations.dart';
+import 'package:sono/services/audio/sleep_timer_service.dart';
 import 'package:sono/services/covers/cover_memory_pressure.dart';
 import 'package:sono/services/device_profile.dart';
 import 'package:sono/services/locale_service.dart';
@@ -86,6 +87,8 @@ void main() async {
   LocaleService.instance.attachDb(db);
   ThemeService.instance.attachDb(db);
   AppearanceService.instance.attachDb(db);
+  SleepTimerService.instance.attach(sono.AudioService.instance);
+  SleepTimerService.instance.attachDb(db);
 
   //only locale, theme and appearance gate first frame
   await Future.wait([
@@ -110,6 +113,7 @@ void main() async {
   //keystore reads (discord) are slow on android
   //and must NOT block startup
   unawaited(AudioEffectsService.instance.loadSettings());
+  unawaited(SleepTimerService.instance.loadSettings());
 
   DiscordRpcService.instance.attachDb(db);
   unawaited(DiscordRpcService.instance.loadState());
