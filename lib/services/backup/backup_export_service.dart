@@ -41,6 +41,7 @@ class BackupExportService {
     'scan.artistParserOn',
     'playback.gapless',
     'playback.pause_on_disconnect',
+    'playback.fade_on_pause',
     'playback.volume',
     'playback.sleep_fade_seconds',
     'discord.show_art',

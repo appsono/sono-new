@@ -32,6 +32,7 @@ void main() {
 
   tearDown(() async {
     await audio.dispose();
+    await pumpEventQueue();
     await db.close();
   });
 
@@ -376,7 +377,10 @@ void main() {
 
       expect(audio.volume, 50.0);
       expect(audio.fadeGain, 1.0);
-      expect(backend.volumes.last, 50.0);
+      expect(
+        backend.volumes.last,
+        closeTo(AudioService.backendVolumeFor(50), 0.001),
+      );
     });
 
     test('volumeStream reports the user value, not the faded one', () async {
@@ -431,11 +435,17 @@ void main() {
       );
       await partway(const Duration(milliseconds: 100));
       await audio.setVolume(40);
-      expect(backend.volumes.last, lessThan(40.0));
+      expect(
+        backend.volumes.last,
+        lessThan(AudioService.backendVolumeFor(40.0)),
+      );
       await fade;
 
       expect(audio.volume, 40.0);
-      expect(backend.volumes.last, 40.0);
+      expect(
+        backend.volumes.last,
+        closeTo(AudioService.backendVolumeFor(40.0), 0.001),
+      );
     });
 
     test('a cancelled fade leaves playback alone', () async {
@@ -507,7 +517,10 @@ void main() {
 
       expect(audio.volume, 35.0);
       expect(audio.fadeGain, 1.0);
-      expect(backend.volumes.last, 35.0);
+      expect(
+        backend.volumes.last,
+        closeTo(AudioService.backendVolumeFor(35.0), 0.001),
+      );
     });
   });
 

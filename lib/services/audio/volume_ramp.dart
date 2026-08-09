@@ -18,7 +18,7 @@ import 'dart:async';
 /// Gain is 0.0-1.0, ramps lineraly since mpvs volume scale is already cubic
 class VolumeRamp {
   VolumeRamp(this._sink, {Duration? tick})
-    : _tick = tick ?? const Duration(milliseconds: 40);
+    : _tick = tick ?? const Duration(milliseconds: 16);
 
   final void Function(double gain) _sink;
 

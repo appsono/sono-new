@@ -98,6 +98,9 @@ class AudioService {
   RepeatMode _repeat = RepeatMode.off;
   bool _gapless = true;
   bool _pauseOnDisconnect = true;
+  bool _fadeOnPause = false;
+
+  static const _pauseFadeLength = Duration(milliseconds: 500);
 
   /// [_userVolume] is persisted, [_fadeGain] is transient
   double _userVolume = 100.0;
@@ -262,6 +265,8 @@ class AudioService {
 
   bool get pauseOnDisconnect => _pauseOnDisconnect;
 
+  bool get fadeOnPause => _fadeOnPause;
+
   int get _effectiveIndex {
     if (_shuffle && _shuffleOrder.isNotEmpty && _currentIndex >= 0) {
       return _shuffleOrder[_currentIndex.clamp(0, _shuffleOrder.length - 1)];
@@ -374,6 +379,7 @@ class AudioService {
     };
     _gapless = all['playback.gapless'] != 'false';
     _pauseOnDisconnect = all['playback.pause_on_disconnect'] != 'false';
+    _fadeOnPause = all['playback.fade_on_pause'] == 'true';
     _userVolume = double.tryParse(all['playback.volume'] ?? '') ?? 100.0;
 
     await _applyGapless();
@@ -512,6 +518,7 @@ class AudioService {
         'playback.pause_on_disconnect',
         _pauseOnDisconnect.toString(),
       );
+      await db.setSetting('playback.fade_on_pause', _fadeOnPause.toString());
       await db.setSetting('playback.volume', _userVolume.toString());
 
       //queue changes shift every raw index, so order row has to follow
@@ -581,9 +588,16 @@ class AudioService {
     _handleQueueIndexChanged();
   }
 
-  Future<void> resume() => _player.play();
-  Future<void> pause() => _player.pause();
-  Future<void> playOrPause() => _player.playOrPause();
+  Future<void> resume() =>
+      _fadeOnPause ? fadeInResume(over: _pauseFadeLength) : _player.play();
+  Future<void> pause() =>
+      _fadeOnPause ? fadeOutAndPause(over: _pauseFadeLength) : _player.pause();
+
+  /// backend decides direction iself
+  Future<void> playOrPause() {
+    if (!_fadeOnPause) return _player.playOrPause();
+    return isPlaying ? pause() : resume();
+  }
 
   /// Seek to [position]
   Future<void> seek(Duration position) => _player.seek(position);
@@ -606,6 +620,12 @@ class AudioService {
   /// Toggle pausing hen audio output disconnects
   Future<void> setPauseOnDisconnect(bool enabled) async {
     _pauseOnDisconnect = enabled;
+    _scheduleStateSave();
+  }
+
+  Future<void> setFadeOnPause(bool enabled) async {
+    _fadeOnPause = enabled;
+    if (!enabled) await cancelFade();
     _scheduleStateSave();
   }
 
@@ -909,10 +929,11 @@ class AudioService {
     Duration over = const Duration(seconds: 2),
   }) async {
     _ensureInitialized();
-    _ramp.reset(0.0);
+    final from = _fadeGain >= 1.0 ? 0.0 : _fadeGain;
+    _ramp.reset(from);
     await _applyVolume();
     await _player.play();
-    await _ramp.run(from: 0.0, to: 1.0, over: over);
+    await _ramp.run(from: from, to: 1.0, over: over);
     await _applyVolume();
   }
 
@@ -924,9 +945,9 @@ class AudioService {
 
   /// Single place backend volume gets written
   Future<void> _applyVolume() =>
-      _player.setVolume(_toBackendVolume(_userVolume * _fadeGain));
+      _player.setVolume(backendVolumeFor(_userVolume * _fadeGain));
 
-  double _toBackendVolume(double percent) {
+  static double backendVolumeFor(double percent) {
     if (percent <= 0) return 0;
     return 100 * pow(percent / 100, 2 / 3).toDouble();
   }

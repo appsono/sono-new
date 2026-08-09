@@ -41,6 +41,7 @@ class SettingsPlaybackPage extends StatefulWidget {
 class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
   late bool _gapless;
   late bool _pauseOnDisconnect;
+  late bool _fadeOnPause;
   late double _volume;
 
   @override
@@ -49,6 +50,7 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
     final audio = sono.AudioService.instance;
     _gapless = audio.gapless;
     _pauseOnDisconnect = audio.pauseOnDisconnect;
+    _fadeOnPause = audio.fadeOnPause;
     _volume = audio.volume;
   }
 
@@ -109,7 +111,11 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
                       accent: c.accentTeal,
                       label: l.settingsPlaybackFadeOnPause,
                       subtitle: l.settingsPlaybackFadeOnPauseSubtitle,
-                      planned: true,
+                      toggle: _fadeOnPause,
+                      onToggle: (value) {
+                        setState(() => _fadeOnPause = value);
+                        sono.AudioService.instance.setFadeOnPause(value);
+                      },
                     ),
                   ],
                 ),

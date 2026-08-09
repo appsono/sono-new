@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sleep timer, reachable from playback settings. Fades out and pauses after a
   set time, at the end of current song, or at the end of the queue, with
   presets, a custom length and an adjustable fade
+- Fade on pause, off by default. Eases the volume out when pausing and back in
+  when resuming, instead of cutting
 
 ### Changed
 
