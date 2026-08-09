@@ -16,6 +16,7 @@ import 'package:sono/l10n/localizations.dart';
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as sono;
+import 'package:sono/services/audio/sleep_timer_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 
@@ -23,6 +24,7 @@ import 'package:sono/pages/settings/eq_labels.dart';
 import 'package:sono/pages/settings/widgets/settings_group.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
+import 'package:sono/pages/settings/widgets/settings_sleep_timer_sheet.dart';
 
 import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
 
@@ -48,6 +50,23 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
     _gapless = audio.gapless;
     _pauseOnDisconnect = audio.pauseOnDisconnect;
     _volume = audio.volume;
+  }
+
+  String _sleepValue(AppLocalizations l) {
+    final sleep = SleepTimerService.instance;
+    if (!sleep.isActive) return l.settingsPlaybackSleepTimerOff;
+    switch (sleep.mode) {
+      case SleepMode.endOfSong:
+        return l.sleepEndOfSong;
+      case SleepMode.endOfQueue:
+        return l.sleepEndOfQueue;
+      case SleepMode.duration:
+      case null:
+        final left = sleep.remaining ?? Duration.zero;
+        return left.inMinutes < 1
+            ? l.sleepUnderMinute
+            : l.sleepMinutes(left.inMinutes);
+    }
   }
 
   @override
@@ -140,7 +159,11 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
                       icon: IconsSheet.moonOutlined,
                       accent: c.accentLightBlue,
                       label: l.settingsPlaybackSleepTimer,
-                      planned: true,
+                      value: _sleepValue(l),
+                      onTap: () async {
+                        await SleepTimerSheet.show(context);
+                        if (mounted) setState(() {});
+                      },
                     ),
                     SettingsRow(
                       icon: IconsSheet.castOutlined,

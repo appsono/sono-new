@@ -10,6 +10,8 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:sono/theme/theme.dart';
@@ -177,6 +179,9 @@ class BottomModalSheet extends StatefulWidget {
   final Color onBackground;
   final Color onAccent;
 
+  /// rebuilds on every event for self-updating sheet values
+  final Stream<void>? rebuildOn;
+
   const BottomModalSheet({
     required this.itemsBuilder,
     required this.background,
@@ -185,6 +190,7 @@ class BottomModalSheet extends StatefulWidget {
     required this.onBackground,
     required this.onAccent,
     this.title,
+    this.rebuildOn,
     super.key,
   });
 
@@ -198,6 +204,7 @@ class BottomModalSheet extends StatefulWidget {
     required Color onBackground,
     required Color onAccent,
     String? title,
+    Stream<void>? rebuildOn,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -212,6 +219,7 @@ class BottomModalSheet extends StatefulWidget {
         accent: accent,
         onBackground: onBackground,
         onAccent: onAccent,
+        rebuildOn: rebuildOn,
       ),
     );
   }
@@ -222,13 +230,21 @@ class BottomModalSheet extends StatefulWidget {
 
 class _BottomModalSheetState extends State<BottomModalSheet> {
   final Set<TextEditingController> _ownedControllers = {};
+  StreamSubscription<void>? _rebuildSub;
 
   void _refresh() {
     if (mounted) setState(() {});
   }
 
   @override
+  void initState() {
+    super.initState();
+    _rebuildSub = widget.rebuildOn?.listen((_) => _refresh());
+  }
+
+  @override
   void dispose() {
+    _rebuildSub?.cancel();
     for (final c in _ownedControllers) {
       c.dispose();
     }
@@ -646,7 +662,7 @@ class _SliderRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 10, 8, 6),
+        padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(14),
@@ -718,15 +734,16 @@ class _SliderRow extends StatelessWidget {
                   const SizedBox(width: 6),
               ],
             ),
+            const SizedBox(height: 12),
             SliderTheme(
               data: SliderThemeData(
-                trackHeight: 3,
+                trackHeight: 8,
                 padding: EdgeInsets.zero,
                 activeTrackColor: accent,
                 inactiveTrackColor: fg.withValues(alpha: 0.15),
                 thumbColor: accent,
                 thumbShape: const RoundSliderThumbShape(
-                  enabledThumbRadius: 6,
+                  enabledThumbRadius: 9,
                   elevation: 0,
                   pressedElevation: 0,
                 ),
