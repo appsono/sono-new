@@ -42,6 +42,7 @@ class BackupExportService {
     'playback.gapless',
     'playback.pause_on_disconnect',
     'playback.volume',
+    'playback.sleep_fade_seconds',
     'discord.show_art',
     'discord.show_elapsed',
     'discord.show_button',
