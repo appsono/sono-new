@@ -18,6 +18,7 @@
         tools:node="remove" />
 
     <application
+    android:enableOnBackInvokedCallback="true"
     android:label="${appName}"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
