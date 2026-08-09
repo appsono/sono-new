@@ -851,18 +851,14 @@
   "@settingsPlaybackSleepTimerOff": {
     "description": "Value shown next to the sleep timer row when no timer is running."
   },
-  "settingsPlaybackSleepTimerFade": "Fade out length",
-  "@settingsPlaybackSleepTimerFade": {
-    "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+  "settingsPlaybackResumeOnConnect": "Resume when connect",
+  "@settingsPlaybackResumeOnConnect": {
+    "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
   },
-  "settingsPlaybackSleepTimerFadeValue": "{seconds}s",
-  "@settingsPlaybackSleepTimerFadeValue": {
-    "description": "Value shown next to the fade out length slider, in seconds.",
-    "placeholders": {
-      "seconds": { "type": "int" }
-    }
+  "settingsPlaybackPauseOnDisconnect": "Pause when disconnected",
+  "@settingsPlaybackPauseOnDisconnect": {
+    "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
   },
-
 
   "normalisationSectionMode": "Mode",
   "@normalisationSectionMode": {
@@ -936,13 +932,16 @@
   "@sleepUnderMinute": {
     "description": "Sleep timer value shown when less than a minute is left."
   },
-  "settingsPlaybackResumeOnConnect": "Resume when connect",
-  "@settingsPlaybackResumeOnConnect": {
-    "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+  "settingsPlaybackSleepTimerFade": "Fade out length",
+  "@settingsPlaybackSleepTimerFade": {
+    "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
   },
-  "settingsPlaybackPauseOnDisconnect": "Pause when disconnected",
-  "@settingsPlaybackPauseOnDisconnect": {
-    "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+  "settingsPlaybackSleepTimerFadeValue": "{seconds}s",
+  "@settingsPlaybackSleepTimerFadeValue": {
+    "description": "Value shown next to the fade out length slider, in seconds.",
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
   },
   "sleepEndOfSong": "End of song",
   "@sleepEndOfSong": {
