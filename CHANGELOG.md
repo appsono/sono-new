@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a full width bar behind it
 - Available updates are now indicated by a dot on the news and updates bell,
   replacing the banner that covered the home header
+- Album art is now downscaled before the media notification decodes it,
+  which lowers memory use during playback
+
+### Fixed
+
+- Fixed a media button receiver pointing at a library that is not bundled
+  with the app, which could fail when headset buttons were pressed
 
 ### Removed
 
@@ -23,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update state moved from `AppShell` to notifiers on `UpdateService`, so any
   header can watch it without plumbing
 - Enabled `android:enableOnBackInvokedCallback`
+- Bumped file_picker to 11.0.3, which drops its Apache Tika dependency and
+  makes Android build noticeably smaller
+- Bumped Android Gradle Plugin to 8.13.2 and enabled optimised resource
+  shrinking
+- Removed Jetifier flag and proguard keeps for ExoPlayer and
+  Media3, none of which the app uses
 
 ## [0.12.0+14] - 2026-08-09
 
