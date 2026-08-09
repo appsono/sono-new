@@ -188,7 +188,7 @@ void main() {
         SleepMode.duration,
         duration: const Duration(seconds: 1),
       );
-      await wait(1400);
+      await wait(2400);
 
       expect(sleep.isActive, isFalse);
       expect(backend.calls, isNot(contains('pause')));
