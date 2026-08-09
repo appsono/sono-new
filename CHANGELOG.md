@@ -56,6 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the slider down or get persisted as the restored volume
 - Added `SleepTimerService`, which fades out and pauses after a set time,
   at the end of the current song, or at the end of the queue
+- Pinned media_kit to an upstream commit through `dependency_overrides` while
+  waiting for the fix to land in a published release
 
 ## [0.12.0+14] - 2026-08-09
 
