@@ -12,7 +12,7 @@
 
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
@@ -29,11 +29,13 @@ class SonoHeaderAction {
   final String icon;
   final String tooltip;
   final VoidCallback onTap;
+  final ValueListenable<bool>? badge;
 
   const SonoHeaderAction({
     required this.icon,
     required this.tooltip,
     required this.onTap,
+    this.badge,
   });
 }
 
@@ -281,20 +283,64 @@ class _ActionPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: actions.map((action) {
+          final icon = IconsSheet.svg(
+            action.icon,
+            size: 24,
+            color: colors.textSecondary,
+          );
           return Tooltip(
             message: action.tooltip,
             child: IconButton(
-              icon: IconsSheet.svg(
-                action.icon,
-                size: 24,
-                color: colors.textSecondary,
-              ),
+              icon: action.badge == null
+                  ? icon
+                  : _ActionBadge(listenable: action.badge!, child: icon),
               onPressed: action.onTap,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
             ),
           );
         }).toList(),
+      ),
+    );
+  }
+}
+
+/// dot drawn on a header action when something needs attention
+class _ActionBadge extends StatelessWidget {
+  final ValueListenable<bool> listenable;
+  final Widget child;
+  static const double _dot = 9;
+
+  const _ActionBadge({required this.listenable, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.sono;
+    return ValueListenableBuilder<bool>(
+      valueListenable: listenable,
+      builder: (context, on, _) => Stack(
+        clipBehavior: Clip.none,
+        children: [
+          child,
+          Positioned(
+            top: -1,
+            right: -1,
+            child: AnimatedScale(
+              scale: on ? 1 : 0,
+              duration: SonoDurations.fast,
+              curve: Curves.easeOutBack,
+              child: Container(
+                width: _dot,
+                height: _dot,
+                decoration: BoxDecoration(
+                  color: colors.primary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: colors.bgContainer, width: 1.5),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

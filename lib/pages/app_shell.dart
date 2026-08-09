@@ -19,7 +19,6 @@ import 'package:sono/l10n/localizations.dart';
 import 'package:sono/main.dart';
 import 'package:sono/services/migration/legacy_migration_service.dart';
 import 'package:sono/widgets/legacy_migration_sheet.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:sono_query/sono_query.dart' hide Song;
 
 import 'package:sono/db/database.dart';
@@ -36,7 +35,6 @@ import 'package:sono/services/scanner/scan_settings.dart';
 
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/bottom_nav.dart';
-import 'package:sono/widgets/update_banner.dart';
 import 'package:sono/widgets/scan_pill.dart';
 
 import 'package:sono/utils/toast.dart';
@@ -54,7 +52,6 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   final _scanProgress = ValueNotifier<ScanProgress?>(null);
   DateTime _lastProgressPush = DateTime.fromMillisecondsSinceEpoch(0);
   final _scanVersion = ValueNotifier<int>(0);
-  UpdateInfo? _update;
 
   //permission request deferref until next resume
   bool _scanPending = false;
@@ -127,18 +124,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   }
 
   Future<void> _checkForUpdates() async {
-    final info = await UpdateService.instance.checkForUpdates();
-    if (!mounted || info == null) return;
-    setState(() => _update = info);
-  }
-
-  Future<void> _openUpdate() async {
-    final info = _update;
-    if (info == null) return;
-    await UpdateService.instance.dismiss(info.latestVersion);
-    final uri = Uri.parse(info.releaseUrl);
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (mounted) setState(() => _update = null);
+    await UpdateService.instance.checkForUpdates();
   }
 
   void _openSettings() {
@@ -151,13 +137,6 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
         ),
       ),
     );
-  }
-
-  Future<void> _dismissUpdate() async {
-    final info = _update;
-    if (info == null) return;
-    await UpdateService.instance.dismiss(info.latestVersion);
-    if (mounted) setState(() => _update = null);
   }
 
   //permission requests wait until an activity exists
@@ -280,23 +259,6 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
             right: 0,
             child: Center(child: SonoScanPill(progress: _scanProgress)),
           ),
-          if (_update != null)
-            Positioned(
-              top: 0,
-              left: 12,
-              right: 12,
-              child: SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: UpdateBanner(
-                    info: _update!,
-                    onView: _openUpdate,
-                    onDismiss: _dismissUpdate,
-                  ),
-                ),
-              ),
-            ),
           Positioned(
             left: 12,
             right: 12,

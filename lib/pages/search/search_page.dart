@@ -15,18 +15,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
-
 import 'package:sono/db/database.dart';
+
+//services
 import 'package:sono/services/audio/audio_service.dart';
+import 'package:sono/services/update_service.dart';
+
+//theme
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
-import 'package:sono/widgets/header.dart';
-import 'package:sono/widgets/changelog_sheet.dart';
-import 'package:sono/widgets/cover_art.dart';
-import 'package:sono/widgets/list_row.dart';
-import 'package:sono/widgets/playlist_cover.dart';
-import 'package:sono/widgets/card_stack_cover.dart';
+
+//library stuff
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/playlist_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
@@ -36,6 +36,12 @@ import 'package:sono/pages/library/subpages/genre_detail_page.dart';
 import 'package:sono/pages/library/subpages/genres_page.dart';
 
 //widgets
+import 'package:sono/widgets/header.dart';
+import 'package:sono/widgets/changelog_sheet.dart';
+import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/widgets/list_row.dart';
+import 'package:sono/widgets/playlist_cover.dart';
+import 'package:sono/widgets/card_stack_cover.dart';
 import 'package:sono/widgets/search_field.dart';
 import 'package:sono/pages/search/widgets/search_filter_chips.dart';
 import 'package:sono/pages/search/widgets/search_section_header.dart';
@@ -393,6 +399,7 @@ class _SearchPageState extends State<SearchPage> {
                         SonoHeaderAction(
                           icon: IconsSheet.bellOutlined,
                           tooltip: l.homeHeaderNewsAndUpdates,
+                          badge: UpdateService.hasPending,
                           onTap: () => ChangelogSheet.show(context),
                         ),
                         SonoHeaderAction(

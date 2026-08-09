@@ -85,6 +85,14 @@ class UpdateService {
 
   static final UpdateService instance = UpdateService._();
 
+  static final ValueNotifier<UpdateInfo?> pending = ValueNotifier(null);
+  static final ValueNotifier<bool> hasPending = ValueNotifier(false);
+
+  static void _setPending(UpdateInfo? info) {
+    pending.value = info;
+    hasPending.value = info != null;
+  }
+
   // ==== conf ====
   static const _repo = 'appsono/sono-new';
   static const _apiUrl = 'https://api.github.com/repos/$_repo/releases/latest';
@@ -111,6 +119,15 @@ class UpdateService {
   ///
   /// Only successful GitHub checks update saved result
   Future<UpdateCheck> check({bool force = false}) async {
+    final result = await _check(force: force);
+    if (result.status != UpdateStatus.cooledDown &&
+        result.status != UpdateStatus.failed) {
+      _setPending(result.status == UpdateStatus.available ? result.info : null);
+    }
+    return result;
+  }
+
+  Future<UpdateCheck> _check({bool force = false}) async {
     //play distros updates itself
     if (await (_isPlayOverride?.call() ?? BuildFlavor.isPlay)) {
       return const UpdateCheck(UpdateStatus.unsupported);
@@ -218,6 +235,7 @@ class UpdateService {
   /// usr can still trigger manual check later
   Future<void> dismiss(String version) async {
     await _db?.setSetting('update.dismissed_version', version);
+    if (pending.value?.latestVersion == version) _setPending(null);
   }
 
   /// Opens play listing, web url when store app is missing

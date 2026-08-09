@@ -28,6 +28,7 @@ import 'package:sono/services/appearance_service.dart';
 import 'package:sono/services/audio/audio_service.dart';
 import 'package:sono/services/covers/cover_thumbs.dart';
 import 'package:sono/services/theme_service.dart';
+import 'package:sono/services/update_service.dart';
 
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
@@ -93,7 +94,6 @@ const double _bentoGap = 10;
 // ====  artists ====
 const int _artistLimit = 10;
 
-// WIP HomePage redesign
 class HomePage extends StatefulWidget {
   final SonoDatabase db;
   final ValueNotifier<int>? scanVersion;
@@ -494,6 +494,7 @@ class _HomePageState extends State<HomePage> {
                                 SonoHeaderAction(
                                   icon: IconsSheet.bellOutlined,
                                   tooltip: l.homeHeaderNewsAndUpdates,
+                                  badge: UpdateService.hasPending,
                                   onTap: () => ChangelogSheet.show(context),
                                 ),
                                 SonoHeaderAction(

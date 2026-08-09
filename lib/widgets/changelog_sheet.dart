@@ -13,7 +13,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:sono/l10n/localizations.dart';
+
+import 'package:sono/pages/settings/widgets/settings_update_sheet.dart';
 import 'package:sono/services/changelog/changelog_service.dart';
+import 'package:sono/services/update_service.dart';
+import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/widgets/bottom_modal_sheet.dart';
 
@@ -22,7 +26,8 @@ import 'package:sono/widgets/bottom_modal_sheet.dart';
 /// reads bundled CHANGELOG.md and shows latest release: version,
 /// date and section/bullet body
 class ChangelogSheet extends StatefulWidget {
-  const ChangelogSheet({super.key});
+  final BuildContext host;
+  const ChangelogSheet({required this.host, super.key});
 
   static Future<void> show(BuildContext context) {
     return showModalBottomSheet(
@@ -30,7 +35,7 @@ class ChangelogSheet extends StatefulWidget {
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withValues(alpha: 0.4),
       isScrollControlled: true,
-      builder: (_) => const ChangelogSheet(),
+      builder: (_) => ChangelogSheet(host: context),
     );
   }
 
@@ -60,6 +65,23 @@ class _ChangelogSheetState extends State<ChangelogSheet> {
   List<BottomSheetItem> _buildItems(AppLocalizations l) {
     final items = <BottomSheetItem>[];
 
+    final update = UpdateService.pending.value;
+    if (update != null) {
+      items.addAll([
+        BottomSheetAction(
+          icon: IconsSheet.openLinkOutlined,
+          label: l.settingsUpdateSheetAvailableTitle(update.latestVersion),
+          subtitle: l.settingsUpdateSheetFrom(
+            update.currentVersion,
+            update.latestVersion,
+          ),
+          prominent: true,
+          onTap: () => _handOffToUpdateSheet(update),
+        ),
+        const BottomSheetDivider(),
+      ]);
+    }
+
     if (_loading) {
       items.add(BottomSheetText(l.changelogLoading, muted: true));
       return items;
@@ -88,6 +110,18 @@ class _ChangelogSheetState extends State<ChangelogSheet> {
     }
 
     return items;
+  }
+
+  void _handOffToUpdateSheet(UpdateInfo info) {
+    //sheet pops right after onTap, so open on next frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!widget.host.mounted) return;
+      SettingsUpdateSheet.show(
+        widget.host,
+        result: UpdateCheck(UpdateStatus.available, info: info),
+        installedVersion: info.currentVersion,
+      );
+    });
   }
 
   @override

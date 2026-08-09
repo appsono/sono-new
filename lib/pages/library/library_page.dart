@@ -18,6 +18,7 @@ import 'package:sono/pages/library/library_cards.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/theme/theme.dart';
+import 'package:sono/services/update_service.dart';
 import 'package:sono/widgets/header.dart';
 import 'package:sono/widgets/changelog_sheet.dart';
 
@@ -157,6 +158,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     SonoHeaderAction(
                       icon: IconsSheet.bellOutlined,
                       tooltip: l.homeHeaderNewsAndUpdates,
+                      badge: UpdateService.hasPending,
                       onTap: () => ChangelogSheet.show(context),
                     ),
                     SonoHeaderAction(
