@@ -777,10 +777,11 @@ packages:
   media_kit:
     dependency: "direct main"
     description:
-      name: media_kit
-      sha256: ae9e79597500c7ad6083a3c7b7b7544ddabfceacce7ae5c9709b0ec16a5d6643
-      url: "https://pub.dev"
-    source: hosted
+      path: media_kit
+      ref: c35be8bd3073772e578d20fa7bfa044eac2958a1
+      resolved-ref: c35be8bd3073772e578d20fa7bfa044eac2958a1
+      url: "https://github.com/media-kit/media-kit.git"
+    source: git
     version: "1.2.6"
   media_kit_libs_android_audio:
     dependency: transitive

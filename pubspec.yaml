@@ -74,6 +74,11 @@ dependency_overrides:
       url: https://github.com/mathiiiiiis/audio_metadata_reader.git
       ref: fix/flac-block-header
   flutter_rust_bridge: 2.11.1
+  media_kit:
+    git:
+      url: https://github.com/media-kit/media-kit.git
+      path: media_kit
+      ref: c35be8bd3073772e578d20fa7bfa044eac2958a1
 
 flutter:
   uses-material-design: true
