@@ -55,6 +55,7 @@ class SleepTimerService {
   bool _fading = false;
 
   Duration _fadeLength = const Duration(seconds: 20);
+  static const _endGuard = Duration(milliseconds: 750);
 
   final _stateController = StreamController<SleepTimerState>.broadcast();
 
@@ -165,7 +166,7 @@ class SleepTimerService {
     final length = audio.currentLength;
     if (length <= Duration.zero) return;
 
-    final left = length - position;
+    final left = length - position - _endGuard;
     if (left <= _fadeLength) unawaited(_beginFade(left));
   }
 
