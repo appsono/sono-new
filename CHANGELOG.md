@@ -36,6 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   shrinking
 - Removed Jetifier flag and proguard keeps for ExoPlayer and
   Media3, none of which the app uses
+- Added `VolumeRamp`, a standalone dB based gain ramp that fades can drive.
+  Instantiable so crossfade can later run two at once
+- `AudioService` now splits the volume the user picked from a transient fade
+  gain and multiplies them before touching the backend, so a fade cannot drag
+  the slider down or get persisted as the restored volume
 
 ## [0.12.0+14] - 2026-08-09
 

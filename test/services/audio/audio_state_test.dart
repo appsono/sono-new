@@ -367,6 +367,150 @@ void main() {
     });
   });
 
+  group('volume and fades', () {
+    /// real timers, ramp duratuons are kept short
+    Future<void> partway(Duration d) => Future<void>.delayed(d);
+
+    test('setVolume writes the product and reports the user value', () async {
+      await audio.setVolume(50);
+
+      expect(audio.volume, 50.0);
+      expect(audio.fadeGain, 1.0);
+      expect(backend.volumes.last, 50.0);
+    });
+
+    test('volumeStream reports the user value, not the faded one', () async {
+      final seen = <double>[];
+      final sub = audio.volumeStream.listen(seen.add);
+
+      await audio.setVolume(60);
+      await audio.fadeOutAndPause(over: const Duration(milliseconds: 200));
+      await sub.cancel();
+
+      expect(seen, [60.0]);
+    });
+
+    test('mid fade the backend sits under the user volume', () async {
+      await audio.play(songs(2), 0);
+      await settle();
+      await audio.setVolume(80);
+      backend.volumes.clear();
+
+      final fade = audio.fadeOutAndPause(
+        over: const Duration(milliseconds: 300),
+      );
+      await partway(const Duration(milliseconds: 150));
+      final midway = backend.volumes.last;
+      await fade;
+
+      expect(midway, lessThan(80.0));
+      expect(midway, greaterThan(0.0));
+    });
+
+    test('fadeOutAndPause pauses and restores gain', () async {
+      await audio.play(songs(2), 0);
+      await settle();
+      backend.clearCalls();
+
+      await audio.fadeOutAndPause(over: const Duration(milliseconds: 200));
+
+      expect(backend.calls, contains('pause'));
+      expect(audio.isPlaying, isFalse);
+      expect(audio.fadeGain, 1.0);
+      //gain back to full while paused, so next play is not silent
+      expect(backend.volumes.last, 100.0);
+    });
+
+    test('the slider stays live during a fade', () async {
+      await audio.play(songs(2), 0);
+      await settle();
+      await audio.setVolume(80);
+
+      final fade = audio.fadeOutAndPause(
+        over: const Duration(milliseconds: 300),
+      );
+      await partway(const Duration(milliseconds: 100));
+      await audio.setVolume(40);
+      expect(backend.volumes.last, lessThan(40.0));
+      await fade;
+
+      expect(audio.volume, 40.0);
+      expect(backend.volumes.last, 40.0);
+    });
+
+    test('a cancelled fade leaves playback alone', () async {
+      await audio.play(songs(2), 0);
+      await settle();
+      backend.clearCalls();
+
+      final fade = audio.fadeOutAndPause(
+        over: const Duration(milliseconds: 300),
+      );
+      await partway(const Duration(milliseconds: 100));
+      await audio.cancelFade();
+      await fade;
+
+      expect(backend.calls, isNot(contains('pause')));
+      expect(audio.isPlaying, isTrue);
+      expect(audio.fadeGain, 1.0);
+      expect(backend.volumes.last, 100.0);
+    });
+
+    test('fadeInResume starts silent and ends at the user volume', () async {
+      await audio.play(songs(2), 0);
+      await settle();
+      await audio.pause();
+      backend.volumes.clear();
+
+      await audio.fadeInResume(over: const Duration(milliseconds: 200));
+
+      expect(backend.volumes.first, 0.0);
+      expect(backend.volumes.last, 100.0);
+      expect(audio.isPlaying, isTrue);
+      expect(audio.fadeGain, 1.0);
+    });
+
+    test('stop drops a fade in flight', () async {
+      await audio.play(songs(2), 0);
+      await settle();
+
+      final fade = audio.fadeOutAndPause(
+        over: const Duration(milliseconds: 300),
+      );
+      await partway(const Duration(milliseconds: 100));
+      await audio.stop();
+      await fade;
+
+      expect(audio.fadeGain, 1.0);
+    });
+
+    test('persists the user volume, not the faded product', () async {
+      await audio.play(songs(2), 0);
+      await settle();
+      await audio.setVolume(70);
+
+      final fade = audio.fadeOutAndPause(
+        over: const Duration(milliseconds: 300),
+      );
+      await partway(const Duration(milliseconds: 100));
+      await audio.flushState();
+      await fade;
+
+      expect(await db.getSetting('playback.volume'), '70.0');
+    });
+
+    test('restores the user volume without a fade applied', () async {
+      await db.setSetting('playback.volume', '35.0');
+      backend.volumes.clear();
+
+      await audio.loadState();
+
+      expect(audio.volume, 35.0);
+      expect(audio.fadeGain, 1.0);
+      expect(backend.volumes.last, 35.0);
+    });
+  });
+
   group('restore', () {
     /// second service on same db (mimics app restart)
     Future<(AudioService, FakePlayerBackend)> restart() async {

@@ -19,6 +19,7 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/audio/player_backend.dart';
+import 'package:sono/services/audio/volume_ramp.dart';
 
 enum RepeatMode { off, all, one }
 
@@ -97,7 +98,15 @@ class AudioService {
   RepeatMode _repeat = RepeatMode.off;
   bool _gapless = true;
   bool _pauseOnDisconnect = true;
-  double _volume = 100.0;
+
+  /// [_userVolume] is persisted, [_fadeGain] is transient
+  double _userVolume = 100.0;
+  double _fadeGain = 1.0;
+
+  late final VolumeRamp _ramp = VolumeRamp((gain) {
+    _fadeGain = gain;
+    unawaited(_applyVolume());
+  });
 
   QueueOrigin _origin = QueueOrigin.allSongs;
   final _originController = StreamController<QueueOrigin>.broadcast();
@@ -109,6 +118,7 @@ class AudioService {
   final _shuffleController = StreamController<bool>.broadcast();
   final _repeatController = StreamController<RepeatMode>.broadcast();
   final _artistNameController = StreamController<String?>.broadcast();
+  final _volumeController = StreamController<double>.broadcast();
 
   String? _currentArtistName;
 
@@ -166,7 +176,8 @@ class AudioService {
 
   Stream<double> get volumeStream {
     _ensureInitialized();
-    return _player.volumeStream;
+    //user volume, fades must not move slider
+    return _volumeController.stream;
   }
 
   Stream<bool> get bufferingStream {
@@ -238,8 +249,11 @@ class AudioService {
 
   double get volume {
     _ensureInitialized();
-    return _player.volume;
+    return _userVolume;
   }
+
+  /// 1.0 when no fade is active
+  double get fadeGain => _fadeGain;
 
   bool get shuffle => _shuffle;
   RepeatMode get repeat => _repeat;
@@ -316,6 +330,7 @@ class AudioService {
   @visibleForTesting
   Future<void> dispose() async {
     _saveStateDebounce?.cancel();
+    _ramp.cancel();
     for (final sub in _subs) {
       await sub.cancel();
     }
@@ -327,6 +342,7 @@ class AudioService {
     await _repeatController.close();
     await _artistNameController.close();
     await _originController.close();
+    await _volumeController.close();
   }
 
   /// Bind database for persisting playback state
@@ -358,10 +374,11 @@ class AudioService {
     };
     _gapless = all['playback.gapless'] != 'false';
     _pauseOnDisconnect = all['playback.pause_on_disconnect'] != 'false';
-    _volume = double.tryParse(all['playback.volume'] ?? '') ?? 100.0;
+    _userVolume = double.tryParse(all['playback.volume'] ?? '') ?? 100.0;
 
     await _applyGapless();
-    await _player.setVolume(_volume);
+    await _applyVolume();
+    _volumeController.add(_userVolume);
 
     _shuffleController.add(_shuffle);
     _repeatController.add(_repeat);
@@ -495,7 +512,7 @@ class AudioService {
         'playback.pause_on_disconnect',
         _pauseOnDisconnect.toString(),
       );
-      await db.setSetting('playback.volume', _volume.toString());
+      await db.setSetting('playback.volume', _userVolume.toString());
 
       //queue changes shift every raw index, so order row has to follow
       if ((_queueDirty || _shuffleOrderDirty) && _queue.isNotEmpty) {
@@ -573,8 +590,9 @@ class AudioService {
 
   /// Set volume (0.0-100.0)
   Future<void> setVolume(double volume) async {
-    _volume = volume.clamp(0.0, 100.0);
-    await _player.setVolume(_volume);
+    _userVolume = volume.clamp(0.0, 100.0);
+    await _applyVolume();
+    _volumeController.add(_userVolume);
     _scheduleStateSave();
   }
 
@@ -596,6 +614,7 @@ class AudioService {
   /// Stop playback and clear queue
   Future<void> stop() async {
     _queueDirty = true;
+    await cancelFade();
     await _player.stop();
     _queue = [];
     _currentIndex = -1;
@@ -866,6 +885,45 @@ class AudioService {
     _queueController.add(effectiveQueue);
     await _rebuildLookahead();
   }
+
+  /// ===========================
+  ///           fades
+  /// ===========================
+
+  /// Fades to silence, then pauses
+  ///
+  /// Restores full gain for next play
+  /// Does nothing if ramp was cancelled
+  Future<void> fadeOutAndPause({
+    Duration over = const Duration(seconds: 5),
+  }) async {
+    _ensureInitialized();
+    await _ramp.run(from: _fadeGain, to: 0.0, over: over);
+    if (_fadeGain > 0.0) return;
+    await _player.pause();
+    await cancelFade();
+  }
+
+  /// Starts silent and fades up user volume
+  Future<void> fadeInResume({
+    Duration over = const Duration(seconds: 2),
+  }) async {
+    _ensureInitialized();
+    _ramp.reset(0.0);
+    await _applyVolume();
+    await _player.play();
+    await _ramp.run(from: 0.0, to: 1.0, over: over);
+    await _applyVolume();
+  }
+
+  /// Drops any fade in flight and snaps back to user volume
+  Future<void> cancelFade() async {
+    _ramp.reset(1.0);
+    await _applyVolume();
+  }
+
+  /// Single place backend volume gets written
+  Future<void> _applyVolume() => _player.setVolume(_userVolume * _fadeGain);
 
   /// ===========================
   ///         internals

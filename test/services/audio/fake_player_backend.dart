@@ -10,6 +10,9 @@ class FakePlayerBackend implements PlayerBackend {
   final List<String> playlist = [];
   final List<String> calls = [];
 
+  /// every setVolume value in order, for asserting fade ramps
+  final List<double> volumes = [];
+
   bool configured = false;
   bool gapless = true;
 
@@ -150,6 +153,7 @@ class FakePlayerBackend implements PlayerBackend {
   @override
   Future<void> setVolume(double volume) async {
     calls.add('setVolume($volume)');
+    volumes.add(volume);
     _volume = volume;
     _volumeCtl.add(volume);
   }
