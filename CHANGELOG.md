@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Sleep timer, reachable from playback settings. Fades out and pauses after a
+  set time, at the end of current song, or at the end of the queue, with
+  presets, a custom length and an adjustable fade
+
 ### Changed
 
 - Library scans now show a compact progress pill below the status bar instead of
@@ -15,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   replacing the banner that covered the home header
 - Album art is now downscaled before the media notification decodes it,
   which lowers memory use during playback
+- Volume slider now uses a squared scale instead of mpv's cubic one, so the
+  lower half of the range is actually usable. Saved volumes will sound louder
+  than before at the same slider position
 
 ### Fixed
 
@@ -36,8 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   shrinking
 - Removed Jetifier flag and proguard keeps for ExoPlayer and
   Media3, none of which the app uses
-- Added `VolumeRamp`, a standalone dB based gain ramp that fades can drive.
-  Instantiable so crossfade can later run two at once
+- Added `VolumeRamp`, a standalone gain ramp that fades can drive. Ramps
+  linearly because mpv already applies a cubic curve. Instantiable so
+  crossfade can later run two at once
 - `AudioService` now splits the volume the user picked from a transient fade
   gain and multiplies them before touching the backend, so a fade cannot drag
   the slider down or get persisted as the restored volume
