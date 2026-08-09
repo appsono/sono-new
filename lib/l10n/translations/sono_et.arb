@@ -497,5 +497,225 @@
     "searchBrowseGenres": "Sirvi žanreid",
     "@searchBrowseGenres": {
         "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
+    },
+    "commonAlbumsCount": "{count, plural, =0{albumeid pole} =1{1 album} other{{count} albumit}}",
+    "@commonAlbumsCount": {
+        "description": "Number of albums, used in library totals",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "commonArtistsCount": "{count, plural, =0{esitajaid pole} =1{1 esitaja} other{{count} esitajat}}",
+    "@commonArtistsCount": {
+        "description": "Number of artists, used in library totals",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "homeNewBadge": "UUS",
+    "@homeNewBadge": {
+        "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+    },
+    "settingsPageTitle": "Seadistused",
+    "@settingsPageTitle": {
+        "description": "Title shown in the header of the settings root page."
+    },
+    "settingsSearchTooltip": "Otsi seadistustest",
+    "@settingsSearchTooltip": {
+        "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
+    },
+    "settingsSearchHint": "Otsi seadistustest",
+    "@settingsSearchHint": {
+        "description": "Placeholder inside the search field at the top of the settings root page."
+    },
+    "settingsProfileUnnamed": "Sinu profiil",
+    "@settingsProfileUnnamed": {
+        "description": "Name shown on the profile row in settings when no username has been set yet."
+    },
+    "settingsProfileSubtitle": "Nimi ja tunnuspilt",
+    "@settingsProfileSubtitle": {
+        "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
+    },
+    "settingsAppearance": "Välimus",
+    "@settingsAppearance": {
+        "description": "Label of the row opening the appearance subpage, and the title of that subpage."
+    },
+    "settingsLanguage": "Keel",
+    "@settingsLanguage": {
+        "description": "Label of the row opening the language subpage, and the title of that subpage."
+    },
+    "settingsThemeSystem": "Süsteemi kujundus",
+    "@settingsThemeSystem": {
+        "description": "Theme option that follows the device light/dark setting. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeDark": "Tume kujundus",
+    "@settingsThemeDark": {
+        "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsThemeLight": "Hele kujundus",
+    "@settingsThemeLight": {
+        "description": "Name of the light theme. Shown as the value on the appearance row and as an option in the theme picker."
+    },
+    "settingsLanguageSystem": "Süsteemi keel",
+    "@settingsLanguageSystem": {
+        "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
+    },
+    "settingsPlayback": "Taasesitus",
+    "@settingsPlayback": {
+        "description": "Label of the row opening the playback subpage, and the title of that subpage."
+    },
+    "settingsEqualizer": "Ekvalaiser ja efektid",
+    "@settingsEqualizer": {
+        "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
+    },
+    "settingsEqualizerOff": "Väljas",
+    "@settingsEqualizerOff": {
+        "description": "Value on the equalizer row when the equalizer is disabled."
+    },
+    "contributorsPlaceholder": "see võiksid olla sina",
+    "@contributorsPlaceholder": {
+        "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
+    },
+    "settingsAboutTitle": "Rakenduse teave",
+    "@settingsAboutTitle": {
+        "description": "Title of the about subpage. Shorter than the row label, which is 'About Sono'."
+    },
+    "settingsAboutVersion": "{version} • kompileerimisjärk {build}",
+    "@settingsAboutVersion": {
+        "description": "Version line under the app name in the about hero. Does not repeat the app name, unlike settingsVersionLine.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsAboutSourceCode": "Lähtekood",
+    "@settingsAboutSourceCode": {
+        "description": "Row that opens the GitHub repository. Its subtitle is the repository path and is not translated."
+    },
+    "settingsAboutLicences": "Litsentsid",
+    "@settingsAboutLicences": {
+        "description": "Row that opens the licence list, covering Sono and every dependency."
+    },
+    "settingsAboutKofiSubtitle": "Aitab maksta allkirjastamisvõtme ja suure koguse kohvi eest",
+    "@settingsAboutKofiSubtitle": {
+        "description": "Subtitle under the Ko-fi row."
+    },
+    "settingsAboutFooterBuilt": "Autoriks on mathiiiiiis",
+    "@settingsAboutFooterBuilt": {
+        "description": "First footer line on the about page. The name is a username and stays as is."
+    },
+    "migrationFoundTitle": "Andmed vanast Sono rakendusest",
+    "@migrationFoundTitle": {
+        "description": "Title of the sheet offering to import data from the previous Sono install."
+    },
+    "migrationFoundBody": "Rakenduse eelmisest paigaldusest on nutiseadmes alles veel andmeid.",
+    "@migrationFoundBody": {
+        "description": "Body text above the counts in the migration sheet."
+    },
+    "settingsSearchNoResults": "Sellele otsingule ei vasta ühtegi seadistust >_<",
+    "@settingsSearchNoResults": {
+        "description": "Shown on the settings root when the search field matches nothing."
+    },
+    "settingsPlannedBadge": "Kavandatud",
+    "@settingsPlannedBadge": {
+        "description": "Small badge on a settings row whose feature is on the roadmap but not built yet."
+    },
+    "settingsPlannedBody": "See funktsionaalsus on meil plaanis, kuid pole veel teostatud.",
+    "@settingsPlannedBody": {
+        "description": "Explanation shown in the sheet that opens when a planned settings row is tapped."
+    },
+    "settingsPlannedFollow": "Jälgi arendust GitHubis",
+    "@settingsPlannedFollow": {
+        "description": "Action in the planned feature sheet that opens the project repository."
+    },
+    "settingsPlannedFollowSubtitle": "Avab lähtekoodi hoidla vaate sinu veebibrauseris",
+    "@settingsPlannedFollowSubtitle": {
+        "description": "Subtitle under the GitHub action in the planned feature sheet."
+    },
+    "settingsLibrary": "Muusikakogu ja skaneerimine",
+    "@settingsLibrary": {
+        "description": "Label of the row opening the library subpage, and the title of that subpage."
+    },
+    "settingsDiscord": "Olekuvaade Discordis",
+    "@settingsDiscord": {
+        "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
+    },
+    "settingsDiscordDisconnected": "Pole ühendatud",
+    "@settingsDiscordDisconnected": {
+        "description": "Value on the Discord row when no Discord account is linked."
+    },
+    "settingsBackup": "Varundus ja taastamine",
+    "@settingsBackup": {
+        "description": "Label of the row opening the backup subpage, and the title of that subpage."
+    },
+    "settingsStorage": "Andmeruum",
+    "@settingsStorage": {
+        "description": "Label of the storage row. Currently marked as planned."
+    },
+    "settingsUpdates": "Uuendused",
+    "@settingsUpdates": {
+        "description": "Label of the row that checks for a newer release. Its value is the installed version."
+    },
+    "settingsUpdatesViaPlay": "Hallatud",
+    "@settingsUpdatesViaPlay": {
+        "description": "Value on the Updates row for Play builds, which open the store listing instead of checking GitHub."
+    },
+    "settingsAbout": "Rakenduse teave: Sono",
+    "@settingsAbout": {
+        "description": "Label of the row opening the about subpage, and the title of that subpage."
+    },
+    "settingsVersionLine": "Sono {version} • kompileerimisjärk {build}",
+    "@settingsVersionLine": {
+        "description": "First footnote line at the bottom of the settings root, showing the installed version and build number.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLicenseLine": "GPL-3.0 alusel litsentseeritud vaba tarkvara",
+    "@settingsLicenseLine": {
+        "description": "Second footnote line at the bottom of the settings root."
+    },
+    "settingsProfileTitle": "Profiil",
+    "@settingsProfileTitle": {
+        "description": "Title of the profile subpage in settings."
+    },
+    "settingsProfileName": "Nimi",
+    "@settingsProfileName": {
+        "description": "Label of the row showing the display name, and the label of the text field in the rename sheet."
+    },
+    "settingsProfileNameUnset": "Määratlemata",
+    "@settingsProfileNameUnset": {
+        "description": "Value on the name row when no display name has been chosen yet."
+    },
+    "settingsProfileNameSheetTitle": "Sinu nimi",
+    "@settingsProfileNameSheetTitle": {
+        "description": "Title of the sheet for editing the display name. This name appears in the greeting on the home page."
+    },
+    "settingsProfilePhotoHint": "Pildi muutmiseks klõpsa sellel",
+    "@settingsProfilePhotoHint": {
+        "description": "Caption under the large avatar on the profile subpage, explaining that tapping it opens the image picker."
+    },
+    "settingsProfileRemovePhoto": "Eemalda foto",
+    "@settingsProfileRemovePhoto": {
+        "description": "Row that clears the profile picture. Only shown when a picture is set."
+    },
+    "settingsProfileStats": "Kuulamise statistika",
+    "@settingsProfileStats": {
+        "description": "Row for play counts and listening history. Currently marked as planned."
     }
 }
