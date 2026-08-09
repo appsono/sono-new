@@ -46,10 +46,12 @@ class PlayTracker {
   _OpenPlay? _open;
   Timer? _timer;
 
+  int? get openSongId => _open?.song.id;
+
   /// Closes running play and opens one for [song]
-  void beginPlay(Song song, {String? artist}) {
+  void beginPlay(Song song) {
     final previous = _open;
-    _open = _OpenPlay(song: song, artist: artist, startedAt: _now());
+    _open = _OpenPlay(song: song, startedAt: _now());
     _timer?.cancel();
     _timer = Timer.periodic(_commitInterval, (_) {
       final play = _open;
@@ -105,7 +107,7 @@ class PlayTracker {
       play.rowId = await _db.recordPlay(
         songId: play.song.id,
         title: play.song.title,
-        artist: play.artist ?? play.song.displayArtist,
+        artist: play.song.displayArtist ?? await _artistName(play.song),
         album: await _albumTitle(play.song),
         durationMs: play.song.duration,
         startedAt: play.startedAt,
@@ -117,6 +119,12 @@ class PlayTracker {
     play.writtenMs = ms;
   }
 
+  Future<String?> _artistName(Song song) async {
+    final artistId = song.artistId;
+    if (artistId == null) return null;
+    return (await _db.getArtistById(artistId))?.name;
+  }
+
   Future<String?> _albumTitle(Song song) async {
     final albumId = song.albumId;
     if (albumId == null) return null;
@@ -126,14 +134,9 @@ class PlayTracker {
 }
 
 class _OpenPlay {
-  _OpenPlay({
-    required this.song,
-    required this.artist,
-    required this.startedAt,
-  });
+  _OpenPlay({required this.song, required this.startedAt});
 
   final Song song;
-  final String? artist;
   final DateTime startedAt;
 
   Duration? lastPosition;

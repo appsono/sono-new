@@ -12,6 +12,7 @@ void main() {
   Future<Song> addSong({
     int? durationMs = 180000,
     String? artist,
+    int? artistId,
     int? albumId,
   }) async {
     final n = ++seq;
@@ -22,6 +23,7 @@ void main() {
         title: 'Song $n',
         duration: Value(durationMs),
         displayArtist: Value(artist),
+        artistId: Value(artistId),
         albumId: Value(albumId),
       ),
     );
@@ -32,6 +34,7 @@ void main() {
       title: 'Song $n',
       duration: durationMs,
       displayArtist: artist,
+      artistId: artistId,
       albumId: albumId,
     );
   }
@@ -104,12 +107,13 @@ void main() {
       expect(row.durationMs, 200000);
     });
 
-    test('an explicit artist wins over the songs displayArtist', () async {
-      tracker.beginPlay(await addSong(artist: 'tagged'), artist: 'resolved');
+    test('the artist is resolved from the db when untagged', () async {
+      final artistId = await db.getOrCreateArtist('The Game');
+      tracker.beginPlay(await addSong(artistId: artistId));
       playSeconds(0, 6);
       await tracker.commitPlay();
 
-      expect((await db.getRecentPlays()).single.artist, 'resolved');
+      expect((await db.getRecentPlays()).single.artist, 'The Game');
     });
   });
 
