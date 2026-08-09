@@ -599,6 +599,13 @@ class AudioService {
     return isPlaying ? pause() : resume();
   }
 
+  /// Hard pause, no fade
+  /// > used for focus loss and route changes
+  Future<void> pauseImmediate() async {
+    await cancelFade();
+    await _player.pause();
+  }
+
   /// Seek to [position]
   Future<void> seek(Duration position) => _player.seek(position);
 
