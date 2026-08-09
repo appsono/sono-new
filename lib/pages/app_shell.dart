@@ -37,6 +37,7 @@ import 'package:sono/services/scanner/scan_settings.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/bottom_nav.dart';
 import 'package:sono/widgets/update_banner.dart';
+import 'package:sono/widgets/scan_pill.dart';
 
 import 'package:sono/utils/toast.dart';
 
@@ -274,18 +275,10 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
             ],
           ),
           Positioned(
-            top: 0,
+            top: MediaQuery.paddingOf(context).top + 8,
             left: 0,
             right: 0,
-            child: ValueListenableBuilder(
-              valueListenable: _scanProgress,
-              builder: (_, p, _) {
-                if (p == null) return const SizedBox.shrink();
-                return LinearProgressIndicator(
-                  value: p.progress > 0 ? p.progress : null,
-                );
-              },
-            ),
+            child: Center(child: SonoScanPill(progress: _scanProgress)),
           ),
           if (_update != null)
             Positioned(
