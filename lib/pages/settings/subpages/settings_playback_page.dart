@@ -28,7 +28,7 @@ import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 import 'package:sono/pages/settings/widgets/settings_sleep_timer_sheet.dart';
 
 import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
-import 'package:sono/pages/settings/subpages/settings_normalization_page.dart';
+import 'package:sono/pages/settings/subpages/settings_normalisation_page.dart';
 
 /// Playback subpage
 class SettingsPlaybackPage extends StatefulWidget {
