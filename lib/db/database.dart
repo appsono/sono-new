@@ -1405,7 +1405,7 @@ class SonoDatabase extends _$SonoDatabase {
   /// ==== Plays ====
   ///
   ///
-  Future<int> recorPlay({
+  Future<int> recordPlay({
     int? songId,
     required String title,
     String? artist,
@@ -1445,6 +1445,12 @@ class SonoDatabase extends _$SonoDatabase {
               ..where(plays.startedAt.isBiggerOrEqualValue(since)))
             .getSingle();
     return row.read(countExp) ?? 0;
+  }
+
+  Future<void> updatePlayedMs(int id, int playedMs) async {
+    await (update(plays)..where((p) => p.id.equals(id))).write(
+      PlaysCompanion(playedMs: Value(playedMs)),
+    );
   }
 
   /// Returns rows removed
