@@ -105,6 +105,8 @@ class AudioService {
   /// [_userVolume] is persisted, [_fadeGain] is transient
   double _userVolume = 100.0;
   double _fadeGain = 1.0;
+  bool _fadingToPause = false;
+  int _fadeGeneration = 0;
 
   late final VolumeRamp _ramp = VolumeRamp((gain) {
     _fadeGain = gain;
@@ -257,6 +259,9 @@ class AudioService {
 
   /// 1.0 when no fade is active
   double get fadeGain => _fadeGain;
+
+  /// True between start of fade and actual pause
+  bool get isFadingToPause => _fadingToPause;
 
   bool get shuffle => _shuffle;
   RepeatMode get repeat => _repeat;
@@ -596,7 +601,7 @@ class AudioService {
   /// backend decides direction iself
   Future<void> playOrPause() {
     if (!_fadeOnPause) return _player.playOrPause();
-    return isPlaying ? pause() : resume();
+    return isPlaying && !_fadingToPause ? pause() : resume();
   }
 
   /// Hard pause, no fade
@@ -925,7 +930,11 @@ class AudioService {
     Duration over = const Duration(seconds: 5),
   }) async {
     _ensureInitialized();
+    final generation = ++_fadeGeneration;
+    _fadingToPause = true;
     await _ramp.run(from: _fadeGain, to: 0.0, over: over);
+    if (generation != _fadeGeneration) return;
+    _fadingToPause = false;
     if (_fadeGain > 0.0) return;
     await _player.pause();
     await cancelFade();
@@ -936,6 +945,8 @@ class AudioService {
     Duration over = const Duration(seconds: 2),
   }) async {
     _ensureInitialized();
+    _fadeGeneration++;
+    _fadingToPause = false;
     final from = _fadeGain >= 1.0 ? 0.0 : _fadeGain;
     _ramp.reset(from);
     await _applyVolume();
@@ -946,6 +957,8 @@ class AudioService {
 
   /// Drops any fade in flight and snaps back to user volume
   Future<void> cancelFade() async {
+    _fadeGeneration++;
+    _fadingToPause = false;
     _ramp.reset(1.0);
     await _applyVolume();
   }
