@@ -17,6 +17,7 @@ import 'package:sono/l10n/localizations.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_service.dart' as sono;
 import 'package:sono/services/audio/sleep_timer_service.dart';
+import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 
@@ -27,6 +28,7 @@ import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 import 'package:sono/pages/settings/widgets/settings_sleep_timer_sheet.dart';
 
 import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
+import 'package:sono/pages/settings/subpages/settings_normalization_page.dart';
 
 /// Playback subpage
 class SettingsPlaybackPage extends StatefulWidget {
@@ -70,6 +72,13 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
             : l.sleepMinutes(left.inMinutes);
     }
   }
+
+  String _normalisationValue(AppLocalizations l) =>
+      switch (AudioEffectsService.instance.normalisation) {
+        NormalisationMode.off => l.normalisationOff,
+        NormalisationMode.track => l.normalisationTrack,
+        NormalisationMode.album => l.normalisationAlbum,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +151,16 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
                       icon: IconsSheet.volumeOutlined,
                       accent: c.accentPurple,
                       label: l.settingsPlaybackNormalisation,
-                      planned: true,
+                      value: _normalisationValue(l),
+                      onTap: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                SettingsNormalisationPage(db: widget.db),
+                          ),
+                        );
+                        if (mounted) setState(() {});
+                      },
                     ),
                     SettingsSliderRow(
                       label: l.settingsPlaybackVolume,

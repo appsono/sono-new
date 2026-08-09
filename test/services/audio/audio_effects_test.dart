@@ -58,6 +58,72 @@ void main() {
     });
   });
 
+  group('normalisation', () {
+    Map<String, String> props() => fx.normalisationPropertiesForTesting();
+
+    test('defaults to off with clipping prevented', () {
+      expect(props()['replaygain'], 'no');
+      expect(props()['replaygain-preamp'], '0.0');
+      expect(props()['replaygain-clip'], 'no');
+    });
+
+    test('track and album map to mpv values', () async {
+      await fx.setNormalisation(NormalisationMode.track);
+      expect(props()['replaygain'], 'track');
+
+      await fx.setNormalisation(NormalisationMode.album);
+      expect(props()['replaygain'], 'album');
+    });
+
+    test('off maps to no, not off', () async {
+      await fx.setNormalisation(NormalisationMode.album);
+      await fx.setNormalisation(NormalisationMode.off);
+
+      expect(props()['replaygain'], 'no');
+    });
+
+    test('preamp clamps to fifteen either way', () async {
+      await fx.setNormalisationPreamp(40);
+      expect(fx.normalisationPreamp, 15.0);
+
+      await fx.setNormalisationPreamp(-40);
+      expect(fx.normalisationPreamp, -15.0);
+    });
+
+    test('preamp is formatted to one decimal', () async {
+      await fx.setNormalisationPreamp(-3.25);
+      expect(props()['replaygain-preamp'], '-3.3');
+    });
+
+    //mpv's flag is inverted, this is the easiest thing to get wrong
+    test("prevent clipping inverts mpv's clip flag", () async {
+      await fx.setPreventClipping(false);
+      expect(props()['replaygain-clip'], 'yes');
+
+      await fx.setPreventClipping(true);
+      expect(props()['replaygain-clip'], 'no');
+    });
+
+    test('resetAll clears normalisation', () async {
+      await fx.setNormalisation(NormalisationMode.album);
+      await fx.setNormalisationPreamp(6);
+      await fx.setPreventClipping(false);
+
+      await fx.resetAll();
+
+      expect(fx.normalisation, NormalisationMode.off);
+      expect(fx.normalisationPreamp, 0.0);
+      expect(fx.preventClipping, isTrue);
+    });
+
+    test('normalisation stays out of the filter chain', () async {
+      await fx.setNormalisation(NormalisationMode.album);
+      await fx.setNormalisationPreamp(6);
+
+      expect(af(), isEmpty);
+    });
+  });
+
   group('eq survives speed and pitch', () {
     test('changing speed keeps the eq filters', () async {
       await fx.setEnabled(true);

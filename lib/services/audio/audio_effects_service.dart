@@ -13,6 +13,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as dev;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:media_kit/media_kit.dart';
 import 'package:sono/db/database.dart';
@@ -33,6 +34,9 @@ const List<({double freq, double width, String label})> eqBands = [
   (freq: 16000, width: 1.0, label: '16k'),
 ];
 
+/// ReplayGain mode, mpv reads tags itself
+enum NormalisationMode { off, track, album }
+
 const int bandCount = 10;
 
 class AudioEffectsService {
@@ -50,6 +54,9 @@ class AudioEffectsService {
   double _bassBoost = 0.0; //dB
   double _speed = 1.0;
   double _pitch = 1.0;
+  NormalisationMode _normalisation = NormalisationMode.off;
+  double _normalisationPreamp = 0.0; //dB
+  bool _preventClipping = true;
   Timer? _applyDebounce;
   List<Completer<void>> _pendingApplies = [];
 
@@ -61,6 +68,9 @@ class AudioEffectsService {
   double get bassBoost => _bassBoost;
   double get speed => _speed;
   double get pitch => _pitch;
+  NormalisationMode get normalisation => _normalisation;
+  double get normalisationPreamp => _normalisationPreamp;
+  bool get preventClipping => _preventClipping;
 
   /// Which preset current curve matches, null when custom
   EqPreset? get currentPreset => EqPresets.matching(_eqGains);
@@ -87,6 +97,13 @@ class AudioEffectsService {
     _bassBoost = double.tryParse(all['fx.bass_boost'] ?? '') ?? 0.0;
     _speed = double.tryParse(all['fx.speed'] ?? '') ?? 1.0;
     _pitch = double.tryParse(all['fx.pitch'] ?? '') ?? 1.0;
+    _normalisation = NormalisationMode.values.firstWhere(
+      (m) => m.name == all['fx.normalisation'],
+      orElse: () => NormalisationMode.off,
+    );
+    _normalisationPreamp =
+        double.tryParse(all['fx.normalisation_preamp'] ?? '') ?? 0.0;
+    _preventClipping = all['fx.normalisation_clip'] != 'false';
 
     final gainsJson = all['fx.eq_gains'];
     if (gainsJson != null) {
@@ -100,6 +117,7 @@ class AudioEffectsService {
 
     //one apply covers speed, pitch, eq and bass
     await _applySpeedAndPitch();
+    await _applyNormalisation();
   }
 
   /// Persist current settings to database
@@ -120,6 +138,12 @@ class AudioEffectsService {
       await db.setSetting('fx.bass_boost', _bassBoost.toString());
       await db.setSetting('fx.speed', _speed.toString());
       await db.setSetting('fx.pitch', _pitch.toString());
+      await db.setSetting('fx.normalisation', _normalisation.name);
+      await db.setSetting(
+        'fx.normalisation_preamp',
+        _normalisationPreamp.toString(),
+      );
+      await db.setSetting('fx.normalisation_clip', _preventClipping.toString());
       await db.removeSetting('fx.bassbost');
     });
   }
@@ -161,6 +185,69 @@ class AudioEffectsService {
     await _applyFilterChain();
     _saveSettings();
   }
+
+  /// ===========================
+  ///        normalisation
+  /// ===========================
+
+  Future<void> setNormalisation(NormalisationMode mode) async {
+    _normalisation = mode;
+    await _applyNormalisation();
+    _saveSettings();
+  }
+
+  /// [db] -15.0 to +15.0
+  Future<void> setNormalisationPreamp(double db) async {
+    _normalisationPreamp = db.clamp(-15.0, 15.0);
+    await _applyNormalisation();
+    _saveSettings();
+  }
+
+  Future<void> setPreventClipping(bool enabled) async {
+    _preventClipping = enabled;
+    await _applyNormalisation();
+    _saveSettings();
+  }
+
+  Future<void> resetNormalisation() async {
+    _normalisation = NormalisationMode.off;
+    _normalisationPreamp = 0.0;
+    _preventClipping = true;
+    await _applyNormalisation();
+    _saveSettings();
+  }
+
+  /// Separate from af (mpv options not filters)
+  Future<void> _applyNormalisation() async {
+    final platform = _player?.platform;
+    if (platform is! NativePlayer) return;
+
+    for (final entry in _normalisationProperties().entries) {
+      try {
+        await platform.setProperty(entry.key, entry.value);
+      } catch (e) {
+        dev.log(
+          'AudioEffects: failed to set ${entry.key}: $e',
+          name: 'sono.fx',
+        );
+      }
+    }
+  }
+
+  /// Exposed for tests, see _applyNormalisation
+  @visibleForTesting
+  Map<String, String> normalisationPropertiesForTesting() =>
+      _normalisationProperties();
+
+  Map<String, String> _normalisationProperties() => {
+    'replaygain': switch (_normalisation) {
+      NormalisationMode.off => 'no',
+      NormalisationMode.track => 'track',
+      NormalisationMode.album => 'album',
+    },
+    'replaygain-preamp': _normalisationPreamp.toStringAsFixed(1),
+    'replaygain-clip': _preventClipping ? 'no' : 'yes',
+  };
 
   /// ===========================
   ///         Bass Boost
@@ -307,10 +394,14 @@ class AudioEffectsService {
     _bassBoost = 0.0;
     _speed = 1.0;
     _pitch = 1.0;
+    _normalisation = NormalisationMode.off;
+    _normalisationPreamp = 0.0;
+    _preventClipping = true;
     for (int i = 0; i < bandCount; i++) {
       _eqGains[i] = 0.0;
     }
     await _applySpeedAndPitch();
+    await _applyNormalisation();
     _saveSettings();
   }
 }

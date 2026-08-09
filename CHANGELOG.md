@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   presets, a custom length and an adjustable fade
 - Fade on pause, off by default. Eases the volume out when pausing and back in
   when resuming, instead of cutting
+- Volume normalisation using ReplayGain tags, with per song and per album
+  modes, a preamp and a clipping guard
 
 ### Changed
 
@@ -24,8 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Album art is now downscaled before the media notification decodes it,
   which lowers memory use during playback
 - Volume slider now uses a squared scale instead of mpv's cubic one, so the
-  lower half of the range is actually usable. Saved volumes will sound louder
-  than before at the same slider position
+  lower half of the range is actually usable
 
 ### Fixed
 

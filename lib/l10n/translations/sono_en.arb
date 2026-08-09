@@ -826,7 +826,7 @@
   },
   "settingsPlaybackNormalisation": "Volume normalisation",
   "@settingsPlaybackNormalisation": {
-    "description": "Row for evening out loudness between tracks using ReplayGain tags. Currently marked as planned."
+    "description": "Row for evening out loudness between tracks using ReplayGain tags."
   },
   "settingsPlaybackVolume": "In-app volume",
   "@settingsPlaybackVolume": {
@@ -862,17 +862,58 @@
       "seconds": { "type": "int" }
     }
   },
-  "sleepUnderMinute": "< 1 minute",
-  "@sleepUnderMinute": {
-    "description": "Sleep timer value shown when less than a minute is left."
+
+
+  "normalisationSectionMode": "Mode",
+  "@normalisationSectionMode": {
+    "description": "Section label above the normalisation mode options."
   },
-  "settingsPlaybackResumeOnConnect": "Resume when connect",
-  "@settingsPlaybackResumeOnConnect": {
-    "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+  "normalisationSectionTuning": "Tuning",
+  "@normalisationSectionTuning": {
+    "description": "Section label above the preamp and clipping options."
   },
-  "settingsPlaybackPauseOnDisconnect": "Pause when disconnected",
-  "@settingsPlaybackPauseOnDisconnect": {
-    "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+  "normalisationResetTooltip": "Reset normalisation",
+  "@normalisationResetTooltip": {
+    "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
+  },
+  "normalisationOff": "Off",
+  "@normalisationOff": {
+    "description": "Normalisation mode that applies no gain."
+  },
+  "normalisationTrack": "Per song",
+  "@normalisationTrack": {
+    "description": "Normalisation mode that brings every song to the same loudness."
+  },
+  "normalisationTrackSubtitle": "Every song at the same loudness",
+  "@normalisationTrackSubtitle": {
+    "description": "Subtitle of the per track normalisation option."
+  },
+  "normalisationAlbum": "Per album",
+  "@normalisationAlbum": {
+    "description": "Normalisation mode that normalises whole albums as one unit."
+  },
+  "normalisationAlbumSubtitle": "Keeps loudness differences within an album",
+  "@normalisationAlbumSubtitle": {
+    "description": "Subtitle of the per album normalisation option."
+  },
+  "normalisationPreamp": "Preamp",
+  "@normalisationPreamp": {
+    "description": "Slider for extra gain applied on top of the ReplayGain value."
+  },
+  "normalisationPreampValue": "{db} dB",
+  "@normalisationPreampValue": {
+    "description": "Value shown next to the preamp slider, in decibels.",
+    "placeholders": {
+      "db": { "type": "String" }
+    }
+  },
+  "normalisationPreventClipping": "Prevent clipping",
+  "@normalisationPreventClipping": {
+    "description": "Toggle that lowers the gain instead of letting loud peaks distort."
+  },
+  "normalisationPreventClippingSubtitle": "Lower the gain instead of letting peaks distort",
+  "@normalisationPreventClippingSubtitle": {
+    "description": "Subtitle of the prevent clipping toggle."
   },
 
 
@@ -890,6 +931,18 @@
     "placeholders": {
       "count": { "type": "int" }
     }
+  },
+  "sleepUnderMinute": "< 1 minute",
+  "@sleepUnderMinute": {
+    "description": "Sleep timer value shown when less than a minute is left."
+  },
+  "settingsPlaybackResumeOnConnect": "Resume when connect",
+  "@settingsPlaybackResumeOnConnect": {
+    "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+  },
+  "settingsPlaybackPauseOnDisconnect": "Pause when disconnected",
+  "@settingsPlaybackPauseOnDisconnect": {
+    "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
   },
   "sleepEndOfSong": "End of song",
   "@sleepEndOfSong": {
