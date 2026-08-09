@@ -76,6 +76,8 @@ void main() async {
       androidNotificationClickStartsActivity: true,
       androidResumeOnClick: true,
       androidNotificationIcon: 'drawable/ic_notification',
+      artDownscaleWidth: 512,
+      artDownscaleHeight: 512,
     ),
   );
 
