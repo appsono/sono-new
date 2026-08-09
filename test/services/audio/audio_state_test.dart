@@ -522,6 +522,41 @@ void main() {
         closeTo(AudioService.backendVolumeFor(35.0), 0.001),
       );
     });
+
+    test('play during a fade out resumes instead of pausing harder', () async {
+      await audio.setFadeOnPause(true);
+      await audio.play(songs(2), 0);
+      await settle();
+
+      final fade = audio.pause();
+      await partway(const Duration(milliseconds: 100));
+      //mpv has not flipped yet, intent has
+      expect(audio.isPlaying, isTrue);
+      expect(audio.isFadingToPause, isTrue);
+
+      await audio.playOrPause();
+      await fade;
+
+      expect(audio.isPlaying, isTrue);
+      expect(audio.isFadingToPause, isFalse);
+      expect(audio.fadeGain, 1.0);
+    });
+
+    test('a second fade out keeps the intent flag set', () async {
+      await audio.setFadeOnPause(true);
+      await audio.play(songs(2), 0);
+      await settle();
+
+      final first = audio.pause();
+      await partway(const Duration(milliseconds: 100));
+      final second = audio.pause();
+      await first;
+
+      //first fade finished early, it must not clear second one
+      expect(audio.isFadingToPause, isTrue);
+      await second;
+      expect(audio.isPlaying, isFalse);
+    });
   });
 
   group('restore', () {
