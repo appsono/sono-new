@@ -296,4 +296,177 @@ void main() {
       expect(rescanned, isTrue);
     });
   });
+
+  group('import plays', () {
+    Map<String, dynamic> play({
+      String? path,
+      String title = 'Song',
+      String? artist,
+      String? album,
+      int? durationMs = 180000,
+      required String startedAt,
+      int playedMs = 90000,
+    }) => {
+      'path': path,
+      'title': title,
+      'artist': artist,
+      'album': album,
+      'durationMs': durationMs,
+      'startedAt': startedAt,
+      'playedMs': playedMs,
+    };
+
+    test('a play is relinked to the local song by path', () async {
+      await db.insertSong(
+        SongsCompanion.insert(path: '/music/a.mp3', title: 'A'),
+      );
+
+      final raw = _backup({
+        'plays': [play(path: '/music/a.mp3', startedAt: _iso)],
+      });
+      final result = await importer.importFromJson(raw, rescan: _noRescan);
+
+      expect(result.plays, 1);
+      final ids = await db.getSongIdsByPaths(['/music/a.mp3']);
+      expect((await db.getRecentPlays()).single.songId, ids['/music/a.mp3']);
+    });
+
+    test('a play whose song is gone still restores unlinked', () async {
+      final raw = _backup({
+        'plays': [play(path: '/music/gone.mp3', startedAt: _iso)],
+      });
+      final result = await importer.importFromJson(raw, rescan: _noRescan);
+
+      expect(result.plays, 1);
+      final row = (await db.getRecentPlays()).single;
+      expect(row.songId, isNull);
+      expect(row.title, 'Song');
+    });
+
+    test('metadata survives the round trip', () async {
+      final raw = _backup({
+        'plays': [
+          play(
+            title: 'Guilt Trip',
+            artist: 'Kanye West',
+            album: 'Yeezus',
+            durationMs: 143000,
+            startedAt: _iso,
+            playedMs: 71500,
+          ),
+        ],
+      });
+      await importer.importFromJson(raw, rescan: _noRescan);
+
+      final row = (await db.getRecentPlays()).single;
+      expect(row.title, 'Guilt Trip');
+      expect(row.artist, 'Kanye West');
+      expect(row.album, 'Yeezus');
+      expect(row.durationMs, 143000);
+      expect(row.playedMs, 71500);
+      expect(row.startedAt, DateTime.parse(_iso).toLocal());
+    });
+
+    test('importing the same backup twice does not duplicate', () async {
+      final raw = _backup({
+        'plays': [
+          play(startedAt: _iso),
+          play(startedAt: '2026-01-01T00:05:00.000Z'),
+        ],
+      });
+      final first = await importer.importFromJson(raw, rescan: _noRescan);
+      final second = await importer.importFromJson(raw, rescan: _noRescan);
+
+      expect(first.plays, 2);
+      expect(second.plays, 0);
+      expect((await db.getRecentPlays()).length, 2);
+    });
+
+    test('duplicates inside one backup are collapsed', () async {
+      final raw = _backup({
+        'plays': [play(startedAt: _iso), play(startedAt: _iso)],
+      });
+      final result = await importer.importFromJson(raw, rescan: _noRescan);
+
+      expect(result.plays, 1);
+    });
+
+    test('existing history is kept', () async {
+      await db.recordPlay(
+        title: 'Already Here',
+        startedAt: DateTime(2025, 5, 5),
+        playedMs: 90000,
+      );
+
+      final raw = _backup({
+        'plays': [play(startedAt: _iso)],
+      });
+      await importer.importFromJson(raw, rescan: _noRescan);
+
+      expect((await db.getRecentPlays()).length, 2);
+    });
+
+    test('rows without a title or usable date are dropped', () async {
+      final raw = _backup({
+        'plays': [
+          play(title: '', startedAt: _iso),
+          play(startedAt: 'not a date'),
+          {'title': 'No time', 'playedMs': 90000},
+          {'title': 'No played ms', 'startedAt': _iso},
+        ],
+      });
+      final result = await importer.importFromJson(raw, rescan: _noRescan);
+
+      expect(result.plays, 0);
+    });
+
+    test('a backup without a plays key imports fine', () async {
+      final result = await importer.importFromJson(
+        _backup(),
+        rescan: _noRescan,
+      );
+      expect(result.plays, 0);
+    });
+  });
+
+  group('export plays', () {
+    test('the song path is carried instead of the local id', () async {
+      await db.insertSong(
+        SongsCompanion.insert(path: '/music/a.mp3', title: 'A'),
+      );
+      final ids = await db.getSongIdsByPaths(['/music/a.mp3']);
+      await db.recordPlay(
+        songId: ids['/music/a.mp3'],
+        title: 'A',
+        startedAt: DateTime(2026, 6, 1, 12),
+        playedMs: 90000,
+      );
+      await db.recordPlay(
+        title: 'Orphan',
+        startedAt: DateTime(2026, 6, 1, 13),
+        playedMs: 90000,
+      );
+
+      final rows = await db.getPlaysForBackup();
+      expect(rows.length, 2);
+      expect(rows.first.path, '/music/a.mp3');
+      expect(rows.last.path, isNull);
+    });
+
+    test('rows come out oldest first', () async {
+      await db.recordPlay(
+        title: 'Newer',
+        startedAt: DateTime(2026, 6, 2),
+        playedMs: 90000,
+      );
+      await db.recordPlay(
+        title: 'Older',
+        startedAt: DateTime(2026, 6, 1),
+        playedMs: 90000,
+      );
+
+      final rows = await db.getPlaysForBackup();
+      expect(rows.map((r) => r.title), ['Older', 'Newer']);
+    });
+  });
 }
