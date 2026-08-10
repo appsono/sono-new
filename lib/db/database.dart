@@ -1492,6 +1492,20 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
+  /// Songs with no artist tag left out
+  Future<({String artist, int plays})?> getTopArtist(DateTime since) async {
+    final row = await customSelect(
+      'SELECT artist, COUNT(*) AS plays FROM plays '
+      'WHERE started_at >= ? AND artist IS NOT NULL AND artist != \'\' '
+      'AND $_countsAsPlay '
+      'GROUP BY artist ORDER BY plays DESC, artist ASC LIMIT 1',
+      variables: [Variable.withInt(_epoch(since))],
+      readsFrom: {plays},
+    ).getSingleOrNull();
+    if (row == null) return null;
+    return (artist: row.read<String>('artist'), plays: row.read<int>('plays'));
+  }
+
   /// Audible time per local day, days without listening are absent
   Future<List<({DateTime day, int totalMs})>> getDailyListening(
     DateTime since,
