@@ -2,7 +2,8 @@ import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sono/db/database.dart';
-import 'package:sono/services/audio/play_tracker.dart';
+import 'package:sono/services/audio/tracker/play_tracker.dart';
+import 'package:sono/services/audio/tracker/play_rules.dart';
 
 void main() {
   late SonoDatabase db;

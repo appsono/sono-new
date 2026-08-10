@@ -18,7 +18,7 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_effects_service.dart';
-import 'package:sono/services/audio/play_tracker.dart';
+import 'package:sono/services/audio/tracker/play_tracker.dart';
 import 'package:sono/services/audio/player_backend.dart';
 import 'package:sono/services/audio/volume_ramp.dart';
 
