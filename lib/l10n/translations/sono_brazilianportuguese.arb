@@ -35,7 +35,7 @@
             }
         }
     },
-    "commonDurationLong": "{horas}h {minutos}m",
+    "commonDurationLong": "{hours}h {minutes}m",
     "@commonDurationLong": {
         "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
         "placeholders": {
@@ -47,7 +47,7 @@
             }
         }
     },
-    "commonDurationShort": "{minutos}m",
+    "commonDurationShort": "{minutes}m",
     "@commonDurationShort": {
         "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
         "placeholders": {
