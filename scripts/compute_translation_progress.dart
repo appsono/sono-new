@@ -69,3 +69,5 @@ void main() {
     print('   $key -> $pct%');
   }
 }
+
+// ignore_for_file: avoid_print
