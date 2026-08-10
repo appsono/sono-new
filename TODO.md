@@ -13,8 +13,8 @@
 - [x] ~~Player has brief silence/artifacts during playback (cache was fully
       disabled)~~
 - [x] ~~Add to Queue / Play next isn't wired up with UI~~
-- [x] ~~Skip to previous doesn't work when on the last song in the queue with loop all
-      enabled~~
+- [x] ~~Skip to previous doesn't work when on the last song in the queue with
+      loop all enabled~~
 - [x] ~~Favorite Albums removed after forced rescan / sorting mode changed~~
 - [x] ~~EQ and bass boost sometimes have no audible effect~~
 
@@ -38,9 +38,9 @@
       liked songs
 - [ ] Crossfade: fade out the current song and fade in the next one at the end of
       the current
-- [ ] Sleep timer: fade out or stop after N minutes / end of song / end of queue
-- [ ] Volume controls: more options to control song volume
-  - ReplayGain
+- [x] Sleep timer: fade out or stop after N minutes / end of song / end of queue
+- [x] Volume controls: more options to control song volume
+  - ~~ReplayGain~~
   - ~~In-app volume slider~~
 - [ ] Output sample rate: option to pin `audio-samplerate` instead of following
       the first played file, plus a toggle to trade fidelity for gapless across
@@ -68,4 +68,3 @@
 - [x] ~~Clean up orphaned artists/albums after song deletion~~
 - [x] ~~Add sorting options for songs list (title, artist, date added)~~
 - [x] ~~Proper database migrations (version tracking, rollback strategy)~~
-
