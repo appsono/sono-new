@@ -1512,11 +1512,76 @@ class SonoDatabase extends _$SonoDatabase {
     ];
   }
 
+  /// Song path instead of songId
+  Future<List<PlayBackupRow>> getPlaysForBackup() async {
+    final rows = await (select(plays).join([
+      leftOuterJoin(songs, songs.id.equalsExp(plays.songId)),
+    ])..orderBy([OrderingTerm.asc(plays.startedAt)])).get();
+    return [
+      for (final r in rows)
+        (
+          path: r.readTableOrNull(songs)?.path,
+          title: r.readTable(plays).title,
+          artist: r.readTable(plays).artist,
+          album: r.readTable(plays).album,
+          durationMs: r.readTable(plays).durationMs,
+          startedAt: r.readTable(plays).startedAt,
+          playedMs: r.readTable(plays).playedMs,
+        ),
+    ];
+  }
+
+  /// Merges into existing history, returns rows added
+  /// > startedAt is dedupe key, only one song plays at a time
+  Future<int> restorePlays(List<PlayBackupRow> entries) async {
+    if (entries.isEmpty) return 0;
+
+    final taken = {
+      for (final r in await customSelect(
+        'SELECT started_at FROM plays',
+        readsFrom: {plays},
+      ).get())
+        r.read<int>('started_at'),
+    };
+    final ids = await getSongIdsByPaths(
+      entries.map((e) => e.path).whereType<String>(),
+    );
+
+    final rows = <PlaysCompanion>[];
+    for (final e in entries) {
+      if (!taken.add(_epoch(e.startedAt))) continue;
+      rows.add(
+        PlaysCompanion.insert(
+          songId: Value(e.path == null ? null : ids[e.path]),
+          title: e.title,
+          artist: Value(e.artist),
+          album: Value(e.album),
+          durationMs: Value(e.durationMs),
+          startedAt: e.startedAt,
+          playedMs: e.playedMs,
+        ),
+      );
+    }
+    if (rows.isEmpty) return 0;
+    await batch((b) => b.insertAll(plays, rows));
+    return rows.length;
+  }
+
   /// Returns rows removed
   Future<int> deletePlaysBefore(DateTime cutoff) => (delete(
     plays,
   )..where((p) => p.startedAt.isSmallerThanValue(cutoff))).go();
 }
+
+typedef PlayBackupRow = ({
+  String? path,
+  String title,
+  String? artist,
+  String? album,
+  int? durationMs,
+  DateTime startedAt,
+  int playedMs,
+});
 
 extension AlbumDisplayTitle on Album {
   String get shownTitle => (displayTitle != null && displayTitle!.isNotEmpty)

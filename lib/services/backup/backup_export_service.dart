@@ -23,7 +23,7 @@ class BackupExportService {
   BackupExportService(this.db);
   final SonoDatabase db;
 
-  static const formatVersion = 2;
+  static const formatVersion = 3;
 
   //fx.* is safe as effects, other prefixes mix settings with state
   static const exportableSettingPrefixes = ['fx.'];
@@ -70,6 +70,7 @@ class BackupExportService {
       'favoriteArtists': await _exportFavoriteArtists(),
       'playlists': await _exportPlaylists(),
       'legacySettings': await _exportLegacySettings(),
+      'plays': await _exportPlays(),
     };
   }
 
@@ -164,6 +165,23 @@ class BackupExportService {
     return [
       for (final r in rows)
         {'category': r.category, 'key': r.settingKey, 'value': r.value},
+    ];
+  }
+
+  /// Listening history, path lets an import relink to local songs
+  Future<List<Map<String, dynamic>>> _exportPlays() async {
+    final rows = await db.getPlaysForBackup();
+    return [
+      for (final r in rows)
+        {
+          'path': r.path,
+          'title': r.title,
+          'artist': r.artist,
+          'album': r.album,
+          'durationMs': r.durationMs,
+          'startedAt': r.startedAt.toUtc().toIso8601String(),
+          'playedMs': r.playedMs,
+        },
     ];
   }
 

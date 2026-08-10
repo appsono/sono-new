@@ -29,6 +29,7 @@ class BackupImportResult {
     required this.favoriteArtists,
     required this.playlists,
     required this.playlistsSkipped,
+    required this.plays,
   });
 
   final int likedSongs;
@@ -37,6 +38,7 @@ class BackupImportResult {
   final int favoriteArtists;
   final int playlists;
   final int playlistsSkipped;
+  final int plays;
 }
 
 class BackupImportException implements Exception {
@@ -107,6 +109,8 @@ class BackupImportService {
 
     final (added, skipped) = await _importPlaylists(data['playlists']);
 
+    final plays = await db.restorePlays(_parsePlays(data['plays']));
+
     return BackupImportResult(
       likedSongs: likedFound,
       likedSongsMissing: liked.length - likedFound,
@@ -114,7 +118,36 @@ class BackupImportService {
       favoriteArtists: artists.length,
       playlists: added,
       playlistsSkipped: skipped,
+      plays: plays,
     );
+  }
+
+  /// Rows without usable title to timestamp are dropped
+  List<PlayBackupRow> _parsePlays(dynamic raw) {
+    if (raw is! List) return const [];
+    final out = <PlayBackupRow>[];
+    for (final e in raw) {
+      if (e is! Map) continue;
+      final title = e['title'];
+      final startedAt = DateTime.tryParse('${e['startedAt']}');
+      final playedMs = e['playedMs'];
+      if (title is! String || title.isEmpty) continue;
+      if (startedAt == null || playedMs is! int) continue;
+      final path = e['path'];
+      final artist = e['artist'];
+      final album = e['album'];
+      final durationMs = e['durationMs'];
+      out.add((
+        path: path is String && path.isNotEmpty ? path : null,
+        title: title,
+        artist: artist is String ? artist : null,
+        album: album is String ? album : null,
+        durationMs: durationMs is int ? durationMs : null,
+        startedAt: startedAt.toLocal(),
+        playedMs: playedMs,
+      ));
+    }
+    return out;
   }
 
   bool _isImportableSetting(String key) {
