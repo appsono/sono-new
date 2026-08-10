@@ -1492,6 +1492,29 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
+  /// Distinct song by the most recent qualifiying play
+  Future<List<SongWithArtistViewData>> getRecentlyPlayedSongs(int limit) async {
+    final rows = await customSelect(
+      'SELECT song_id, MAX(started_at) AS last_played FROM plays '
+      'WHERE song_id IS NOT NULL AND $_countsAsPlay '
+      'GROUP BY song_id ORDER BY last_played DESC LIMIT ?',
+      variables: [Variable.withInt(limit)],
+      readsFrom: {plays},
+    ).get();
+
+    final ids = [for (final r in rows) r.read<int>('song_id')];
+    if (ids.isEmpty) return const [];
+
+    final found = await (select(
+      songWithArtistView,
+    )..where((v) => v.id.isIn(ids))).get();
+    final byId = {for (final s in found) s.id: s};
+    return [
+      for (final id in ids)
+        if (byId[id] != null) byId[id]!,
+    ];
+  }
+
   /// Songs with no artist tag left out
   Future<({String artist, int plays})?> getTopArtist(DateTime since) async {
     final row = await customSelect(

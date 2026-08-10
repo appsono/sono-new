@@ -31,6 +31,7 @@ enum QueueSource {
   playlist,
   liked,
   recentlyAdded,
+  recentlyPlayed,
   search,
 }
 

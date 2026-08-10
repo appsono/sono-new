@@ -83,6 +83,11 @@ const String _newSeenKey = 'home.newSeenId';
 const double _recentCardW = 125;
 const double _recentCardH = 165;
 
+// ==== recently played ====
+const int _playedLimit = 12;
+const double _playedSize = 100;
+const double _playedExtent = 148;
+
 // ==== shared cover tiles ====
 const double _tileScrimMaxAlpha = 0.75;
 const double _tileScrimFraction = 0.6;
@@ -138,6 +143,9 @@ class _HomePageState extends State<HomePage> {
   List<Artist>? _artists;
   Map<int, int>? _artistSongCounts;
   Map<int, String>? _artistCoverPaths;
+
+  // ==== recently played ====
+  List<SongWithArtistViewData>? _played;
 
   @override
   void initState() {
@@ -208,6 +216,7 @@ class _HomePageState extends State<HomePage> {
     // ==== recently added ====
     //newest first, capped at section limit
     final recent = await widget.db.getRecentlyAddedSongs(_recentLimit);
+    final played = await widget.db.getRecentlyPlayedSongs(_playedLimit);
 
     //watermark: unset on first ever load means seed silently
     final raw = await widget.db.getSetting(_newSeenKey);
@@ -260,6 +269,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _songs = songs;
       _recent = recent;
+      _played = played;
       _newIds = newIds;
       _albumsFallback = fallback;
       _albumCoverPaths = albumCovers;
@@ -329,6 +339,18 @@ class _HomePageState extends State<HomePage> {
     db: widget.db,
     artist: artist,
   );
+
+  void _playSong(SongWithArtistViewData song) {
+    final l = AppLocalizations.of(context);
+    AudioService.instance.play(
+      [song.toSong()],
+      0,
+      origin: QueueOrigin(
+        source: QueueSource.recentlyPlayed,
+        label: l.homeSectionRecentlyPlayed,
+      ),
+    );
+  }
 
   void _playRecent(int index) {
     final recent = _recent;
@@ -606,6 +628,35 @@ class _HomePageState extends State<HomePage> {
                         onLongPress: () => _openArtistSheet(a),
                       );
                     }).toList(),
+                  ),
+                ),
+              ],
+
+              // ==== recently played ====
+              if (_played != null && _played!.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.homeSectionRecentlyPlayed,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: _playedExtent,
+                    children: [
+                      for (final s in _played!)
+                        SonoMediaCard(
+                          path: s.path,
+                          title: s.title,
+                          subtitle:
+                              s.displayArtist ??
+                              s.artistName ??
+                              l.commonUnknown,
+                          size: _playedSize,
+                          titleStyle: Theme.of(
+                            context,
+                          ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+                          onTap: () => _playSong(s),
+                          onLongPress: () => _openSongSheet(s),
+                        ),
+                    ],
                   ),
                 ),
               ],
