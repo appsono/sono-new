@@ -7,6 +7,13 @@ void main() {
   late SonoDatabase db;
 
   final epoch = DateTime(2026, 1, 1);
+  var seq = 0;
+
+  Future<int> addSong(String title) async {
+    final path = '/music/${++seq}.mp3';
+    await db.insertSong(SongsCompanion.insert(path: path, title: title));
+    return (await db.getSongIdsByPaths([path]))[path]!;
+  }
 
   Future<void> addPlay({
     String title = 'Song',
@@ -23,6 +30,7 @@ void main() {
   );
 
   setUp(() {
+    seq = 0;
     db = SonoDatabase.forTesting(NativeDatabase.memory());
   });
 
@@ -201,6 +209,103 @@ void main() {
 
       final days = await db.getDailyListening(DateTime(2026, 6, 1));
       expect(days.single.day, DateTime(2026, 6, 2));
+    });
+  });
+
+  group('getRecentlyPlayedSongs', () {
+    test('is empty on a fresh database', () async {
+      expect(await db.getRecentlyPlayedSongs(12), isEmpty);
+    });
+
+    test('a song played several times appears once', () async {
+      final id = await addSong('Repeat');
+      for (var i = 0; i < 4; i++) {
+        await db.recordPlay(
+          songId: id,
+          title: 'Repeat',
+          durationMs: 180000,
+          playedMs: 90000,
+          startedAt: DateTime(2026, 6, 1, 12 + i),
+        );
+      }
+
+      final songs = await db.getRecentlyPlayedSongs(12);
+      expect(songs.length, 1);
+      expect(songs.single.title, 'Repeat');
+    });
+
+    test('ordered by the most recent play, not the first', () async {
+      final older = await addSong('Older');
+      final newer = await addSong('Newer');
+
+      //Older was played first, then again after Newer
+      await db.recordPlay(
+        songId: older,
+        title: 'Older',
+        durationMs: 180000,
+        playedMs: 90000,
+        startedAt: DateTime(2026, 6, 1, 9),
+      );
+      await db.recordPlay(
+        songId: newer,
+        title: 'Newer',
+        durationMs: 180000,
+        playedMs: 90000,
+        startedAt: DateTime(2026, 6, 1, 10),
+      );
+      await db.recordPlay(
+        songId: older,
+        title: 'Older',
+        durationMs: 180000,
+        playedMs: 90000,
+        startedAt: DateTime(2026, 6, 1, 11),
+      );
+
+      final songs = await db.getRecentlyPlayedSongs(12);
+      expect(songs.map((s) => s.title), ['Older', 'Newer']);
+    });
+
+    test('plays that do not count are left out', () async {
+      final skipped = await addSong('Skipped');
+      final heard = await addSong('Heard');
+      await db.recordPlay(
+        songId: skipped,
+        title: 'Skipped',
+        durationMs: 180000,
+        playedMs: 6000,
+        startedAt: DateTime(2026, 6, 1, 13),
+      );
+      await db.recordPlay(
+        songId: heard,
+        title: 'Heard',
+        durationMs: 180000,
+        playedMs: 90000,
+        startedAt: DateTime(2026, 6, 1, 12),
+      );
+
+      final songs = await db.getRecentlyPlayedSongs(12);
+      expect(songs.map((s) => s.title), ['Heard']);
+    });
+
+    test('history without a local song is left out', () async {
+      await addPlay(title: 'Gone', playedMs: 90000);
+
+      expect(await db.getRecentlyPlayedSongs(12), isEmpty);
+    });
+
+    test('respects the limit', () async {
+      for (var i = 0; i < 5; i++) {
+        final id = await addSong('Song $i');
+        await db.recordPlay(
+          songId: id,
+          title: 'Song $i',
+          durationMs: 180000,
+          playedMs: 90000,
+          startedAt: DateTime(2026, 6, 1, 10 + i),
+        );
+      }
+
+      expect((await db.getRecentlyPlayedSongs(3)).length, 3);
     });
   });
 }
