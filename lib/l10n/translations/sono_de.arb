@@ -530,7 +530,7 @@
     "@settingsProfileUnnamed": {
         "description": "Name shown on the profile row in settings when no username has been set yet."
     },
-    "settingsProfileSubtitle": "Name und Avatar",
+    "settingsProfileSubtitle": "Name, Avatar und Hörstatistiken",
     "@settingsProfileSubtitle": {
         "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
     },
@@ -1645,5 +1645,60 @@
     "sleepCancelled": "Schlaftimer abgebrochen",
     "@sleepCancelled": {
         "description": "Confirmation shown after a running sleep timer is cancelled."
+    },
+    "homeSectionRecentlyPlayed": "Zuletzt Gespielt",
+    "settingsProfileStatsWindow": "Diese Woche",
+    "@settingsProfileStatsWindow": {
+        "description": "Subtitle under the stats card title, naming the window every number covers. Monday to Sunday of the current week."
+    },
+    "settingsProfileStatsPlays": "Gesamtwiedergaben",
+    "@settingsProfileStatsPlays": {
+        "description": "Label above the number of songs played."
+    },
+    "settingsProfileStatsTopArtist": "Top Künstler",
+    "@settingsProfileStatsTopArtist": {
+        "description": "Label above the most played artist."
+    },
+    "settingsProfileStatsTopSong": "Top Song",
+    "@settingsProfileStatsTopSong": {
+        "description": "Label above the most played song."
+    },
+    "settingsProfileStatsPlayCount": "{count, plural, =1{1 Wiedergabe} other{{count} Wiedergaben}}",
+    "@settingsProfileStatsPlayCount": {
+        "description": "How often the top song or artist was played, shown after the name.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsHoursMinutes": "{hours} h {minutes} min",
+    "@settingsProfileStatsHoursMinutes": {
+        "description": "Listening time of an hour or more. Minutes are zero padded.",
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsMinutes": "{minutes} min",
+    "@settingsProfileStatsMinutes": {
+        "description": "Listening time under an hour.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsEmpty": "Noch nichts hier. Spiele etwas, dann füllt es sich.",
+    "@settingsProfileStatsEmpty": {
+        "description": "Shown in place of the numbers when nothing was played this week."
+    },
+    "settingsProfileStatsNone": "Noch nichts",
+    "@settingsProfileStatsNone": {
+        "description": "Placeholder where a top song or artist would go when there is none."
     }
 }
