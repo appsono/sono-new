@@ -530,7 +530,7 @@
     "@settingsProfileUnnamed": {
         "description": "Name shown on the profile row in settings when no username has been set yet."
     },
-    "settingsProfileSubtitle": "Name und Avatar",
+    "settingsProfileSubtitle": "Name, Avatar und Hörstatistiken",
     "@settingsProfileSubtitle": {
         "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
     },
@@ -776,7 +776,7 @@
     "@settingsPlaybackSleepTimer": {
         "description": "Row for stopping playback after a set time. Currently marked as planned."
     },
-    "settingsPlaybackResumeOnConnect": "Bei Kopfhörerverbindung fortsetzen",
+    "settingsPlaybackResumeOnConnect": "Bei Verbindung fortsetzen",
     "@settingsPlaybackResumeOnConnect": {
         "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
     },
@@ -1155,10 +1155,6 @@
     "@settingsBackupExporting": {
         "description": "Replaces the export label while a backup is being written."
     },
-    "settingsBackupExportSubtitle": "Likes, Favoriten, Playlisten, Profil und Einstellungen",
-    "@settingsBackupExportSubtitle": {
-        "description": "Subtitle under the export row, listing what a backup contains."
-    },
     "settingsBackupExportSaved": "Gespeichert unter {path}",
     "@settingsBackupExportSaved": {
         "description": "Snackbar confirming where the backup file was written.",
@@ -1493,5 +1489,216 @@
     "settingsAppearanceHomeTintSubtitle": "Färbt den oberen Bereich der Startseite mit den Farben des aktuellen Songs ein",
     "@settingsAppearanceHomeTintSubtitle": {
         "description": "Subtitle under the home tint row."
+    },
+    "settingsPlaybackSleepTimerOff": "Aus",
+    "@settingsPlaybackSleepTimerOff": {
+        "description": "Value shown next to the sleep timer row when no timer is running."
+    },
+    "settingsPlaybackSleepTimerFade": "Ausblenddauer",
+    "@settingsPlaybackSleepTimerFade": {
+        "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+    },
+    "settingsPlaybackSleepTimerFadeValue": "{seconds} s",
+    "@settingsPlaybackSleepTimerFadeValue": {
+        "description": "Value shown next to the fade out length slider, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "normalisationSectionMode": "Modus",
+    "@normalisationSectionMode": {
+        "description": "Section label above the normalisation mode options."
+    },
+    "normalisationSectionTuning": "Tuning",
+    "@normalisationSectionTuning": {
+        "description": "Section label above the preamp and clipping options."
+    },
+    "normalisationResetTooltip": "Normalisierung zurücksetzen",
+    "@normalisationResetTooltip": {
+        "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
+    },
+    "normalisationOff": "Aus",
+    "@normalisationOff": {
+        "description": "Normalisation mode that applies no gain."
+    },
+    "normalisationTrack": "Per Song",
+    "@normalisationTrack": {
+        "description": "Normalisation mode that brings every song to the same loudness."
+    },
+    "normalisationTrackSubtitle": "Jeder Song auf der selben Lautstärke",
+    "@normalisationTrackSubtitle": {
+        "description": "Subtitle of the per track normalisation option."
+    },
+    "normalisationAlbum": "Per Album",
+    "@normalisationAlbum": {
+        "description": "Normalisation mode that normalises whole albums as one unit."
+    },
+    "normalisationAlbumSubtitle": "Hält Lautstärkeunterschiede innerhalb eines Albums gering",
+    "@normalisationAlbumSubtitle": {
+        "description": "Subtitle of the per album normalisation option."
+    },
+    "normalisationPreamp": "Vorverstärkung",
+    "@normalisationPreamp": {
+        "description": "Slider for extra gain applied on top of the ReplayGain value."
+    },
+    "normalisationPreampValue": "{db} dB",
+    "@normalisationPreampValue": {
+        "description": "Value shown next to the preamp slider, in decibels.",
+        "placeholders": {
+            "db": {
+                "type": "String"
+            }
+        }
+    },
+    "normalisationPreventClipping": "Clipping verhindern",
+    "@normalisationPreventClipping": {
+        "description": "Toggle that lowers the gain instead of letting loud peaks distort."
+    },
+    "normalisationPreventClippingSubtitle": "Senkt die Verstärkung, um Verzerrungen durch Spitzen zu vermeiden",
+    "@normalisationPreventClippingSubtitle": {
+        "description": "Subtitle of the prevent clipping toggle."
+    },
+    "sleepTitle": "Schlaftimer",
+    "@sleepTitle": {
+        "description": "Title of the sleep timer sheet."
+    },
+    "sleepSubtitle": "Blendet aus und pausiert, wenn der Timer abläuft",
+    "@sleepSubtitle": {
+        "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+    },
+    "sleepMinutes": "{count, plural, =1{1 Minute} other{{count} Minuten}}",
+    "@sleepMinutes": {
+        "description": "Preset duration option in the sleep timer sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepUnderMinute": "< 1 Minute",
+    "@sleepUnderMinute": {
+        "description": "Sleep timer value shown when less than a minute is left."
+    },
+    "sleepEndOfSong": "Songende",
+    "@sleepEndOfSong": {
+        "description": "Sleep timer option that stops playback when the current song finishes."
+    },
+    "sleepEndOfQueue": "Queue-Ende",
+    "@sleepEndOfQueue": {
+        "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+    },
+    "sleepCustom": "Benutzerdefiniert",
+    "@sleepCustom": {
+        "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+    },
+    "sleepRemaining": "{minutes}:{seconds}",
+    "@sleepRemaining": {
+        "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            },
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "sleepRemainingEndOfSong": "Bis Songende",
+    "@sleepRemainingEndOfSong": {
+        "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+    },
+    "sleepRemainingEndOfQueue": "Bis Queue-Ende",
+    "@sleepRemainingEndOfQueue": {
+        "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+    },
+    "sleepExtend": "+{count, plural, =1{1 Minute} other{{count} Minuten}}",
+    "@sleepExtend": {
+        "description": "Button that adds more time to a running sleep timer.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepCustomTitle": "Benutzerdefinierte Zeit",
+    "@sleepCustomTitle": {
+        "description": "Title of the sheet for entering an arbitrary sleep timer length."
+    },
+    "sleepCustomField": "Minuten",
+    "@sleepCustomField": {
+        "description": "Label of the field for entering the sleep timer length in minutes."
+    },
+    "sleepCustomStart": "Timer starten",
+    "@sleepCustomStart": {
+        "description": "Button that starts the sleep timer with the entered number of minutes."
+    },
+    "sleepCancel": "Timer abbrechen",
+    "@sleepCancel": {
+        "description": "Button that stops a running sleep timer without pausing playback."
+    },
+    "sleepStarted": "Schlaftimer eingestellt",
+    "@sleepStarted": {
+        "description": "Confirmation shown after a sleep timer is started."
+    },
+    "sleepCancelled": "Schlaftimer abgebrochen",
+    "@sleepCancelled": {
+        "description": "Confirmation shown after a running sleep timer is cancelled."
+    },
+    "homeSectionRecentlyPlayed": "Zuletzt Gespielt",
+    "settingsProfileStatsWindow": "Diese Woche",
+    "@settingsProfileStatsWindow": {
+        "description": "Subtitle under the stats card title, naming the window every number covers. Monday to Sunday of the current week."
+    },
+    "settingsProfileStatsPlays": "Gesamtwiedergaben",
+    "@settingsProfileStatsPlays": {
+        "description": "Label above the number of songs played."
+    },
+    "settingsProfileStatsTopArtist": "Top Künstler",
+    "@settingsProfileStatsTopArtist": {
+        "description": "Label above the most played artist."
+    },
+    "settingsProfileStatsTopSong": "Top Song",
+    "@settingsProfileStatsTopSong": {
+        "description": "Label above the most played song."
+    },
+    "settingsProfileStatsPlayCount": "{count, plural, =1{1 Wiedergabe} other{{count} Wiedergaben}}",
+    "@settingsProfileStatsPlayCount": {
+        "description": "How often the top song or artist was played, shown after the name.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsHoursMinutes": "{hours} h {minutes} min",
+    "@settingsProfileStatsHoursMinutes": {
+        "description": "Listening time of an hour or more. Minutes are zero padded.",
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsMinutes": "{minutes} min",
+    "@settingsProfileStatsMinutes": {
+        "description": "Listening time under an hour.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsEmpty": "Noch nichts hier. Spiele etwas, dann füllt es sich.",
+    "@settingsProfileStatsEmpty": {
+        "description": "Shown in place of the numbers when nothing was played this week."
+    },
+    "settingsProfileStatsNone": "Noch nichts",
+    "@settingsProfileStatsNone": {
+        "description": "Placeholder where a top song or artist would go when there is none."
     }
 }

@@ -923,10 +923,6 @@
     "@settingsBackupExporting": {
         "description": "Replaces the export label while a backup is being written."
     },
-    "settingsBackupExportSubtitle": "Вподобання, вибране, добірки, профіль та налаштування",
-    "@settingsBackupExportSubtitle": {
-        "description": "Subtitle under the export row, listing what a backup contains."
-    },
     "settingsBackupExportSaved": "Збережено до {path}",
     "@settingsBackupExportSaved": {
         "description": "Snackbar confirming where the backup file was written.",
