@@ -1163,10 +1163,6 @@
     "@settingsBackupExporting": {
         "description": "Replaces the export label while a backup is being written."
     },
-    "settingsBackupExportSubtitle": "Упадабаныя і абраныя песні, плэй-лісты, профіль і налады",
-    "@settingsBackupExportSubtitle": {
-        "description": "Subtitle under the export row, listing what a backup contains."
-    },
     "settingsBackupExportSaved": "Захавана ў {path}",
     "@settingsBackupExportSaved": {
         "description": "Snackbar confirming where the backup file was written.",
