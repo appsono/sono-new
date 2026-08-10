@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 
 import 'package:sono/db/database.dart';
 import 'package:sono/services/audio/audio_effects_service.dart';
+import 'package:sono/services/audio/play_tracker.dart';
 import 'package:sono/services/audio/player_backend.dart';
 import 'package:sono/services/audio/volume_ramp.dart';
 
@@ -84,6 +85,7 @@ class AudioService {
   Future<void>? _loadStateFuture;
   int _targetIndex = -1;
   SonoDatabase? _db;
+  PlayTracker? _tracker;
 
   //queue state
   List<Song> _queue = [];
@@ -319,6 +321,7 @@ class AudioService {
     _subs.add(
       _player.positionStream.listen((pos) {
         if (!_player.playing) return;
+        _tracker?.onPosition(pos);
         final now = DateTime.now();
         if (_lastPositionSave == null ||
             now.difference(_lastPositionSave!).inSeconds >= 30) {
@@ -333,6 +336,9 @@ class AudioService {
         if (!playing && !_isRestoringState) {
           _persistPosition(_player.position);
         }
+        //restored queue start playing without any index change
+        final song = currentSong;
+        if (playing && song != null) _beginTrackedPlay(song);
       }),
     );
   }
@@ -341,6 +347,8 @@ class AudioService {
   Future<void> dispose() async {
     _saveStateDebounce?.cancel();
     _ramp.cancel();
+    await _tracker?.dispose();
+    _tracker = null;
     for (final sub in _subs) {
       await sub.cancel();
     }
@@ -358,6 +366,7 @@ class AudioService {
   /// Bind database for persisting playback state
   void attachDb(SonoDatabase db) {
     _db = db;
+    _tracker ??= PlayTracker(db);
   }
 
   /// Load saved shuffle/repeat state from database
@@ -510,6 +519,7 @@ class AudioService {
     _saveStateDebounce = null;
     await _savePlaybackState();
     _persistPosition(_player.position);
+    await _tracker?.flush();
   }
 
   Future<void> _savePlaybackState() async {
@@ -647,6 +657,7 @@ class AudioService {
   Future<void> stop() async {
     _queueDirty = true;
     await cancelFade();
+    await _tracker?.commitPlay();
     await _player.stop();
     _queue = [];
     _currentIndex = -1;
@@ -663,6 +674,14 @@ class AudioService {
   ///           skip
   /// ===========================
 
+  /// [restart] forces new play for a song thats already open
+  void _beginTrackedPlay(Song song, {bool restart = false}) {
+    final tracker = _tracker;
+    if (tracker == null) return;
+    if (!restart && tracker.openSongId == song.id) return;
+    tracker.beginPlay(song);
+  }
+
   void _handleQueueIndexChanged() {
     _scheduleStateSave();
 
@@ -670,6 +689,7 @@ class AudioService {
     if (song != null) {
       _currentSongController.add(song);
       _artistNameController.add(song.displayArtist);
+      _beginTrackedPlay(song);
     }
 
     if (_isOpening) return;
@@ -1047,6 +1067,7 @@ class AudioService {
 
       final song = currentSong!;
       _currentSongController.add(song);
+      _beginTrackedPlay(song, restart: true);
 
       _currentArtistName = song.displayArtist;
       _artistNameController.add(_currentArtistName);
@@ -1102,6 +1123,8 @@ class AudioService {
       } finally {
         _isAdvancing = false;
       }
+      final song = currentSong;
+      if (song != null) _beginTrackedPlay(song, restart: true);
       return;
     }
     await skipNext();
