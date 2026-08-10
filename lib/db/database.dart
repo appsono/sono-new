@@ -18,6 +18,7 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:sono/db/tables.dart';
+import 'package:sono/services/audio/tracker/play_rules.dart';
 
 part 'database.g.dart';
 
@@ -1451,6 +1452,64 @@ class SonoDatabase extends _$SonoDatabase {
     await (update(plays)..where((p) => p.id.equals(id))).write(
       PlaysCompanion(playedMs: Value(playedMs)),
     );
+  }
+
+  /// SQL twin of PlayRules.counts
+  static const _countsAsPlay =
+      'duration_ms > ${PlayRules.minSongMs} AND '
+      'played_ms >= MIN(duration_ms / 2, ${PlayRules.cutoffMs})';
+
+  static int _epoch(DateTime at) => at.millisecondsSinceEpoch ~/ 1000;
+
+  /// Total audible counts every play, plays only qualifying ones
+  Future<({int totalMs, int plays})> getListeningSummary(DateTime since) async {
+    final row = await customSelect(
+      'SELECT COALESCE(SUM(played_ms), 0) AS total_ms, '
+      'COALESCE(SUM(CASE WHEN $_countsAsPlay THEN 1 ELSE 0 END), 0) AS plays '
+      'FROM plays WHERE started_at >= ?',
+      variables: [Variable.withInt(_epoch(since))],
+      readsFrom: {plays},
+    ).getSingle();
+    return (totalMs: row.read<int>('total_ms'), plays: row.read<int>('plays'));
+  }
+
+  /// Grouped by name so rescan that clears songId does not split count
+  Future<({String title, String? artist, int plays})?> getTopSong(
+    DateTime since,
+  ) async {
+    final row = await customSelect(
+      'SELECT title, artist, COUNT(*) AS plays FROM plays '
+      'WHERE started_at >= ? AND $_countsAsPlay '
+      'GROUP BY title, artist ORDER BY plays DESC, title ASC LIMIT 1',
+      variables: [Variable.withInt(_epoch(since))],
+      readsFrom: {plays},
+    ).getSingleOrNull();
+    if (row == null) return null;
+    return (
+      title: row.read<String>('title'),
+      artist: row.read<String?>('artist'),
+      plays: row.read<int>('plays'),
+    );
+  }
+
+  /// Audible time per local day, days without listening are absent
+  Future<List<({DateTime day, int totalMs})>> getDailyListening(
+    DateTime since,
+  ) async {
+    final rows = await customSelect(
+      "SELECT date(started_at, 'unixepoch', 'localtime') AS day, "
+      'SUM(played_ms) AS total_ms FROM plays '
+      'WHERE started_at >= ? GROUP BY day ORDER BY day ASC',
+      variables: [Variable.withInt(_epoch(since))],
+      readsFrom: {plays},
+    ).get();
+    return [
+      for (final r in rows)
+        (
+          day: DateTime.parse(r.read<String>('day')),
+          totalMs: r.read<int>('total_ms'),
+        ),
+    ];
   }
 
   /// Returns rows removed
