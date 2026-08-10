@@ -28,6 +28,7 @@ import 'package:sono/widgets/bottom_modal_sheet.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/profile_circle.dart';
 
+import 'package:sono/pages/settings/widgets/settings_listening_stats_card.dart';
 import 'package:sono/pages/settings/widgets/settings_group.dart';
 import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
@@ -254,19 +255,5 @@ class _SettingsProfilePageState extends State<SettingsProfilePage> {
     );
   }
 
-  Widget _statsGroup(BuildContext context) {
-    final c = context.sono;
-    final l = AppLocalizations.of(context);
-
-    return SettingsGroup(
-      children: [
-        SettingsRow(
-          icon: IconsSheet.lastPlayedOutlined,
-          accent: c.accentPurple,
-          label: l.settingsProfileStats,
-          planned: true,
-        ),
-      ],
-    );
-  }
+  Widget _statsGroup(BuildContext context) => ListeningStatsCard(db: widget.db);
 }
