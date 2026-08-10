@@ -226,7 +226,6 @@ class _SettingsBackupPageState extends State<SettingsBackupPage> {
                       label: _exporting
                           ? l.settingsBackupExporting
                           : l.settingsBackupExport,
-                      subtitle: l.settingsBackupExportSubtitle,
                       value: 'JSON',
                       enabled: !_busy,
                       onTap: _export,

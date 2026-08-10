@@ -1336,10 +1336,6 @@
   "@settingsBackupExporting": {
     "description": "Replaces the export label while a backup is being written."
   },
-  "settingsBackupExportSubtitle": "Likes, favourites, playlists, profile and settings",
-  "@settingsBackupExportSubtitle": {
-    "description": "Subtitle under the export row, listing what a backup contains."
-  },
   "settingsBackupExportSaved": "Saved to {path}",
   "@settingsBackupExportSaved": {
     "description": "Snackbar confirming where the backup file was written.",
