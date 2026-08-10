@@ -67,6 +67,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PlayRules` decides whether a play counts at query time, mirroring last.fm
 - Backup format version is now 3
 
+### Translation
+
+- [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
+  German (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (51%)
+- [JVVAV](https://hosted.weblate.org/user/JVVAV/) started translating Sono into
+  Portuguese (35%)
+
 ## [0.12.0+14] - 2026-08-09
 
 ### Added
