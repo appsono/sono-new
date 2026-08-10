@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   when resuming, instead of cutting
 - Volume normalisation using ReplayGain tags, with per song and per album
   modes, a preamp and a clipping guard
+- Listening stats on the profile page, showing this week's listening time,
+  plays, top song and artist, and a time bar per day
+- Recently Played on the home page
 
 ### Changed
 
@@ -58,6 +61,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   at the end of the current song, or at the end of the queue
 - Pinned media_kit to an upstream commit through `dependency_overrides` while
   waiting for the fix to land in a published release
+- Added a `plays` table and `PlayTracker`. Audible time comes from position
+  deltas, and rows are written as the play runs rather than when it ends
+- Play rows copy title, artist and album in, so history survives a rescan
+- `PlayRules` decides whether a play counts at query time, mirroring last.fm
+- Backup format version is now 3
 
 ## [0.12.0+14] - 2026-08-09
 
