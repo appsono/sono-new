@@ -123,6 +123,53 @@ void main() {
     });
   });
 
+  group('getTopArtist', () {
+    test('is null with no qualifying plays', () async {
+      await addPlay(artist: 'Kanye West', playedMs: 6000);
+      expect(await db.getTopArtist(epoch), isNull);
+    });
+
+    test('counts across different songs', () async {
+      await addPlay(title: 'Guilt Trip', artist: 'Kanye West', playedMs: 90000);
+      await addPlay(title: 'Bound 2', artist: 'Kanye West', playedMs: 90000);
+      await addPlay(
+        title: 'Alright',
+        artist: 'Kendrick Lamar',
+        playedMs: 90000,
+      );
+
+      final top = await db.getTopArtist(epoch);
+      expect(top?.artist, 'Kanye West');
+      expect(top?.plays, 2);
+    });
+
+    test('untagged plays never win', () async {
+      await addPlay(playedMs: 90000);
+      await addPlay(playedMs: 90000);
+      await addPlay(artist: '', playedMs: 90000);
+      await addPlay(artist: 'MF DOOM', playedMs: 90000);
+
+      final top = await db.getTopArtist(epoch);
+      expect(top?.artist, 'MF DOOM');
+      expect(top?.plays, 1);
+    });
+
+    test('rows before the window are excluded', () async {
+      await addPlay(
+        artist: 'Old',
+        playedMs: 90000,
+        startedAt: DateTime(2026, 5, 1),
+      );
+      await addPlay(
+        artist: 'New',
+        playedMs: 90000,
+        startedAt: DateTime(2026, 7, 1),
+      );
+
+      expect((await db.getTopArtist(DateTime(2026, 6, 1)))?.artist, 'New');
+    });
+  });
+
   group('getDailyListening', () {
     test('is empty on a fresh database', () async {
       expect(await db.getDailyListening(epoch), isEmpty);
