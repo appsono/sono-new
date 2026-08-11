@@ -286,6 +286,7 @@ class ScanService {
     //changed on disk or are being re-grouped)
     final toInsert = <SongsCompanion>[];
     final toUpdate = <({String path, SongsCompanion data})>[];
+    final creditedByPath = <String, List<String>>{};
 
     for (final song in chunk) {
       final mainArtist = getMainArtistFromSong(song) ?? song.artist;
@@ -303,6 +304,7 @@ class ScanService {
           ? song.artists.join(', ')
           : song.artist;
 
+      creditedByPath[song.path] = _creditedArtists(song);
       final rawTrack = song.trackNumber;
       final int? discNumber;
       final int? trackNumber;
@@ -359,6 +361,20 @@ class ScanService {
         batch.update(db.songs, u.data, where: (s) => s.path.equals(u.path));
       }
     });
+
+    //ids only exist after batch, inserts do not report them
+    final songIds = await db.getSongIdsByPaths(creditedByPath.keys);
+    final links = <int, List<int>>{};
+    for (final entry in creditedByPath.entries) {
+      final songId = songIds[entry.key];
+      if (songId == null) continue;
+      final artistIds = [
+        for (final name in entry.value)
+          if (artistCache[name] != null) artistCache[name]!,
+      ];
+      if (artistIds.isNotEmpty) links[songId] = artistIds;
+    }
+    await db.replaceSongArtists(links);
 
     return (artistCache, albumCache, folderCache);
   }
@@ -471,11 +487,35 @@ class ScanService {
       ),
     );
 
+    final songId = (await db.getSongIdsByPaths([path]))[path];
+    if (songId != null) {
+      final artistIds = [
+        for (final name in _creditedArtists(song))
+          if (artistCache[name] != null) artistCache[name]!,
+      ];
+      await db.replaceSongArtists({songId: artistIds});
+    }
+
     //old album/artist refs may now be unreferenced
     await db.removeOrphanedAlbums();
     await db.removeOrphanedArtists();
 
     return true;
+  }
+
+  /// Every credied artist, deduped, primary first
+  /// > falls back to raw tag when parser produced nothing
+  static List<String> _creditedArtists(sq.Song song) {
+    final names = <String>{};
+    for (final name in song.artists) {
+      if (name.isNotEmpty) names.add(name);
+    }
+    if (names.isEmpty && (song.artist?.isNotEmpty ?? false)) {
+      names.add(song.artist!);
+    }
+    final main = getMainArtistFromSong(song) ?? song.artist;
+    if (main == null || !names.contains(main)) return names.toList();
+    return [main, ...names.where((n) => n != main)];
   }
 
   static void _defaultOnError(String path, Object error) {
