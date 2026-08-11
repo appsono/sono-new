@@ -1577,6 +1577,90 @@ class SonoDatabase extends _$SonoDatabase {
     ];
   }
 
+  /// Albums where this artist is credited on every song
+  Future<List<int>> getCollabAlbumIds(int artistId) async {
+    final rows = await customSelect(
+      'SELECT s.album_id AS album_id FROM songs s '
+      'LEFT JOIN song_artists sa ON sa.song_id = s.id AND sa.artist_id = ? '
+      'WHERE s.album_id IS NOT NULL '
+      'GROUP BY s.album_id HAVING COUNT(*) = COUNT(sa.artist_id)',
+      variables: [Variable.withInt(artistId)],
+      readsFrom: {songs, songArtists},
+    ).get();
+    return [for (final r in rows) r.read<int>('album_id')];
+  }
+
+  /// Artists own catalogue, what play and shuffle use
+  /// > their songs plus collab albums, no features
+  Future<List<Song>> getArtistCatalogueSongs(int artistId) async {
+    final albumIds = await getCollabAlbumIds(artistId);
+    final query = select(songs);
+    if (albumIds.isEmpty) {
+      query.where((s) => s.artistId.equals(artistId));
+    } else {
+      query.where(
+        (s) => s.artistId.equals(artistId) | s.albumId.isIn(albumIds),
+      );
+    }
+    return query.get();
+  }
+
+  /// Most played songs of an artist, features included
+  Future<List<({Song song, int plays})>> getTopSongsByArtist(
+    int artistId, {
+    int limit = 5,
+  }) async {
+    final rows = await customSelect(
+      'SELECT p.song_id AS song_id, COUNT(*) AS plays FROM plays p '
+      'JOIN song_artists sa ON sa.song_id = p.song_id AND sa.artist_id = ? '
+      'WHERE $_countsAsPlay '
+      'GROUP BY p.song_id ORDER BY plays DESC, p.song_id ASC LIMIT ?',
+      variables: [Variable.withInt(artistId), Variable.withInt(limit)],
+    ).get();
+    if (rows.isEmpty) return const [];
+
+    final counts = {
+      for (final r in rows) r.read<int>('song_id'): r.read<int>('plays'),
+    };
+    final found = await (select(
+      songs,
+    )..where((s) => s.id.isIn(counts.keys))).get();
+    final byId = {for (final s in found) s.id: s};
+    return [
+      for (final entry in counts.entries)
+        if (byId[entry.key] != null)
+          (song: byId[entry.key]!, plays: entry.value),
+    ];
+  }
+
+  /// All time listening for one artist, features included
+  Future<({int totalMs, int plays, DateTime? firstAt, DateTime? lastAt})>
+  getArtistListeningSummary(int artistId) async {
+    final row = await customSelect(
+      'SELECT COALESCE(SUM(p.played_ms), 0) AS total_ms, '
+      'COALESCE(SUM(CASE WHEN $_countsAsPlay THEN 1 ELSE 0 END), 0) AS plays, '
+      'MIN(p.started_at) AS first_at, MAX(p.started_at) AS last_at '
+      'FROM plays p '
+      'JOIN song_artists sa ON sa.song_id = p.song_id AND sa.artist_id = ?',
+      variables: [Variable.withInt(artistId)],
+      readsFrom: {plays, songArtists},
+    ).getSingle();
+
+    DateTime? at(String column) {
+      final seconds = row.read<int?>(column);
+      return seconds == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
+    }
+
+    return (
+      totalMs: row.read<int>('total_ms'),
+      plays: row.read<int>('plays'),
+      firstAt: at('first_at'),
+      lastAt: at('last_at'),
+    );
+  }
+
   /// Audible time per local day, days without listening are absent
   Future<List<({DateTime day, int totalMs})>> getDailyListening(
     DateTime since,
