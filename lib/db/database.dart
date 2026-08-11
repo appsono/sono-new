@@ -1590,11 +1590,23 @@ class SonoDatabase extends _$SonoDatabase {
   /// Albums where this artist is credited on every song
   Future<List<int>> getCollabAlbumIds(int artistId) async {
     final rows = await customSelect(
-      'SELECT s.album_id AS album_id FROM songs s '
-      'LEFT JOIN song_artists sa ON sa.song_id = s.id AND sa.artist_id = ? '
-      'WHERE s.album_id IS NOT NULL '
-      'GROUP BY s.album_id HAVING COUNT(*) = COUNT(sa.artist_id)',
-      variables: [Variable.withInt(artistId)],
+      'WITH totals AS ('
+      'SELECT album_id, COUNT(*) AS total FROM songs '
+      'WHERE album_id IS NOT NULL GROUP BY album_id'
+      '), credits AS ('
+      'SELECT s.album_id AS album_id, sa.artist_id AS artist_id, '
+      'COUNT(*) AS n FROM song_artists sa '
+      'JOIN songs s ON s.id = sa.song_id '
+      'WHERE s.album_id IS NOT NULL GROUP BY s.album_id, sa.artist_id'
+      ') '
+      'SELECT t.album_id AS album_id FROM totals t '
+      'JOIN credits me ON me.album_id = t.album_id '
+      'AND me.artist_id = ? AND me.n = t.total '
+      //without a second full credit this is just their own album
+      'JOIN credits other ON other.album_id = t.album_id '
+      'AND other.artist_id != ? AND other.n = t.total '
+      'GROUP BY t.album_id',
+      variables: [Variable.withInt(artistId), Variable.withInt(artistId)],
       readsFrom: {songs, songArtists},
     ).get();
     return [for (final r in rows) r.read<int>('album_id')];

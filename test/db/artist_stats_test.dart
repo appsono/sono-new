@@ -79,6 +79,28 @@ void main() {
 
       expect(await db.getCollabAlbumIds(ye), isEmpty);
     });
+
+    test('a solo album is not a collab', () async {
+      final doom = await artist('MF DOOM');
+      final album = await db.getOrCreateAlbum('Operation Doomsday', doom, null);
+      await addSong('Doomsday', [doom], albumId: album);
+      await addSong('Rhymes Like Dimes', [doom], albumId: album);
+
+      expect(await db.getCollabAlbumIds(doom), isEmpty);
+    });
+
+    test(
+      'a guest on every song does not make it a collab for the host',
+      () async {
+        final nas = await artist('Nas');
+        final ye = await artist('Ye');
+        final album = await db.getOrCreateAlbum('Hosted', nas, null);
+        await addSong('One', [nas], albumId: album);
+        await addSong('Two', [nas, ye], albumId: album);
+
+        expect(await db.getCollabAlbumIds(nas), isEmpty);
+      },
+    );
   });
 
   group('getArtistCoverPath', () {
