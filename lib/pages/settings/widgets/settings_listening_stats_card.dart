@@ -40,8 +40,11 @@ class ListeningStatsCard extends StatefulWidget {
 class _ListeningStatsCardState extends State<ListeningStatsCard> {
   late final Future<_Stats> _future = _load();
 
-  static const _barHeight = 46.0;
+  static const _barHeight = 76.0;
   static const _barMinHeight = 4.0;
+
+  /// Day the readout is showing
+  int? _active;
 
   static const _skeleton = (
     totalMs: 3600000,
@@ -281,21 +284,57 @@ class _ListeningStatsCardState extends State<ListeningStatsCard> {
     final peak = byDay.values.fold(0, (a, b) => a > b ? a : b);
     final today = _key(DateTime.now());
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        for (final day in week)
-          Expanded(
-            child: _bar(
-              context,
-              ms: byDay[_key(day)] ?? 0,
-              peak: peak,
-              label: label.format(day),
-              isToday: _key(day) == today,
-              accent: c.accentPurple,
+    final active = _active;
+    final readout = active == null
+        ? ''
+        : '${label.format(week[active])} \u2022 '
+              '${_duration(context, byDay[_key(week[active])] ?? 0)}';
+
+    return TapRegion(
+      onTapOutside: (_) {
+        if (_active != null) setState(() => _active = null);
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          //reserved so bars are not moving on pick
+          SizedBox(
+            height: 20,
+            child: Text(
+              readout,
+              style: TextStyle(
+                fontFamily: SonoFonts.primary,
+                fontSize: 13,
+                color: c.textSecondary,
+              ),
             ),
           ),
-      ],
+          const SizedBox(height: 6),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (var i = 0; i < week.length; i++)
+                Expanded(
+                  child: _bar(
+                    context,
+                    ms: byDay[_key(week[i])] ?? 0,
+                    peak: peak,
+                    label: label.format(week[i]),
+                    isToday: _key(week[i]) == today,
+                    isActive: _active == i,
+                    accent: c.accentPurple,
+                    onTap: () =>
+                        setState(() => _active = _active == i ? null : i),
+                    onHover: (over) => setState(
+                      () =>
+                          _active = over ? i : (_active == i ? null : _active),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -305,42 +344,60 @@ class _ListeningStatsCardState extends State<ListeningStatsCard> {
     required int peak,
     required String label,
     required bool isToday,
+    required bool isActive,
     required Color accent,
+    required VoidCallback onTap,
+    required ValueChanged<bool> onHover,
   }) {
     final c = context.sono;
     final fill = peak == 0 ? 0.0 : ms / peak;
     final height = _barMinHeight + (_barHeight - _barMinHeight) * fill;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: _barHeight,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: height,
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                color: ms == 0 ? c.borderLight20 : accent,
-                borderRadius: BorderRadius.circular(SonoSizes.borderRadiusSm),
+    return MouseRegion(
+      onEnter: (_) => onHover(true),
+      onExit: (_) => onHover(false),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: _barHeight,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 120),
+                  height: height,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? Color.lerp(accent, Colors.black, 0.25)
+                        : accent,
+                    borderRadius: BorderRadius.circular(
+                      SonoSizes.borderRadiusSm,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+            const SizedBox(height: 7),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+              style: TextStyle(
+                fontFamily: SonoFonts.primary,
+                fontSize: 11,
+                fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
+                color: isActive
+                    ? c.textPrimary
+                    : (isToday ? c.textSecondary : c.textTertiary),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 7),
-        Text(
-          label,
-          maxLines: 1,
-          overflow: TextOverflow.clip,
-          style: TextStyle(
-            fontFamily: SonoFonts.primary,
-            fontSize: 11,
-            fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
-            color: isToday ? c.textSecondary : c.textTertiary,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
