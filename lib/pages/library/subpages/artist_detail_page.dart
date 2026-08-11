@@ -35,6 +35,7 @@ import 'package:sono/widgets/header.dart';
 
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/artist_discography_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 const double _scrolledThreshold = 60;
@@ -277,8 +278,16 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     return [...favorited, ...rest].take(_albumRailLimit).toList();
   }
 
-  void _openDiscography() {
-    //TODO: discography page with filter chips
+  Future<void> _openDiscography() async {
+    final artist = _artist;
+    if (artist == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ArtistDiscographyPage(db: widget.db, artist: artist),
+      ),
+    );
+    if (!mounted) return;
+    await _reloadAlbums();
   }
 
   void _openAlbum(int albumId) async {
