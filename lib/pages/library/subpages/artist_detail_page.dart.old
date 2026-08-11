@@ -32,8 +32,6 @@ const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 const double _scrolledThreshold = 60;
 const double _heroCover = 200;
 
-const int _topSongLimit = 5;
-
 typedef _ArtistAlbumRow = ({
   int id,
   String title,
@@ -45,19 +43,6 @@ typedef _ArtistAlbumRow = ({
   DateTime? firstReleaseDate,
   String firstPath,
 });
-
-typedef _ArtistListening = ({
-  int totalMs,
-  int plays,
-  DateTime? firstAt,
-  DateTime? lastAt,
-});
-
-/// WIP ARTIST PAGE REDESIGN
-/// CHECK artist_detail_page.dart.old FOR THE OLD PAGE
-///
-/// TODO: remove once every section is built
-// ignore_for_file: unused_field, unused_element
 
 class ArtistDetailPage extends StatefulWidget {
   final SonoDatabase db;
@@ -74,14 +59,9 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   bool _scrolled = false;
 
   Artist? _artist;
-  String? _coverPath;
-  bool _favorited = false;
-
-  /// their own songs + collab songs (shuffle uses this)
-  List<Song>? _catalogue;
-  List<({Song song, int plays})>? _topSongs;
-  _ArtistListening? _listening;
+  List<Song>? _songs;
   List<_ArtistAlbumRow>? _albums;
+  bool _favorited = false;
 
   @override
   void initState() {
@@ -112,30 +92,15 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
         Navigator.of(context).pop();
         return;
       }
-
-      final coverPath = await widget.db.getArtistCoverPath(widget.artistId);
-      final catalogue = await widget.db.getArtistCatalogueSongs(
-        widget.artistId,
-      );
-      final topSongs = await widget.db.getTopSongsByArtist(
-        widget.artistId,
-        limit: _topSongLimit,
-      );
-      final listening = await widget.db.getArtistListeningSummary(
-        widget.artistId,
-      );
+      final songs = await widget.db.getSongsByArtist(widget.artistId);
       final albums = await widget.db.getArtistAlbumsWithMetadata(
         widget.artistId,
       );
       final favorited = await widget.db.getArtistFavorited(widget.artistId);
       if (!mounted) return;
-
       setState(() {
         _artist = artist;
-        _coverPath = coverPath;
-        _catalogue = catalogue;
-        _topSongs = topSongs;
-        _listening = listening;
+        _songs = songs;
         _albums = albums;
         _favorited = favorited;
       });
@@ -143,8 +108,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
       debugPrint('ArtistDetailPage._load failed: $e\n$st');
       if (!mounted) return;
       setState(() {
-        _catalogue = const [];
-        _topSongs = const [];
+        _songs = const [];
         _albums = const [];
       });
     }
@@ -153,27 +117,12 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   // ==== actions ====
   void _play({int index = 0, bool shuffle = false}) {
     final artist = _artist;
-    final songs = _catalogue;
+    final songs = _songs;
     if (artist == null || songs == null || songs.isEmpty) return;
     final ordered = shuffle ? (List<Song>.of(songs)..shuffle()) : songs;
     AudioService.instance.play(
       ordered,
       shuffle ? 0 : index,
-      origin: QueueOrigin(
-        source: QueueSource.artist,
-        label: artist.name,
-        refId: artist.id,
-      ),
-    );
-  }
-
-  /// A ranked song plays on its own, rail != queue
-  void _playSong(Song song) {
-    final artist = _artist;
-    if (artist == null) return;
-    AudioService.instance.play(
-      [song],
-      0,
       origin: QueueOrigin(
         source: QueueSource.artist,
         label: artist.name,
@@ -246,6 +195,8 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final artist = _artist;
+    final songs = _songs;
+    final albums = _albums;
 
     final scrolledActions = _scrolled
         ? <SonoHeaderAction>[
@@ -282,9 +233,11 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                 SliverToBoxAdapter(
                   child: _Hero(
                     artist: artist,
-                    coverPath: _coverPath ?? '',
-                    songCount: _catalogue?.length ?? 0,
-                    totalDurationMs: _totalDurationMs(_catalogue),
+                    coverPath: songs?.isNotEmpty == true
+                        ? songs!.first.path
+                        : '',
+                    songCount: songs?.length ?? 0,
+                    totalDurationMs: _totalDurationMs(songs),
                     favorited: _favorited,
                     onToggleFavorite: _toggleFavorited,
                     onOpenMore: _openMoreSheet,
@@ -293,23 +246,43 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                   ),
                 ),
 
-              // ==== your listening ====
-              // TODO: time, plays, first and last heard. hidden when never played
-
-              // ==== top songs ====
-              // TODO: numbered rows with play counts, hidden when never played
-
               // ==== albums ====
-              // TODO: rail, favourites promoted, full discography button
+              if (albums == null)
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (albums.isEmpty)
+                SliverToBoxAdapter(child: const SizedBox.shrink())
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  sliver: SliverGrid.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.78,
+                        ),
+                    itemCount: albums.length,
+                    itemBuilder: (context, i) {
+                      final a = albums[i];
+                      final type = inferAlbumType(
+                        songCount: a.songCount,
+                        distinctArtistCount: a.distinctArtistCount,
+                        totalDurationMs: a.totalDurationMs,
+                      );
+                      return _AlbumGridCard(
+                        album: a,
+                        type: type,
+                        onTap: () => _openAlbum(a.id),
+                        onLongPress: () => _openAlbumSheet(a),
+                      );
+                    },
+                  ),
+                ),
 
-              // ==== appears on ====
-              // TODO: album/songs/eps by others crediting this artist
-
-              // ==== related artists ====
-              // TODO: most frequent co-credits
-
-              // ==== playlist ====
-              // TODO: playlists containing this artist
               SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
             ],
           ),
