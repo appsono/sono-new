@@ -357,7 +357,7 @@ class SettingsSliderRow extends StatelessWidget {
 // ==== action row ====
 /// Centered group action
 ///
-/// USed for standalone actions without icon or chevron
+/// Used for standalone actions without icon or chevron
 class SettingsActionRow extends StatelessWidget {
   final String label;
   final bool destructive;
