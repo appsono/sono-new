@@ -398,6 +398,17 @@
     }
   },
 
+  "artistTopSongs": "Top songs",
+  "@artistTopSongs": {
+    "description": "Heading above the users most played songs by this artist."
+  },
+  "artistTopSongsPlays": "{count, plural, =1{1 play} other{{count} plays}}",
+  "@artistTopSongsPlays": {
+    "description": "How often the user played a song, shown at the end of each ranked row.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "artistListeningTime": "You've listened",
   "@artistListeningTime": {
     "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."

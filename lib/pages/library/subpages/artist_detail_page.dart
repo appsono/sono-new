@@ -10,24 +10,28 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:sono/l10n/localizations.dart';
-
 import 'package:sono/db/database.dart';
+
 import 'package:sono/helper/album_type.dart';
+import 'package:sono/utils/format_ms.dart';
+
 import 'package:sono/services/audio/audio_service.dart';
+
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
+
 import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/widgets/list_row.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/header.dart';
+
 import 'package:sono/pages/library/library_sheets.dart';
-import 'package:sono/utils/format_ms.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
@@ -184,6 +188,28 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     );
   }
 
+  Future<void> _openSongSheet(Song song) async {
+    final artist = _artist;
+    if (artist == null) return;
+    await LibrarySheets.openForSong(
+      context: context,
+      db: widget.db,
+      song: SongWithArtistViewData(
+        id: song.id,
+        path: song.path,
+        title: song.title,
+        duration: song.duration,
+        genre: song.genre,
+        releaseDate: song.releaseDate,
+        albumId: song.albumId,
+        artistId: song.artistId,
+        displayArtist: song.displayArtist,
+        likedAt: song.likedAt,
+        artistName: artist.name,
+      ),
+    );
+  }
+
   Future<void> _openAlbumSheet(_ArtistAlbumRow a) async {
     final artist = _artist;
     if (artist == null) return;
@@ -300,7 +326,14 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                 SliverToBoxAdapter(child: _Listening(summary: _listening!)),
 
               // ==== top songs ====
-              // TODO: numbered rows with play counts, hidden when never played
+              if (_topSongs != null && _topSongs!.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: _TopSongs(
+                    songs: _topSongs!,
+                    onTap: _playSong,
+                    onLongPress: _openSongSheet,
+                  ),
+                ),
 
               // ==== albums ====
               // TODO: rail, favourites promoted, full discography button
@@ -573,6 +606,83 @@ class _PlayAction extends StatelessWidget {
             color: c.textLight,
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ==== Ranked list ====
+class _TopSongs extends StatelessWidget {
+  final List<({Song song, int plays})> songs;
+  final ValueChanged<Song> onTap;
+  final ValueChanged<Song> onLongPress;
+
+  static const _rankWidth = 22.0;
+  static const _rankGap = 8.0;
+
+  const _TopSongs({
+    required this.songs,
+    required this.onTap,
+    required this.onLongPress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.artistTopSongs,
+            style: TextStyle(
+              fontFamily: SonoFonts.heading,
+              fontSize: 20,
+              color: c.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          for (var i = 0; i < songs.length; i++) ...[
+            if (i > 0) const SizedBox(height: 8),
+            Row(
+              children: [
+                SizedBox(
+                  width: _rankWidth,
+                  child: Text(
+                    '${i + 1}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: SonoFonts.heading,
+                      fontSize: 15,
+                      color: c.textTertiary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: _rankGap),
+                Expanded(
+                  child: SonoListRow(
+                    coverPath: songs[i].song.path,
+                    title: songs[i].song.title,
+                    subtitle: songs[i].song.displayArtist,
+                    trailing: Text(
+                      l.artistTopSongsPlays(songs[i].plays),
+                      style: TextStyle(
+                        fontFamily: SonoFonts.primary,
+                        fontSize: 12.5,
+                        color: c.textTertiary,
+                      ),
+                    ),
+                    onTap: () => onTap(songs[i].song),
+                    onLongPress: () => onLongPress(songs[i].song),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }
