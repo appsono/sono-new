@@ -753,5 +753,220 @@
     "settingsProfileStatsNone": "Nada ainda",
     "@settingsProfileStatsNone": {
         "description": "Placeholder where a top song or artist would go when there is none."
+    },
+    "settingsProfilePickBadImage": "esse arquivo aqui.. NÃO é uma imagem valida, hmph",
+    "@settingsProfilePickBadImage": {
+        "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
+    },
+    "settingsAppearanceSectionTheme": "Tema",
+    "@settingsAppearanceSectionTheme": {
+        "description": "Section label above the theme picker on the appearance subpage."
+    },
+    "settingsAppearanceThemeNote": "Segue a configuração de claro ou escuro no seu dispositivo, incluindo qualquer um que você selecionou aqui.",
+    "@settingsAppearanceThemeNote": {
+        "description": "Note under the theme picker explaining what the System option does. The schedule belongs to the operating system, not to Sono."
+    },
+    "settingsAppearanceSectionPlayer": "Reprodutor",
+    "@settingsAppearanceSectionPlayer": {
+        "description": "Section label above the player appearance options on the appearance subpage."
+    },
+    "settingsAppearanceSeeAll": "Ver tudo",
+    "@settingsAppearanceSeeAll": {
+        "description": "Label for the picker that chooses how the see all control on section headers is drawn."
+    },
+    "settingsAppearanceSeeAllButton": "Botão",
+    "@settingsAppearanceSeeAllButton": {
+        "description": "Option name for the see all control drawn as a filled circle with an arrow."
+    },
+    "settingsAppearanceSeeAllText": "Texto",
+    "@settingsAppearanceSeeAllText": {
+        "description": "Option name for the see all control drawn as a plain text label."
+    },
+    "settingsAppearanceSeeAllArrow": "Texto + seta",
+    "@settingsAppearanceSeeAllArrow": {
+        "description": "Option name for the see all control drawn as a text label followed by a chevron."
+    },
+    "settingsAppearanceHomeTint": "Tonalidade",
+    "@settingsAppearanceHomeTint": {
+        "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
+    },
+    "settingsAppearanceHomeTintSubtitle": "Mudar a tonalidade de acordo com a musica atual",
+    "@settingsAppearanceHomeTintSubtitle": {
+        "description": "Subtitle under the home tint row."
+    },
+    "settingsAppearanceColourFromArt": "Cor da capa do álbum",
+    "@settingsAppearanceColourFromArt": {
+        "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
+    },
+    "settingsAppearanceColourFromArtSubtitle": "Mudar as cores do reprodutor com cores dos covers",
+    "@settingsAppearanceColourFromArtSubtitle": {
+        "description": "Subtitle under the colour from album art row."
+    },
+    "settingsAppearanceBlurredBackdrops": "Borrar fundo",
+    "@settingsAppearanceBlurredBackdrops": {
+        "description": "Row that enables blurred cover backdrops behind the player. Currently marked as planned."
+    },
+    "settingsAppearanceBlurredBackdropsSubtitle": "Custa um pouco de bateria em dispositivos antigos",
+    "@settingsAppearanceBlurredBackdropsSubtitle": {
+        "description": "Subtitle under the blurred backdrops row, warning about the performance cost."
+    },
+    "settingsAppearanceReduceMotion": "Reduzir movimento",
+    "@settingsAppearanceReduceMotion": {
+        "description": "Row that disables animations across the app. Currently marked as planned."
+    },
+    "settingsAppearanceReduceMotionSubtitle": "Desliga os movimentos do aplicativo",
+    "@settingsAppearanceReduceMotionSubtitle": {
+        "description": "Subtitle under the reduce motion row."
+    },
+    "settingsAppearanceSectionLibrary": "Biblioteca",
+    "@settingsAppearanceSectionLibrary": {
+        "description": "Section label above the library appearance options on the appearance subpage."
+    },
+    "settingsAppearanceGridDensity": "Densidade da grade",
+    "@settingsAppearanceGridDensity": {
+        "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
+    },
+    "settingsAppearanceTrackNumbers": "Mostrar número das faixas",
+    "@settingsAppearanceTrackNumbers": {
+        "description": "Row toggling track numbers in album track lists. Currently marked as planned."
+    },
+    "settingsLanguageSearchHint": "Pesquisar idiomas",
+    "@settingsLanguageSearchHint": {
+        "description": "Placeholder inside the search field on the language subpage."
+    },
+    "settingsLanguageSystemSubtitle": "Atualmente {language}",
+    "@settingsLanguageSystemSubtitle": {
+        "description": "Subtitle under the system default option, naming the language the device settings currently resolve to. The language name is in its own language, e.g. Deutsch.",
+        "placeholders": {
+            "language": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLanguageSectionAvailable": "Disponivel",
+    "@settingsLanguageSectionAvailable": {
+        "description": "Section label above the list of translated languages on the language subpage."
+    },
+    "settingsLanguageNoMatches": "Nenhum idioma encontrado :/",
+    "@settingsLanguageNoMatches": {
+        "description": "Shown on the language subpage when the search field filters out every language."
+    },
+    "settingsLanguageHelpTranslate": "Ajudar a traduzir o Sono",
+    "@settingsLanguageHelpTranslate": {
+        "description": "Row that opens the Weblate project where translations are contributed."
+    },
+    "settingsLanguageHelpTranslateSubtitle": "Abrir Weblate no seu navegador",
+    "@settingsLanguageHelpTranslateSubtitle": {
+        "description": "Subtitle under the help translate row."
+    },
+    "settingsPlaybackSectionTransitions": "Transições",
+    "@settingsPlaybackSectionTransitions": {
+        "description": "Section label above gapless, crossfade and fade options on the playback subpage."
+    },
+    "settingsPlaybackGapless": "Reprodução sem interrupções",
+    "@settingsPlaybackGapless": {
+        "description": "Toggle that preloads the next track so it starts without a gap."
+    },
+    "settingsPlaybackGaplessSubtitle": "Pre Carregar a próxima música",
+    "@settingsPlaybackGaplessSubtitle": {
+        "description": "Subtitle under the gapless playback row."
+    },
+    "settingsPlaybackCrossfade": "Transição gradual",
+    "@settingsPlaybackCrossfade": {
+        "description": "Row for fading one song into the next. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPause": "Esmaecimento ao pausar",
+    "@settingsPlaybackFadeOnPause": {
+        "description": "Row for fading out on pause rather than cutting. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPauseSubtitle": "Esmaecer curto ao invés de um longo",
+    "@settingsPlaybackFadeOnPauseSubtitle": {
+        "description": "Subtitle under the fade on pause row."
+    },
+    "settingsPlaybackSectionSound": "Som",
+    "@settingsPlaybackSectionSound": {
+        "description": "Section label above the equalizer, normalisation and volume options on the playback subpage."
+    },
+    "settingsPlaybackNormalisation": "Normalizar Volume",
+    "@settingsPlaybackNormalisation": {
+        "description": "Row for evening out loudness between tracks using ReplayGain tags."
+    },
+    "settingsPlaybackVolume": "Volume do aplicativo",
+    "@settingsPlaybackVolume": {
+        "description": "Slider controlling Sono's own output volume, separate from the device volume."
+    },
+    "settingsPlaybackVolumeValue": "{value}%",
+    "@settingsPlaybackVolumeValue": {
+        "description": "Value shown next to the in-app volume slider.",
+        "placeholders": {
+            "value": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsPlaybackSectionBehaviour": "Comportamento",
+    "@settingsPlaybackSectionBehaviour": {
+        "description": "Section label above the sleep timer and headphone options on the playback subpage."
+    },
+    "settingsPlaybackSleepTimer": "Temporizador para dormir",
+    "@settingsPlaybackSleepTimer": {
+        "description": "Row on the playback subpage that opens the sleep timer sheet."
+    },
+    "settingsPlaybackSleepTimerOff": "Desligado",
+    "@settingsPlaybackSleepTimerOff": {
+        "description": "Value shown next to the sleep timer row when no timer is running."
+    },
+    "settingsPlaybackResumeOnConnect": "Reproduzir quando conectado",
+    "@settingsPlaybackResumeOnConnect": {
+        "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+    },
+    "settingsPlaybackPauseOnDisconnect": "Pausar quando desconectado",
+    "@settingsPlaybackPauseOnDisconnect": {
+        "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+    },
+    "normalisationSectionMode": "Modo",
+    "@normalisationSectionMode": {
+        "description": "Section label above the normalisation mode options."
+    },
+    "normalisationSectionTuning": "Sintonia",
+    "@normalisationSectionTuning": {
+        "description": "Section label above the preamp and clipping options."
+    },
+    "normalisationResetTooltip": "Resetar normalização",
+    "@normalisationResetTooltip": {
+        "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
+    },
+    "normalisationOff": "Desligado",
+    "@normalisationOff": {
+        "description": "Normalisation mode that applies no gain."
+    },
+    "normalisationTrack": "Por música",
+    "@normalisationTrack": {
+        "description": "Normalisation mode that brings every song to the same loudness."
+    },
+    "normalisationTrackSubtitle": "Toda música no mesmo volume",
+    "@normalisationTrackSubtitle": {
+        "description": "Subtitle of the per track normalisation option."
+    },
+    "normalisationAlbum": "Por álbum",
+    "@normalisationAlbum": {
+        "description": "Normalisation mode that normalises whole albums as one unit."
+    },
+    "normalisationAlbumSubtitle": "Deixar as diferenças de barulho dentro de um álbum",
+    "@normalisationAlbumSubtitle": {
+        "description": "Subtitle of the per album normalisation option."
+    },
+    "normalisationPreamp": "Pré-amplificador",
+    "@normalisationPreamp": {
+        "description": "Slider for extra gain applied on top of the ReplayGain value."
+    },
+    "normalisationPreampValue": "{db} dB",
+    "@normalisationPreampValue": {
+        "description": "Value shown next to the preamp slider, in decibels.",
+        "placeholders": {
+            "db": {
+                "type": "String"
+            }
+        }
     }
 }
