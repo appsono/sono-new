@@ -156,6 +156,20 @@ class PlaylistSongs extends Table {
   Set<Column> get primaryKey => {playlistId, songId};
 }
 
+/// Artists credited on a song (parsed order)
+///
+/// [position] is 0 for primary artist
+class SongArtists extends Table {
+  IntColumn get songId =>
+      integer().references(Songs, #id, onDelete: KeyAction.cascade)();
+  IntColumn get artistId =>
+      integer().references(Artists, #id, onDelete: KeyAction.cascade)();
+  IntColumn get position => integer()();
+
+  @override
+  Set<Column> get primaryKey => {songId, artistId};
+}
+
 /// Listening history
 /// > metadata copied in so it doesn't get deleted
 /// > songID is a soft link, null once song gone

@@ -33,6 +33,7 @@ part 'database.g.dart';
     Playlists,
     PlaylistSongs,
     Plays,
+    SongArtists,
     LegacySettings,
   ],
   views: [SongWithArtistView, AlbumWithArtistView],
@@ -42,7 +43,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 19;
+  int get schemaVersion => 20;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -147,8 +148,20 @@ class SonoDatabase extends _$SonoDatabase {
           'CREATE INDEX IF NOT EXISTS plays_song_id ON plays (song_id)',
         );
       }
+      if (from < 20) {
+        await m.createTable(songArtists);
+        await customStatement(
+          'CREATE INDEX IF NOT EXISTS song_artists_artist_id '
+          'ON song_artists (artist_id)',
+        );
+        //existing songs have no credit, full rescan to fill
+        await customStatement(
+          'INSERT OR REPLACE INTO settings (setting_key, value) '
+          "VALUES ('$forceRescanKey', '1')",
+        );
+      }
       //future migrations go here:
-      // if (from < 20) { .. }
+      // if (from < 21) { .. }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -1029,6 +1042,16 @@ class SonoDatabase extends _$SonoDatabase {
   /// ==== Settings ====
   ///
   ///
+
+  /// Set by a migration when stored data can only be rebuilt by a full scan
+  static const forceRescanKey = 'system.force_rescan';
+
+  Future<bool> takeForceRescan() async {
+    if (await getSetting(forceRescanKey) != '1') return false;
+    await removeSetting(forceRescanKey);
+    return true;
+  }
+
   Future<String?> getSetting(String key) async {
     final row = await (select(
       settings,
@@ -1399,6 +1422,28 @@ class SonoDatabase extends _$SonoDatabase {
       await batch((b) => b.insertAll(playlistSongs, rows));
     }
     return playlistId;
+  }
+
+  ///
+  ///
+  /// ==== Song artists ====
+  ///
+  /// Replaces the credited artists of every song in [artistIdsById]
+  /// > order of each list becomes position: 0 == primary
+  Future<void> replaceSongArtists(Map<int, List<int>> artistIdsBySong) async {
+    if (artistIdsBySong.isEmpty) return;
+    await batch((b) {
+      b.deleteWhere(songArtists, (t) => t.songId.isIn(artistIdsBySong.keys));
+      b.insertAll(songArtists, [
+        for (final entry in artistIdsBySong.entries)
+          for (var i = 0; i < entry.value.length; i++)
+            SongArtistsCompanion.insert(
+              songId: entry.key,
+              artistId: entry.value[i],
+              position: i,
+            ),
+      ]);
+    });
   }
 
   ///

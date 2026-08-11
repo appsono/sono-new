@@ -158,13 +158,14 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
 
   Future<void> _checkPermissionAndScan({bool force = false}) async {
     if (Platform.isAndroid && !await _ensureMediaPermission()) return;
+    final forced = force || await widget.db.takeForceRescan();
     final config = await ScanSettings(widget.db).load();
     final grouping = await ScanSettings(widget.db).loadAlbumGrouping();
     try {
       await ScanService(widget.db).scan(
         config: config,
         grouping: grouping,
-        force: force,
+        force: forced,
         onProgress: (progress) {
           final now = DateTime.now();
           if (now.difference(_lastProgressPush).inMilliseconds < 120) return;
