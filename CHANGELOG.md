@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed a media button receiver pointing at a library that is not bundled
   with the app, which could fail when headset buttons were pressed
+- Artists who only ever appear as a feature are no longer removed at the end
+  of a scan
 
 ### Removed
 
@@ -66,6 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Play rows copy title, artist and album in, so history survives a rescan
 - `PlayRules` decides whether a play counts at query time, mirroring last.fm
 - Backup format version is now 3
+- Added a `song_artists` table linking every credited artist, so top artist
+  counts features. Migration flags a rescan to fill it
 
 ### Translation
 
