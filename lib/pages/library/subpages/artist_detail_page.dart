@@ -25,6 +25,7 @@ import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 
+import 'package:sono/widgets/album_card.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/list_row.dart';
@@ -367,15 +368,18 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                     onSeeAll: _openDiscography,
                     children: [
                       for (final a in _railAlbums)
-                        _AlbumCard(
-                          album: a,
-                          type: inferAlbumType(
-                            songCount: a.songCount,
-                            distinctArtistCount: a.distinctArtistCount,
-                            totalDurationMs: a.totalDurationMs,
+                        SizedBox(
+                          width: _albumCard,
+                          child: SonoAlbumCard(
+                            album: a,
+                            type: inferAlbumType(
+                              songCount: a.songCount,
+                              distinctArtistCount: a.distinctArtistCount,
+                              totalDurationMs: a.totalDurationMs,
+                            ),
+                            onTap: () => _openAlbum(a.id),
+                            onLongPress: () => _openAlbumSheet(a),
                           ),
-                          onTap: () => _openAlbum(a.id),
-                          onLongPress: () => _openAlbumSheet(a),
                         ),
                     ],
                   ),
@@ -500,92 +504,6 @@ class _Hero extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _AlbumCard extends StatelessWidget {
-  final _ArtistAlbumRow album;
-  final AlbumType type;
-  final VoidCallback onTap;
-  final VoidCallback onLongPress;
-
-  const _AlbumCard({
-    required this.album,
-    required this.type,
-    required this.onTap,
-    required this.onLongPress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sono;
-    final l = AppLocalizations.of(context);
-
-    final shownTitle = album.displayTitle?.isNotEmpty == true
-        ? album.displayTitle!
-        : album.title;
-    final year = album.firstReleaseDate?.year.toString();
-    final metaParts = <String>[?year, type.label(l)];
-
-    return GestureDetector(
-      onLongPress: onLongPress,
-      behavior: HitTestBehavior.opaque,
-      child: BouncyTap(
-        onTap: onTap,
-        child: SizedBox(
-          width: _albumCard,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SonoCoverArt(
-                path: album.firstPath,
-                size: _albumCard,
-                borderRadius: SonoSizes.borderRadiusLg,
-                bordered: true,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                shownTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: SonoFonts.heading,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: c.textPrimary,
-                  height: 1.2,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  if (album.favoritedAt != null) ...[
-                    IconsSheet.svg(
-                      IconsSheet.favoriteAlbumFilled,
-                      size: 11,
-                      color: c.primary,
-                    ),
-                    const SizedBox(width: 4),
-                  ],
-                  Flexible(
-                    child: Text(
-                      metaParts.join(' • '),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: SonoFonts.primary,
-                        fontSize: 12,
-                        color: c.textSecondary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
