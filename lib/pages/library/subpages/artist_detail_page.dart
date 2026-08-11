@@ -10,7 +10,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:sono/l10n/localizations.dart';
 
@@ -294,7 +296,8 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                 ),
 
               // ==== your listening ====
-              // TODO: time, plays, first and last heard. hidden when never played
+              if (_listening != null && _listening!.plays > 0)
+                SliverToBoxAdapter(child: _Listening(summary: _listening!)),
 
               // ==== top songs ====
               // TODO: numbered rows with play counts, hidden when never played
@@ -570,6 +573,83 @@ class _PlayAction extends StatelessWidget {
             color: c.textLight,
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// ==== Compact strip ====
+class _Listening extends StatelessWidget {
+  final _ArtistListening summary;
+
+  const _Listening({required this.summary});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final firstAt = summary.firstAt;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 22),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _ListeningStat(
+            label: l.artistListeningTime,
+            value: fmtMsCompact(summary.totalMs, l),
+          ),
+          _ListeningStat(
+            label: l.artistListeningPlays,
+            value: '${summary.plays}',
+          ),
+          if (firstAt != null)
+            _ListeningStat(
+              label: l.artistListeningFirstHeard,
+              value: DateFormat.yMMM(
+                Localizations.localeOf(context).toString(),
+              ).format(firstAt),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ListeningStat extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _ListeningStat({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: SonoFonts.primary,
+              fontSize: 11.5,
+              color: c.textTertiary,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: SonoFonts.heading,
+              fontSize: 16,
+              color: c.textPrimary,
+            ),
+          ),
+        ],
       ),
     );
   }

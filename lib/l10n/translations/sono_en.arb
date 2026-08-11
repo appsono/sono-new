@@ -398,6 +398,19 @@
     }
   },
 
+  "artistListeningTime": "You've listened",
+  "@artistListeningTime": {
+    "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
+  },
+  "artistListeningPlays": "Plays",
+  "@artistListeningPlays": {
+    "description": "Label above how many songs by this artist the user has played."
+  },
+  "artistListeningFirstHeard": "First heard",
+  "@artistListeningFirstHeard": {
+    "description": "Label above the date the user first played this artist."
+  },
+
   "albumTypeAlbum": "Album",
   "@albumTypeAlbum": {
     "description": "Type label for a standard album shown on the artist detail page."
