@@ -257,7 +257,8 @@ class SonoDatabase extends _$SonoDatabase {
   Future<void> removeOrphanedArtists() async {
     await customStatement(
       'DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artist_id FROM songs WHERE artist_id IS NOT NULL) '
-      'AND id NOT IN (SELECT DISTINCT artist_id FROM albums)',
+      'AND id NOT IN (SELECT DISTINCT artist_id FROM albums) '
+      'AND id NOT IN (SELECT DISTINCT artist_id FROM song_artists)',
     );
   }
 
