@@ -190,6 +190,16 @@ class SonoDatabase extends _$SonoDatabase {
     };
   }
 
+  /// Cover sourc for one artist
+  Future<String?> getArtistCoverPath(int artistId) async {
+    final row = await customSelect(
+      'SELECT MIN(path) AS path FROM songs WHERE artist_id = ?',
+      variables: [Variable.withInt(artistId)],
+      readsFrom: {songs},
+    ).getSingle();
+    return row.read<String?>('path');
+  }
+
   /// Total number of artists in library
   Future<int> countArtists() async {
     final exp = artists.id.count();

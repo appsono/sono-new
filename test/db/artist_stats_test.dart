@@ -15,8 +15,9 @@ void main() {
     List<int> credits, {
     int? albumId,
     int? primaryId,
+    String? at,
   }) async {
-    final path = '/music/${++seq}.mp3';
+    final path = at ?? '/music/${++seq}.mp3';
     await db.insertSong(
       SongsCompanion.insert(
         path: path,
@@ -77,6 +78,29 @@ void main() {
       await addSong('Loose', [ye]);
 
       expect(await db.getCollabAlbumIds(ye), isEmpty);
+    });
+  });
+
+  group('getArtistCoverPath', () {
+    test('is the alphabetically first path they are primary on', () async {
+      final ye = await artist('Ye');
+      await addSong('Later', [ye], primaryId: ye, at: '/music/zzz.mp3');
+      await addSong('Earlier', [ye], primaryId: ye, at: '/music/aaa.mp3');
+
+      expect(await db.getArtistCoverPath(ye), '/music/aaa.mp3');
+    });
+
+    test('guest spots are not used as the cover', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      await addSong('Feature', [nas, ye], primaryId: nas, at: '/music/aaa.mp3');
+      await addSong('Runaway', [ye], primaryId: ye, at: '/music/bbb.mp3');
+
+      expect(await db.getArtistCoverPath(ye), '/music/bbb.mp3');
+    });
+
+    test('is null for an artist with no songs', () async {
+      expect(await db.getArtistCoverPath(await artist('Nobody')), isNull);
     });
   });
 
