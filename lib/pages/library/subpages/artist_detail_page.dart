@@ -29,6 +29,7 @@ import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/list_row.dart';
 import 'package:sono/widgets/mini_player.dart';
+import 'package:sono/widgets/section.dart';
 import 'package:sono/widgets/header.dart';
 
 import 'package:sono/pages/library/library_sheets.dart';
@@ -39,6 +40,9 @@ const double _scrolledThreshold = 60;
 const double _heroCover = 200;
 
 const int _topSongLimit = 5;
+const int _albumRailLimit = 10;
+const double _albumCard = 150;
+const double _albumExtent = 196;
 
 typedef _ArtistAlbumRow = ({
   int id,
@@ -258,6 +262,24 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     setState(() => _favorited = favorited);
   }
 
+  /// Favourites first, query already sorts by release then title
+  List<_ArtistAlbumRow> get _railAlbums {
+    final albums = _albums ?? const <_ArtistAlbumRow>[];
+    final favorited = [
+      for (final a in albums)
+        if (a.favoritedAt != null) a,
+    ];
+    final rest = [
+      for (final a in albums)
+        if (a.favoritedAt == null) a,
+    ];
+    return [...favorited, ...rest].take(_albumRailLimit).toList();
+  }
+
+  void _openDiscography() {
+    //TODO: discography page with filter chips
+  }
+
   void _openAlbum(int albumId) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -336,7 +358,28 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                 ),
 
               // ==== albums ====
-              // TODO: rail, favourites promoted, full discography button
+              if (_albums != null && _albums!.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.homeSectionAlbums,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: _albumExtent,
+                    onSeeAll: _openDiscography,
+                    children: [
+                      for (final a in _railAlbums)
+                        _AlbumCard(
+                          album: a,
+                          type: inferAlbumType(
+                            songCount: a.songCount,
+                            distinctArtistCount: a.distinctArtistCount,
+                            totalDurationMs: a.totalDurationMs,
+                          ),
+                          onTap: () => _openAlbum(a.id),
+                          onLongPress: () => _openAlbumSheet(a),
+                        ),
+                    ],
+                  ),
+                ),
 
               // ==== appears on ====
               // TODO: album/songs/eps by others crediting this artist
@@ -462,13 +505,13 @@ class _Hero extends StatelessWidget {
   }
 }
 
-class _AlbumGridCard extends StatelessWidget {
+class _AlbumCard extends StatelessWidget {
   final _ArtistAlbumRow album;
   final AlbumType type;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
 
-  const _AlbumGridCard({
+  const _AlbumCard({
     required this.album,
     required this.type,
     required this.onTap,
@@ -485,72 +528,63 @@ class _AlbumGridCard extends StatelessWidget {
         : album.title;
     final year = album.firstReleaseDate?.year.toString();
     final metaParts = <String>[?year, type.label(l)];
-    final isFavorited = album.favoritedAt != null;
 
     return GestureDetector(
       onLongPress: onLongPress,
       behavior: HitTestBehavior.opaque,
       child: BouncyTap(
         onTap: onTap,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    SonoCoverArt(
-                      path: album.firstPath,
-                      size: constraints.maxWidth,
-                      borderRadius: SonoSizes.borderRadiusLg,
-                      bordered: true,
+        child: SizedBox(
+          width: _albumCard,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SonoCoverArt(
+                path: album.firstPath,
+                size: _albumCard,
+                borderRadius: SonoSizes.borderRadiusLg,
+                bordered: true,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                shownTitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: SonoFonts.heading,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: c.textPrimary,
+                  height: 1.2,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Row(
+                children: [
+                  if (album.favoritedAt != null) ...[
+                    IconsSheet.svg(
+                      IconsSheet.favoriteAlbumFilled,
+                      size: 11,
+                      color: c.primary,
                     ),
-                    if (isFavorited)
-                      Positioned(
-                        top: 6,
-                        right: 6,
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.55),
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconsSheet.svg(
-                            IconsSheet.favoriteAlbumFilled,
-                            size: 14,
-                            color: c.primary,
-                          ),
-                        ),
-                      ),
+                    const SizedBox(width: 4),
                   ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  shownTitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: SonoFonts.heading,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: c.textPrimary,
-                    height: 1.2,
+                  Flexible(
+                    child: Text(
+                      metaParts.join(' • '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: SonoFonts.primary,
+                        fontSize: 12,
+                        color: c.textSecondary,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  metaParts.join(' • '),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: SonoFonts.primary,
-                    fontSize: 12,
-                    color: c.textSecondary,
-                  ),
-                ),
-              ],
-            );
-          },
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
