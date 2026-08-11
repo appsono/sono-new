@@ -15,13 +15,23 @@ void main() {
     return (await db.getSongIdsByPaths([path]))[path]!;
   }
 
+  /// Song plus credited artists
+  Future<int> addCredited(String title, List<String> artists) async {
+    final songId = await addSong(title);
+    final ids = [for (final name in artists) await db.getOrCreateArtist(name)];
+    await db.replaceSongArtists({songId: ids});
+    return songId;
+  }
+
   Future<void> addPlay({
+    int? songId,
     String title = 'Song',
     String? artist,
     int? durationMs = 180000,
     required int playedMs,
     DateTime? startedAt,
   }) => db.recordPlay(
+    songId: songId,
     title: title,
     artist: artist,
     durationMs: durationMs,
@@ -133,43 +143,68 @@ void main() {
 
   group('getTopArtist', () {
     test('is null with no qualifying plays', () async {
-      await addPlay(artist: 'Kanye West', playedMs: 6000);
+      final id = await addCredited('Song', ['Kanye West']);
+      await addPlay(songId: id, playedMs: 6000);
+
       expect(await db.getTopArtist(epoch), isNull);
     });
 
     test('counts across different songs', () async {
-      await addPlay(title: 'Guilt Trip', artist: 'Kanye West', playedMs: 90000);
-      await addPlay(title: 'Bound 2', artist: 'Kanye West', playedMs: 90000);
-      await addPlay(
-        title: 'Alright',
-        artist: 'Kendrick Lamar',
-        playedMs: 90000,
-      );
+      final guilt = await addCredited('Guilt Trip', ['Kanye West']);
+      final bound = await addCredited('Bound 2', ['Kanye West']);
+      final alright = await addCredited('Alright', ['Kendrick Lamar']);
+      for (final id in [guilt, bound, alright]) {
+        await addPlay(songId: id, playedMs: 90000);
+      }
 
       final top = await db.getTopArtist(epoch);
       expect(top?.artist, 'Kanye West');
       expect(top?.plays, 2);
     });
 
-    test('untagged plays never win', () async {
-      await addPlay(playedMs: 90000);
-      await addPlay(playedMs: 90000);
-      await addPlay(artist: '', playedMs: 90000);
-      await addPlay(artist: 'MF DOOM', playedMs: 90000);
+    test('a featured artist is credited too', () async {
+      final solo = await addCredited('Runaway', ['Ye']);
+      final feat = await addCredited('Still Dreaming', [
+        'Nas',
+        'Ye',
+        'Chrisette Michele',
+      ]);
+      await addPlay(songId: solo, playedMs: 90000);
+      await addPlay(songId: feat, playedMs: 90000);
+
+      final top = await db.getTopArtist(epoch);
+      expect(top?.artist, 'Ye');
+      expect(top?.plays, 2);
+    });
+
+    test('songs with no credited artist are left out', () async {
+      final bare = await addSong('Untagged');
+      final tagged = await addCredited('Tagged', ['MF DOOM']);
+      await addPlay(songId: bare, playedMs: 90000);
+      await addPlay(songId: bare, playedMs: 90000);
+      await addPlay(songId: tagged, playedMs: 90000);
 
       final top = await db.getTopArtist(epoch);
       expect(top?.artist, 'MF DOOM');
       expect(top?.plays, 1);
     });
 
+    test('history whose song is gone is not credited', () async {
+      await addPlay(title: 'Deleted', artist: 'Ghost', playedMs: 90000);
+
+      expect(await db.getTopArtist(epoch), isNull);
+    });
+
     test('rows before the window are excluded', () async {
+      final old = await addCredited('Old', ['Old']);
+      final recent = await addCredited('New', ['New']);
       await addPlay(
-        artist: 'Old',
+        songId: old,
         playedMs: 90000,
         startedAt: DateTime(2026, 5, 1),
       );
       await addPlay(
-        artist: 'New',
+        songId: recent,
         playedMs: 90000,
         startedAt: DateTime(2026, 7, 1),
       );
