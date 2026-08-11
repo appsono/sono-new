@@ -398,6 +398,10 @@
     }
   },
 
+  "artistFullDiscography": "Full discography",
+  "@artistFullDiscography": {
+    "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
+  },
   "artistTopSongs": "Top songs",
   "@artistTopSongs": {
     "description": "Heading above the users most played songs by this artist."
