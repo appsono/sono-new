@@ -615,5 +615,143 @@
     "settingsPlayback": "Reprodução",
     "@settingsPlayback": {
         "description": "Label of the row opening the playback subpage, and the title of that subpage."
+    },
+    "settingsEqualizer": "Equalizador & efeitos",
+    "@settingsEqualizer": {
+        "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
+    },
+    "settingsEqualizerOff": "Desligado",
+    "@settingsEqualizerOff": {
+        "description": "Value on the equalizer row when the equalizer is disabled."
+    },
+    "settingsLibrary": "Biblioteca & varredura",
+    "@settingsLibrary": {
+        "description": "Label of the row opening the library subpage, and the title of that subpage."
+    },
+    "settingsDiscord": "Aparecer no discord",
+    "@settingsDiscord": {
+        "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
+    },
+    "settingsDiscordDisconnected": "Não conectado",
+    "@settingsDiscordDisconnected": {
+        "description": "Value on the Discord row when no Discord account is linked."
+    },
+    "settingsBackup": "Backup & restauração",
+    "@settingsBackup": {
+        "description": "Label of the row opening the backup subpage, and the title of that subpage."
+    },
+    "settingsStorage": "Armazenamento",
+    "@settingsStorage": {
+        "description": "Label of the storage row. Currently marked as planned."
+    },
+    "settingsUpdates": "Atualizações",
+    "@settingsUpdates": {
+        "description": "Label of the row that checks for a newer release. Its value is the installed version."
+    },
+    "settingsUpdatesViaPlay": "Gerenciado",
+    "@settingsUpdatesViaPlay": {
+        "description": "Value on the Updates row for Play builds, which open the store listing instead of checking GitHub."
+    },
+    "settingsAbout": "Sobre o Sono",
+    "@settingsAbout": {
+        "description": "Label of the row opening the about subpage, and the title of that subpage."
+    },
+    "settingsVersionLine": "Sono {version} • Versão{build}",
+    "@settingsVersionLine": {
+        "description": "First footnote line at the bottom of the settings root, showing the installed version and build number.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLicenseLine": "Software gratuito sob a GPL-3.0",
+    "@settingsLicenseLine": {
+        "description": "Second footnote line at the bottom of the settings root."
+    },
+    "settingsProfileTitle": "Perfil",
+    "@settingsProfileTitle": {
+        "description": "Title of the profile subpage in settings."
+    },
+    "settingsProfileName": "Nome",
+    "@settingsProfileName": {
+        "description": "Label of the row showing the display name, and the label of the text field in the rename sheet."
+    },
+    "settingsProfileNameUnset": "Não definido",
+    "@settingsProfileNameUnset": {
+        "description": "Value on the name row when no display name has been chosen yet."
+    },
+    "settingsProfileNameSheetTitle": "Seu nome",
+    "@settingsProfileNameSheetTitle": {
+        "description": "Title of the sheet for editing the display name. This name appears in the greeting on the home page."
+    },
+    "settingsProfilePhotoHint": "Aperte na foto para alterar",
+    "@settingsProfilePhotoHint": {
+        "description": "Caption under the large avatar on the profile subpage, explaining that tapping it opens the image picker."
+    },
+    "settingsProfileRemovePhoto": "Remover foto",
+    "@settingsProfileRemovePhoto": {
+        "description": "Row that clears the profile picture. Only shown when a picture is set."
+    },
+    "settingsProfileStats": "Estatística",
+    "@settingsProfileStats": {
+        "description": "Row for play counts and listening history."
+    },
+    "settingsProfileStatsWindow": "Essa semana",
+    "@settingsProfileStatsWindow": {
+        "description": "Subtitle under the stats card title, naming the window every number covers. Monday to Sunday of the current week."
+    },
+    "settingsProfileStatsPlays": "Total de plays",
+    "@settingsProfileStatsPlays": {
+        "description": "Label above the number of songs played."
+    },
+    "settingsProfileStatsTopArtist": "Mais escutado",
+    "@settingsProfileStatsTopArtist": {
+        "description": "Label above the most played artist."
+    },
+    "settingsProfileStatsTopSong": "Mais escutado",
+    "@settingsProfileStatsTopSong": {
+        "description": "Label above the most played song."
+    },
+    "settingsProfileStatsPlayCount": "{count, plural, =1{1 reprodução} other{{count} plays}}",
+    "@settingsProfileStatsPlayCount": {
+        "description": "How often the top song or artist was played, shown after the name.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsHoursMinutes": "{hours} h {minutes} m",
+    "@settingsProfileStatsHoursMinutes": {
+        "description": "Listening time of an hour or more. Minutes are zero padded.",
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsMinutes": "{minutes} m",
+    "@settingsProfileStatsMinutes": {
+        "description": "Listening time under an hour.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsEmpty": "Nada aqui ainda. Escute algo para preencher este espaço.",
+    "@settingsProfileStatsEmpty": {
+        "description": "Shown in place of the numbers when nothing was played this week."
+    },
+    "settingsProfileStatsNone": "Nada ainda",
+    "@settingsProfileStatsNone": {
+        "description": "Placeholder where a top song or artist would go when there is none."
     }
 }
