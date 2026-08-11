@@ -549,22 +549,21 @@ class SonoDatabase extends _$SonoDatabase {
 
   /// Albums by an artist with aggregate metadata for artist detail grid
   /// Sorted newest release first; undated albums last
-  Future<
-    List<
-      ({
-        int id,
-        String title,
-        String? displayTitle,
-        DateTime? favoritedAt,
-        int songCount,
-        int distinctArtistCount,
-        int totalDurationMs,
-        DateTime? firstReleaseDate,
-        String firstPath,
-      })
-    >
-  >
-  getArtistAlbumsWithMetadata(int artistId) async {
+  Future<List<AlbumMetadataRow>> getArtistAlbumsWithMetadata(int artistId) =>
+      _albumsWithMetadata(albums.artistId.equals(artistId));
+
+  /// Same rows for an explicit set, ids that no longer exist are skipped
+  Future<List<AlbumMetadataRow>> getAlbumsWithMetadataByIds(
+    List<int> ids,
+  ) async {
+    if (ids.isEmpty) return const [];
+    return _albumsWithMetadata(albums.id.isIn(ids));
+  }
+
+  /// Newest first, albums without a release date last, then by title
+  Future<List<AlbumMetadataRow>> _albumsWithMetadata(
+    Expression<bool> filter,
+  ) async {
     final songCountExp = songs.id.count();
     final distinctArtistExp = songs.artistId.count(distinct: true);
     final totalDurationExp = songs.duration.sum();
@@ -586,7 +585,7 @@ class SonoDatabase extends _$SonoDatabase {
             firstReleaseExp,
             firstPathExp,
           ])
-          ..where(albums.artistId.equals(artistId))
+          ..where(filter)
           ..groupBy([albums.id])
           ..orderBy([
             OrderingTerm(
@@ -1790,6 +1789,18 @@ typedef PlayBackupRow = ({
   int? durationMs,
   DateTime startedAt,
   int playedMs,
+});
+
+typedef AlbumMetadataRow = ({
+  int id,
+  String title,
+  String? displayTitle,
+  DateTime? favoritedAt,
+  int songCount,
+  int distinctArtistCount,
+  int totalDurationMs,
+  DateTime? firstReleaseDate,
+  String firstPath,
 });
 
 extension AlbumDisplayTitle on Album {

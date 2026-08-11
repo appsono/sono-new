@@ -306,4 +306,43 @@ void main() {
       expect((await db.getArtistListeningSummary(ye)).plays, 1);
     });
   });
+
+  group('getAlbumsWithMetadataByIds', () {
+    test('is empty for an empty list', () async {
+      expect(await db.getAlbumsWithMetadataByIds([]), isEmpty);
+    });
+
+    test('returns the requested albums with their metadata', () async {
+      final ye = await artist('Ye');
+      final wanted = await db.getOrCreateAlbum('Wanted', ye, null);
+      final other = await db.getOrCreateAlbum('Other', ye, null);
+      await addSong('One', [ye], albumId: wanted);
+      await addSong('Two', [ye], albumId: wanted);
+      await addSong('Three', [ye], albumId: other);
+
+      final rows = await db.getAlbumsWithMetadataByIds([wanted]);
+      expect(rows.single.id, wanted);
+      expect(rows.single.title, 'Wanted');
+      expect(rows.single.songCount, 2);
+    });
+
+    test('ids that do not exist are skipped', () async {
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Real', ye, null);
+      await addSong('One', [ye], albumId: album);
+
+      final rows = await db.getAlbumsWithMetadataByIds([album, 9999]);
+      expect(rows.length, 1);
+    });
+
+    test('albums by other artists are still returned', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Life Is Good', nas, null);
+      await addSong('Still Dreaming', [nas, ye], albumId: album);
+
+      final rows = await db.getAlbumsWithMetadataByIds([album]);
+      expect(rows.single.title, 'Life Is Good');
+    });
+  });
 }
