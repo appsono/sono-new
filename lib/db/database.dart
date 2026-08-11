@@ -1500,7 +1500,7 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
-  /// SQL twin of PlayRules.counts
+  /// SQL twin of PlayRules.counts, usable with or without joins
   static const _countsAsPlay =
       'duration_ms > ${PlayRules.minSongMs} AND '
       'played_ms >= MIN(duration_ms / 2, ${PlayRules.cutoffMs})';
@@ -1538,6 +1538,22 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
+  /// Every credited artist gets play, not just primaty
+  /// > history whose song is gone cannot be credited, it only has the tag
+  Future<({String artist, int plays})?> getTopArtist(DateTime since) async {
+    final row = await customSelect(
+      'SELECT a.name AS artist, COUNT(*) AS plays FROM plays p '
+      'JOIN song_artists sa ON sa.song_id = p.song_id '
+      'JOIN artists a ON a.id = sa.artist_id '
+      'WHERE p.started_at >= ? AND $_countsAsPlay '
+      'GROUP BY a.id ORDER BY plays DESC, a.name ASC LIMIT 1',
+      variables: [Variable.withInt(_epoch(since))],
+      readsFrom: {plays},
+    ).getSingleOrNull();
+    if (row == null) return null;
+    return (artist: row.read<String>('artist'), plays: row.read<int>('plays'));
+  }
+
   /// Distinct song by the most recent qualifiying play
   Future<List<SongWithArtistViewData>> getRecentlyPlayedSongs(int limit) async {
     final rows = await customSelect(
@@ -1559,20 +1575,6 @@ class SonoDatabase extends _$SonoDatabase {
       for (final id in ids)
         if (byId[id] != null) byId[id]!,
     ];
-  }
-
-  /// Songs with no artist tag left out
-  Future<({String artist, int plays})?> getTopArtist(DateTime since) async {
-    final row = await customSelect(
-      'SELECT artist, COUNT(*) AS plays FROM plays '
-      'WHERE started_at >= ? AND artist IS NOT NULL AND artist != \'\' '
-      'AND $_countsAsPlay '
-      'GROUP BY artist ORDER BY plays DESC, artist ASC LIMIT 1',
-      variables: [Variable.withInt(_epoch(since))],
-      readsFrom: {plays},
-    ).getSingleOrNull();
-    if (row == null) return null;
-    return (artist: row.read<String>('artist'), plays: row.read<int>('plays'));
   }
 
   /// Audible time per local day, days without listening are absent
