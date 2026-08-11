@@ -75,6 +75,7 @@ class _SettingsNormalisationPageState extends State<SettingsNormalisationPage> {
               children: [
                 SettingsGroupLabel(text: l.normalisationSectionMode),
                 SettingsGroup(
+                  dividerInset: 0,
                   children: [
                     SettingsCheckRow(
                       label: l.normalisationOff,
