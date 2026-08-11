@@ -1612,6 +1612,24 @@ class SonoDatabase extends _$SonoDatabase {
     return [for (final r in rows) r.read<int>('album_id')];
   }
 
+  /// Albums this artist truns up on without it being theirs
+  /// > credited on some songs but not all, so collabs are excluded
+  Future<List<int>> getArtistFeaturedAlbumIds(int artistId) async {
+    final rows = await customSelect(
+      'WITH totals AS ('
+      'SELECT album_id, COUNT(*) AS total FROM songs '
+      'WHERE album_id IS NOT NULL GROUP BY album_id'
+      ') '
+      'SELECT t.album_id AS album_id FROM totals t '
+      'JOIN song_artists sa ON sa.artist_id = ? '
+      'JOIN songs s ON s.id = sa.song_id AND s.album_id = t.album_id '
+      'GROUP BY t.album_id HAVING COUNT(*) < t.total',
+      variables: [Variable.withInt(artistId)],
+      readsFrom: {songs, songArtists},
+    ).get();
+    return [for (final r in rows) r.read<int>('album_id')];
+  }
+
   /// Artists own catalogue, what play and shuffle use
   /// > their songs plus collab albums, no features
   Future<List<Song>> getArtistCatalogueSongs(int artistId) async {

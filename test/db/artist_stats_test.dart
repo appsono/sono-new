@@ -126,6 +126,62 @@ void main() {
     });
   });
 
+  group('getArtistFeaturedAlbumIds', () {
+    test('an album they appear on but do not carry counts', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Life Is Good', nas, null);
+      await addSong('Still Dreaming', [nas, ye], albumId: album);
+      await addSong('Daughters', [nas], albumId: album);
+
+      expect(await db.getArtistFeaturedAlbumIds(ye), [album]);
+      expect(await db.getArtistFeaturedAlbumIds(nas), isEmpty);
+    });
+
+    test('a collab album is not a feature', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      final album = await db.getOrCreateAlbum('KIDS SEE GHOSTS', ye, null);
+      await addSong('Feel The Love', [ye, cudi], albumId: album);
+      await addSong('Reborn', [ye, cudi], albumId: album);
+
+      expect(await db.getArtistFeaturedAlbumIds(cudi), isEmpty);
+    });
+
+    test('their own album is not a feature', () async {
+      final doom = await artist('MF DOOM');
+      final album = await db.getOrCreateAlbum('Operation Doomsday', doom, null);
+      await addSong('Doomsday', [doom], albumId: album);
+
+      expect(await db.getArtistFeaturedAlbumIds(doom), isEmpty);
+    });
+
+    test('appearing on several songs still counts as a feature', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Long One', nas, null);
+      await addSong('One', [nas, ye], albumId: album);
+      await addSong('Two', [nas, ye], albumId: album);
+      await addSong('Three', [nas], albumId: album);
+
+      expect(await db.getArtistFeaturedAlbumIds(ye), [album]);
+    });
+
+    test('songs without an album are ignored', () async {
+      final ye = await artist('Ye');
+      await addSong('Loose', [ye]);
+
+      expect(await db.getArtistFeaturedAlbumIds(ye), isEmpty);
+    });
+
+    test('is empty for an artist with nothing', () async {
+      expect(
+        await db.getArtistFeaturedAlbumIds(await artist('Nobody')),
+        isEmpty,
+      );
+    });
+  });
+
   group('getArtistCatalogueSongs', () {
     test('their own songs plus collab albums, not guest spots', () async {
       final ye = await artist('Ye');
