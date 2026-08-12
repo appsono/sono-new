@@ -79,6 +79,42 @@ void main() {
 
       expect(await db.getCollabAlbumIds(ye), isEmpty);
     });
+
+    test('a solo album is not a collab', () async {
+      final doom = await artist('MF DOOM');
+      final album = await db.getOrCreateAlbum('Operation Doomsday', doom, null);
+      await addSong('Doomsday', [doom], albumId: album);
+      await addSong('Rhymes Like Dimes', [doom], albumId: album);
+
+      expect(await db.getCollabAlbumIds(doom), isEmpty);
+    });
+
+    test('a one song release is a feature, never a collab', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum(
+        'Take Me To The Light',
+        nas,
+        null,
+      );
+      await addSong('Take Me To The Light', [nas, ye], albumId: album);
+
+      expect(await db.getCollabAlbumIds(ye), isEmpty);
+      expect(await db.getArtistFeaturedAlbumIds(ye), [album]);
+    });
+
+    test(
+      'a guest on every song does not make it a collab for the host',
+      () async {
+        final nas = await artist('Nas');
+        final ye = await artist('Ye');
+        final album = await db.getOrCreateAlbum('Hosted', nas, null);
+        await addSong('One', [nas], albumId: album);
+        await addSong('Two', [nas, ye], albumId: album);
+
+        expect(await db.getCollabAlbumIds(nas), isEmpty);
+      },
+    );
   });
 
   group('getArtistCoverPath', () {
@@ -99,8 +135,176 @@ void main() {
       expect(await db.getArtistCoverPath(ye), '/music/bbb.mp3');
     });
 
+    test('the batch lookup matches the single one', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      await addSong('Runaway', [ye], primaryId: ye, at: '/music/a.mp3');
+      await addSong('Reborn', [cudi], primaryId: cudi, at: '/music/b.mp3');
+
+      expect(await db.getArtistCoverPaths([ye, cudi]), {
+        ye: '/music/a.mp3',
+        cudi: '/music/b.mp3',
+      });
+    });
+
+    test('the batch lookup is empty for no ids', () async {
+      expect(await db.getArtistCoverPaths([]), isEmpty);
+    });
+
+    test('an artist with no songs is absent from the batch', () async {
+      final ye = await artist('Ye');
+      final nobody = await artist('Nobody');
+      await addSong('Runaway', [ye], primaryId: ye, at: '/music/a.mp3');
+
+      final covers = await db.getArtistCoverPaths([ye, nobody]);
+      expect(covers.containsKey(nobody), isFalse);
+    });
+
     test('is null for an artist with no songs', () async {
       expect(await db.getArtistCoverPath(await artist('Nobody')), isNull);
+    });
+  });
+
+  group('getArtistFeaturedAlbumIds', () {
+    test('an album they appear on but do not carry counts', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Life Is Good', nas, null);
+      await addSong('Still Dreaming', [nas, ye], albumId: album);
+      await addSong('Daughters', [nas], albumId: album);
+
+      expect(await db.getArtistFeaturedAlbumIds(ye), [album]);
+      expect(await db.getArtistFeaturedAlbumIds(nas), isEmpty);
+    });
+
+    test('a collab album is not a feature', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      final album = await db.getOrCreateAlbum('KIDS SEE GHOSTS', ye, null);
+      await addSong('Feel The Love', [ye, cudi], albumId: album);
+      await addSong('Reborn', [ye, cudi], albumId: album);
+
+      expect(await db.getArtistFeaturedAlbumIds(cudi), isEmpty);
+    });
+
+    test('their own album is not a feature', () async {
+      final doom = await artist('MF DOOM');
+      final album = await db.getOrCreateAlbum('Operation Doomsday', doom, null);
+      await addSong('Doomsday', [doom], albumId: album);
+
+      expect(await db.getArtistFeaturedAlbumIds(doom), isEmpty);
+    });
+
+    test('appearing on several songs still counts as a feature', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Long One', nas, null);
+      await addSong('One', [nas, ye], albumId: album);
+      await addSong('Two', [nas, ye], albumId: album);
+      await addSong('Three', [nas], albumId: album);
+
+      expect(await db.getArtistFeaturedAlbumIds(ye), [album]);
+    });
+
+    test('songs without an album are ignored', () async {
+      final ye = await artist('Ye');
+      await addSong('Loose', [ye]);
+
+      expect(await db.getArtistFeaturedAlbumIds(ye), isEmpty);
+    });
+
+    test('is empty for an artist with nothing', () async {
+      expect(
+        await db.getArtistFeaturedAlbumIds(await artist('Nobody')),
+        isEmpty,
+      );
+    });
+  });
+
+  group('getPlaylistsWithArtist', () {
+    Future<int> addPlaylist(String name, List<int> songIds) async {
+      final id = await db.createPlaylist(name: name);
+      for (final songId in songIds) {
+        await db.addSongToPlaylist(id, songId);
+      }
+      return id;
+    }
+
+    test('is empty when no playlist holds them', () async {
+      final ye = await artist('Ye');
+      await addSong('Runaway', [ye]);
+
+      expect(await db.getPlaylistsWithArtist(ye), isEmpty);
+    });
+
+    test('finds a playlist holding one of their songs', () async {
+      final ye = await artist('Ye');
+      final doom = await artist('MF DOOM');
+      final mine = await addSong('Runaway', [ye]);
+      final theirs = await addSong('Doomsday', [doom]);
+      final wanted = await addPlaylist('Has Ye', [mine, theirs]);
+      await addPlaylist('No Ye', [theirs]);
+
+      final found = await db.getPlaylistsWithArtist(ye);
+      expect(found.single.id, wanted);
+    });
+
+    test('a guest credit is enough', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final feat = await addSong('Still Dreaming', [nas, ye]);
+      final playlist = await addPlaylist('Rap', [feat]);
+
+      expect((await db.getPlaylistsWithArtist(ye)).single.id, playlist);
+    });
+
+    test('a playlist is listed once however many songs match', () async {
+      final ye = await artist('Ye');
+      final one = await addSong('One', [ye]);
+      final two = await addSong('Two', [ye]);
+      await addPlaylist('Both', [one, two]);
+
+      expect((await db.getPlaylistsWithArtist(ye)).length, 1);
+    });
+  });
+
+  group('getRelatedArtists', () {
+    test('is empty for an artist who never shares a song', () async {
+      final doom = await artist('MF DOOM');
+      await addSong('Doomsday', [doom]);
+
+      expect(await db.getRelatedArtists(doom), isEmpty);
+    });
+
+    test('ranks by how many songs they share', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      final nas = await artist('Nas');
+      await addSong('One', [ye, cudi]);
+      await addSong('Two', [ye, cudi]);
+      await addSong('Three', [ye, nas]);
+
+      final related = await db.getRelatedArtists(ye);
+      expect([for (final r in related) r.artist.name], ['Kid Cudi', 'Nas']);
+      expect(related.first.shared, 2);
+    });
+
+    test('the artist is never related to themselves', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      await addSong('One', [ye, cudi]);
+
+      final related = await db.getRelatedArtists(ye);
+      expect(related.single.artist.name, 'Kid Cudi');
+    });
+
+    test('honours the limit', () async {
+      final ye = await artist('Ye');
+      for (var i = 0; i < 4; i++) {
+        await addSong('Song $i', [ye, await artist('Other $i')]);
+      }
+
+      expect((await db.getRelatedArtists(ye, limit: 2)).length, 2);
     });
   });
 
@@ -226,6 +430,100 @@ void main() {
       await addPlay(await addSong('Still Dreaming', [nas, ye]));
 
       expect((await db.getArtistListeningSummary(ye)).plays, 1);
+    });
+  });
+
+  group('getAlbumCreditedArtists', () {
+    test('a collab record credits both, primary first', () async {
+      final ye = await artist('Ye');
+      final jay = await artist('JAY-Z');
+      final album = await db.getOrCreateAlbum('Watch The Throne', ye, null);
+      await addSong('Otis', [ye, jay], albumId: album);
+      await addSong('Ni__as In Paris', [ye, jay], albumId: album);
+
+      expect(await db.getAlbumCreditedArtists(album), ['Ye', 'JAY-Z']);
+    });
+
+    test('a guest on one song is not credited', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Life Is Good', nas, null);
+      await addSong('Still Dreaming', [nas, ye], albumId: album);
+      await addSong('Daughters', [nas], albumId: album);
+
+      expect(await db.getAlbumCreditedArtists(album), ['Nas']);
+    });
+
+    test('a single credits everyone on it', () async {
+      final a = await artist('First');
+      final b = await artist('Second');
+      final c = await artist('Third');
+      final album = await db.getOrCreateAlbum('Take Me To The Light', a, null);
+      await addSong('Take Me To The Light', [a, b, c], albumId: album);
+
+      expect(await db.getAlbumCreditedArtists(album), [
+        'First',
+        'Second',
+        'Third',
+      ]);
+    });
+
+    test('is empty for an album without credits', () async {
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Untagged', ye, null);
+      await addSong('One', const [], albumId: album);
+
+      expect(await db.getAlbumCreditedArtists(album), isEmpty);
+    });
+
+    test('songs on other albums do not leak in', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      final mine = await db.getOrCreateAlbum('Mine', ye, null);
+      final theirs = await db.getOrCreateAlbum('Theirs', cudi, null);
+      await addSong('One', [ye], albumId: mine);
+      await addSong('Two', [cudi], albumId: theirs);
+
+      expect(await db.getAlbumCreditedArtists(mine), ['Ye']);
+    });
+  });
+
+  group('getAlbumsWithMetadataByIds', () {
+    test('is empty for an empty list', () async {
+      expect(await db.getAlbumsWithMetadataByIds([]), isEmpty);
+    });
+
+    test('returns the requested albums with their metadata', () async {
+      final ye = await artist('Ye');
+      final wanted = await db.getOrCreateAlbum('Wanted', ye, null);
+      final other = await db.getOrCreateAlbum('Other', ye, null);
+      await addSong('One', [ye], albumId: wanted);
+      await addSong('Two', [ye], albumId: wanted);
+      await addSong('Three', [ye], albumId: other);
+
+      final rows = await db.getAlbumsWithMetadataByIds([wanted]);
+      expect(rows.single.id, wanted);
+      expect(rows.single.title, 'Wanted');
+      expect(rows.single.songCount, 2);
+    });
+
+    test('ids that do not exist are skipped', () async {
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Real', ye, null);
+      await addSong('One', [ye], albumId: album);
+
+      final rows = await db.getAlbumsWithMetadataByIds([album, 9999]);
+      expect(rows.length, 1);
+    });
+
+    test('albums by other artists are still returned', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Life Is Good', nas, null);
+      await addSong('Still Dreaming', [nas, ye], albumId: album);
+
+      final rows = await db.getAlbumsWithMetadataByIds([album]);
+      expect(rows.single.title, 'Life Is Good');
     });
   });
 }

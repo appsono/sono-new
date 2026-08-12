@@ -11,37 +11,49 @@
 // GNU General Public License for more details.
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:sono/l10n/localizations.dart';
-
 import 'package:sono/db/database.dart';
+
 import 'package:sono/helper/album_type.dart';
+import 'package:sono/utils/format_ms.dart';
+
 import 'package:sono/services/audio/audio_service.dart';
+
 import 'package:sono/theme/icons.dart';
 import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
+
+import 'package:sono/widgets/album_card.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/cover_art.dart';
+import 'package:sono/widgets/list_row.dart';
+import 'package:sono/widgets/media_card.dart';
 import 'package:sono/widgets/mini_player.dart';
+import 'package:sono/widgets/playlist_cover.dart';
+import 'package:sono/widgets/section.dart';
 import 'package:sono/widgets/header.dart';
+
 import 'package:sono/pages/library/library_sheets.dart';
-import 'package:sono/utils/format_ms.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/pages/library/subpages/artist_discography_page.dart';
+import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 const double _scrolledThreshold = 60;
 const double _heroCover = 200;
 
-typedef _ArtistAlbumRow = ({
-  int id,
-  String title,
-  String? displayTitle,
-  DateTime? favoritedAt,
-  int songCount,
-  int distinctArtistCount,
-  int totalDurationMs,
-  DateTime? firstReleaseDate,
-  String firstPath,
+const int _topSongLimit = 5;
+const int _albumRailLimit = 10;
+const double _albumCard = 150;
+const double _albumExtent = 196;
+
+typedef _ArtistListening = ({
+  int totalMs,
+  int plays,
+  DateTime? firstAt,
+  DateTime? lastAt,
 });
 
 class ArtistDetailPage extends StatefulWidget {
@@ -59,9 +71,20 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   bool _scrolled = false;
 
   Artist? _artist;
-  List<Song>? _songs;
-  List<_ArtistAlbumRow>? _albums;
+  String? _coverPath;
   bool _favorited = false;
+
+  /// their own songs + collab songs (shuffle uses this)
+  List<Song>? _catalogue;
+  List<({Song song, int plays})>? _topSongs;
+  _ArtistListening? _listening;
+  List<AlbumMetadataRow>? _albums;
+  List<AlbumMetadataRow>? _featured;
+  List<({Artist artist, int shared})>? _related;
+  Map<int, String> _relatedCovers = const {};
+  List<Playlist>? _playlists;
+  Map<int, int> _playlistCounts = const {};
+  Map<int, List<String>> _playlistCovers = const {};
 
   @override
   void initState() {
@@ -84,6 +107,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     }
   }
 
+  /// What hero needs to paint, everything else follows in [_loadRest]
   Future<void> _load() async {
     try {
       final artist = await widget.db.getArtistById(widget.artistId);
@@ -92,24 +116,85 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
         Navigator.of(context).pop();
         return;
       }
-      final songs = await widget.db.getSongsByArtist(widget.artistId);
-      final albums = await widget.db.getArtistAlbumsWithMetadata(
+
+      final coverPath = await widget.db.getArtistCoverPath(widget.artistId);
+      final catalogue = await widget.db.getArtistCatalogueSongs(
         widget.artistId,
       );
       final favorited = await widget.db.getArtistFavorited(widget.artistId);
       if (!mounted) return;
+
       setState(() {
         _artist = artist;
-        _songs = songs;
-        _albums = albums;
+        _coverPath = coverPath;
+        _catalogue = catalogue;
         _favorited = favorited;
       });
     } catch (e, st) {
       debugPrint('ArtistDetailPage._load failed: $e\n$st');
       if (!mounted) return;
+      setState(() => _catalogue = const []);
+    }
+    await _loadRest();
+  }
+
+  /// Sections below hero, each render once data arrives
+  Future<void> _loadRest() async {
+    try {
+      final id = widget.artistId;
+      final topSongs = await widget.db.getTopSongsByArtist(
+        id,
+        limit: _topSongLimit,
+      );
+      final listening = await widget.db.getArtistListeningSummary(id);
+      final own = await widget.db.getArtistAlbumsWithMetadata(id);
+      final collabIds = await widget.db.getCollabAlbumIds(id);
+      final missing = [
+        for (final albumId in collabIds)
+          if (!own.any((a) => a.id == albumId)) albumId,
+      ];
+      final albums = missing.isEmpty
+          ? own
+          : await widget.db.getAlbumsWithMetadataByIds([
+              for (final a in own) a.id,
+              ...missing,
+            ]);
+      final featuredIds = await widget.db.getArtistFeaturedAlbumIds(id);
+      final featured = await widget.db.getAlbumsWithMetadataByIds(featuredIds);
+      final related = await widget.db.getRelatedArtists(id);
+      final covers = await widget.db.getArtistCoverPaths([
+        for (final r in related) r.artist.id,
+      ]);
+      final playlists = await widget.db.getPlaylistsWithArtist(id);
+      final playlistCounts = <int, int>{};
+      final playlistCovers = <int, List<String>>{};
+      for (final p in playlists) {
+        playlistCounts[p.id] = await widget.db.getPlaylistSongCount(p.id);
+        playlistCovers[p.id] = await widget.db.getFirstNPlaylistSongPaths(
+          p.id,
+          4,
+        );
+      }
+      if (!mounted) return;
+
       setState(() {
-        _songs = const [];
+        _topSongs = topSongs;
+        _listening = listening;
+        _albums = albums;
+        _featured = featured;
+        _related = related;
+        _relatedCovers = covers;
+        _playlists = playlists;
+        _playlistCounts = playlistCounts;
+        _playlistCovers = playlistCovers;
+      });
+    } catch (e, st) {
+      debugPrint('ArtistDetailPage._loadRest failed: $e\n$st');
+      if (!mounted) return;
+      setState(() {
+        _topSongs = const [];
         _albums = const [];
+        _featured = const [];
       });
     }
   }
@@ -117,7 +202,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   // ==== actions ====
   void _play({int index = 0, bool shuffle = false}) {
     final artist = _artist;
-    final songs = _songs;
+    final songs = _catalogue;
     if (artist == null || songs == null || songs.isEmpty) return;
     final ordered = shuffle ? (List<Song>.of(songs)..shuffle()) : songs;
     AudioService.instance.play(
@@ -131,14 +216,47 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     );
   }
 
-  Future<void> _openAlbumSheet(_ArtistAlbumRow a) async {
+  /// A ranked song plays on its own, rail != queue
+  void _playSong(Song song) {
     final artist = _artist;
     if (artist == null) return;
+    AudioService.instance.play(
+      [song],
+      0,
+      origin: QueueOrigin(
+        source: QueueSource.artist,
+        label: artist.name,
+        refId: artist.id,
+      ),
+    );
+  }
+
+  Future<void> _openSongSheet(Song song) async {
+    await LibrarySheets.openForSong(
+      context: context,
+      db: widget.db,
+      song: SongWithArtistViewData(
+        id: song.id,
+        path: song.path,
+        title: song.title,
+        duration: song.duration,
+        genre: song.genre,
+        releaseDate: song.releaseDate,
+        albumId: song.albumId,
+        artistId: song.artistId,
+        displayArtist: song.displayArtist,
+        likedAt: song.likedAt,
+        artistName: null,
+      ),
+    );
+  }
+
+  Future<void> _openAlbumSheet(AlbumMetadataRow a) async {
     final viewData = AlbumWithArtistViewData(
       id: a.id,
       title: a.displayTitle?.isNotEmpty == true ? a.displayTitle! : a.title,
-      artistId: artist.id,
-      artistName: artist.name,
+      artistId: a.artistId,
+      artistName: a.artistName,
     );
     await LibrarySheets.openForAlbum(
       context: context,
@@ -161,11 +279,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     await _reloadAlbums();
   }
 
-  Future<void> _reloadAlbums() async {
-    final albums = await widget.db.getArtistAlbumsWithMetadata(widget.artistId);
-    if (!mounted) return;
-    setState(() => _albums = albums);
-  }
+  Future<void> _reloadAlbums() => _loadRest();
 
   Future<void> _toggleFavorited() async {
     final next = !_favorited;
@@ -179,6 +293,32 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     setState(() => _favorited = favorited);
   }
 
+  /// Favourites first, query already sorts by release then title
+  List<AlbumMetadataRow> get _railAlbums {
+    final albums = _albums ?? const <AlbumMetadataRow>[];
+    final favorited = [
+      for (final a in albums)
+        if (a.favoritedAt != null) a,
+    ];
+    final rest = [
+      for (final a in albums)
+        if (a.favoritedAt == null) a,
+    ];
+    return [...favorited, ...rest].take(_albumRailLimit).toList();
+  }
+
+  Future<void> _openDiscography() async {
+    final artist = _artist;
+    if (artist == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ArtistDiscographyPage(db: widget.db, artist: artist),
+      ),
+    );
+    if (!mounted) return;
+    await _reloadAlbums();
+  }
+
   void _openAlbum(int albumId) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -190,13 +330,36 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     await _reloadAlbums();
   }
 
+  void _openArtist(int artistId) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ArtistDetailPage(db: widget.db, artistId: artistId),
+      ),
+    );
+  }
+
+  Future<void> _openRelatedSheet(Artist artist) => LibrarySheets.openForArtist(
+    context: context,
+    db: widget.db,
+    artist: artist,
+  );
+
+  Future<void> _openPlaylist(Playlist playlist) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            PlaylistDetailPage(db: widget.db, playlistId: playlist.id),
+      ),
+    );
+    if (!mounted) return;
+    await _loadRest();
+  }
+
   // ==== build ====
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final artist = _artist;
-    final songs = _songs;
-    final albums = _albums;
 
     final scrolledActions = _scrolled
         ? <SonoHeaderAction>[
@@ -233,11 +396,9 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                 SliverToBoxAdapter(
                   child: _Hero(
                     artist: artist,
-                    coverPath: songs?.isNotEmpty == true
-                        ? songs!.first.path
-                        : '',
-                    songCount: songs?.length ?? 0,
-                    totalDurationMs: _totalDurationMs(songs),
+                    coverPath: _coverPath ?? '',
+                    songCount: _catalogue?.length ?? 0,
+                    totalDurationMs: _totalDurationMs(_catalogue),
                     favorited: _favorited,
                     onToggleFavorite: _toggleFavorited,
                     onOpenMore: _openMoreSheet,
@@ -246,42 +407,128 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                   ),
                 ),
 
-              // ==== albums ====
-              if (albums == null)
-                const SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              else if (albums.isEmpty)
-                SliverToBoxAdapter(child: const SizedBox.shrink())
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  sliver: SliverGrid.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 0.78,
-                        ),
-                    itemCount: albums.length,
-                    itemBuilder: (context, i) {
-                      final a = albums[i];
-                      final type = inferAlbumType(
-                        songCount: a.songCount,
-                        distinctArtistCount: a.distinctArtistCount,
-                        totalDurationMs: a.totalDurationMs,
-                      );
-                      return _AlbumGridCard(
-                        album: a,
-                        type: type,
-                        onTap: () => _openAlbum(a.id),
-                        onLongPress: () => _openAlbumSheet(a),
-                      );
-                    },
+              // ==== your listening ====
+              if (_listening != null && _listening!.plays > 0)
+                SliverToBoxAdapter(child: _Listening(summary: _listening!)),
+
+              // ==== top songs ====
+              if (_topSongs != null && _topSongs!.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: _TopSongs(
+                    songs: _topSongs!,
+                    onTap: _playSong,
+                    onLongPress: _openSongSheet,
                   ),
                 ),
+
+              // ==== albums ====
+              if (_albums != null && _albums!.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.homeSectionAlbums,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: _albumExtent,
+                    onSeeAll: _openDiscography,
+                    children: [
+                      for (final a in _railAlbums)
+                        SizedBox(
+                          width: _albumCard,
+                          child: SonoAlbumCard(
+                            album: a,
+                            type: inferAlbumType(
+                              songCount: a.songCount,
+                              distinctArtistCount: a.distinctArtistCount,
+                              creditedArtistCount: a.creditedArtistCount,
+                              totalDurationMs: a.totalDurationMs,
+                            ),
+                            onTap: () => _openAlbum(a.id),
+                            onLongPress: () => _openAlbumSheet(a),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+
+              if (_featured != null && _featured!.isNotEmpty)
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+              // ==== appears on ====
+              if (_featured != null && _featured!.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.artistAppearsOn,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: _albumExtent,
+                    children: [
+                      for (final a in _featured!)
+                        SizedBox(
+                          width: _albumCard,
+                          child: SonoAlbumCard(
+                            album: a,
+                            type: inferAlbumType(
+                              songCount: a.songCount,
+                              distinctArtistCount: a.distinctArtistCount,
+                              creditedArtistCount: a.creditedArtistCount,
+                              totalDurationMs: a.totalDurationMs,
+                            ),
+                            onTap: () => _openAlbum(a.id),
+                            onLongPress: () => _openAlbumSheet(a),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+
+              // ==== related artists ====
+              if (_related != null && _related!.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.artistRelated,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: 168,
+                    children: [
+                      for (final r in _related!)
+                        SonoMediaCard(
+                          path: _relatedCovers[r.artist.id] ?? '',
+                          title: r.artist.name,
+                          subtitle: l.artistRelatedShared(r.shared),
+                          bordered: true,
+                          shape: CoverShape.circle,
+                          titleStyle: Theme.of(
+                            context,
+                          ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+                          onTap: () => _openArtist(r.artist.id),
+                          onLongPress: () => _openRelatedSheet(r.artist),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+
+              // ==== playlist ====
+              if (_playlists != null && _playlists!.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.artistInPlaylists,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: _albumExtent,
+                    children: [
+                      for (final p in _playlists!)
+                        SizedBox(
+                          width: _albumCard,
+                          child: _PlaylistCard(
+                            playlist: p,
+                            songCount: _playlistCounts[p.id] ?? 0,
+                            songPaths: _playlistCovers[p.id] ?? const [],
+                            onTap: () => _openPlaylist(p),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
 
               SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
             ],
@@ -399,101 +646,6 @@ class _Hero extends StatelessWidget {
   }
 }
 
-class _AlbumGridCard extends StatelessWidget {
-  final _ArtistAlbumRow album;
-  final AlbumType type;
-  final VoidCallback onTap;
-  final VoidCallback onLongPress;
-
-  const _AlbumGridCard({
-    required this.album,
-    required this.type,
-    required this.onTap,
-    required this.onLongPress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sono;
-    final l = AppLocalizations.of(context);
-
-    final shownTitle = album.displayTitle?.isNotEmpty == true
-        ? album.displayTitle!
-        : album.title;
-    final year = album.firstReleaseDate?.year.toString();
-    final metaParts = <String>[?year, type.label(l)];
-    final isFavorited = album.favoritedAt != null;
-
-    return GestureDetector(
-      onLongPress: onLongPress,
-      behavior: HitTestBehavior.opaque,
-      child: BouncyTap(
-        onTap: onTap,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    SonoCoverArt(
-                      path: album.firstPath,
-                      size: constraints.maxWidth,
-                      borderRadius: SonoSizes.borderRadiusLg,
-                      bordered: true,
-                    ),
-                    if (isFavorited)
-                      Positioned(
-                        top: 6,
-                        right: 6,
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.55),
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconsSheet.svg(
-                            IconsSheet.favoriteAlbumFilled,
-                            size: 14,
-                            color: c.primary,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  shownTitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: SonoFonts.heading,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: c.textPrimary,
-                    height: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  metaParts.join(' • '),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: SonoFonts.primary,
-                    fontSize: 12,
-                    color: c.textSecondary,
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
 class _SquareAction extends StatelessWidget {
   final String icon;
   final VoidCallback onTap;
@@ -543,6 +695,221 @@ class _PlayAction extends StatelessWidget {
             color: c.textLight,
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ==== playlist card ====
+class _PlaylistCard extends StatelessWidget {
+  final Playlist playlist;
+  final int songCount;
+  final List<String> songPaths;
+  final VoidCallback onTap;
+
+  const _PlaylistCard({
+    required this.playlist,
+    required this.songCount,
+    required this.songPaths,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+
+    return BouncyTap(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SonoPlaylistCover(
+            coverPath: playlist.coverPath,
+            songPaths: songPaths,
+            size: _albumCard,
+            borderRadius: SonoSizes.borderRadiusLg,
+            bordered: true,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            playlist.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: SonoFonts.heading,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: c.textPrimary,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            l.commonSongsCount(songCount),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: SonoFonts.primary,
+              fontSize: 12,
+              color: c.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ==== Ranked list ====
+class _TopSongs extends StatelessWidget {
+  final List<({Song song, int plays})> songs;
+  final ValueChanged<Song> onTap;
+  final ValueChanged<Song> onLongPress;
+
+  static const _rankWidth = 22.0;
+  static const _rankGap = 8.0;
+
+  const _TopSongs({
+    required this.songs,
+    required this.onTap,
+    required this.onLongPress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.artistTopSongs,
+            style: TextStyle(
+              fontFamily: SonoFonts.heading,
+              fontSize: 20,
+              color: c.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          for (var i = 0; i < songs.length; i++) ...[
+            if (i > 0) const SizedBox(height: 8),
+            Row(
+              children: [
+                SizedBox(
+                  width: _rankWidth,
+                  child: Text(
+                    '${i + 1}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: SonoFonts.heading,
+                      fontSize: 15,
+                      color: c.textTertiary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: _rankGap),
+                Expanded(
+                  child: SonoListRow(
+                    coverPath: songs[i].song.path,
+                    title: songs[i].song.title,
+                    subtitle: songs[i].song.displayArtist,
+                    trailing: Text(
+                      l.artistTopSongsPlays(songs[i].plays),
+                      style: TextStyle(
+                        fontFamily: SonoFonts.primary,
+                        fontSize: 12.5,
+                        color: c.textTertiary,
+                      ),
+                    ),
+                    onTap: () => onTap(songs[i].song),
+                    onLongPress: () => onLongPress(songs[i].song),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// ==== Compact strip ====
+class _Listening extends StatelessWidget {
+  final _ArtistListening summary;
+
+  const _Listening({required this.summary});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final firstAt = summary.firstAt;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 22),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _ListeningStat(
+            label: l.artistListeningTime,
+            value: fmtMsCompact(summary.totalMs, l),
+          ),
+          _ListeningStat(
+            label: l.artistListeningPlays,
+            value: '${summary.plays}',
+          ),
+          if (firstAt != null)
+            _ListeningStat(
+              label: l.artistListeningFirstHeard,
+              value: DateFormat.yMMM(
+                Localizations.localeOf(context).toString(),
+              ).format(firstAt),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ListeningStat extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _ListeningStat({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: SonoFonts.primary,
+              fontSize: 11.5,
+              color: c.textTertiary,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: SonoFonts.heading,
+              fontSize: 16,
+              color: c.textPrimary,
+            ),
+          ),
+        ],
       ),
     );
   }

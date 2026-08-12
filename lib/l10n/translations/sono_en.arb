@@ -398,6 +398,68 @@
     }
   },
 
+  "artistAppearsOn": "Appears on",
+  "@artistAppearsOn": {
+    "description": "Heading above releases by other artists that this artist is credited on."
+  },
+  "artistDiscographyEmpty": "Nothing by this artist yet :(",
+  "@artistDiscographyEmpty": {
+    "description": "Shown on the discography page when the artist has no releases at all."
+  },
+  "artistDiscographyNoMatches": "Nothing matches these filters :/",
+  "@artistDiscographyNoMatches": {
+    "description": "Shown on the discography page when the selected filter chips leave no releases."
+  },
+  "artistFilterSinglesEps": "Singles & EPs",
+  "@artistFilterSinglesEps": {
+    "description": "Discography filter chip for short releases."
+  },
+  "artistFilterFeatured": "Featured",
+  "@artistFilterFeatured": {
+    "description": "Discography filter chip for albums the artist only appears on."
+  },
+  "artistFullDiscography": "Full discography",
+  "@artistFullDiscography": {
+    "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
+  },
+  "artistTopSongs": "Top songs",
+  "@artistTopSongs": {
+    "description": "Heading above the users most played songs by this artist."
+  },
+  "artistTopSongsPlays": "{count, plural, =1{1 play} other{{count} plays}}",
+  "@artistTopSongsPlays": {
+    "description": "How often the user played a song, shown at the end of each ranked row.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "artistInPlaylists": "In your playlists",
+  "@artistInPlaylists": {
+    "description": "Heading above playlists that contain a song by this artist."
+  },
+  "artistListeningTime": "You've listened",
+  "@artistListeningTime": {
+    "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
+  },
+  "artistListeningPlays": "Plays",
+  "@artistListeningPlays": {
+    "description": "Label above how many songs by this artist the user has played."
+  },
+  "artistListeningFirstHeard": "First heard",
+  "@artistListeningFirstHeard": {
+    "description": "Label above the date the user first played this artist."
+  },
+  "artistRelated": "Often with",
+  "@artistRelated": {
+    "description": "Heading above artists this one shares songs with."
+  },
+  "artistRelatedShared": "{count, plural, =1{1 song together} other{{count} songs together}}",
+  "@artistRelatedShared": {
+    "description": "How many songs the two artists are both credited on.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "albumTypeAlbum": "Album",
   "@albumTypeAlbum": {
     "description": "Type label for a standard album shown on the artist detail page."

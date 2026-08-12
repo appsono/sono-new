@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Listening stats on the profile page, showing this week's listening time,
   plays, top song and artist, and a time bar per day
 - Recently Played on the home page
+- Artist pages now show your top songs, how long you have listened, releases
+  they appear on, artists they often record with, and playlists holding them
+- Full discography page behind the artist album row, split into albums,
+  singles and EPs, and features, with filter chips
 
 ### Changed
 
@@ -37,6 +41,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with the app, which could fail when headset buttons were pressed
 - Artists who only ever appear as a feature are no longer removed at the end
   of a scan
+- Album sheets now list every artist on the record instead of only the one it
+  is filed under
+- Albums like "Watch The Throne" are now recognised as collaborations
 
 ### Removed
 

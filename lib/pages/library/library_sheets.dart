@@ -186,6 +186,10 @@ class LibrarySheets {
     final songs = await db.getSongsByAlbum(album.id);
     final coverPath = songs.isNotEmpty ? songs.first.path : '';
     final favorited0 = await db.getAlbumFavorited(album.id);
+    final credited = await db.getAlbumCreditedArtists(album.id);
+    final artistLabel = credited.isEmpty
+        ? album.artistName
+        : credited.join(', ');
     if (!context.mounted) return;
 
     final c = context.sono;
@@ -223,7 +227,7 @@ class LibrarySheets {
       type: SongSheetType.album,
       coverPath: coverPath,
       title: album.title,
-      subtitle: album.artistName ?? l.commonUnknownArtist,
+      subtitle: artistLabel ?? l.commonUnknownArtist,
       background: c.bgPrimary,
       surface: c.bgContainer,
       accent: c.primary,
@@ -231,7 +235,7 @@ class LibrarySheets {
       onAccent: c.textLight,
       infoRows: [
         SongSheetInfoRow(label: l.commonAlbum, value: album.title),
-        SongSheetInfoRow(label: l.commonArtist, value: album.artistName),
+        SongSheetInfoRow(label: l.commonArtist, value: artistLabel),
         if (songs.isNotEmpty)
           SongSheetInfoRow(
             label: l.commonPath,

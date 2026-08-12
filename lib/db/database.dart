@@ -200,6 +200,19 @@ class SonoDatabase extends _$SonoDatabase {
     return row.read<String?>('path');
   }
 
+  /// Cover source for several artists at once
+  Future<Map<int, String>> getArtistCoverPaths(List<int> artistIds) async {
+    if (artistIds.isEmpty) return const {};
+    final rows = await customSelect(
+      'SELECT artist_id AS aid, MIN(path) AS path FROM songs '
+      'WHERE artist_id IN (${artistIds.map((_) => '?').join(',')}) '
+      'GROUP BY artist_id',
+      variables: [for (final id in artistIds) Variable.withInt(id)],
+      readsFrom: {songs},
+    ).get();
+    return {for (final r in rows) r.read<int>('aid'): r.read<String>('path')};
+  }
+
   /// Total number of artists in library
   Future<int> countArtists() async {
     final exp = artists.id.count();
@@ -549,22 +562,21 @@ class SonoDatabase extends _$SonoDatabase {
 
   /// Albums by an artist with aggregate metadata for artist detail grid
   /// Sorted newest release first; undated albums last
-  Future<
-    List<
-      ({
-        int id,
-        String title,
-        String? displayTitle,
-        DateTime? favoritedAt,
-        int songCount,
-        int distinctArtistCount,
-        int totalDurationMs,
-        DateTime? firstReleaseDate,
-        String firstPath,
-      })
-    >
-  >
-  getArtistAlbumsWithMetadata(int artistId) async {
+  Future<List<AlbumMetadataRow>> getArtistAlbumsWithMetadata(int artistId) =>
+      _albumsWithMetadata(albums.artistId.equals(artistId));
+
+  /// Same rows for an explicit set, ids that no longer exist are skipped
+  Future<List<AlbumMetadataRow>> getAlbumsWithMetadataByIds(
+    List<int> ids,
+  ) async {
+    if (ids.isEmpty) return const [];
+    return _albumsWithMetadata(albums.id.isIn(ids));
+  }
+
+  /// Newest first, albums without a release date last, then by title
+  Future<List<AlbumMetadataRow>> _albumsWithMetadata(
+    Expression<bool> filter,
+  ) async {
     final songCountExp = songs.id.count();
     final distinctArtistExp = songs.artistId.count(distinct: true);
     final totalDurationExp = songs.duration.sum();
@@ -572,13 +584,16 @@ class SonoDatabase extends _$SonoDatabase {
     final firstPathExp = songs.path.min();
 
     final query =
-        selectOnly(
-            albums,
-          ).join([leftOuterJoin(songs, songs.albumId.equalsExp(albums.id))])
+        selectOnly(albums).join([
+            leftOuterJoin(songs, songs.albumId.equalsExp(albums.id)),
+            leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+          ])
           ..addColumns([
             albums.id,
             albums.title,
             albums.displayTitle,
+            albums.artistId,
+            artists.name,
             albums.favoritedAt,
             songCountExp,
             distinctArtistExp,
@@ -586,7 +601,7 @@ class SonoDatabase extends _$SonoDatabase {
             firstReleaseExp,
             firstPathExp,
           ])
-          ..where(albums.artistId.equals(artistId))
+          ..where(filter)
           ..groupBy([albums.id])
           ..orderBy([
             OrderingTerm(
@@ -598,14 +613,21 @@ class SonoDatabase extends _$SonoDatabase {
           ]);
 
     final rows = await query.get();
+    final credited = await _creditedArtistCounts([
+      for (final row in rows) row.read(albums.id)!,
+    ]);
     return rows.map((row) {
+      final id = row.read(albums.id)!;
       return (
-        id: row.read(albums.id)!,
+        id: id,
         title: row.read(albums.title)!,
         displayTitle: row.read(albums.displayTitle),
+        artistId: row.read(albums.artistId)!,
+        artistName: row.read(artists.name) ?? '',
         favoritedAt: row.read(albums.favoritedAt),
         songCount: row.read(songCountExp) ?? 0,
         distinctArtistCount: row.read(distinctArtistExp) ?? 0,
+        creditedArtistCount: credited[id] ?? 0,
         totalDurationMs: row.read(totalDurationExp) ?? 0,
         firstReleaseDate: row.read(firstReleaseExp),
         firstPath: row.read(firstPathExp) ?? '',
@@ -618,6 +640,47 @@ class SonoDatabase extends _$SonoDatabase {
     await customStatement(
       'DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT album_id FROM songs WHERE album_id IS NOT NULL)',
     );
+  }
+
+  /// How many artists are credited on every son (per album)
+  /// > two or more means album is a collaboration
+  Future<Map<int, int>> _creditedArtistCounts(List<int> albumIds) async {
+    if (albumIds.isEmpty) return const {};
+    final ids = albumIds.join(',');
+    final rows = await customSelect(
+      'WITH totals AS ('
+      'SELECT album_id, COUNT(*) AS total FROM songs '
+      'WHERE album_id IN ($ids) GROUP BY album_id'
+      '), credits AS ('
+      'SELECT s.album_id AS album_id, sa.artist_id AS artist_id, '
+      'COUNT(*) AS n FROM song_artists sa '
+      'JOIN songs s ON s.id = sa.song_id '
+      'WHERE s.album_id IN ($ids) GROUP BY s.album_id, sa.artist_id'
+      ') '
+      'SELECT t.album_id AS album_id, COUNT(*) AS credited FROM totals t '
+      'JOIN credits c ON c.album_id = t.album_id AND c.n = t.total '
+      'GROUP BY t.album_id',
+      readsFrom: {songs, songArtists},
+    ).get();
+    return {
+      for (final r in rows) r.read<int>('album_id'): r.read<int>('credited'),
+    };
+  }
+
+  /// Artists credited on every song of an album (tag order)
+  /// > collab album gives both names, feat on one song gives neither
+  Future<List<String>> getAlbumCreditedArtists(int albumId) async {
+    final rows = await customSelect(
+      'SELECT a.name AS name, MIN(sa.position) AS pos FROM song_artists sa '
+      'JOIN songs s ON s.id = sa.song_id AND s.album_id = ? '
+      'JOIN artists a ON a.id = sa.artist_id '
+      'GROUP BY sa.artist_id '
+      'HAVING COUNT(*) = (SELECT COUNT(*) FROM songs WHERE album_id = ?) '
+      'ORDER BY pos, a.name',
+      variables: [Variable.withInt(albumId), Variable.withInt(albumId)],
+      readsFrom: {songs, songArtists, artists},
+    ).get();
+    return [for (final r in rows) r.read<String>('name')];
   }
 
   Future<void> detachAllSongsFromAlbums() async {
@@ -1590,14 +1653,108 @@ class SonoDatabase extends _$SonoDatabase {
   /// Albums where this artist is credited on every song
   Future<List<int>> getCollabAlbumIds(int artistId) async {
     final rows = await customSelect(
-      'SELECT s.album_id AS album_id FROM songs s '
-      'LEFT JOIN song_artists sa ON sa.song_id = s.id AND sa.artist_id = ? '
-      'WHERE s.album_id IS NOT NULL '
-      'GROUP BY s.album_id HAVING COUNT(*) = COUNT(sa.artist_id)',
-      variables: [Variable.withInt(artistId)],
+      'WITH totals AS ('
+      'SELECT album_id, COUNT(*) AS total FROM songs '
+      'WHERE album_id IS NOT NULL GROUP BY album_id'
+      '), credits AS ('
+      'SELECT s.album_id AS album_id, sa.artist_id AS artist_id, '
+      'COUNT(*) AS n FROM song_artists sa '
+      'JOIN songs s ON s.id = sa.song_id '
+      'WHERE s.album_id IS NOT NULL GROUP BY s.album_id, sa.artist_id'
+      ') '
+      'SELECT t.album_id AS album_id FROM totals t '
+      'JOIN credits me ON me.album_id = t.album_id '
+      'AND me.artist_id = ? AND me.n = t.total '
+      //without a second full credit this is just their own album
+      'JOIN credits other ON other.album_id = t.album_id '
+      'AND other.artist_id != ? AND other.n = t.total '
+      //a single is one song, a second name on it is a feat not a partner
+      'WHERE t.total > 1 '
+      'GROUP BY t.album_id',
+      variables: [Variable.withInt(artistId), Variable.withInt(artistId)],
       readsFrom: {songs, songArtists},
     ).get();
     return [for (final r in rows) r.read<int>('album_id')];
+  }
+
+  /// Albums this artist truns up on without it being theirs
+  /// > credited on some songs but not all, so collabs are excluded
+  Future<List<int>> getArtistFeaturedAlbumIds(int artistId) async {
+    final rows = await customSelect(
+      'WITH totals AS ('
+      'SELECT album_id, COUNT(*) AS total FROM songs '
+      'WHERE album_id IS NOT NULL GROUP BY album_id'
+      '), credits AS ('
+      'SELECT s.album_id AS album_id, sa.artist_id AS artist_id, '
+      'COUNT(*) AS n FROM song_artists sa '
+      'JOIN songs s ON s.id = sa.song_id '
+      'WHERE s.album_id IS NOT NULL GROUP BY s.album_id, sa.artist_id'
+      '), collabs AS ('
+      //a single is one song, a second name on it is a guest not a partner
+      'SELECT t.album_id FROM totals t JOIN credits c '
+      'ON c.album_id = t.album_id AND c.n = t.total '
+      'WHERE t.total > 1 GROUP BY t.album_id HAVING COUNT(*) > 1'
+      ') '
+      'SELECT a.id AS album_id FROM albums a '
+      'JOIN credits me ON me.album_id = a.id AND me.artist_id = ? '
+      'WHERE a.artist_id != ? '
+      'AND a.id NOT IN (SELECT album_id FROM collabs)',
+      variables: [Variable.withInt(artistId), Variable.withInt(artistId)],
+      readsFrom: {albums, songs, songArtists},
+    ).get();
+    return [for (final r in rows) r.read<int>('album_id')];
+  }
+
+  /// Playlists holding at least one song this artist is credited on
+  Future<List<Playlist>> getPlaylistsWithArtist(
+    int artistId, {
+    int limit = 12,
+  }) async {
+    final rows = await customSelect(
+      'SELECT DISTINCT ps.playlist_id AS id FROM playlist_songs ps '
+      'JOIN song_artists sa ON sa.song_id = ps.song_id '
+      'WHERE sa.artist_id = ?',
+      variables: [Variable.withInt(artistId)],
+      readsFrom: {playlistSongs, songArtists},
+    ).get();
+    if (rows.isEmpty) return const [];
+
+    final ids = [for (final r in rows) r.read<int>('id')];
+    return (select(playlists)
+          ..where((p) => p.id.isIn(ids))
+          ..orderBy([(p) => OrderingTerm.desc(p.createdAt)])
+          ..limit(limit))
+        .get();
+  }
+
+  /// Artists credited alongside this one, most shared song first
+  Future<List<({Artist artist, int shared})>> getRelatedArtists(
+    int artistId, {
+    int limit = 12,
+  }) async {
+    final rows = await customSelect(
+      'SELECT other.artist_id AS id, COUNT(*) AS shared FROM song_artists me '
+      'JOIN song_artists other ON other.song_id = me.song_id '
+      'AND other.artist_id != me.artist_id '
+      'WHERE me.artist_id = ? '
+      'GROUP BY other.artist_id ORDER BY shared DESC, other.artist_id LIMIT ?',
+      variables: [Variable.withInt(artistId), Variable.withInt(limit)],
+      readsFrom: {songArtists},
+    ).get();
+    if (rows.isEmpty) return const [];
+
+    final counts = {
+      for (final r in rows) r.read<int>('id'): r.read<int>('shared'),
+    };
+    final found = await (select(
+      artists,
+    )..where((a) => a.id.isIn(counts.keys))).get();
+    final byId = {for (final a in found) a.id: a};
+    return [
+      for (final entry in counts.entries)
+        if (byId[entry.key] != null)
+          (artist: byId[entry.key]!, shared: entry.value),
+    ];
   }
 
   /// Artists own catalogue, what play and shuffle use
@@ -1760,6 +1917,21 @@ typedef PlayBackupRow = ({
   int? durationMs,
   DateTime startedAt,
   int playedMs,
+});
+
+typedef AlbumMetadataRow = ({
+  int id,
+  String title,
+  String? displayTitle,
+  int artistId,
+  String artistName,
+  DateTime? favoritedAt,
+  int songCount,
+  int distinctArtistCount,
+  int creditedArtistCount,
+  int totalDurationMs,
+  DateTime? firstReleaseDate,
+  String firstPath,
 });
 
 extension AlbumDisplayTitle on Album {

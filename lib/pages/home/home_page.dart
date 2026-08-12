@@ -655,6 +655,7 @@ class _HomePageState extends State<HomePage> {
                           ).textTheme.headlineSmall?.copyWith(fontSize: 13),
                           onTap: () => _playSong(s),
                           onLongPress: () => _openSongSheet(s),
+                          bordered: true,
                         ),
                     ],
                   ),
