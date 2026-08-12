@@ -150,7 +150,18 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
         limit: _topSongLimit,
       );
       final listening = await widget.db.getArtistListeningSummary(id);
-      final albums = await widget.db.getArtistAlbumsWithMetadata(id);
+      final own = await widget.db.getArtistAlbumsWithMetadata(id);
+      final collabIds = await widget.db.getCollabAlbumIds(id);
+      final missing = [
+        for (final albumId in collabIds)
+          if (!own.any((a) => a.id == albumId)) albumId,
+      ];
+      final albums = missing.isEmpty
+          ? own
+          : await widget.db.getAlbumsWithMetadataByIds([
+              for (final a in own) a.id,
+              ...missing,
+            ]);
       final featuredIds = await widget.db.getArtistFeaturedAlbumIds(id);
       final featured = await widget.db.getAlbumsWithMetadataByIds(featuredIds);
       final related = await widget.db.getRelatedArtists(id);
@@ -279,11 +290,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     await _reloadAlbums();
   }
 
-  Future<void> _reloadAlbums() async {
-    final albums = await widget.db.getArtistAlbumsWithMetadata(widget.artistId);
-    if (!mounted) return;
-    setState(() => _albums = albums);
-  }
+  Future<void> _reloadAlbums() => _loadRest();
 
   Future<void> _toggleFavorited() async {
     final next = !_favorited;
