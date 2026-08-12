@@ -55,9 +55,6 @@ typedef _ArtistListening = ({
 
 /// WIP ARTIST PAGE REDESIGN
 /// CHECK artist_detail_page.dart.old FOR THE OLD PAGE
-///
-/// TODO: remove once every section is built
-// ignore_for_file: unused_field, unused_element
 
 class ArtistDetailPage extends StatefulWidget {
   final SonoDatabase db;
