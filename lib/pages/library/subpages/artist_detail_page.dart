@@ -29,6 +29,7 @@ import 'package:sono/widgets/album_card.dart';
 import 'package:sono/widgets/bouncy_tap.dart';
 import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/list_row.dart';
+import 'package:sono/widgets/media_card.dart';
 import 'package:sono/widgets/mini_player.dart';
 import 'package:sono/widgets/section.dart';
 import 'package:sono/widgets/header.dart';
@@ -80,6 +81,8 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   _ArtistListening? _listening;
   List<AlbumMetadataRow>? _albums;
   List<AlbumMetadataRow>? _featured;
+  List<({Artist artist, int shared})>? _related;
+  Map<int, String> _relatedCovers = const {};
 
   @override
   void initState() {
@@ -145,6 +148,14 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
       final albums = await widget.db.getArtistAlbumsWithMetadata(id);
       final featuredIds = await widget.db.getArtistFeaturedAlbumIds(id);
       final featured = await widget.db.getAlbumsWithMetadataByIds(featuredIds);
+      final related = await widget.db.getRelatedArtists(id);
+      final covers = related.isEmpty
+          ? const <int, String>{}
+          : {
+              for (final e
+                  in (await widget.db.getArtistCoverAndCounts()).entries)
+                e.key: e.value.path,
+            };
       if (!mounted) return;
 
       setState(() {
@@ -152,6 +163,8 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
         _listening = listening;
         _albums = albums;
         _featured = featured;
+        _related = related;
+        _relatedCovers = covers;
       });
     } catch (e, st) {
       debugPrint('ArtistDetailPage._loadRest failed: $e\n$st');
@@ -303,6 +316,20 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     await _reloadAlbums();
   }
 
+  void _openArtist(int artistId) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ArtistDetailPage(db: widget.db, artistId: artistId),
+      ),
+    );
+  }
+
+  Future<void> _openRelatedSheet(Artist artist) => LibrarySheets.openForArtist(
+    context: context,
+    db: widget.db,
+    artist: artist,
+  );
+
   // ==== build ====
   @override
   Widget build(BuildContext context) {
@@ -428,7 +455,31 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                 ),
 
               // ==== related artists ====
-              // TODO: most frequent co-credits
+              if (_related != null && _related!.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.artistRelated,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: 168,
+                    children: [
+                      for (final r in _related!)
+                        SonoMediaCard(
+                          path: _relatedCovers[r.artist.id] ?? '',
+                          title: r.artist.name,
+                          subtitle: l.artistRelatedShared(r.shared),
+                          bordered: true,
+                          shape: CoverShape.circle,
+                          titleStyle: Theme.of(
+                            context,
+                          ).textTheme.headlineSmall?.copyWith(fontSize: 13),
+                          onTap: () => _openArtist(r.artist.id),
+                          onLongPress: () => _openRelatedSheet(r.artist),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
 
               // ==== playlist ====
               // TODO: playlists containing this artist

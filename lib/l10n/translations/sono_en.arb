@@ -437,7 +437,17 @@
   "@artistListeningFirstHeard": {
     "description": "Label above the date the user first played this artist."
   },
-
+  "artistRelated": "Often with",
+  "@artistRelated": {
+    "description": "Heading above artists this one shares songs with."
+  },
+  "artistRelatedShared": "{count, plural, =1{1 song together} other{{count} songs together}}",
+  "@artistRelatedShared": {
+    "description": "How many songs the two artists are both credited on.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "albumTypeAlbum": "Album",
   "@albumTypeAlbum": {
     "description": "Type label for a standard album shown on the artist detail page."
