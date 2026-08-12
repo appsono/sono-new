@@ -41,11 +41,14 @@ enum AlbumType {
 AlbumType inferAlbumType({
   required int songCount,
   required int distinctArtistCount,
+  required int creditedArtistCount,
   required int totalDurationMs,
 }) {
   if (songCount <= 1) return AlbumType.single;
   if (distinctArtistCount >= 3) return AlbumType.compilation;
-  if (distinctArtistCount == 2) return AlbumType.collaboration;
+  if (creditedArtistCount >= 2 || distinctArtistCount == 2) {
+    return AlbumType.collaboration;
+  }
   if (songCount <= 7 || totalDurationMs < 30 * 60 * 1000) {
     return AlbumType.ep;
   }

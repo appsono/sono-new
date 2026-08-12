@@ -600,9 +600,13 @@ class SonoDatabase extends _$SonoDatabase {
           ]);
 
     final rows = await query.get();
+    final credited = await _creditedArtistCounts([
+      for (final row in rows) row.read(albums.id)!,
+    ]);
     return rows.map((row) {
+      final id = row.read(albums.id)!;
       return (
-        id: row.read(albums.id)!,
+        id: id,
         title: row.read(albums.title)!,
         displayTitle: row.read(albums.displayTitle),
         artistId: row.read(albums.artistId)!,
@@ -610,6 +614,7 @@ class SonoDatabase extends _$SonoDatabase {
         favoritedAt: row.read(albums.favoritedAt),
         songCount: row.read(songCountExp) ?? 0,
         distinctArtistCount: row.read(distinctArtistExp) ?? 0,
+        creditedArtistCount: credited[id] ?? 0,
         totalDurationMs: row.read(totalDurationExp) ?? 0,
         firstReleaseDate: row.read(firstReleaseExp),
         firstPath: row.read(firstPathExp) ?? '',
@@ -622,6 +627,31 @@ class SonoDatabase extends _$SonoDatabase {
     await customStatement(
       'DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT album_id FROM songs WHERE album_id IS NOT NULL)',
     );
+  }
+
+  /// How many artists are credited on every son (per album)
+  /// > two or more means album is a collaboration
+  Future<Map<int, int>> _creditedArtistCounts(List<int> albumIds) async {
+    if (albumIds.isEmpty) return const {};
+    final ids = albumIds.join(',');
+    final rows = await customSelect(
+      'WITH totals AS ('
+      'SELECT album_id, COUNT(*) AS total FROM songs '
+      'WHERE album_id IN ($ids) GROUP BY album_id'
+      '), credits AS ('
+      'SELECT s.album_id AS album_id, sa.artist_id AS artist_id, '
+      'COUNT(*) AS n FROM song_artists sa '
+      'JOIN songs s ON s.id = sa.song_id '
+      'WHERE s.album_id IN ($ids) GROUP BY s.album_id, sa.artist_id'
+      ') '
+      'SELECT t.album_id AS album_id, COUNT(*) AS credited FROM totals t '
+      'JOIN credits c ON c.album_id = t.album_id AND c.n = t.total '
+      'GROUP BY t.album_id',
+      readsFrom: {songs, songArtists},
+    ).get();
+    return {
+      for (final r in rows) r.read<int>('album_id'): r.read<int>('credited'),
+    };
   }
 
   /// Artists credited on every song of an album (tag order)
@@ -1821,6 +1851,7 @@ typedef AlbumMetadataRow = ({
   DateTime? favoritedAt,
   int songCount,
   int distinctArtistCount,
+  int creditedArtistCount,
   int totalDurationMs,
   DateTime? firstReleaseDate,
   String firstPath,

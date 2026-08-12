@@ -86,6 +86,7 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
     final type = inferAlbumType(
       songCount: a.songCount,
       distinctArtistCount: a.distinctArtistCount,
+      creditedArtistCount: a.creditedArtistCount,
       totalDurationMs: a.totalDurationMs,
     );
     return type == AlbumType.single || type == AlbumType.ep
@@ -207,6 +208,7 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
                         type: inferAlbumType(
                           songCount: a.songCount,
                           distinctArtistCount: a.distinctArtistCount,
+                          creditedArtistCount: a.creditedArtistCount,
                           totalDurationMs: a.totalDurationMs,
                         ),
                         onTap: () => _openAlbum(a.id),

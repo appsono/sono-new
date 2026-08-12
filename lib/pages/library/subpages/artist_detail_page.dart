@@ -372,6 +372,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                             type: inferAlbumType(
                               songCount: a.songCount,
                               distinctArtistCount: a.distinctArtistCount,
+                              creditedArtistCount: a.creditedArtistCount,
                               totalDurationMs: a.totalDurationMs,
                             ),
                             onTap: () => _openAlbum(a.id),
