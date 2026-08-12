@@ -402,6 +402,14 @@
   "@artistAppearsOn": {
     "description": "Heading above releases by other artists that this artist is credited on."
   },
+  "artistDiscographyEmpty": "Nothing by this artist yet :(",
+  "@artistDiscographyEmpty": {
+    "description": "Shown on the discography page when the artist has no releases at all."
+  },
+  "artistDiscographyNoMatches": "Nothing matches these filters :/",
+  "@artistDiscographyNoMatches": {
+    "description": "Shown on the discography page when the selected filter chips leave no releases."
+  },
   "artistFilterSinglesEps": "Singles & EPs",
   "@artistFilterSinglesEps": {
     "description": "Discography filter chip for short releases."
