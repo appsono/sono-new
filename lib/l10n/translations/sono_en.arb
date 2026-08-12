@@ -398,6 +398,14 @@
     }
   },
 
+  "artistFilterSinglesEps": "Singles & EPs",
+  "@artistFilterSinglesEps": {
+    "description": "Discography filter chip for short releases."
+  },
+  "artistFilterFeatured": "Featured",
+  "@artistFilterFeatured": {
+    "description": "Discography filter chip for albums the artist only appears on."
+  },
   "artistFullDiscography": "Full discography",
   "@artistFullDiscography": {
     "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
