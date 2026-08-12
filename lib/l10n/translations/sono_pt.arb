@@ -968,5 +968,21 @@
                 "type": "String"
             }
         }
+    },
+    "artistAppearsOn": "Aparece em",
+    "@artistAppearsOn": {
+        "description": "Heading above releases by other artists that this artist is credited on."
+    },
+    "artistDiscographyEmpty": "Nada por esse artista ainda :(",
+    "@artistDiscographyEmpty": {
+        "description": "Shown on the discography page when the artist has no releases at all."
+    },
+    "artistDiscographyNoMatches": "Nada encontrado com esses filtros :/",
+    "@artistDiscographyNoMatches": {
+        "description": "Shown on the discography page when the selected filter chips leave no releases."
+    },
+    "artistFilterSinglesEps": "Singles & EPs",
+    "@artistFilterSinglesEps": {
+        "description": "Discography filter chip for short releases."
     }
 }
