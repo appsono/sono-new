@@ -182,6 +182,53 @@ void main() {
     });
   });
 
+  group('getPlaylistsWithArtist', () {
+    Future<int> addPlaylist(String name, List<int> songIds) async {
+      final id = await db.createPlaylist(name: name);
+      for (final songId in songIds) {
+        await db.addSongToPlaylist(id, songId);
+      }
+      return id;
+    }
+
+    test('is empty when no playlist holds them', () async {
+      final ye = await artist('Ye');
+      await addSong('Runaway', [ye]);
+
+      expect(await db.getPlaylistsWithArtist(ye), isEmpty);
+    });
+
+    test('finds a playlist holding one of their songs', () async {
+      final ye = await artist('Ye');
+      final doom = await artist('MF DOOM');
+      final mine = await addSong('Runaway', [ye]);
+      final theirs = await addSong('Doomsday', [doom]);
+      final wanted = await addPlaylist('Has Ye', [mine, theirs]);
+      await addPlaylist('No Ye', [theirs]);
+
+      final found = await db.getPlaylistsWithArtist(ye);
+      expect(found.single.id, wanted);
+    });
+
+    test('a guest credit is enough', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final feat = await addSong('Still Dreaming', [nas, ye]);
+      final playlist = await addPlaylist('Rap', [feat]);
+
+      expect((await db.getPlaylistsWithArtist(ye)).single.id, playlist);
+    });
+
+    test('a playlist is listed once however many songs match', () async {
+      final ye = await artist('Ye');
+      final one = await addSong('One', [ye]);
+      final two = await addSong('Two', [ye]);
+      await addPlaylist('Both', [one, two]);
+
+      expect((await db.getPlaylistsWithArtist(ye)).length, 1);
+    });
+  });
+
   group('getRelatedArtists', () {
     test('is empty for an artist who never shares a song', () async {
       final doom = await artist('MF DOOM');

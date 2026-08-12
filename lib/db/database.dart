@@ -1690,6 +1690,28 @@ class SonoDatabase extends _$SonoDatabase {
     return [for (final r in rows) r.read<int>('album_id')];
   }
 
+  /// Playlists holding at least one song this artist is credited on
+  Future<List<Playlist>> getPlaylistsWithArtist(
+    int artistId, {
+    int limit = 12,
+  }) async {
+    final rows = await customSelect(
+      'SELECT DISTINCT ps.playlist_id AS id FROM playlist_songs ps '
+      'JOIN song_artists sa ON sa.song_id = ps.song_id '
+      'WHERE sa.artist_id = ?',
+      variables: [Variable.withInt(artistId)],
+      readsFrom: {playlistSongs, songArtists},
+    ).get();
+    if (rows.isEmpty) return const [];
+
+    final ids = [for (final r in rows) r.read<int>('id')];
+    return (select(playlists)
+          ..where((p) => p.id.isIn(ids))
+          ..orderBy([(p) => OrderingTerm.desc(p.createdAt)])
+          ..limit(limit))
+        .get();
+  }
+
   /// Artists credited alongside this one, most shared song first
   Future<List<({Artist artist, int shared})>> getRelatedArtists(
     int artistId, {
