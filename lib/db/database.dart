@@ -1690,6 +1690,36 @@ class SonoDatabase extends _$SonoDatabase {
     return [for (final r in rows) r.read<int>('album_id')];
   }
 
+  /// Artists credited alongside this one, most shared song first
+  Future<List<({Artist artist, int shared})>> getRelatedArtists(
+    int artistId, {
+    int limit = 12,
+  }) async {
+    final rows = await customSelect(
+      'SELECT other.artist_id AS id, COUNT(*) AS shared FROM song_artists me '
+      'JOIN song_artists other ON other.song_id = me.song_id '
+      'AND other.artist_id != me.artist_id '
+      'WHERE me.artist_id = ? '
+      'GROUP BY other.artist_id ORDER BY shared DESC, other.artist_id LIMIT ?',
+      variables: [Variable.withInt(artistId), Variable.withInt(limit)],
+      readsFrom: {songArtists},
+    ).get();
+    if (rows.isEmpty) return const [];
+
+    final counts = {
+      for (final r in rows) r.read<int>('id'): r.read<int>('shared'),
+    };
+    final found = await (select(
+      artists,
+    )..where((a) => a.id.isIn(counts.keys))).get();
+    final byId = {for (final a in found) a.id: a};
+    return [
+      for (final entry in counts.entries)
+        if (byId[entry.key] != null)
+          (artist: byId[entry.key]!, shared: entry.value),
+    ];
+  }
+
   /// Artists own catalogue, what play and shuffle use
   /// > their songs plus collab albums, no features
   Future<List<Song>> getArtistCatalogueSongs(int artistId) async {

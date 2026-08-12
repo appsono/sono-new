@@ -182,6 +182,46 @@ void main() {
     });
   });
 
+  group('getRelatedArtists', () {
+    test('is empty for an artist who never shares a song', () async {
+      final doom = await artist('MF DOOM');
+      await addSong('Doomsday', [doom]);
+
+      expect(await db.getRelatedArtists(doom), isEmpty);
+    });
+
+    test('ranks by how many songs they share', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      final nas = await artist('Nas');
+      await addSong('One', [ye, cudi]);
+      await addSong('Two', [ye, cudi]);
+      await addSong('Three', [ye, nas]);
+
+      final related = await db.getRelatedArtists(ye);
+      expect([for (final r in related) r.artist.name], ['Kid Cudi', 'Nas']);
+      expect(related.first.shared, 2);
+    });
+
+    test('the artist is never related to themselves', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      await addSong('One', [ye, cudi]);
+
+      final related = await db.getRelatedArtists(ye);
+      expect(related.single.artist.name, 'Kid Cudi');
+    });
+
+    test('honours the limit', () async {
+      final ye = await artist('Ye');
+      for (var i = 0; i < 4; i++) {
+        await addSong('Song $i', [ye, await artist('Other $i')]);
+      }
+
+      expect((await db.getRelatedArtists(ye, limit: 2)).length, 2);
+    });
+  });
+
   group('getArtistCatalogueSongs', () {
     test('their own songs plus collab albums, not guest spots', () async {
       final ye = await artist('Ye');
