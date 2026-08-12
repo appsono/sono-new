@@ -89,6 +89,20 @@ void main() {
       expect(await db.getCollabAlbumIds(doom), isEmpty);
     });
 
+    test('a one song release is a feature, never a collab', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum(
+        'Take Me To The Light',
+        nas,
+        null,
+      );
+      await addSong('Take Me To The Light', [nas, ye], albumId: album);
+
+      expect(await db.getCollabAlbumIds(ye), isEmpty);
+      expect(await db.getArtistFeaturedAlbumIds(ye), [album]);
+    });
+
     test(
       'a guest on every song does not make it a collab for the host',
       () async {

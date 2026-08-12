@@ -13,6 +13,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -60,6 +61,8 @@ void main() async {
     );
   }
   MediaKit.ensureInitialized();
+  //DateFormat throws on a locale showse data was never loaded
+  await initializeDateFormatting();
   await DeviceProfile.detect();
 
   final db = SonoDatabase();

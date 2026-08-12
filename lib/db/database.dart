@@ -1655,6 +1655,8 @@ class SonoDatabase extends _$SonoDatabase {
       //without a second full credit this is just their own album
       'JOIN credits other ON other.album_id = t.album_id '
       'AND other.artist_id != ? AND other.n = t.total '
+      //a single is one song, a second name on it is a feat not a partner
+      'WHERE t.total > 1 '
       'GROUP BY t.album_id',
       variables: [Variable.withInt(artistId), Variable.withInt(artistId)],
       readsFrom: {songs, songArtists},

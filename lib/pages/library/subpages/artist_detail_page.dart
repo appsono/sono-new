@@ -239,8 +239,6 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   }
 
   Future<void> _openSongSheet(Song song) async {
-    final artist = _artist;
-    if (artist == null) return;
     await LibrarySheets.openForSong(
       context: context,
       db: widget.db,
@@ -255,19 +253,17 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
         artistId: song.artistId,
         displayArtist: song.displayArtist,
         likedAt: song.likedAt,
-        artistName: artist.name,
+        artistName: null,
       ),
     );
   }
 
   Future<void> _openAlbumSheet(AlbumMetadataRow a) async {
-    final artist = _artist;
-    if (artist == null) return;
     final viewData = AlbumWithArtistViewData(
       id: a.id,
       title: a.displayTitle?.isNotEmpty == true ? a.displayTitle! : a.title,
-      artistId: artist.id,
-      artistName: artist.name,
+      artistId: a.artistId,
+      artistName: a.artistName,
     );
     await LibrarySheets.openForAlbum(
       context: context,
