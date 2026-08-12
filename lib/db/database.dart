@@ -624,6 +624,22 @@ class SonoDatabase extends _$SonoDatabase {
     );
   }
 
+  /// Artists credited on every song of an album (tag order)
+  /// > collab album gives both names, feat on one song gives neither
+  Future<List<String>> getAlbumCreditedArtists(int albumId) async {
+    final rows = await customSelect(
+      'SELECT a.name AS name, MIN(sa.position) AS pos FROM song_artists sa '
+      'JOIN songs s ON s.id = sa.song_id AND s.album_id = ? '
+      'JOIN artists a ON a.id = sa.artist_id '
+      'GROUP BY sa.artist_id '
+      'HAVING COUNT(*) = (SELECT COUNT(*) FROM songs WHERE album_id = ?) '
+      'ORDER BY pos, a.name',
+      variables: [Variable.withInt(albumId), Variable.withInt(albumId)],
+      readsFrom: {songs, songArtists, artists},
+    ).get();
+    return [for (final r in rows) r.read<String>('name')];
+  }
+
   Future<void> detachAllSongsFromAlbums() async {
     await customStatement('UPDATE songs SET album_id = NULL');
   }
