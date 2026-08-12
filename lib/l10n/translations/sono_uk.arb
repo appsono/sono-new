@@ -266,7 +266,7 @@
     "@libraryEmptyArtists": {
         "description": "Empty state on the Artists list page when no artists have been scanned."
     },
-    "commonDurationLong": "{hours} гол {minutes} хв",
+    "commonDurationLong": "{hours} год {minutes} хв",
     "@commonDurationLong": {
         "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
         "placeholders": {
@@ -554,7 +554,7 @@
     "@settingsProfileUnnamed": {
         "description": "Name shown on the profile row in settings when no username has been set yet."
     },
-    "settingsProfileSubtitle": "Назва й аватар",
+    "settingsProfileSubtitle": "Ім’я, аватар та статистика прослуховувань",
     "@settingsProfileSubtitle": {
         "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
     },
@@ -1247,7 +1247,7 @@
     "@settingsPlaybackSleepTimer": {
         "description": "Row for stopping playback after a set time. Currently marked as planned."
     },
-    "settingsPlaybackResumeOnConnect": "Відновлювати відтворення після під’єднання навушників",
+    "settingsPlaybackResumeOnConnect": "Відновлювати після з’єднання",
     "@settingsPlaybackResumeOnConnect": {
         "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
     },
@@ -1489,5 +1489,216 @@
     "settingsAppearanceHomeTintSubtitle": "Зафарбувати верхню частину головного екрана кольорами поточної пісні",
     "@settingsAppearanceHomeTintSubtitle": {
         "description": "Subtitle under the home tint row."
+    },
+    "homeSectionRecentlyPlayed": "Нещодавно відтворені",
+    "settingsProfileStatsWindow": "Цього тижня",
+    "@settingsProfileStatsWindow": {
+        "description": "Subtitle under the stats card title, naming the window every number covers. Monday to Sunday of the current week."
+    },
+    "settingsProfileStatsPlays": "Усього відтворень",
+    "@settingsProfileStatsPlays": {
+        "description": "Label above the number of songs played."
+    },
+    "settingsProfileStatsTopArtist": "Топовий виконавець",
+    "@settingsProfileStatsTopArtist": {
+        "description": "Label above the most played artist."
+    },
+    "settingsProfileStatsTopSong": "Топова пісня",
+    "@settingsProfileStatsTopSong": {
+        "description": "Label above the most played song."
+    },
+    "settingsProfileStatsPlayCount": "{count, plural, one{# відтворення} few{# відтворення} many{# відтворень} other{# відтворення}}",
+    "@settingsProfileStatsPlayCount": {
+        "description": "How often the top song or artist was played, shown after the name.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsHoursMinutes": "{hours} гол {minutes} хв",
+    "@settingsProfileStatsHoursMinutes": {
+        "description": "Listening time of an hour or more. Minutes are zero padded.",
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsMinutes": "{minutes} хв",
+    "@settingsProfileStatsMinutes": {
+        "description": "Listening time under an hour.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsEmpty": "Тут ще нічого немає. Увімкніть щось, і цей список заповниться.",
+    "@settingsProfileStatsEmpty": {
+        "description": "Shown in place of the numbers when nothing was played this week."
+    },
+    "settingsProfileStatsNone": "Поки що немає",
+    "@settingsProfileStatsNone": {
+        "description": "Placeholder where a top song or artist would go when there is none."
+    },
+    "settingsPlaybackSleepTimerOff": "Вимк",
+    "@settingsPlaybackSleepTimerOff": {
+        "description": "Value shown next to the sleep timer row when no timer is running."
+    },
+    "normalisationSectionMode": "Режим",
+    "@normalisationSectionMode": {
+        "description": "Section label above the normalisation mode options."
+    },
+    "normalisationSectionTuning": "Налаштування",
+    "@normalisationSectionTuning": {
+        "description": "Section label above the preamp and clipping options."
+    },
+    "normalisationResetTooltip": "Скинути нормалізацію",
+    "@normalisationResetTooltip": {
+        "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
+    },
+    "normalisationOff": "Вимк",
+    "@normalisationOff": {
+        "description": "Normalisation mode that applies no gain."
+    },
+    "normalisationTrack": "Для кожної пісні",
+    "@normalisationTrack": {
+        "description": "Normalisation mode that brings every song to the same loudness."
+    },
+    "normalisationTrackSubtitle": "Однакова гучність для всіх пісень",
+    "@normalisationTrackSubtitle": {
+        "description": "Subtitle of the per track normalisation option."
+    },
+    "normalisationAlbum": "Для кожного альбому",
+    "@normalisationAlbum": {
+        "description": "Normalisation mode that normalises whole albums as one unit."
+    },
+    "normalisationAlbumSubtitle": "Зберігає різницю в гучності всередині альбому",
+    "@normalisationAlbumSubtitle": {
+        "description": "Subtitle of the per album normalisation option."
+    },
+    "normalisationPreamp": "Попереднє підсилення",
+    "@normalisationPreamp": {
+        "description": "Slider for extra gain applied on top of the ReplayGain value."
+    },
+    "normalisationPreampValue": "{db} дБ",
+    "@normalisationPreampValue": {
+        "description": "Value shown next to the preamp slider, in decibels.",
+        "placeholders": {
+            "db": {
+                "type": "String"
+            }
+        }
+    },
+    "normalisationPreventClipping": "Запобігання спотворенню",
+    "@normalisationPreventClipping": {
+        "description": "Toggle that lowers the gain instead of letting loud peaks distort."
+    },
+    "normalisationPreventClippingSubtitle": "Зменшуйте підсилення замість того, щоб дозволяти пікам спотворювати звук",
+    "@normalisationPreventClippingSubtitle": {
+        "description": "Subtitle of the prevent clipping toggle."
+    },
+    "sleepTitle": "Таймер сну",
+    "@sleepTitle": {
+        "description": "Title of the sleep timer sheet."
+    },
+    "sleepSubtitle": "Гучність поступово зменшується, а відтворення призупиняється після завершення часу таймера",
+    "@sleepSubtitle": {
+        "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+    },
+    "sleepMinutes": "{count, plural, =1{1 хвилина} one{{count} хвилина} few{{count} хвилини} many{{count} хвилин} other{{count} хвилин}}",
+    "@sleepMinutes": {
+        "description": "Preset duration option in the sleep timer sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepUnderMinute": "< 1 хвилини",
+    "@sleepUnderMinute": {
+        "description": "Sleep timer value shown when less than a minute is left."
+    },
+    "settingsPlaybackSleepTimerFade": "Тривалість затухання",
+    "@settingsPlaybackSleepTimerFade": {
+        "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+    },
+    "settingsPlaybackSleepTimerFadeValue": "{seconds} с",
+    "@settingsPlaybackSleepTimerFadeValue": {
+        "description": "Value shown next to the fade out length slider, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepEndOfSong": "Кінець пісні",
+    "@sleepEndOfSong": {
+        "description": "Sleep timer option that stops playback when the current song finishes."
+    },
+    "sleepEndOfQueue": "Кінець черги",
+    "@sleepEndOfQueue": {
+        "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+    },
+    "sleepCustom": "Власний",
+    "@sleepCustom": {
+        "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+    },
+    "sleepRemaining": "{minutes}:{seconds}",
+    "@sleepRemaining": {
+        "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            },
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "sleepRemainingEndOfSong": "Доки пісня не закінчиться",
+    "@sleepRemainingEndOfSong": {
+        "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+    },
+    "sleepRemainingEndOfQueue": "Доки черга не закінчиться",
+    "@sleepRemainingEndOfQueue": {
+        "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+    },
+    "sleepExtend": "+{count, plural, one {1 хвилина} few {{count} хвилини} many{{count} хвилин} other {{count} хвилин}}",
+    "@sleepExtend": {
+        "description": "Button that adds more time to a running sleep timer.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepCustomTitle": "Власний час",
+    "@sleepCustomTitle": {
+        "description": "Title of the sheet for entering an arbitrary sleep timer length."
+    },
+    "sleepCustomField": "Хвилин",
+    "@sleepCustomField": {
+        "description": "Label of the field for entering the sleep timer length in minutes."
+    },
+    "sleepCustomStart": "Запустити таймер",
+    "@sleepCustomStart": {
+        "description": "Button that starts the sleep timer with the entered number of minutes."
+    },
+    "sleepCancel": "Скасувати таймер",
+    "@sleepCancel": {
+        "description": "Button that stops a running sleep timer without pausing playback."
+    },
+    "sleepStarted": "Таймер сну встановлено",
+    "@sleepStarted": {
+        "description": "Confirmation shown after a sleep timer is started."
+    },
+    "sleepCancelled": "Таймер сну скасовано",
+    "@sleepCancelled": {
+        "description": "Confirmation shown after a running sleep timer is cancelled."
     }
 }
