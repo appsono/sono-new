@@ -31,12 +31,14 @@ import 'package:sono/widgets/cover_art.dart';
 import 'package:sono/widgets/list_row.dart';
 import 'package:sono/widgets/media_card.dart';
 import 'package:sono/widgets/mini_player.dart';
+import 'package:sono/widgets/playlist_cover.dart';
 import 'package:sono/widgets/section.dart';
 import 'package:sono/widgets/header.dart';
 
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
 import 'package:sono/pages/library/subpages/artist_discography_page.dart';
+import 'package:sono/pages/library/subpages/playlist_detail_page.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 const double _scrolledThreshold = 60;
@@ -83,6 +85,9 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   List<AlbumMetadataRow>? _featured;
   List<({Artist artist, int shared})>? _related;
   Map<int, String> _relatedCovers = const {};
+  List<Playlist>? _playlists;
+  Map<int, int> _playlistCounts = const {};
+  Map<int, List<String>> _playlistCovers = const {};
 
   @override
   void initState() {
@@ -156,6 +161,16 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                   in (await widget.db.getArtistCoverAndCounts()).entries)
                 e.key: e.value.path,
             };
+      final playlists = await widget.db.getPlaylistsWithArtist(id);
+      final playlistCounts = <int, int>{};
+      final playlistCovers = <int, List<String>>{};
+      for (final p in playlists) {
+        playlistCounts[p.id] = await widget.db.getPlaylistSongCount(p.id);
+        playlistCovers[p.id] = await widget.db.getFirstNPlaylistSongPaths(
+          p.id,
+          4,
+        );
+      }
       if (!mounted) return;
 
       setState(() {
@@ -165,6 +180,9 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
         _featured = featured;
         _related = related;
         _relatedCovers = covers;
+        _playlists = playlists;
+        _playlistCounts = playlistCounts;
+        _playlistCovers = playlistCovers;
       });
     } catch (e, st) {
       debugPrint('ArtistDetailPage._loadRest failed: $e\n$st');
@@ -330,6 +348,17 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     artist: artist,
   );
 
+  Future<void> _openPlaylist(Playlist playlist) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            PlaylistDetailPage(db: widget.db, playlistId: playlist.id),
+      ),
+    );
+    if (!mounted) return;
+    await _loadRest();
+  }
+
   // ==== build ====
   @override
   Widget build(BuildContext context) {
@@ -482,7 +511,29 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
               ],
 
               // ==== playlist ====
-              // TODO: playlists containing this artist
+              if (_playlists != null && _playlists!.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.artistInPlaylists,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: _albumExtent,
+                    children: [
+                      for (final p in _playlists!)
+                        SizedBox(
+                          width: _albumCard,
+                          child: _PlaylistCard(
+                            playlist: p,
+                            songCount: _playlistCounts[p.id] ?? 0,
+                            songPaths: _playlistCovers[p.id] ?? const [],
+                            onTap: () => _openPlaylist(p),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+
               SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
             ],
           ),
@@ -648,6 +699,67 @@ class _PlayAction extends StatelessWidget {
             color: c.textLight,
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ==== playlist card ====
+class _PlaylistCard extends StatelessWidget {
+  final Playlist playlist;
+  final int songCount;
+  final List<String> songPaths;
+  final VoidCallback onTap;
+
+  const _PlaylistCard({
+    required this.playlist,
+    required this.songCount,
+    required this.songPaths,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+
+    return BouncyTap(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SonoPlaylistCover(
+            coverPath: playlist.coverPath,
+            songPaths: songPaths,
+            size: _albumCard,
+            borderRadius: SonoSizes.borderRadiusLg,
+            bordered: true,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            playlist.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: SonoFonts.heading,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: c.textPrimary,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            l.commonSongsCount(songCount),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: SonoFonts.primary,
+              fontSize: 12,
+              color: c.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }

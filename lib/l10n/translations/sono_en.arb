@@ -425,6 +425,10 @@
       "count": { "type": "int" }
     }
   },
+  "artistInPlaylists": "In your playlists",
+  "@artistInPlaylists": {
+    "description": "Heading above playlists that contain a song by this artist."
+  },
   "artistListeningTime": "You've listened",
   "@artistListeningTime": {
     "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
