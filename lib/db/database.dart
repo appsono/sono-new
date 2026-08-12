@@ -1669,13 +1669,23 @@ class SonoDatabase extends _$SonoDatabase {
       'WITH totals AS ('
       'SELECT album_id, COUNT(*) AS total FROM songs '
       'WHERE album_id IS NOT NULL GROUP BY album_id'
+      '), credits AS ('
+      'SELECT s.album_id AS album_id, sa.artist_id AS artist_id, '
+      'COUNT(*) AS n FROM song_artists sa '
+      'JOIN songs s ON s.id = sa.song_id '
+      'WHERE s.album_id IS NOT NULL GROUP BY s.album_id, sa.artist_id'
+      '), collabs AS ('
+      //a single is one song, a second name on it is a guest not a partner
+      'SELECT t.album_id FROM totals t JOIN credits c '
+      'ON c.album_id = t.album_id AND c.n = t.total '
+      'WHERE t.total > 1 GROUP BY t.album_id HAVING COUNT(*) > 1'
       ') '
-      'SELECT t.album_id AS album_id FROM totals t '
-      'JOIN song_artists sa ON sa.artist_id = ? '
-      'JOIN songs s ON s.id = sa.song_id AND s.album_id = t.album_id '
-      'GROUP BY t.album_id HAVING COUNT(*) < t.total',
-      variables: [Variable.withInt(artistId)],
-      readsFrom: {songs, songArtists},
+      'SELECT a.id AS album_id FROM albums a '
+      'JOIN credits me ON me.album_id = a.id AND me.artist_id = ? '
+      'WHERE a.artist_id != ? '
+      'AND a.id NOT IN (SELECT album_id FROM collabs)',
+      variables: [Variable.withInt(artistId), Variable.withInt(artistId)],
+      readsFrom: {albums, songs, songArtists},
     ).get();
     return [for (final r in rows) r.read<int>('album_id')];
   }
