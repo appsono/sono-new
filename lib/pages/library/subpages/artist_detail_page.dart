@@ -46,18 +46,6 @@ const int _albumRailLimit = 10;
 const double _albumCard = 150;
 const double _albumExtent = 196;
 
-typedef _ArtistAlbumRow = ({
-  int id,
-  String title,
-  String? displayTitle,
-  DateTime? favoritedAt,
-  int songCount,
-  int distinctArtistCount,
-  int totalDurationMs,
-  DateTime? firstReleaseDate,
-  String firstPath,
-});
-
 typedef _ArtistListening = ({
   int totalMs,
   int plays,
@@ -93,7 +81,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   List<Song>? _catalogue;
   List<({Song song, int plays})>? _topSongs;
   _ArtistListening? _listening;
-  List<_ArtistAlbumRow>? _albums;
+  List<AlbumMetadataRow>? _albums;
 
   @override
   void initState() {
@@ -216,7 +204,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     );
   }
 
-  Future<void> _openAlbumSheet(_ArtistAlbumRow a) async {
+  Future<void> _openAlbumSheet(AlbumMetadataRow a) async {
     final artist = _artist;
     if (artist == null) return;
     final viewData = AlbumWithArtistViewData(
@@ -265,8 +253,8 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   }
 
   /// Favourites first, query already sorts by release then title
-  List<_ArtistAlbumRow> get _railAlbums {
-    final albums = _albums ?? const <_ArtistAlbumRow>[];
+  List<AlbumMetadataRow> get _railAlbums {
+    final albums = _albums ?? const <AlbumMetadataRow>[];
     final favorited = [
       for (final a in albums)
         if (a.favoritedAt != null) a,

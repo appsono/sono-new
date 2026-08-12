@@ -571,13 +571,16 @@ class SonoDatabase extends _$SonoDatabase {
     final firstPathExp = songs.path.min();
 
     final query =
-        selectOnly(
-            albums,
-          ).join([leftOuterJoin(songs, songs.albumId.equalsExp(albums.id))])
+        selectOnly(albums).join([
+            leftOuterJoin(songs, songs.albumId.equalsExp(albums.id)),
+            leftOuterJoin(artists, artists.id.equalsExp(albums.artistId)),
+          ])
           ..addColumns([
             albums.id,
             albums.title,
             albums.displayTitle,
+            albums.artistId,
+            artists.name,
             albums.favoritedAt,
             songCountExp,
             distinctArtistExp,
@@ -602,6 +605,8 @@ class SonoDatabase extends _$SonoDatabase {
         id: row.read(albums.id)!,
         title: row.read(albums.title)!,
         displayTitle: row.read(albums.displayTitle),
+        artistId: row.read(albums.artistId)!,
+        artistName: row.read(artists.name) ?? '',
         favoritedAt: row.read(albums.favoritedAt),
         songCount: row.read(songCountExp) ?? 0,
         distinctArtistCount: row.read(distinctArtistExp) ?? 0,
@@ -1795,6 +1800,8 @@ typedef AlbumMetadataRow = ({
   int id,
   String title,
   String? displayTitle,
+  int artistId,
+  String artistName,
   DateTime? favoritedAt,
   int songCount,
   int distinctArtistCount,

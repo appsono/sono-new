@@ -65,11 +65,11 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
       album: AlbumWithArtistViewData(
         id: a.id,
         title: a.displayTitle?.isNotEmpty == true ? a.displayTitle! : a.title,
-        artistId: widget.artist.id,
-        artistName: widget.artist.name,
+        artistId: a.artistId,
+        artistName: a.artistName,
       ),
     );
-    await _load(); //may have toggled albums favorite state
+    await _refreshAlbum(a.id); //may have toggled albums favorite state
   }
 
   void _openAlbum(int albumId) async {
@@ -79,7 +79,16 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
       ),
     );
     if (!mounted) return;
-    await _load();
+    await _refreshAlbum(albumId);
+  }
+
+  Future<void> _refreshAlbum(int albumId) async {
+    final rows = await widget.db.getAlbumsWithMetadataByIds([albumId]);
+    if (!mounted || rows.isEmpty) return;
+    setState(() {
+      final i = _albums!.indexWhere((a) => a.id == albumId);
+      if (i >= 0) _albums![i] = rows.single;
+    });
   }
 
   @override
@@ -102,7 +111,7 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
               ),
 
               // ==== chips ====
-              // TODO: albums, singles and eps, feaured
+              // TODO: albums, singles and eps, featured
               if (albums != null)
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
