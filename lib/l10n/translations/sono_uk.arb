@@ -1700,5 +1700,71 @@
     "sleepCancelled": "Таймер сну скасовано",
     "@sleepCancelled": {
         "description": "Confirmation shown after a running sleep timer is cancelled."
+    },
+    "artistAppearsOn": "З’являється у",
+    "@artistAppearsOn": {
+        "description": "Heading above releases by other artists that this artist is credited on."
+    },
+    "artistDiscographyEmpty": "Від цього виконавця поки нічого немає :(",
+    "@artistDiscographyEmpty": {
+        "description": "Shown on the discography page when the artist has no releases at all."
+    },
+    "artistDiscographyNoMatches": "Нічого не відповідає цим фільтрам :/",
+    "@artistDiscographyNoMatches": {
+        "description": "Shown on the discography page when the selected filter chips leave no releases."
+    },
+    "artistFilterSinglesEps": "Сингли та мініальбоми",
+    "@artistFilterSinglesEps": {
+        "description": "Discography filter chip for short releases."
+    },
+    "artistFilterFeatured": "Вибране",
+    "@artistFilterFeatured": {
+        "description": "Discography filter chip for albums the artist only appears on."
+    },
+    "artistFullDiscography": "Повна дискографія",
+    "@artistFullDiscography": {
+        "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
+    },
+    "artistTopSongs": "Найкращі пісні",
+    "@artistTopSongs": {
+        "description": "Heading above the users most played songs by this artist."
+    },
+    "artistTopSongsPlays": "{count, plural, one{# відтворення} few{# відтворення} many{# відтворень} other{# відтворень}}",
+    "@artistTopSongsPlays": {
+        "description": "How often the user played a song, shown at the end of each ranked row.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "artistInPlaylists": "У ваших добірках",
+    "@artistInPlaylists": {
+        "description": "Heading above playlists that contain a song by this artist."
+    },
+    "artistListeningTime": "Ви послухали",
+    "@artistListeningTime": {
+        "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
+    },
+    "artistListeningPlays": "Відтворень",
+    "@artistListeningPlays": {
+        "description": "Label above how many songs by this artist the user has played."
+    },
+    "artistListeningFirstHeard": "Уперше почуто",
+    "@artistListeningFirstHeard": {
+        "description": "Label above the date the user first played this artist."
+    },
+    "artistRelated": "Разом із",
+    "@artistRelated": {
+        "description": "Heading above artists this one shares songs with."
+    },
+    "artistRelatedShared": "{count, plural, one{{count} пісня разом} few{{count} пісні разом} many{{count} пісень разом} other{{count} пісень разом}}",
+    "@artistRelatedShared": {
+        "description": "How many songs the two artists are both credited on.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
     }
 }
