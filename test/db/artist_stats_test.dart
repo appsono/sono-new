@@ -307,6 +307,61 @@ void main() {
     });
   });
 
+  group('getAlbumCreditedArtists', () {
+    test('a collab record credits both, primary first', () async {
+      final ye = await artist('Ye');
+      final jay = await artist('JAY-Z');
+      final album = await db.getOrCreateAlbum('Watch The Throne', ye, null);
+      await addSong('Otis', [ye, jay], albumId: album);
+      await addSong('Ni__as In Paris', [ye, jay], albumId: album);
+
+      expect(await db.getAlbumCreditedArtists(album), ['Ye', 'JAY-Z']);
+    });
+
+    test('a guest on one song is not credited', () async {
+      final nas = await artist('Nas');
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Life Is Good', nas, null);
+      await addSong('Still Dreaming', [nas, ye], albumId: album);
+      await addSong('Daughters', [nas], albumId: album);
+
+      expect(await db.getAlbumCreditedArtists(album), ['Nas']);
+    });
+
+    test('a single credits everyone on it', () async {
+      final a = await artist('First');
+      final b = await artist('Second');
+      final c = await artist('Third');
+      final album = await db.getOrCreateAlbum('Take Me To The Light', a, null);
+      await addSong('Take Me To The Light', [a, b, c], albumId: album);
+
+      expect(await db.getAlbumCreditedArtists(album), [
+        'First',
+        'Second',
+        'Third',
+      ]);
+    });
+
+    test('is empty for an album without credits', () async {
+      final ye = await artist('Ye');
+      final album = await db.getOrCreateAlbum('Untagged', ye, null);
+      await addSong('One', const [], albumId: album);
+
+      expect(await db.getAlbumCreditedArtists(album), isEmpty);
+    });
+
+    test('songs on other albums do not leak in', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      final mine = await db.getOrCreateAlbum('Mine', ye, null);
+      final theirs = await db.getOrCreateAlbum('Theirs', cudi, null);
+      await addSong('One', [ye], albumId: mine);
+      await addSong('Two', [cudi], albumId: theirs);
+
+      expect(await db.getAlbumCreditedArtists(mine), ['Ye']);
+    });
+  });
+
   group('getAlbumsWithMetadataByIds', () {
     test('is empty for an empty list', () async {
       expect(await db.getAlbumsWithMetadataByIds([]), isEmpty);
