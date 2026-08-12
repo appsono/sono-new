@@ -135,6 +135,31 @@ void main() {
       expect(await db.getArtistCoverPath(ye), '/music/bbb.mp3');
     });
 
+    test('the batch lookup matches the single one', () async {
+      final ye = await artist('Ye');
+      final cudi = await artist('Kid Cudi');
+      await addSong('Runaway', [ye], primaryId: ye, at: '/music/a.mp3');
+      await addSong('Reborn', [cudi], primaryId: cudi, at: '/music/b.mp3');
+
+      expect(await db.getArtistCoverPaths([ye, cudi]), {
+        ye: '/music/a.mp3',
+        cudi: '/music/b.mp3',
+      });
+    });
+
+    test('the batch lookup is empty for no ids', () async {
+      expect(await db.getArtistCoverPaths([]), isEmpty);
+    });
+
+    test('an artist with no songs is absent from the batch', () async {
+      final ye = await artist('Ye');
+      final nobody = await artist('Nobody');
+      await addSong('Runaway', [ye], primaryId: ye, at: '/music/a.mp3');
+
+      final covers = await db.getArtistCoverPaths([ye, nobody]);
+      expect(covers.containsKey(nobody), isFalse);
+    });
+
     test('is null for an artist with no songs', () async {
       expect(await db.getArtistCoverPath(await artist('Nobody')), isNull);
     });

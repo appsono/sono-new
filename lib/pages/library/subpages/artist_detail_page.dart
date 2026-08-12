@@ -162,13 +162,9 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
       final featuredIds = await widget.db.getArtistFeaturedAlbumIds(id);
       final featured = await widget.db.getAlbumsWithMetadataByIds(featuredIds);
       final related = await widget.db.getRelatedArtists(id);
-      final covers = related.isEmpty
-          ? const <int, String>{}
-          : {
-              for (final e
-                  in (await widget.db.getArtistCoverAndCounts()).entries)
-                e.key: e.value.path,
-            };
+      final covers = await widget.db.getArtistCoverPaths([
+        for (final r in related) r.artist.id,
+      ]);
       final playlists = await widget.db.getPlaylistsWithArtist(id);
       final playlistCounts = <int, int>{};
       final playlistCovers = <int, List<String>>{};

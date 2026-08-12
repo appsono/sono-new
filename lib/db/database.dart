@@ -200,6 +200,19 @@ class SonoDatabase extends _$SonoDatabase {
     return row.read<String?>('path');
   }
 
+  /// Cover source for several artists at once
+  Future<Map<int, String>> getArtistCoverPaths(List<int> artistIds) async {
+    if (artistIds.isEmpty) return const {};
+    final rows = await customSelect(
+      'SELECT artist_id AS aid, MIN(path) AS path FROM songs '
+      'WHERE artist_id IN (${artistIds.map((_) => '?').join(',')}) '
+      'GROUP BY artist_id',
+      variables: [for (final id in artistIds) Variable.withInt(id)],
+      readsFrom: {songs},
+    ).get();
+    return {for (final r in rows) r.read<int>('aid'): r.read<String>('path')};
+  }
+
   /// Total number of artists in library
   Future<int> countArtists() async {
     final exp = artists.id.count();
