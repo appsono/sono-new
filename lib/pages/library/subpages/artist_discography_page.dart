@@ -16,6 +16,7 @@ import 'package:sono/l10n/localizations.dart';
 import 'package:sono/db/database.dart';
 
 import 'package:sono/helper/album_type.dart';
+import 'package:sono/theme/theme.dart';
 import 'package:sono/theme/tokens.dart';
 import 'package:sono/widgets/album_card.dart';
 import 'package:sono/widgets/chip.dart';
@@ -169,6 +170,7 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
     final l = AppLocalizations.of(context);
     final sections = _sections;
     final filters = _availableFilters;
+    final albums = _albums;
 
     return Scaffold(
       body: Stack(
@@ -192,6 +194,32 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
                     selected: _filters,
                     onToggle: _toggleFilter,
                     onClear: _clearFilters,
+                  ),
+                ),
+
+              if (albums == null)
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (sections.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: Text(
+                        albums.isEmpty
+                            ? l.artistDiscographyEmpty
+                            : l.artistDiscographyNoMatches,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: SonoFonts.primary,
+                          fontSize: 13,
+                          color: context.sono.textTertiary,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
 
