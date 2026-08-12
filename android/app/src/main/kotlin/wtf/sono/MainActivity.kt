@@ -2,6 +2,9 @@ package wtf.sono
 
 import android.app.ActivityManager
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.os.Process
 import com.ryanheise.audioservice.AudioServiceActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -13,7 +16,7 @@ class MainActivity : AudioServiceActivity() {
         override fun onPreEngineRestart() {}
 
         override fun onEngineWillDestroy() {
-            // post so AudioService can finish cleanup before process exists
+            // post so AudioService can finish cleanup before process exits
             Handler(Looper.getMainLooper()).post {
                 Process.killProcess(Process.myPid())
             }
