@@ -79,6 +79,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
   List<({Song song, int plays})>? _topSongs;
   _ArtistListening? _listening;
   List<AlbumMetadataRow>? _albums;
+  List<AlbumMetadataRow>? _featured;
 
   @override
   void initState() {
@@ -101,6 +102,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
     }
   }
 
+  /// What hero needs to paint, everything else follows in [_loadRest]
   Future<void> _load() async {
     try {
       final artist = await widget.db.getArtistById(widget.artistId);
@@ -114,16 +116,6 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
       final catalogue = await widget.db.getArtistCatalogueSongs(
         widget.artistId,
       );
-      final topSongs = await widget.db.getTopSongsByArtist(
-        widget.artistId,
-        limit: _topSongLimit,
-      );
-      final listening = await widget.db.getArtistListeningSummary(
-        widget.artistId,
-      );
-      final albums = await widget.db.getArtistAlbumsWithMetadata(
-        widget.artistId,
-      );
       final favorited = await widget.db.getArtistFavorited(widget.artistId);
       if (!mounted) return;
 
@@ -131,18 +123,43 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
         _artist = artist;
         _coverPath = coverPath;
         _catalogue = catalogue;
-        _topSongs = topSongs;
-        _listening = listening;
-        _albums = albums;
         _favorited = favorited;
       });
     } catch (e, st) {
       debugPrint('ArtistDetailPage._load failed: $e\n$st');
       if (!mounted) return;
+      setState(() => _catalogue = const []);
+    }
+    await _loadRest();
+  }
+
+  /// Sections below hero, each render once data arrives
+  Future<void> _loadRest() async {
+    try {
+      final id = widget.artistId;
+      final topSongs = await widget.db.getTopSongsByArtist(
+        id,
+        limit: _topSongLimit,
+      );
+      final listening = await widget.db.getArtistListeningSummary(id);
+      final albums = await widget.db.getArtistAlbumsWithMetadata(id);
+      final featuredIds = await widget.db.getArtistFeaturedAlbumIds(id);
+      final featured = await widget.db.getAlbumsWithMetadataByIds(featuredIds);
+      if (!mounted) return;
+
       setState(() {
-        _catalogue = const [];
+        _topSongs = topSongs;
+        _listening = listening;
+        _albums = albums;
+        _featured = featured;
+      });
+    } catch (e, st) {
+      debugPrint('ArtistDetailPage._loadRest failed: $e\n$st');
+      if (!mounted) return;
+      setState(() {
         _topSongs = const [];
         _albums = const [];
+        _featured = const [];
       });
     }
   }
@@ -380,8 +397,35 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
                   ),
                 ),
 
+              if (_featured != null && _featured!.isNotEmpty)
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
               // ==== appears on ====
-              // TODO: album/songs/eps by others crediting this artist
+              if (_featured != null && _featured!.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: SonoSection(
+                    title: l.artistAppearsOn,
+                    titleStyle: const TextStyle(fontSize: 20),
+                    itemExtent: _albumExtent,
+                    children: [
+                      for (final a in _featured!)
+                        SizedBox(
+                          width: _albumCard,
+                          child: SonoAlbumCard(
+                            album: a,
+                            type: inferAlbumType(
+                              songCount: a.songCount,
+                              distinctArtistCount: a.distinctArtistCount,
+                              creditedArtistCount: a.creditedArtistCount,
+                              totalDurationMs: a.totalDurationMs,
+                            ),
+                            onTap: () => _openAlbum(a.id),
+                            onLongPress: () => _openAlbumSheet(a),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
 
               // ==== related artists ====
               // TODO: most frequent co-credits
