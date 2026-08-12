@@ -44,6 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Album sheets now list every artist on the record instead of only the one it
   is filed under
 - Albums like "Watch The Throne" are now recognised as collaborations
+- Fixed the media controls occasionally showing the previous song's title,
+  artist and cover while the duration was already correct
 
 ### Removed
 

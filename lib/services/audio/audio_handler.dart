@@ -34,6 +34,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   int _coverCounter = 0;
 
   int _updateToken = 0;
+  String? _inFlightItemPath;
 
   Duration _lastBroadcastPosition = Duration.zero;
   DateTime _lastBroadcastTime = DateTime.now();
@@ -65,12 +66,19 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     });
 
     _audio.durationStream.listen((duration) {
-      if (mediaItem.hasValue && mediaItem.value != null) {
-        final currentItem = mediaItem.value!;
-        if (currentItem.duration == null ||
-            (currentItem.duration!.inSeconds - duration.inSeconds).abs() > 1) {
-          mediaItem.add(currentItem.copyWith(duration: duration));
+      final current = mediaItem.hasValue ? mediaItem.value : null;
+      final playingPath = _audio.currentSong?.path;
+
+      //only stamp playing song, otherwise old song gets new dur
+      if (current != null && playingPath != null && current.id == playingPath) {
+        if (current.duration == null ||
+            (current.duration!.inSeconds - duration.inSeconds).abs() > 1) {
+          mediaItem.add(current.copyWith(duration: duration));
         }
+      } else if (playingPath != null && _inFlightItemPath != playingPath) {
+        //session stale, no update on the way > rebuil
+        final song = _audio.currentSong;
+        if (song != null) _updateMediaItem(song);
       }
       _broadcastState();
     });
@@ -118,6 +126,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   Future<void> _updateMediaItem(Song song) async {
     final token = ++_updateToken;
+    _inFlightItemPath = song.path;
     Uri? finalArtUri;
     try {
       //lazy-init temp dir path
@@ -167,9 +176,11 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
     String? artistName = song.displayArtist;
     if (artistName == null && song.artistId != null) {
-      final artist = await _db.getArtistById(song.artistId!);
+      try {
+        final artist = await _db.getArtistById(song.artistId!);
+        artistName = artist?.name;
+      } catch (_) {}
       if (token != _updateToken) return;
-      artistName = artist?.name;
     }
 
     final item = MediaItem(
@@ -182,6 +193,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           : null,
     );
     mediaItem.add(item);
+    if (_inFlightItemPath == song.path) _inFlightItemPath = null;
   }
 
   Future<void> _cleanupStaleCover() async {
