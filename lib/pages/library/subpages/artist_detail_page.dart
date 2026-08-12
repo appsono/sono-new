@@ -56,9 +56,6 @@ typedef _ArtistListening = ({
   DateTime? lastAt,
 });
 
-/// WIP ARTIST PAGE REDESIGN
-/// CHECK artist_detail_page.dart.old FOR THE OLD PAGE
-
 class ArtistDetailPage extends StatefulWidget {
   final SonoDatabase db;
   final int artistId;
