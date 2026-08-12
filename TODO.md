@@ -17,6 +17,8 @@
       loop all enabled~~
 - [x] ~~Favorite Albums removed after forced rescan / sorting mode changed~~
 - [x] ~~EQ and bass boost sometimes have no audible effect~~
+- [ ] Engine-death process kill only registers from `MainActivity`. Move it
+      into `sono_query`'s `onAttachedToEngine` to cover service-first engines
 
 ## UI
 

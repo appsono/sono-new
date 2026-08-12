@@ -46,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Albums like "Watch The Throne" are now recognised as collaborations
 - Fixed the media controls occasionally showing the previous song's title,
   artist and cover while the duration was already correct
+- Closing Sono from the recent apps list and reopening it no longer crashes on
+  the first launch (only happened on some devices)
 
 ### Removed
 
