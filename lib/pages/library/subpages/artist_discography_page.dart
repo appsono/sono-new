@@ -24,6 +24,7 @@ import 'package:sono/widgets/mini_player.dart';
 
 import 'package:sono/pages/library/library_sheets.dart';
 import 'package:sono/pages/library/subpages/album_detail_page.dart';
+import 'package:sono/widgets/section.dart';
 
 const double _bottomInset = SonoSizes.playerHeight + 22 + 16;
 
@@ -109,12 +110,18 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
     setState(_filters.clear);
   }
 
-  List<AlbumMetadataRow> get _shown {
+  List<({DiscographyFilter filter, List<AlbumMetadataRow> albums})>
+  get _sections {
     final albums = _albums ?? const <AlbumMetadataRow>[];
-    if (_filters.isEmpty) return albums;
+    final byBucket = <DiscographyFilter, List<AlbumMetadataRow>>{};
+    for (final a in albums) {
+      final bucket = _bucketOf(a);
+      if (_filters.isNotEmpty && !_filters.contains(bucket)) continue;
+      byBucket.putIfAbsent(bucket, () => []).add(a);
+    }
     return [
-      for (final a in albums)
-        if (_filters.contains(_bucketOf(a))) a,
+      for (final f in DiscographyFilter.values)
+        if (byBucket[f] != null) (filter: f, albums: byBucket[f]!),
     ];
   }
 
@@ -160,8 +167,7 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final albums = _albums;
-    final shown = _shown;
+    final sections = _sections;
     final filters = _availableFilters;
 
     return Scaffold(
@@ -189,9 +195,18 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
                   ),
                 ),
 
-              if (albums != null)
+              for (final section in sections) ...[
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 26, 0, 14),
+                    child: SonoSectionHeader(
+                      title: _filterLabel(l, section.filter),
+                      titleStyle: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   sliver: SliverGrid.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -200,9 +215,9 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
                           mainAxisSpacing: 16,
                           childAspectRatio: 0.78,
                         ),
-                    itemCount: shown.length,
+                    itemCount: section.albums.length,
                     itemBuilder: (context, i) {
-                      final a = shown[i];
+                      final a = section.albums[i];
                       return SonoAlbumCard(
                         album: a,
                         type: inferAlbumType(
@@ -217,6 +232,7 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
                     },
                   ),
                 ),
+              ],
 
               SliverToBoxAdapter(child: SizedBox(height: _bottomInset)),
             ],
@@ -233,6 +249,12 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
     );
   }
 }
+
+String _filterLabel(AppLocalizations l, DiscographyFilter f) => switch (f) {
+  DiscographyFilter.albums => l.libraryCardAlbums,
+  DiscographyFilter.singleEps => l.artistFilterSinglesEps,
+  DiscographyFilter.featured => l.artistFilterFeatured,
+};
 
 /// Mutli select, non selected == all stuff
 class _FilterChips extends StatelessWidget {
@@ -252,12 +274,6 @@ class _FilterChips extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
 
-    String label(DiscographyFilter f) => switch (f) {
-      DiscographyFilter.albums => l.libraryCardAlbums,
-      DiscographyFilter.singleEps => l.artistFilterSinglesEps,
-      DiscographyFilter.featured => l.artistFilterFeatured,
-    };
-
     return SizedBox(
       height: 50,
       child: ListView.separated(
@@ -275,7 +291,7 @@ class _FilterChips extends StatelessWidget {
           }
           final f = filters[i - 1];
           return SonoChip(
-            label: label(f),
+            label: _filterLabel(l, f),
             selected: selected.contains(f),
             onTap: () => onToggle(f),
           );
