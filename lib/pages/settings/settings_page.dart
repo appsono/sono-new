@@ -10,6 +10,8 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sono/theme/tokens.dart';
@@ -38,6 +40,7 @@ import 'package:sono/pages/settings/subpages/settings_profile_page.dart';
 import 'package:sono/pages/settings/subpages/settings_appearance_page.dart';
 import 'package:sono/pages/settings/subpages/settings_language_page.dart';
 import 'package:sono/pages/settings/subpages/settings_playback_page.dart';
+import 'package:sono/pages/settings/subpages/settings_diagnostics_page.dart';
 import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
 import 'package:sono/pages/settings/subpages/settings_library_page.dart';
 import 'package:sono/pages/settings/subpages/settings_discord_page.dart';
@@ -470,6 +473,18 @@ class _SettingsPageState extends State<SettingsPage> {
             MaterialPageRoute(builder: (_) => SettingsAboutPage(db: widget.db)),
           ),
         ),
+        //diagnostics: not translated on purpose
+        if (Platform.isAndroid)
+          SettingsRow(
+            icon: IconsSheet.storageOutlined,
+            accent: c.accentAmber,
+            label: 'Diagnostics',
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SettingsDiagnosticsPage(db: widget.db),
+              ),
+            ),
+          ),
         //screenshot mode: not translated on purpose
         if (kShots)
           SettingsRow(
