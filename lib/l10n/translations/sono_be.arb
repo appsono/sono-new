@@ -554,7 +554,7 @@
     "@settingsProfileUnnamed": {
         "description": "Name shown on the profile row in settings when no username has been set yet."
     },
-    "settingsProfileSubtitle": "Імя і аватар",
+    "settingsProfileSubtitle": "Імя, аватар і статыстыка",
     "@settingsProfileSubtitle": {
         "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
     },
@@ -804,7 +804,7 @@
     "@settingsPlaybackSleepTimer": {
         "description": "Row for stopping playback after a set time. Currently marked as planned."
     },
-    "settingsPlaybackResumeOnConnect": "Прайграванне з навушнікамі",
+    "settingsPlaybackResumeOnConnect": "Прайграванне пры падлучэнні",
     "@settingsPlaybackResumeOnConnect": {
         "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
     },
@@ -1489,5 +1489,14 @@
     "settingsAppearanceHomeTintSubtitle": "Задаваць колер наверсе галоўнай старонцы, каб ён адпавядаў колерам бягучай песні",
     "@settingsAppearanceHomeTintSubtitle": {
         "description": "Subtitle under the home tint row."
+    },
+    "homeSectionRecentlyPlayed": "Нядаўна прайграныя",
+    "artistAppearsOn": "З'яўляецца",
+    "@artistAppearsOn": {
+        "description": "Heading above releases by other artists that this artist is credited on."
+    },
+    "artistDiscographyEmpty": "Нічога ад гэтага выканаўцы :(",
+    "@artistDiscographyEmpty": {
+        "description": "Shown on the discography page when the artist has no releases at all."
     }
 }
