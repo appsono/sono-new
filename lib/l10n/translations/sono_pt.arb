@@ -984,5 +984,818 @@
     "artistFilterSinglesEps": "Singles & EPs",
     "@artistFilterSinglesEps": {
         "description": "Discography filter chip for short releases."
+    },
+    "artistFilterFeatured": "Participações",
+    "@artistFilterFeatured": {
+        "description": "Discography filter chip for albums the artist only appears on."
+    },
+    "artistFullDiscography": "Discografia completa",
+    "@artistFullDiscography": {
+        "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
+    },
+    "artistTopSongs": "Melhores músicas",
+    "@artistTopSongs": {
+        "description": "Heading above the users most played songs by this artist."
+    },
+    "artistTopSongsPlays": "{count, plural, =1{1 reproduções} other{{count} plays}}",
+    "@artistTopSongsPlays": {
+        "description": "How often the user played a song, shown at the end of each ranked row.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "artistInPlaylists": "Na sua playlist",
+    "@artistInPlaylists": {
+        "description": "Heading above playlists that contain a song by this artist."
+    },
+    "artistListeningTime": "Você escutou",
+    "@artistListeningTime": {
+        "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
+    },
+    "artistListeningPlays": "Reproduções",
+    "@artistListeningPlays": {
+        "description": "Label above how many songs by this artist the user has played."
+    },
+    "artistListeningFirstHeard": "Primeira reprodução",
+    "@artistListeningFirstHeard": {
+        "description": "Label above the date the user first played this artist."
+    },
+    "artistRelated": "Frequentemente com",
+    "@artistRelated": {
+        "description": "Heading above artists this one shares songs with."
+    },
+    "artistRelatedShared": "{count, plural, =1{1 música juntos} other{{count} songs together}}",
+    "@artistRelatedShared": {
+        "description": "How many songs the two artists are both credited on.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "normalisationPreventClipping": "Evitar distorção",
+    "@normalisationPreventClipping": {
+        "description": "Toggle that lowers the gain instead of letting loud peaks distort."
+    },
+    "normalisationPreventClippingSubtitle": "Reduz o ganho em vez de deixar os picos distorcerem",
+    "@normalisationPreventClippingSubtitle": {
+        "description": "Subtitle of the prevent clipping toggle."
+    },
+    "sleepTitle": "Hora de dormir",
+    "@sleepTitle": {
+        "description": "Title of the sleep timer sheet."
+    },
+    "sleepSubtitle": "Esmaecer e pausar quando o contador acabar",
+    "@sleepSubtitle": {
+        "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+    },
+    "sleepMinutes": "{count, plural, =1{1 minuto} other{{count} minutos}}",
+    "@sleepMinutes": {
+        "description": "Preset duration option in the sleep timer sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepUnderMinute": "< 1 minuto",
+    "@sleepUnderMinute": {
+        "description": "Sleep timer value shown when less than a minute is left."
+    },
+    "settingsPlaybackSleepTimerFade": "Duração do desvanecimento",
+    "@settingsPlaybackSleepTimerFade": {
+        "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+    },
+    "settingsPlaybackSleepTimerFadeValue": "{seconds}s",
+    "@settingsPlaybackSleepTimerFadeValue": {
+        "description": "Value shown next to the fade out length slider, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepEndOfSong": "Fim da música",
+    "@sleepEndOfSong": {
+        "description": "Sleep timer option that stops playback when the current song finishes."
+    },
+    "sleepEndOfQueue": "Fim da fila",
+    "@sleepEndOfQueue": {
+        "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+    },
+    "sleepCustom": "Customizado",
+    "@sleepCustom": {
+        "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+    },
+    "sleepRemaining": "{minutes}:{seconds}",
+    "@sleepRemaining": {
+        "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            },
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "sleepRemainingEndOfSong": "Até a música acabar",
+    "@sleepRemainingEndOfSong": {
+        "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+    },
+    "sleepRemainingEndOfQueue": "Até a fila acabar",
+    "@sleepRemainingEndOfQueue": {
+        "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+    },
+    "sleepExtend": "+{count, plural, =1{1 minuto} other{{count} minutos}}",
+    "@sleepExtend": {
+        "description": "Button that adds more time to a running sleep timer.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepCustomTitle": "Tempo customizado",
+    "@sleepCustomTitle": {
+        "description": "Title of the sheet for entering an arbitrary sleep timer length."
+    },
+    "sleepCustomField": "Minutos",
+    "@sleepCustomField": {
+        "description": "Label of the field for entering the sleep timer length in minutes."
+    },
+    "sleepCustomStart": "Começar temporizador",
+    "@sleepCustomStart": {
+        "description": "Button that starts the sleep timer with the entered number of minutes."
+    },
+    "sleepCancel": "Cancelar temporizador",
+    "@sleepCancel": {
+        "description": "Button that stops a running sleep timer without pausing playback."
+    },
+    "sleepStarted": "Definir temporizador",
+    "@sleepStarted": {
+        "description": "Confirmation shown after a sleep timer is started."
+    },
+    "sleepCancelled": "Temporizador de dormir cancelado",
+    "@sleepCancelled": {
+        "description": "Confirmation shown after a running sleep timer is cancelled."
+    },
+    "settingsEqPresetFlat": "Plano",
+    "@settingsEqPresetFlat": {
+        "description": "Equalizer preset, every band at zero."
+    },
+    "settingsEqPresetBass": "Graves",
+    "@settingsEqPresetBass": {
+        "description": "Equalizer preset, lifts the lows."
+    },
+    "settingsEqPresetTreble": "Agudos",
+    "@settingsEqPresetTreble": {
+        "description": "Equalizer preset, lifts the highs."
+    },
+    "settingsEqPresetVocal": "Vocal",
+    "@settingsEqPresetVocal": {
+        "description": "Equalizer preset, lifts the mids where voices sit."
+    },
+    "settingsEqPresetRock": "Rock",
+    "@settingsEqPresetRock": {
+        "description": "Equalizer preset, lifts the lows and highs."
+    },
+    "settingsEqPresetElectronic": "Eletrônico",
+    "@settingsEqPresetElectronic": {
+        "description": "Equalizer preset for electronic music, lifts the lows and highs."
+    },
+    "settingsEqPresetBrainFryer": "Fritador de Cérebro",
+    "@settingsEqPresetBrainFryer": {
+        "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
+    },
+    "settingsEqPresetFryerUltimate": "Fritador Supremo",
+    "@settingsEqPresetFryerUltimate": {
+        "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
+    },
+    "settingsEqPresetCustom": "Customizado",
+    "@settingsEqPresetCustom": {
+        "description": "Shown instead of a preset name when the curve matches none of them."
+    },
+    "settingsEqTitle": "Equalizador",
+    "@settingsEqTitle": {
+        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+    },
+    "settingsEqEnable": "Equalizador",
+    "@settingsEqEnable": {
+        "description": "Toggle that switches the equalizer on and off."
+    },
+    "settingsEqEnableSubtitle": "Aplicado através da cadeia de filtros do mpv",
+    "@settingsEqEnableSubtitle": {
+        "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
+    },
+    "settingsEqSectionPreset": "Preset",
+    "@settingsEqSectionPreset": {
+        "description": "Section label above the preset chips on the equalizer subpage."
+    },
+    "settingsEqSectionEffects": "Efeitos",
+    "@settingsEqSectionEffects": {
+        "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
+    },
+    "settingsEqBassBoost": "Aumentar Graves",
+    "@settingsEqBassBoost": {
+        "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
+    },
+    "settingsEqSpeed": "Velocidade",
+    "@settingsEqSpeed": {
+        "description": "Slider controlling playback rate without changing pitch."
+    },
+    "settingsEqPitch": "Tom",
+    "@settingsEqPitch": {
+        "description": "Slider controlling pitch without changing playback rate."
+    },
+    "settingsEqValueDb": "{value} dB",
+    "@settingsEqValueDb": {
+        "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsEqValueRate": "{value}x",
+    "@settingsEqValueRate": {
+        "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsEqResetAll": "Resetar todos efeitos",
+    "@settingsEqResetAll": {
+        "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
+    },
+    "settingsEqResetTooltip": "Resetar equalizador",
+    "@settingsEqResetTooltip": {
+        "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
+    },
+    "settingsLibrarySectionSources": "Fontes",
+    "@settingsLibrarySectionSources": {
+        "description": "Section label above folder and length options on the library subpage."
+    },
+    "settingsLibraryMusicFolders": "Pastas de músicas",
+    "@settingsLibraryMusicFolders": {
+        "description": "Extra folders to scan. Desktop only, Android uses MediaStore."
+    },
+    "settingsLibraryMusicFoldersEmpty": "Sem pastas extras ainda",
+    "@settingsLibraryMusicFoldersEmpty": {
+        "description": "Shown in the music folders editor when the list is empty."
+    },
+    "settingsLibraryExcludedFolders": "Pastas excluídas",
+    "@settingsLibraryExcludedFolders": {
+        "description": "Folders skipped when scanning."
+    },
+    "settingsLibraryExcludedFoldersEmpty": "Nada excluído ainda",
+    "@settingsLibraryExcludedFoldersEmpty": {
+        "description": "Shown in the excluded folders editor when the list is empty."
+    },
+    "settingsLibraryFolderField": "Diretório da pasta",
+    "@settingsLibraryFolderField": {
+        "description": "Label of the text field in the folder editors."
+    },
+    "settingsLibraryFolderAdd": "Adicionar pasta",
+    "@settingsLibraryFolderAdd": {
+        "description": "Action that adds the typed path to the folder list."
+    },
+    "settingsLibraryMinLength": "Duração mínima",
+    "@settingsLibraryMinLength": {
+        "description": "Files shorter than this are skipped when scanning."
+    },
+    "settingsLibraryMinLengthHelp": "Arquivos menores que isso são pulados. Deixe em branco para manter tudo.",
+    "@settingsLibraryMinLengthHelp": {
+        "description": "Explanation at the top of the minimum length sheet."
+    },
+    "settingsLibraryMinLengthField": "Segundos",
+    "@settingsLibraryMinLengthField": {
+        "description": "Label of the text field in the minimum length sheet."
+    },
+    "settingsLibraryMinLengthValue": "{seconds}s",
+    "@settingsLibraryMinLengthValue": {
+        "description": "Minimum length shown on the row, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsLibraryMinLengthOff": "Desligado",
+    "@settingsLibraryMinLengthOff": {
+        "description": "Shown when no minimum length is set."
+    },
+    "settingsLibrarySectionGrouping": "Agrupar",
+    "@settingsLibrarySectionGrouping": {
+        "description": "Section label above album grouping and sorting options."
+    },
+    "settingsLibraryGroupByFolder": "Agrupar álbuns por pasta",
+    "@settingsLibraryGroupByFolder": {
+        "description": "Toggle that groups albums by the song's folder instead of its album tag."
+    },
+    "settingsLibraryGroupByFolderSubtitle": "Usar a pasta da música invés da etiqueta do album",
+    "@settingsLibraryGroupByFolderSubtitle": {
+        "description": "Subtitle under the group albums by folder row."
+    },
+    "settingsLibraryIgnoreLeadingThe": "Ignorar \"The\" no início",
+    "@settingsLibraryIgnoreLeadingThe": {
+        "description": "Sorts artists ignoring a leading 'The'. Currently marked as planned. Keep the English article in quotes."
+    },
+    "settingsLibraryIgnoreLeadingTheSubtitle": "Ao ordenar artistas",
+    "@settingsLibraryIgnoreLeadingTheSubtitle": {
+        "description": "Subtitle under the ignore leading The row."
+    },
+    "settingsLibrarySectionArtistParsing": "Análise de artistas",
+    "@settingsLibrarySectionArtistParsing": {
+        "description": "Section label above the multi-artist splitting options."
+    },
+    "settingsLibrarySplitArtists": "Separar tags multi-artista",
+    "@settingsLibrarySplitArtists": {
+        "description": "Toggle that splits an artist tag into several artists at the delimiters."
+    },
+    "settingsLibraryDelimiters": "Delimitadores",
+    "@settingsLibraryDelimiters": {
+        "description": "Characters that separate artists in a tag, such as a comma or a slash."
+    },
+    "settingsLibraryDelimitersEmpty": "Usando os padrões",
+    "@settingsLibraryDelimitersEmpty": {
+        "description": "Shown in the delimiter editor when the list is empty, meaning the built-in delimiters apply."
+    },
+    "settingsLibraryDelimiterField": "Delimitador",
+    "@settingsLibraryDelimiterField": {
+        "description": "Label of the text field in the delimiter editor."
+    },
+    "settingsLibraryDelimiterAdd": "Adicionar delimitador",
+    "@settingsLibraryDelimiterAdd": {
+        "description": "Action that adds the typed delimiter to the list."
+    },
+    "settingsLibraryProtectedArtists": "Artistas protegidos",
+    "@settingsLibraryProtectedArtists": {
+        "description": "Artist names never split, for acts whose name contains a delimiter."
+    },
+    "settingsLibraryProtectedArtistsEmpty": "Sem artistas protegidos ainda",
+    "@settingsLibraryProtectedArtistsEmpty": {
+        "description": "Shown in the protected artists editor when the list is empty."
+    },
+    "settingsLibraryProtectedArtistField": "Nome do artista",
+    "@settingsLibraryProtectedArtistField": {
+        "description": "Label of the text field in the protected artists editor."
+    },
+    "settingsLibraryProtectedArtistAdd": "Adicionar artista",
+    "@settingsLibraryProtectedArtistAdd": {
+        "description": "Action that adds the typed artist to the protected list."
+    },
+    "settingsLibraryRescan": "Reescanear biblioteca",
+    "@settingsLibraryRescan": {
+        "description": "Action that runs a full rescan of the music library."
+    },
+    "settingsLibraryRescanRunning": "Escaneando…",
+    "@settingsLibraryRescanRunning": {
+        "description": "Replaces the rescan label while a scan is in progress."
+    },
+    "settingsLibraryLastScan": "Ultimo escaneamento {date} as {time}",
+    "@settingsLibraryLastScan": {
+        "description": "First footer line on the library subpage, showing when the last scan finished.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsLibraryCountSongs": "{count, plural, =0{sem músicas} =1{1 música} other{{count} songs}}",
+    "@settingsLibraryCountSongs": {
+        "description": "Song total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryCountAlbums": "{count, plural, =0{no álbuns} =1{1 álbum} other{{count} álbuns}}",
+    "@settingsLibraryCountAlbums": {
+        "description": "Album total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryCountArtists": "{count, plural, =0{sem artistas} =1{1 artista} other{{count} artists}}",
+    "@settingsLibraryCountArtists": {
+        "description": "Artist total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsDiscordTitle": "Discord",
+    "@settingsDiscordTitle": {
+        "description": "Title of the Discord subpage. Shorter than the row label, which is 'Discord presence'."
+    },
+    "settingsDiscordConnect": "Conectar Discord",
+    "@settingsDiscordConnect": {
+        "description": "Action that opens the Discord login flow."
+    },
+    "settingsDiscordConnecting": "Conectando…",
+    "@settingsDiscordConnecting": {
+        "description": "Replaces the connect label while the login is in progress."
+    },
+    "settingsDiscordConnected": "Conectado",
+    "@settingsDiscordConnected": {
+        "description": "Status under the Discord account name when a token is loaded."
+    },
+    "settingsDiscordDisconnect": "Desconectado",
+    "@settingsDiscordDisconnect": {
+        "description": "Destructive action that logs out of Discord and clears the presence."
+    },
+    "settingsDiscordLoginFailed": "Login do discord falhou",
+    "@settingsDiscordLoginFailed": {
+        "description": "Snackbar shown when the Discord login could not be completed. The error follows after a colon."
+    },
+    "settingsDiscordSectionVisible": "O que as pessoas veem",
+    "@settingsDiscordSectionVisible": {
+        "description": "Section label above the toggles controlling what the presence card shows."
+    },
+    "settingsDiscordShowSong": "Mostrar música atual",
+    "@settingsDiscordShowSong": {
+        "description": "Master toggle for the presence. Off means nothing is shown on Discord at all."
+    },
+    "settingsDiscordShowArt": "Mostrar arte do álbum",
+    "@settingsDiscordShowArt": {
+        "description": "Toggle for sending the cover with the presence."
+    },
+    "settingsDiscordShowArtSubtitle": "O Discord exibe uma imagem substituta",
+    "@settingsDiscordShowArtSubtitle": {
+        "description": "Subtitle under the album art row, explaining that turning it off does not remove the image, Discord substitutes a generic one."
+    },
+    "settingsDiscordShowElapsed": "Mostrar barra de progresso",
+    "@settingsDiscordShowElapsed": {
+        "description": "Toggle for sending playback timestamps, which Discord draws as a progress bar."
+    },
+    "settingsDiscordShowElapsedSubtitle": "O Discord conta a partir do início",
+    "@settingsDiscordShowElapsedSubtitle": {
+        "description": "Subtitle under the progress bar row, explaining that turning it off leaves Discord's own timer running."
+    },
+    "settingsDiscordShowButton": "Mostar um botão do link",
+    "@settingsDiscordShowButton": {
+        "description": "Toggle for the button under the presence card."
+    },
+    "settingsDiscordShowButtonSubtitle": "Adicionar um \"Try Sono\" abaixo",
+    "@settingsDiscordShowButtonSubtitle": {
+        "description": "Subtitle under the link button row. The quoted text is the button's own label and is not translated."
+    },
+    "settingsDiscordOnlyWhilePlaying": "Apenas enquanto toca",
+    "@settingsDiscordOnlyWhilePlaying": {
+        "description": "Toggle that clears the presence shortly after playback pauses."
+    },
+    "settingsDiscordOnlyWhilePlayingSubtitle": "Limpa a presença quando pausada por um minuto",
+    "@settingsDiscordOnlyWhilePlayingSubtitle": {
+        "description": "Subtitle under the only while playing row."
+    },
+    "settingsDiscordNote": "A presença funciona por meio de uma sessão headless. Ela para assim que você se desconecta e nada é armazenado em um servidor.",
+    "@settingsDiscordNote": {
+        "description": "Note explaining how the Discord connection works and that no data is kept remotely."
+    },
+    "settingsDiscordPreview": "Preview",
+    "@settingsDiscordPreview": {
+        "description": "Heading of the card showing how the presence will look. Rendered in uppercase."
+    },
+    "settingsDiscordPreviewHeading": "Ouvindo no Sono",
+    "@settingsDiscordPreviewHeading": {
+        "description": "First line of the preview card, matching what Discord displays above the song."
+    },
+    "settingsDiscordPreviewIdle": "Nada tocando",
+    "@settingsDiscordPreviewIdle": {
+        "description": "Shown in the preview card in place of a song title when nothing is playing."
+    },
+    "settingsDiscordPreviewButton": "Try Sono",
+    "@settingsDiscordPreviewButton": {
+        "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
+    },
+    "settingsBackupExport": "Exportar backup",
+    "@settingsBackupExport": {
+        "description": "Row that writes a backup file."
+    },
+    "settingsBackupExporting": "Exportando…",
+    "@settingsBackupExporting": {
+        "description": "Replaces the export label while a backup is being written."
+    },
+    "settingsBackupExportSaved": "Salvo em {path}",
+    "@settingsBackupExportSaved": {
+        "description": "Snackbar confirming where the backup file was written.",
+        "placeholders": {
+            "path": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsBackupExportFailed": "Falha ao exportar backup",
+    "@settingsBackupExportFailed": {
+        "description": "Snackbar shown when writing the backup failed. The error follows after a colon."
+    },
+    "settingsBackupImport": "Importar backup",
+    "@settingsBackupImport": {
+        "description": "Row that reads a backup file back in."
+    },
+    "settingsBackupImporting": "Importando…",
+    "@settingsBackupImporting": {
+        "description": "Replaces the import label while a backup is being restored."
+    },
+    "settingsBackupImportSubtitle": "Mescla à sua biblioteca e reescaneia",
+    "@settingsBackupImportSubtitle": {
+        "description": "Subtitle under the import row."
+    },
+    "settingsBackupImportConfirmTitle": "Importar um backup?",
+    "@settingsBackupImportConfirmTitle": {
+        "description": "Title of the sheet shown before choosing a backup file."
+    },
+    "settingsBackupImportConfirmBody": "Suas configurações são substituídas e um reescaneamento completo é executado. Curtidas, favoritos e playlists que você já tem são mantidos, o backup é mesclado por cima.",
+    "@settingsBackupImportConfirmBody": {
+        "description": "Explanation in the import confirmation sheet."
+    },
+    "settingsBackupImportChoose": "Escolher um arquivo",
+    "@settingsBackupImportChoose": {
+        "description": "Action in the import confirmation sheet that opens the file picker."
+    },
+    "settingsBackupImportDone": "Restaurou {liked, plural, =0{sem curtidas} =1{1 curtida} other{{liked} curtidas}}, {albums, plural, =0{sem álbuns} =1{1 álbum} other{{albums} álbuns}}, {artists, plural, =0{sem artistas} =1{1 artista} other{{artists} artistas}}, {playlists, plural, =0{sem playlists} =1{1 playlist} other{{playlists} playlists}}",
+    "@settingsBackupImportDone": {
+        "description": "Snackbar summarising a successful import.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportSkipped": "{songs, plural, =0{Nenhuma música} =1{1 música} other{{songs} músicas}} e {playlists, plural, =0{nenhuma playlist foi} =1{1 playlist foi} other{{playlists} playlists foram}} encontradas neste dispositivo",
+    "@settingsBackupImportSkipped": {
+        "description": "Second snackbar after an import, listing what could not be matched to local files.",
+        "placeholders": {
+            "songs": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportFailed": "Falha ao importar backup",
+    "@settingsBackupImportFailed": {
+        "description": "Snackbar shown when reading the backup failed. The error follows after a colon."
+    },
+    "settingsBackupNote": "Importar mantém tudo que você ja tem. Músicas que não estão no dispositivos serão puladas e reportadas.",
+    "@settingsBackupNote": {
+        "description": "Note under the export and import rows, clarifying that importing is not destructive."
+    },
+    "settingsBackupSectionAutomatic": "Automático",
+    "@settingsBackupSectionAutomatic": {
+        "description": "Section label above the scheduled backup option."
+    },
+    "settingsBackupWeekly": "Backup semanal",
+    "@settingsBackupWeekly": {
+        "description": "Toggle for writing a backup once a week. Currently marked as planned."
+    },
+    "settingsBackupWeeklySubtitle": "Salvo na sua pasta de música",
+    "@settingsBackupWeeklySubtitle": {
+        "description": "Subtitle under the weekly backup row."
+    },
+    "settingsBackupLastExport": "Ultimo exportação {date} as {time}",
+    "@settingsBackupLastExport": {
+        "description": "Footer line showing when a backup was last written. Both placeholders receive the same timestamp.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsUpdatesChecking": "Checando…",
+    "@settingsUpdatesChecking": {
+        "description": "Value on the updates row while a check is running."
+    },
+    "settingsUpdatesUpToDate": "Pronto pra atualizar",
+    "@settingsUpdatesUpToDate": {
+        "description": "Value on the updates row when the installed version is the newest release."
+    },
+    "settingsUpdatesAvailable": "{version} disponível",
+    "@settingsUpdatesAvailable": {
+        "description": "Value on the updates row when a newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetUpToDateTitle": "Você esta pronto para atualizar :D",
+    "@settingsUpdateSheetUpToDateTitle": {
+        "description": "Title of the update sheet when no newer release exists."
+    },
+    "settingsUpdateSheetUpToDateBody": "Sono {version} é a versão mais recente.",
+    "@settingsUpdateSheetUpToDateBody": {
+        "description": "Body of the update sheet when no newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetAvailableTitle": "Sono {version} esta disponível",
+    "@settingsUpdateSheetAvailableTitle": {
+        "description": "Title of the update sheet when a newer release was found.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetFrom": "Você esta em {current}, versão mais recente é {latest}.",
+    "@settingsUpdateSheetFrom": {
+        "description": "Line above the release notes comparing the installed and newest versions.",
+        "placeholders": {
+            "current": {
+                "type": "String"
+            },
+            "latest": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetOpen": "Abrir a release",
+    "@settingsUpdateSheetOpen": {
+        "description": "Action that opens the GitHub release page in the browser."
+    },
+    "settingsUpdateSheetSkip": "Pular essa versão",
+    "@settingsUpdateSheetSkip": {
+        "description": "Action that dismisses a release so it stops being announced."
+    },
+    "settingsUpdateSheetSkipSubtitle": "Para de exibir o banner desta versão",
+    "@settingsUpdateSheetSkipSubtitle": {
+        "description": "Subtitle under the skip action in the update sheet."
+    },
+    "settingsUpdateSheetFailedTitle": "Não foi possível checar atualizações",
+    "@settingsUpdateSheetFailedTitle": {
+        "description": "Title of the update sheet when the check could not reach GitHub."
+    },
+    "settingsUpdateSheetFailedBody": "Sono não conseguiu abrir GitHub. Cheque sua conexão e tente novamente.",
+    "@settingsUpdateSheetFailedBody": {
+        "description": "Body of the update sheet when the check failed."
+    },
+    "settingsAboutTitle": "Sobre",
+    "@settingsAboutTitle": {
+        "description": "Title of the about subpage. Shorter than the row label, which is 'About Sono'."
+    },
+    "settingsAboutVersion": "{version} • build {build}",
+    "@settingsAboutVersion": {
+        "description": "Version line under the app name in the about hero. Does not repeat the app name, unlike settingsVersionLine.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            },
+            "build": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsAboutSourceCode": "Código fonte",
+    "@settingsAboutSourceCode": {
+        "description": "Row that opens the GitHub repository. Its subtitle is the repository path and is not translated."
+    },
+    "settingsAboutLicences": "Licenças",
+    "@settingsAboutLicences": {
+        "description": "Row that opens the licence list, covering Sono and every dependency."
+    },
+    "settingsSupportKofi": "Me ajude",
+    "settingsAboutKofiSubtitle": "Pagar pela chave de assinatura e um monte de café",
+    "@settingsAboutKofiSubtitle": {
+        "description": "Subtitle under the Ko-fi row."
+    },
+    "settingsAboutFooterBuilt": "Feito por mathiiiiiis",
+    "@settingsAboutFooterBuilt": {
+        "description": "First footer line on the about page. The name is a username and stays as is."
+    },
+    "settingsContributors": "Contribuidores",
+    "contributorsMaintainer": "Mantenedor",
+    "contributorsCodeSection": "Código",
+    "contributorsTranslatorSection": "Traduções",
+    "contributorsPlaceholder": "esse pode ser você",
+    "@contributorsPlaceholder": {
+        "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
+    },
+    "contributorsLoadFailed": "Não foi possível carregar os contribuidores :/",
+    "migrationFoundTitle": "Arquivos do Sono antigo",
+    "@migrationFoundTitle": {
+        "description": "Title of the sheet offering to import data from the previous Sono install."
+    },
+    "migrationFoundBody": "Sua instalação antiga ainda tem arquivos nesse dispositivo.",
+    "@migrationFoundBody": {
+        "description": "Body text above the counts in the migration sheet."
+    },
+    "migrationCountLiked": "{count, plural, =0{sem curtidas} =1{1 curtida} other{{count} curtidas}}",
+    "@migrationCountLiked": {
+        "description": "Liked song count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountAlbums": "{count, plural, =0{no álbuns} =1{1 álbum} other{{count} álbuns}}",
+    "@migrationCountAlbums": {
+        "description": "Favorite album count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountArtists": "{count, plural, =0{sem artistas} =1{1 artista} other{{count} artistas}}",
+    "@migrationCountArtists": {
+        "description": "Favorite artist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountPlaylists": "{count, plural, =0{sem playlists} =1{1 playlist} other{{count} playlists}}",
+    "@migrationCountPlaylists": {
+        "description": "Playlist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationImport": "Importar",
+    "@migrationImport": {
+        "description": "Action confirming the import in the migration sheet."
+    },
+    "migrationLater": "Não agora",
+    "@migrationLater": {
+        "description": "Action dismissing the migration sheet until the next launch."
+    },
+    "migrationNever": "Nunca peça novamente",
+    "@migrationNever": {
+        "description": "Action permanently dismissing the migration sheet without importing."
+    },
+    "migrationDone": "Importado {liked, plural, =0{sem curtidas} =1{1 curtida} other{{liked} curtidas}}, {albums, plural, =0{sem álbuns} =1{1 álbum} other{{albums} álbuns}}, {artists, plural, =0{sem artistas} =1{1 artista} other{{artists} artistas}} e {playlists, plural, =0{sem playlists} =1{1 playlist} other{{playlists} playlists}} :D",
+    "@migrationDone": {
+        "description": "Snackbar summarising a successful migration from the old Sono.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationDoneNothing": "Nada pode ser importado da versão antiga do Sono :/",
+    "@migrationDoneNothing": {
+        "description": "Snackbar shown when a migration ran but matched nothing on this device."
+    },
+    "migrationUnresolved": "{count, plural, =1{1 música} other{{count} músicas}} não estão nesse dispositivo",
+    "@migrationUnresolved": {
+        "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationFailed": "Importação da versão antiga do Sono falhou :/",
+    "@migrationFailed": {
+        "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
     }
 }
