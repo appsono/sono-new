@@ -1453,7 +1453,7 @@
     "@settingsDiscordShowButton": {
         "description": "Toggle for the button under the presence card."
     },
-    "settingsDiscordShowButtonSubtitle": "Adicionar um \"Experimente Sono\" abaixo",
+    "settingsDiscordShowButtonSubtitle": "Adicionar um \"Try Sono\" abaixo",
     "@settingsDiscordShowButtonSubtitle": {
         "description": "Subtitle under the link button row. The quoted text is the button's own label and is not translated."
     },
@@ -1481,7 +1481,7 @@
     "@settingsDiscordPreviewIdle": {
         "description": "Shown in the preview card in place of a song title when nothing is playing."
     },
-    "settingsDiscordPreviewButton": "Experimente Sono",
+    "settingsDiscordPreviewButton": "Try Sono",
     "@settingsDiscordPreviewButton": {
         "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
     },
@@ -1530,7 +1530,7 @@
     "@settingsBackupImportChoose": {
         "description": "Action in the import confirmation sheet that opens the file picker."
     },
-    "settingsBackupImportDone": "Restaurou {liked, plural, =0{sem curtidas} =1{1 curtida} other{{curtido} curtidas}}, {álbuns, plural, =0{sem álbuns} =1{1 álbum} other{{álbuns} álbuns}}, {artistas, plural, =0{sem artistas} =1{1 artista} other{{artista} artistas}}, {playlists, plural, =0{sem playlists} =1{1 playlist} other{{playlists} playlists}}",
+    "settingsBackupImportDone": "Restaurou {liked, plural, =0{sem curtidas} =1{1 curtida} other{{liked} curtidas}}, {albums, plural, =0{sem álbuns} =1{1 álbum} other{{albums} álbuns}}, {artists, plural, =0{sem artistas} =1{1 artista} other{{artists} artistas}}, {playlists, plural, =0{sem playlists} =1{1 playlist} other{{playlists} playlists}}",
     "@settingsBackupImportDone": {
         "description": "Snackbar summarising a successful import.",
         "placeholders": {
@@ -1548,7 +1548,7 @@
             }
         }
     },
-    "settingsBackupImportSkipped": "{songs, plural, =0{Sem músicas} =1{1 músicas} other{{músicas} músicas}} and {playlists, plural, =0{nenhuma playlist foi} =1{1 playlist foi} other{{playlists} playlists foram}} não encontradas nesse dispositivo",
+    "settingsBackupImportSkipped": "{songs, plural, =0{Nenhuma música} =1{1 música} other{{songs} músicas}} e {playlists, plural, =0{nenhuma playlist foi} =1{1 playlist foi} other{{playlists} playlists foram}} encontradas neste dispositivo",
     "@settingsBackupImportSkipped": {
         "description": "Second snackbar after an import, listing what could not be matched to local files.",
         "placeholders": {
@@ -1763,7 +1763,7 @@
     "@migrationNever": {
         "description": "Action permanently dismissing the migration sheet without importing."
     },
-    "migrationDone": "Importado {liked, plural, =0{sem curtidas} =1{1 curtida} other{{liked} curtidas}}, {álbuns, plural, =0{sem álbuns} =1{1 álbum} other{{albums} álbuns}}, {artistas, plural, =0{sem artistas} =1{1 artista} other{{artists} artistas}}, {playlists, plural, =0{sem playlists} =1{1 playlist} other{{playlists} playlists}} :D",
+    "migrationDone": "Importado {liked, plural, =0{sem curtidas} =1{1 curtida} other{{liked} curtidas}}, {albums, plural, =0{sem álbuns} =1{1 álbum} other{{albums} álbuns}}, {artists, plural, =0{sem artistas} =1{1 artista} other{{artists} artistas}} e {playlists, plural, =0{sem playlists} =1{1 playlist} other{{playlists} playlists}} :D",
     "@migrationDone": {
         "description": "Snackbar summarising a successful migration from the old Sono.",
         "placeholders": {
