@@ -1498,5 +1498,149 @@
     "artistDiscographyEmpty": "Нічога ад гэтага выканаўцы :(",
     "@artistDiscographyEmpty": {
         "description": "Shown on the discography page when the artist has no releases at all."
+    },
+    "artistDiscographyNoMatches": "Нічога не адпавядае гэтым фільтрам :/",
+    "@artistDiscographyNoMatches": {
+        "description": "Shown on the discography page when the selected filter chips leave no releases."
+    },
+    "artistFilterSinglesEps": "Сінглы і міні-альбомы",
+    "@artistFilterSinglesEps": {
+        "description": "Discography filter chip for short releases."
+    },
+    "artistFilterFeatured": "Вартае ўвагі",
+    "@artistFilterFeatured": {
+        "description": "Discography filter chip for albums the artist only appears on."
+    },
+    "artistFullDiscography": "Поўная дыскаграфія",
+    "@artistFullDiscography": {
+        "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
+    },
+    "artistTopSongs": "Топ песень",
+    "@artistTopSongs": {
+        "description": "Heading above the users most played songs by this artist."
+    },
+    "artistTopSongsPlays": "{count, plural, one{{count} прайграванне} few{{count} прайгравання} other{{count} прайграванняў}}",
+    "@artistTopSongsPlays": {
+        "description": "How often the user played a song, shown at the end of each ranked row.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "artistInPlaylists": "У вашых плэй-лістах",
+    "@artistInPlaylists": {
+        "description": "Heading above playlists that contain a song by this artist."
+    },
+    "artistListeningTime": "Вы слухалі",
+    "@artistListeningTime": {
+        "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
+    },
+    "artistListeningPlays": "Прайграванні",
+    "@artistListeningPlays": {
+        "description": "Label above how many songs by this artist the user has played."
+    },
+    "artistListeningFirstHeard": "Упершыню пачута",
+    "@artistListeningFirstHeard": {
+        "description": "Label above the date the user first played this artist."
+    },
+    "artistRelated": "Часта разам",
+    "@artistRelated": {
+        "description": "Heading above artists this one shares songs with."
+    },
+    "artistRelatedShared": "{count, plural, one{{count} сумесная песня} few{{count} сумесных песні} other{{count} сумесных песень}}",
+    "@artistRelatedShared": {
+        "description": "How many songs the two artists are both credited on.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsWindow": "Гэты тыдзень",
+    "@settingsProfileStatsWindow": {
+        "description": "Subtitle under the stats card title, naming the window every number covers. Monday to Sunday of the current week."
+    },
+    "settingsProfileStatsPlays": "Усяго прайграванняў",
+    "@settingsProfileStatsPlays": {
+        "description": "Label above the number of songs played."
+    },
+    "settingsProfileStatsTopArtist": "Выканаўца №1",
+    "@settingsProfileStatsTopArtist": {
+        "description": "Label above the most played artist."
+    },
+    "settingsProfileStatsTopSong": "Песня №1",
+    "@settingsProfileStatsTopSong": {
+        "description": "Label above the most played song."
+    },
+    "settingsProfileStatsPlayCount": "{count, plural, one{{count} прайграванне} few{{count} прайгравання} other{{count} прайграванняў}}",
+    "@settingsProfileStatsPlayCount": {
+        "description": "How often the top song or artist was played, shown after the name.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsHoursMinutes": "{hours} гадз {minutes} хв",
+    "@settingsProfileStatsHoursMinutes": {
+        "description": "Listening time of an hour or more. Minutes are zero padded.",
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsMinutes": "{minutes} хв",
+    "@settingsProfileStatsMinutes": {
+        "description": "Listening time under an hour.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsEmpty": "Пакуль што тут нічога няма. Прайграйце што-небудзь, каб гэты спіс пачаў запаўняцца.",
+    "@settingsProfileStatsEmpty": {
+        "description": "Shown in place of the numbers when nothing was played this week."
+    },
+    "settingsProfileStatsNone": "Пакуль што нічога няма",
+    "@settingsProfileStatsNone": {
+        "description": "Placeholder where a top song or artist would go when there is none."
+    },
+    "settingsPlaybackSleepTimerOff": "Выкл",
+    "@settingsPlaybackSleepTimerOff": {
+        "description": "Value shown next to the sleep timer row when no timer is running."
+    },
+    "normalisationSectionMode": "Рэжым",
+    "@normalisationSectionMode": {
+        "description": "Section label above the normalisation mode options."
+    },
+    "normalisationSectionTuning": "Рэдагаванне",
+    "@normalisationSectionTuning": {
+        "description": "Section label above the preamp and clipping options."
+    },
+    "normalisationResetTooltip": "Скінуць нармалізацыю",
+    "@normalisationResetTooltip": {
+        "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
+    },
+    "normalisationOff": "Выключана",
+    "@normalisationOff": {
+        "description": "Normalisation mode that applies no gain."
+    },
+    "normalisationTrack": "Для кожнай песні",
+    "@normalisationTrack": {
+        "description": "Normalisation mode that brings every song to the same loudness."
+    },
+    "normalisationTrackSubtitle": "У кожнай песні адна і тая ж гучнасць",
+    "@normalisationTrackSubtitle": {
+        "description": "Subtitle of the per track normalisation option."
+    },
+    "normalisationAlbum": "Для кожнага альбому",
+    "@normalisationAlbum": {
+        "description": "Normalisation mode that normalises whole albums as one unit."
     }
 }
