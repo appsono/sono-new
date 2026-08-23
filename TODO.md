@@ -19,6 +19,7 @@
 - [x] ~~EQ and bass boost sometimes have no audible effect~~
 - [ ] Engine-death process kill only registers from `MainActivity`. Move it
       into `sono_query`'s `onAttachedToEngine` to cover service-first engines
+- [ ] Swiping away Samsung Now Bar killing playback
 
 ## UI
 
@@ -56,6 +57,9 @@
 - [x] ~~Backup: export / import app data (likes, favorites, playlists, settings,
       scan paths, etc.)~~
 - [ ] Scrobbling Support (Last.fm, Libre.fm, etc.)
+- Lyrics:
+  - [ ] fetch .lrc files from local files
+  - [ ] allow searching for synced lyrics
 
 ## Improvements (pre-UI)
 
