@@ -132,6 +132,22 @@ class PlaylistSheets {
           _AddToPlaylistSheet(db: db, songId: songId, outerContext: context),
     );
   }
+
+  // ==== add album to playlist (picker) ====
+  static Future<void> openAddAlbumToPlaylist({
+    required BuildContext context,
+    required SonoDatabase db,
+    required int albumdId,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.4),
+      isScrollControlled: true,
+      builder: (_) =>
+          _AddToPlaylistSheet(db: db, albumId: albumdId, outerContext: context),
+    );
+  }
 }
 
 // ==== create ====
@@ -392,13 +408,15 @@ class _DeletePlaylistSheet extends StatelessWidget {
 // ==== add-to-playlist picker ====
 class _AddToPlaylistSheet extends StatefulWidget {
   final SonoDatabase db;
-  final int songId;
+  final int? songId;
+  final int? albumId;
   final BuildContext outerContext;
 
   const _AddToPlaylistSheet({
     required this.db,
-    required this.songId,
     required this.outerContext,
+    this.songId,
+    this.albumId,
   });
 
   @override
@@ -423,7 +441,12 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
   }
 
   Future<void> _addToExisting(Playlist playlist) async {
-    final added = await widget.db.addSongToPlaylist(playlist.id, widget.songId);
+    final albumSongId = widget.albumId != null
+        ? await widget.db.addAlbumToPlaylist(playlist.id, widget.albumId!)
+        : null;
+    final added = widget.albumId == null
+        ? await widget.db.addSongToPlaylist(playlist.id, widget.songId!)
+        : albumSongId!.isNotEmpty;
     if (!mounted) return;
     Navigator.of(context).maybePop();
 
@@ -437,10 +460,16 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
           action: SnackBarAction(
             label: l.commonUndo,
             onPressed: () async {
-              await widget.db.removeSongFromPlaylist(
-                playlist.id,
-                widget.songId,
-              );
+              if (widget.albumId != null) {
+                for (final songId in albumSongId!) {
+                  await widget.db.removeSongFromPlaylist(playlist.id, songId);
+                }
+              } else {
+                await widget.db.removeSongFromPlaylist(
+                  playlist.id,
+                  widget.songId!,
+                );
+              }
             },
           ),
         ),
@@ -466,7 +495,13 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
     );
     if (newId == null || !widget.outerContext.mounted) return;
 
-    await widget.db.addSongToPlaylist(newId, widget.songId);
+    final albumSongId = widget.albumId != null
+        ? await widget.db.addAlbumToPlaylist(newId, widget.albumId!)
+        : null;
+    final added = widget.albumId == null
+        ? await widget.db.addSongToPlaylist(newId, widget.songId!)
+        : albumSongId!.isNotEmpty;
+
     final playlist = await widget.db.getPlaylistById(newId);
 
     if (!widget.outerContext.mounted || playlist == null) return;
@@ -475,12 +510,23 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
       SnackBar(
         duration: const Duration(seconds: 4),
         content: Text(l.playlistAdded(playlist.name)),
-        action: SnackBarAction(
-          label: l.commonUndo,
-          onPressed: () async {
-            await widget.db.removeSongFromPlaylist(newId, widget.songId);
-          },
-        ),
+        action: added && widget.albumId == null
+            ? SnackBarAction(
+                label: l.commonUndo,
+                onPressed: () async {
+                  if (widget.albumId != null) {
+                    for (final songId in albumSongId!) {
+                      await widget.db.removeSongFromPlaylist(newId, songId);
+                    }
+                  } else {
+                    await widget.db.removeSongFromPlaylist(
+                      newId,
+                      widget.songId!,
+                    );
+                  }
+                },
+              )
+            : null,
       ),
     );
   }

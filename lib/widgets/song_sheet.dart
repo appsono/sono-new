@@ -346,6 +346,7 @@ class SongSheet extends StatefulWidget {
     VoidCallback? onShuffle,
     VoidCallback? onLike,
     VoidCallback? onAddToQueue,
+    VoidCallback? onAddToPlaylist,
     VoidCallback? onGoToArtist,
   }) => [
     SongSheetAction(
@@ -362,6 +363,11 @@ class SongSheet extends StatefulWidget {
       icon: IconsSheet.queueOutlined,
       label: l.commonAddToQueue,
       onTap: onAddToQueue ?? () {},
+    ),
+    SongSheetAction(
+      icon: IconsSheet.addToPlaylistOutlined,
+      label: l.commonAddToPlaylist,
+      onTap: onAddToPlaylist ?? () {},
     ),
     SongSheetAction(
       icon: liked

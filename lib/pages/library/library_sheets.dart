@@ -254,6 +254,16 @@ class LibrarySheets {
             refId: album.id,
           ),
         ),
+        onAddToPlaylist: () {
+          Future.microtask(() {
+            if (!context.mounted) return;
+            PlaylistSheets.openAddAlbumToPlaylist(
+              context: context,
+              db: db,
+              albumdId: album.id,
+            );
+          });
+        },
         liked: favorited,
         onLike: () async {
           favorited = !favorited;

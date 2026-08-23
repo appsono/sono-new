@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   they appear on, artists they often record with, and playlists holding them
 - Full discography page behind the artist album row, split into albums,
   singles and EPs, and features, with filter chips
+- Add an `Add to Playlist` action for albums, allowing full albums to be
+  added directly to playlists
 
 ### Changed
 
