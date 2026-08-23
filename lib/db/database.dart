@@ -1303,6 +1303,38 @@ class SonoDatabase extends _$SonoDatabase {
     }
   }
 
+  /// Append an album to end of playlist
+  /// Returns false for songs already in the album
+  Future<List<int>> addAlbumToPlaylist(int playlistId, int albumId) async {
+    final maxRow =
+        await (selectOnly(playlistSongs)
+              ..addColumns([playlistSongs.position.max()])
+              ..where(playlistSongs.playlistId.equals(playlistId)))
+            .getSingle();
+    var next = (maxRow.read(playlistSongs.position.max()) ?? -1) + 1;
+    final album = await getSongsByAlbum(albumId);
+    final addedSongIds = <int>[];
+
+    for (final song in album) {
+      try {
+        await into(playlistSongs).insert(
+          PlaylistSongsCompanion.insert(
+            playlistId: playlistId,
+            songId: song.id,
+            position: next,
+            addedAt: DateTime.now(),
+          ),
+        );
+        addedSongIds.add(song.id);
+        next++;
+      } catch (_) {
+        //song in playlist
+      }
+    }
+
+    return addedSongIds;
+  }
+
   Future<void> removeSongFromPlaylist(int playlistId, int songId) async {
     await (delete(playlistSongs)..where(
           (ps) => ps.playlistId.equals(playlistId) & ps.songId.equals(songId),

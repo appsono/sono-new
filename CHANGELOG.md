@@ -81,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Backup format version is now 3
 - Added a `song_artists` table linking every credited artist, so top artist
   counts features. Migration flags a rescan to fill it
+- Added an addAlbumToPlaylist() db query
 
 ### Translation
 
@@ -89,7 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
   into Estonian (51%)
 - [JVVAV](https://hosted.weblate.org/user/JVVAV/) started translating Sono into
-  Portuguese (35%)
+  Portuguese (100%)
 
 ## [0.12.0+14] - 2026-08-09
 
