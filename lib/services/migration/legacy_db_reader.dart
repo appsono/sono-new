@@ -48,7 +48,7 @@ abstract final class LegacyDbReader {
     if (!Platform.isAndroid) return false;
     if (!await BuildFlavor.isPlay) return false;
     try {
-      return File(await defaultPath()).exists();
+      return await File(await defaultPath()).exists();
     } catch (e) {
       debugPrint('LegacyDbReader: stat failed: $e');
       return false;
