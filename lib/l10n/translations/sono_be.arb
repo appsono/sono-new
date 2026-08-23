@@ -1642,5 +1642,22 @@
     "normalisationAlbum": "Для кожнага альбому",
     "@normalisationAlbum": {
         "description": "Normalisation mode that normalises whole albums as one unit."
+    },
+    "normalisationAlbumSubtitle": "Ва ўсіх песнях альбома аднолькавая гучнасць",
+    "@normalisationAlbumSubtitle": {
+        "description": "Subtitle of the per album normalisation option."
+    },
+    "normalisationPreamp": "Папярэдні ўзмацняльнік",
+    "@normalisationPreamp": {
+        "description": "Slider for extra gain applied on top of the ReplayGain value."
+    },
+    "normalisationPreampValue": "{db} дБ",
+    "@normalisationPreampValue": {
+        "description": "Value shown next to the preamp slider, in decibels.",
+        "placeholders": {
+            "db": {
+                "type": "String"
+            }
+        }
     }
 }
