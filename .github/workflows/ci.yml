@@ -14,6 +14,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version-file: pubspec.yaml
       - run: flutter pub get
       - run: dart run scripts/compute_translation_progress.dart
       - run: dart analyze
@@ -44,6 +45,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version-file: pubspec.yaml
       - run: flutter pub get
       - run: dart run scripts/compute_translation_progress.dart
       - run: flutter build apk --debug --flavor dev
