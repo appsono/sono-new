@@ -42,7 +42,7 @@
 - [ ] Crossfade: fade out the current song and fade in the next one at the end of
       the current
 - [x] Sleep timer: fade out or stop after N minutes / end of song / end of queue
-- [x] Volume controls: more options to control song volume
+- [x] ~~Volume controls: more options to control song volume~~
   - ~~ReplayGain~~
   - ~~In-app volume slider~~
 - [ ] Output sample rate: option to pin `audio-samplerate` instead of following
@@ -57,7 +57,7 @@
 - [x] ~~Backup: export / import app data (likes, favorites, playlists, settings,
       scan paths, etc.)~~
 - [ ] Scrobbling Support (Last.fm, Libre.fm, etc.)
-- Lyrics:
+- [ ] Lyrics:
   - [ ] fetch .lrc files from local files
   - [ ] allow searching for synced lyrics
 
