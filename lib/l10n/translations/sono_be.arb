@@ -1491,7 +1491,7 @@
         "description": "Subtitle under the home tint row."
     },
     "homeSectionRecentlyPlayed": "Нядаўна прайграныя",
-    "artistAppearsOn": "З'яўляецца",
+    "artistAppearsOn": "З'яўляецца ў",
     "@artistAppearsOn": {
         "description": "Heading above releases by other artists that this artist is credited on."
     },
@@ -1659,5 +1659,112 @@
                 "type": "String"
             }
         }
+    },
+    "normalisationPreventClipping": "Папераджэнне завышэння гучнасці",
+    "@normalisationPreventClipping": {
+        "description": "Toggle that lowers the gain instead of letting loud peaks distort."
+    },
+    "normalisationPreventClippingSubtitle": "Памяншаць узмацненне, каб рэзкія павелічэнні гучнасці не скажаліся",
+    "@normalisationPreventClippingSubtitle": {
+        "description": "Subtitle of the prevent clipping toggle."
+    },
+    "sleepTitle": "Таймер сну",
+    "@sleepTitle": {
+        "description": "Title of the sleep timer sheet."
+    },
+    "sleepSubtitle": "Музыка затухае і прыпыняецца, калі сканчваецца таймер",
+    "@sleepSubtitle": {
+        "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+    },
+    "sleepMinutes": "{count, plural, one{{count} хвіліна} few{{count} хвіліны} other{{count} хвілін}}",
+    "@sleepMinutes": {
+        "description": "Preset duration option in the sleep timer sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepUnderMinute": "< 1 хвіліну",
+    "@sleepUnderMinute": {
+        "description": "Sleep timer value shown when less than a minute is left."
+    },
+    "settingsPlaybackSleepTimerFade": "Даўжыня затухання",
+    "@settingsPlaybackSleepTimerFade": {
+        "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+    },
+    "settingsPlaybackSleepTimerFadeValue": "{seconds} с",
+    "@settingsPlaybackSleepTimerFadeValue": {
+        "description": "Value shown next to the fade out length slider, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepEndOfSong": "На канцы песні",
+    "@sleepEndOfSong": {
+        "description": "Sleep timer option that stops playback when the current song finishes."
+    },
+    "sleepEndOfQueue": "На канцы чаргі",
+    "@sleepEndOfQueue": {
+        "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+    },
+    "sleepCustom": "Уласны",
+    "@sleepCustom": {
+        "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+    },
+    "sleepRemaining": "{minutes}:{seconds}",
+    "@sleepRemaining": {
+        "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            },
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "sleepRemainingEndOfSong": "Пакуль не скончыцца песня",
+    "@sleepRemainingEndOfSong": {
+        "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+    },
+    "sleepRemainingEndOfQueue": "Пакуль не скончыцца чарга",
+    "@sleepRemainingEndOfQueue": {
+        "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+    },
+    "sleepExtend": "яшчэ {count, plural, one{{count} хвілінку} few{{count} хвілінкі} other{{count} хвілінак}}",
+    "@sleepExtend": {
+        "description": "Button that adds more time to a running sleep timer.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepCustomTitle": "Уласны час",
+    "@sleepCustomTitle": {
+        "description": "Title of the sheet for entering an arbitrary sleep timer length."
+    },
+    "sleepCustomField": "Хвілін",
+    "@sleepCustomField": {
+        "description": "Label of the field for entering the sleep timer length in minutes."
+    },
+    "sleepCustomStart": "Запусціць таймер",
+    "@sleepCustomStart": {
+        "description": "Button that starts the sleep timer with the entered number of minutes."
+    },
+    "sleepCancel": "Скасаваць таймер",
+    "@sleepCancel": {
+        "description": "Button that stops a running sleep timer without pausing playback."
+    },
+    "sleepStarted": "Таймер сну заданы",
+    "@sleepStarted": {
+        "description": "Confirmation shown after a sleep timer is started."
+    },
+    "sleepCancelled": "Таймер сну скасаваны",
+    "@sleepCancelled": {
+        "description": "Confirmation shown after a running sleep timer is cancelled."
     }
 }
