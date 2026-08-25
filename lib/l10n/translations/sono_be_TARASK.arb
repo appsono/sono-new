@@ -554,7 +554,7 @@
     "@settingsProfileUnnamed": {
         "description": "Name shown on the profile row in settings when no username has been set yet."
     },
-    "settingsProfileSubtitle": "Імя й аватар",
+    "settingsProfileSubtitle": "Імя, аватар і статыстыка",
     "@settingsProfileSubtitle": {
         "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
     },
@@ -804,7 +804,7 @@
     "@settingsPlaybackSleepTimer": {
         "description": "Row for stopping playback after a set time. Currently marked as planned."
     },
-    "settingsPlaybackResumeOnConnect": "Прайграваньне з навушнікамі",
+    "settingsPlaybackResumeOnConnect": "Прайграваньне пры падлучэньні",
     "@settingsPlaybackResumeOnConnect": {
         "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
     },
@@ -1489,5 +1489,282 @@
     "settingsAppearanceHomeTintSubtitle": "Задаваць колер наверсе галоўнае старонцы, каб ён адпавядаў колерам бягучае песьні",
     "@settingsAppearanceHomeTintSubtitle": {
         "description": "Subtitle under the home tint row."
+    },
+    "homeSectionRecentlyPlayed": "Нядаўна прайграныя",
+    "artistAppearsOn": "З'яўляецца ў",
+    "@artistAppearsOn": {
+        "description": "Heading above releases by other artists that this artist is credited on."
+    },
+    "artistDiscographyEmpty": "Нічога ад гэтага выканаўцы :(",
+    "@artistDiscographyEmpty": {
+        "description": "Shown on the discography page when the artist has no releases at all."
+    },
+    "artistDiscographyNoMatches": "Нічога не адпавядае гэтым фільтрам :/",
+    "@artistDiscographyNoMatches": {
+        "description": "Shown on the discography page when the selected filter chips leave no releases."
+    },
+    "artistFilterSinglesEps": "Сінґлы й міні-альбомы",
+    "@artistFilterSinglesEps": {
+        "description": "Discography filter chip for short releases."
+    },
+    "artistFilterFeatured": "Вартае ўвагі",
+    "@artistFilterFeatured": {
+        "description": "Discography filter chip for albums the artist only appears on."
+    },
+    "artistFullDiscography": "Поўная дыскаґрафія",
+    "@artistFullDiscography": {
+        "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
+    },
+    "artistTopSongs": "Топ песьняў",
+    "@artistTopSongs": {
+        "description": "Heading above the users most played songs by this artist."
+    },
+    "artistTopSongsPlays": "{count, plural, one{{count} прайграваньне} few{{count} прайграваньня} other{{count} прайграваньняў}}",
+    "@artistTopSongsPlays": {
+        "description": "How often the user played a song, shown at the end of each ranked row.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "artistInPlaylists": "У вашых плэй-лістох",
+    "@artistInPlaylists": {
+        "description": "Heading above playlists that contain a song by this artist."
+    },
+    "artistListeningTime": "Вы слухалі",
+    "@artistListeningTime": {
+        "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
+    },
+    "artistListeningPlays": "Прайграваньні",
+    "@artistListeningPlays": {
+        "description": "Label above how many songs by this artist the user has played."
+    },
+    "artistListeningFirstHeard": "Упершыню пачута",
+    "@artistListeningFirstHeard": {
+        "description": "Label above the date the user first played this artist."
+    },
+    "artistRelated": "Часта разам",
+    "@artistRelated": {
+        "description": "Heading above artists this one shares songs with."
+    },
+    "artistRelatedShared": "{count, plural, one{{count} сумесная песьня} few{{count} сумесных песьні} other{{count} сумесных песьняў}}",
+    "@artistRelatedShared": {
+        "description": "How many songs the two artists are both credited on.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsWindow": "Гэты тыдзень",
+    "@settingsProfileStatsWindow": {
+        "description": "Subtitle under the stats card title, naming the window every number covers. Monday to Sunday of the current week."
+    },
+    "settingsProfileStatsPlays": "Усяго прайграваньняў",
+    "@settingsProfileStatsPlays": {
+        "description": "Label above the number of songs played."
+    },
+    "settingsProfileStatsTopArtist": "Выканаўца №1",
+    "@settingsProfileStatsTopArtist": {
+        "description": "Label above the most played artist."
+    },
+    "settingsProfileStatsTopSong": "Песня №1",
+    "@settingsProfileStatsTopSong": {
+        "description": "Label above the most played song."
+    },
+    "settingsProfileStatsPlayCount": "{count, plural, one{{count} прайграваньне} few{{count} прайграваньня} other{{count} прайграваньняў}}",
+    "@settingsProfileStatsPlayCount": {
+        "description": "How often the top song or artist was played, shown after the name.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsHoursMinutes": "{hours} гадз {minutes} хв",
+    "@settingsProfileStatsHoursMinutes": {
+        "description": "Listening time of an hour or more. Minutes are zero padded.",
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsMinutes": "{minutes} хв",
+    "@settingsProfileStatsMinutes": {
+        "description": "Listening time under an hour.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsEmpty": "Пакуль што тут нічога няма. Прайграйце што-небудзь, каб гэты сьпіс пачаў запаўняцца.",
+    "@settingsProfileStatsEmpty": {
+        "description": "Shown in place of the numbers when nothing was played this week."
+    },
+    "settingsProfileStatsNone": "Пакуль што нічога няма",
+    "@settingsProfileStatsNone": {
+        "description": "Placeholder where a top song or artist would go when there is none."
+    },
+    "settingsPlaybackSleepTimerOff": "Выкл",
+    "@settingsPlaybackSleepTimerOff": {
+        "description": "Value shown next to the sleep timer row when no timer is running."
+    },
+    "normalisationSectionMode": "Рэжым",
+    "@normalisationSectionMode": {
+        "description": "Section label above the normalisation mode options."
+    },
+    "normalisationSectionTuning": "Рэдагаваньне",
+    "@normalisationSectionTuning": {
+        "description": "Section label above the preamp and clipping options."
+    },
+    "normalisationResetTooltip": "Скінуць нармалізацыю",
+    "@normalisationResetTooltip": {
+        "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
+    },
+    "normalisationOff": "Выключана",
+    "@normalisationOff": {
+        "description": "Normalisation mode that applies no gain."
+    },
+    "normalisationTrack": "Для кожнае песьні",
+    "@normalisationTrack": {
+        "description": "Normalisation mode that brings every song to the same loudness."
+    },
+    "normalisationTrackSubtitle": "У кожнае песьні адна й тая ж гучнасьць",
+    "@normalisationTrackSubtitle": {
+        "description": "Subtitle of the per track normalisation option."
+    },
+    "normalisationAlbum": "Для кожнага альбому",
+    "@normalisationAlbum": {
+        "description": "Normalisation mode that normalises whole albums as one unit."
+    },
+    "normalisationAlbumSubtitle": "Ва ўсіх песьнях альбома аднолькавая гучнасьць",
+    "@normalisationAlbumSubtitle": {
+        "description": "Subtitle of the per album normalisation option."
+    },
+    "normalisationPreamp": "Папярэдні ўзмацняльнік",
+    "@normalisationPreamp": {
+        "description": "Slider for extra gain applied on top of the ReplayGain value."
+    },
+    "normalisationPreampValue": "{db} дБ",
+    "@normalisationPreampValue": {
+        "description": "Value shown next to the preamp slider, in decibels.",
+        "placeholders": {
+            "db": {
+                "type": "String"
+            }
+        }
+    },
+    "normalisationPreventClipping": "Папераджэньне завышэньня гучнасьці",
+    "@normalisationPreventClipping": {
+        "description": "Toggle that lowers the gain instead of letting loud peaks distort."
+    },
+    "normalisationPreventClippingSubtitle": "Памяньшаць узмацненьне, каб рэзкія павелічэньні гучнасьці не скажаліся",
+    "@normalisationPreventClippingSubtitle": {
+        "description": "Subtitle of the prevent clipping toggle."
+    },
+    "sleepTitle": "Таймэр сну",
+    "@sleepTitle": {
+        "description": "Title of the sleep timer sheet."
+    },
+    "sleepSubtitle": "Музыка затухае і прыпыняецца, калі сканчваецца таймэр",
+    "@sleepSubtitle": {
+        "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+    },
+    "sleepMinutes": "{count, plural, one{{count} хвіліна} few{{count} хвіліны} other{{count} хвілін}}",
+    "@sleepMinutes": {
+        "description": "Preset duration option in the sleep timer sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepUnderMinute": "< 1 хвіліну",
+    "@sleepUnderMinute": {
+        "description": "Sleep timer value shown when less than a minute is left."
+    },
+    "settingsPlaybackSleepTimerFade": "Даўжыня затуханьня",
+    "@settingsPlaybackSleepTimerFade": {
+        "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+    },
+    "settingsPlaybackSleepTimerFadeValue": "{seconds} с",
+    "@settingsPlaybackSleepTimerFadeValue": {
+        "description": "Value shown next to the fade out length slider, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepEndOfSong": "На канцы песьні",
+    "@sleepEndOfSong": {
+        "description": "Sleep timer option that stops playback when the current song finishes."
+    },
+    "sleepEndOfQueue": "На канцы чаргі",
+    "@sleepEndOfQueue": {
+        "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+    },
+    "sleepCustom": "Уласны",
+    "@sleepCustom": {
+        "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+    },
+    "sleepRemaining": "{minutes}:{seconds}",
+    "@sleepRemaining": {
+        "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            },
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "sleepRemainingEndOfSong": "Пакуль не скончыцца песьня",
+    "@sleepRemainingEndOfSong": {
+        "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+    },
+    "sleepRemainingEndOfQueue": "Пакуль не скончыцца чарга",
+    "@sleepRemainingEndOfQueue": {
+        "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+    },
+    "sleepExtend": "яшчэ {count, plural, one{{count} хвілінку} few{{count} хвілінкі} other{{count} хвілінак}}",
+    "@sleepExtend": {
+        "description": "Button that adds more time to a running sleep timer.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepCustomTitle": "Уласны час",
+    "@sleepCustomTitle": {
+        "description": "Title of the sheet for entering an arbitrary sleep timer length."
+    },
+    "sleepCustomField": "Хвілін",
+    "@sleepCustomField": {
+        "description": "Label of the field for entering the sleep timer length in minutes."
+    },
+    "sleepCustomStart": "Запусьціць таймэр",
+    "@sleepCustomStart": {
+        "description": "Button that starts the sleep timer with the entered number of minutes."
+    },
+    "sleepCancel": "Скасаваць таймэр",
+    "@sleepCancel": {
+        "description": "Button that stops a running sleep timer without pausing playback."
+    },
+    "sleepStarted": "Таймэр сну заданы",
+    "@sleepStarted": {
+        "description": "Confirmation shown after a sleep timer is started."
+    },
+    "sleepCancelled": "Таймэр сну скасаваны",
+    "@sleepCancelled": {
+        "description": "Confirmation shown after a running sleep timer is cancelled."
     }
 }
