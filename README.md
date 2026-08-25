@@ -93,6 +93,8 @@ Discord: [https://discord.gg/48fvsUCNwu](https://discord.gg/48fvsUCNwu)
 
 Nerimity: [https://nerimity.com/i/sono](https://nerimity.com/i/sono)
 
+Stoat/Revolt: [https://stt.gg/3chxJMWT](https://stt.gg/3chxJMWT)
+
 ## LICENSE
 
 [GPLv3](LICENSE)

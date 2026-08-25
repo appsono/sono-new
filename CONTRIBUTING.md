@@ -133,4 +133,4 @@ my point of view.
 ## Questions
 
 Open an issue or join one of our community servers ([Discord](https://discord.gg/48fvsUCNwu),
-[Nerimity](https://nerimity.com/i/sono)) if you want to talk something through first.
+[Nerimity](https://nerimity.com/i/sono), [Stoat/Revolt](https://stt.gg/3chxJMWT)) if you want to talk something through first.

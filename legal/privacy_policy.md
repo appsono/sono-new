@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Last updated: 24 July 2026
+Last updated: 25 August 2026
 
 Sono is a local music player by the GitHub user mathiiiiiis, distributed as free,
 open-source software under the GNU GPLv3.
@@ -205,3 +205,4 @@ the release notes on GitHub.
 - GitHub Issues: <https://github.com/appsono/sono-new/issues>
 - Discord: <https://discord.gg/48fvsUCNwu>
 - Nerimity: <https://nerimity.com/i/sono>
+- Stoat/Revolt: <https://stt.gg/3chxJMWT>
