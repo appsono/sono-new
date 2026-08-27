@@ -311,4 +311,5 @@ abstract final class IconsSheet {
 abstract final class SonoBrands {
   static const String discord = 'assets/app/brands/discord_symbol.svg';
   static const String kofi = 'assets/app/brands/kofi_symbol.svg';
+  static const String lastfm = 'assets/app/brands/lastfm_symbol.svg';
 }
