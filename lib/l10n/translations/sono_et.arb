@@ -948,5 +948,265 @@
     "settingsPlaybackPauseOnDisconnect": "Lahtiühendamisel peata esitus",
     "@settingsPlaybackPauseOnDisconnect": {
         "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+    },
+    "sleepTitle": "Unetaimer",
+    "@sleepTitle": {
+        "description": "Title of the sleep timer sheet."
+    },
+    "sleepSubtitle": "Taimeri lõppemisel esitus hajub vaikselt ja peatub",
+    "@sleepSubtitle": {
+        "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+    },
+    "sleepMinutes": "{count, plural, =1{1 minut} other{{count} minutit}}",
+    "@sleepMinutes": {
+        "description": "Preset duration option in the sleep timer sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepUnderMinute": "< 1 minut",
+    "@sleepUnderMinute": {
+        "description": "Sleep timer value shown when less than a minute is left."
+    },
+    "settingsPlaybackSleepTimerFade": "Hajumise kestus",
+    "@settingsPlaybackSleepTimerFade": {
+        "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+    },
+    "settingsPlaybackSleepTimerFadeValue": "{seconds} sek",
+    "@settingsPlaybackSleepTimerFadeValue": {
+        "description": "Value shown next to the fade out length slider, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepEndOfSong": "Loo lõpp",
+    "@sleepEndOfSong": {
+        "description": "Sleep timer option that stops playback when the current song finishes."
+    },
+    "sleepEndOfQueue": "Esitusloendi lõpp",
+    "@sleepEndOfQueue": {
+        "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+    },
+    "sleepCustom": "Sinu valitud kestus",
+    "@sleepCustom": {
+        "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+    },
+    "sleepRemaining": "{minutes}:{seconds}",
+    "@sleepRemaining": {
+        "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            },
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "sleepRemainingEndOfSong": "Kuni lugu lõppeb",
+    "@sleepRemainingEndOfSong": {
+        "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+    },
+    "sleepRemainingEndOfQueue": "Kuni esitusjärjekord lõppeb",
+    "@sleepRemainingEndOfQueue": {
+        "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+    },
+    "sleepExtend": "+{count, plural, =1{1 minut} other{{count} minutit}}",
+    "@sleepExtend": {
+        "description": "Button that adds more time to a running sleep timer.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepCustomTitle": "Sinu määratud kestus",
+    "@sleepCustomTitle": {
+        "description": "Title of the sheet for entering an arbitrary sleep timer length."
+    },
+    "sleepCustomStart": "Käivita taimer",
+    "@sleepCustomStart": {
+        "description": "Button that starts the sleep timer with the entered number of minutes."
+    },
+    "sleepCancel": "Tühista taimer",
+    "@sleepCancel": {
+        "description": "Button that stops a running sleep timer without pausing playback."
+    },
+    "sleepStarted": "Unetaimer on seadistatud",
+    "@sleepStarted": {
+        "description": "Confirmation shown after a sleep timer is started."
+    },
+    "sleepCancelled": "Unetaimer on tühistatud",
+    "@sleepCancelled": {
+        "description": "Confirmation shown after a running sleep timer is cancelled."
+    },
+    "settingsEqPresetFlat": "Ühetasane",
+    "@settingsEqPresetFlat": {
+        "description": "Equalizer preset, every band at zero."
+    },
+    "settingsEqPresetBass": "Bass",
+    "@settingsEqPresetBass": {
+        "description": "Equalizer preset, lifts the lows."
+    },
+    "settingsEqPresetTreble": "Kõrged toonid",
+    "@settingsEqPresetTreble": {
+        "description": "Equalizer preset, lifts the highs."
+    },
+    "settingsEqPresetVocal": "Laul",
+    "@settingsEqPresetVocal": {
+        "description": "Equalizer preset, lifts the mids where voices sit."
+    },
+    "settingsEqPresetRock": "Rokk",
+    "@settingsEqPresetRock": {
+        "description": "Equalizer preset, lifts the lows and highs."
+    },
+    "settingsEqPresetElectronic": "Elektrooniline muusika",
+    "@settingsEqPresetElectronic": {
+        "description": "Equalizer preset for electronic music, lifts the lows and highs."
+    },
+    "settingsEqPresetBrainFryer": "Ajuküpsetaja",
+    "@settingsEqPresetBrainFryer": {
+        "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
+    },
+    "settingsEqPresetFryerUltimate": "Raju ajuküpsetaja",
+    "@settingsEqPresetFryerUltimate": {
+        "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
+    },
+    "settingsEqPresetCustom": "Sinu seadistatud",
+    "@settingsEqPresetCustom": {
+        "description": "Shown instead of a preset name when the curve matches none of them."
+    },
+    "settingsEqTitle": "Ekvalaiser",
+    "@settingsEqTitle": {
+        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+    },
+    "settingsEqEnable": "Ekvalaiser",
+    "@settingsEqEnable": {
+        "description": "Toggle that switches the equalizer on and off."
+    },
+    "settingsLibraryLastScan": "Viimane skaneerimine {date} kell {time}",
+    "@settingsLibraryLastScan": {
+        "description": "First footer line on the library subpage, showing when the last scan finished.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsLibraryCountSongs": "{count, plural, =0{lugusid pole} =1{1 lugu} other{{count} lugu}}",
+    "@settingsLibraryCountSongs": {
+        "description": "Song total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryMusicFolders": "Muusika kaustad",
+    "@settingsLibraryMusicFolders": {
+        "description": "Extra folders to scan. Desktop only, Android uses MediaStore."
+    },
+    "settingsLibraryMusicFoldersEmpty": "Täiendavaid kaustu veel pole",
+    "@settingsLibraryMusicFoldersEmpty": {
+        "description": "Shown in the music folders editor when the list is empty."
+    },
+    "settingsLibraryExcludedFolders": "Välistatud kaustad",
+    "@settingsLibraryExcludedFolders": {
+        "description": "Folders skipped when scanning."
+    },
+    "settingsLibraryExcludedFoldersEmpty": "Sa pole veel midagi välistanud",
+    "@settingsLibraryExcludedFoldersEmpty": {
+        "description": "Shown in the excluded folders editor when the list is empty."
+    },
+    "settingsLibraryFolderField": "Kausta asukoht",
+    "@settingsLibraryFolderField": {
+        "description": "Label of the text field in the folder editors."
+    },
+    "settingsLibraryFolderAdd": "Lisa kaust",
+    "@settingsLibraryFolderAdd": {
+        "description": "Action that adds the typed path to the folder list."
+    },
+    "settingsLibraryMinLength": "Minimaalne kestus",
+    "@settingsLibraryMinLength": {
+        "description": "Files shorter than this are skipped when scanning."
+    },
+    "settingsLibraryMinLengthHelp": "Sellest lühemad lood jäävad vahele. Kui jätad tühjaks, siis laaditakse kõik lood.",
+    "@settingsLibraryMinLengthHelp": {
+        "description": "Explanation at the top of the minimum length sheet."
+    },
+    "settingsLibraryMinLengthField": "Sekundit",
+    "@settingsLibraryMinLengthField": {
+        "description": "Label of the text field in the minimum length sheet."
+    },
+    "settingsLibraryMinLengthValue": "{seconds} sek",
+    "@settingsLibraryMinLengthValue": {
+        "description": "Minimum length shown on the row, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsLibraryMinLengthOff": "Pole kasutusel",
+    "@settingsLibraryMinLengthOff": {
+        "description": "Shown when no minimum length is set."
+    },
+    "settingsLibrarySectionGrouping": "Rühmitamine",
+    "@settingsLibrarySectionGrouping": {
+        "description": "Section label above album grouping and sorting options."
+    },
+    "settingsLibraryGroupByFolder": "Rühmita albumid kausta kaupa",
+    "@settingsLibraryGroupByFolder": {
+        "description": "Toggle that groups albums by the song's folder instead of its album tag."
+    },
+    "settingsLibraryCountAlbums": "{count, plural, =0{albumeid pole} =1{1 album} other{{count} albumit}}",
+    "@settingsLibraryCountAlbums": {
+        "description": "Album total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryCountArtists": "{count, plural, =0{esitajaid pole} =1{1 esitaja} other{{count} esitajat}}",
+    "@settingsLibraryCountArtists": {
+        "description": "Artist total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsDiscordTitle": "Discord",
+    "@settingsDiscordTitle": {
+        "description": "Title of the Discord subpage. Shorter than the row label, which is 'Discord presence'."
+    },
+    "settingsDiscordConnect": "Ühenda Discordiga",
+    "@settingsDiscordConnect": {
+        "description": "Action that opens the Discord login flow."
+    },
+    "settingsDiscordConnecting": "Ühendan…",
+    "@settingsDiscordConnecting": {
+        "description": "Replaces the connect label while the login is in progress."
+    },
+    "settingsDiscordConnected": "Ühendatud",
+    "@settingsDiscordConnected": {
+        "description": "Status under the Discord account name when a token is loaded."
+    },
+    "settingsDiscordDisconnect": "Katkesta ühendus",
+    "@settingsDiscordDisconnect": {
+        "description": "Destructive action that logs out of Discord and clears the presence."
     }
 }
