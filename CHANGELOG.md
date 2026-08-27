@@ -50,6 +50,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   artist and cover while the duration was already correct
 - Closing Sono from the recent apps list and reopening it no longer crashes on
   the first launch (only happened on some devices)
+- Swiping the media no longer clears the queue on OneUI
+  ([#55](https://github.com/appsono/sono-new/issues/55))
+- A failed check for and old Sono install no longer breaks the Play build's
+  migration prompt
 
 ### Removed
 
@@ -84,15 +88,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a `song_artists` table linking every credited artist, so top artist
   counts features. Migration flags a rescan to fill it
 - Added an addAlbumToPlaylist() db query
+- `onTaskRemoved`, `onNotificationDeleted` and `stop` share one release path
+- Flutter is now pinned in `pubspec.yaml`, workflows read it
 
 ### Translation
 
+- [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
+  Belarusian (100%) and Belarusian (be_TARASK) (100%)
+- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
+  into Estonian (72%)
 - [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
   German (100%)
-- [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
-  into Estonian (51%)
 - [JVVAV](https://hosted.weblate.org/user/JVVAV/) started translating Sono into
   Portuguese (100%)
+- [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
+  Ukrainian (100%)
 
 ## [0.12.0+14] - 2026-08-09
 
