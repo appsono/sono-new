@@ -39,6 +39,8 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   Duration _lastBroadcastPosition = Duration.zero;
   DateTime _lastBroadcastTime = DateTime.now();
 
+  bool _dismissed = false;
+
   SonoAudioHandler(this._db) {
     _initSession();
     _cleanupStaleCover();
@@ -46,6 +48,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     //bridge media_kit playing state > audio_service playback state
     _audio.playingStream.listen((playing) async {
       if (playing) {
+        _dismissed = false;
         final session = await AudioSession.instance;
         await session.setActive(true);
       }
@@ -245,7 +248,9 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
           MediaAction.setRepeatMode,
         },
         androidCompactActionIndices: const [0, 1, 2],
-        processingState: AudioProcessingState.ready,
+        processingState: _dismissed
+            ? AudioProcessingState.idle
+            : AudioProcessingState.ready,
         //processingState: (_audio.isBuffering)
         //    ? AudioProcessingState.loading
         //    : AudioProcessingState.ready,
@@ -286,16 +291,27 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
     );
   }
 
-  @override
-  Future<void> onTaskRemoved() async {
-    await stop();
+  Future<void> _release() async {
+    //before awaits pauseImmediate emits a playing event that would
+    //otherwise reports the notif as ready
+    _dismissed = true;
+    await _audio.pauseImmediate();
+    await _audio.flushState();
     final session = await AudioSession.instance;
     await session.setActive(false);
     _broadcastState();
   }
 
   @override
+  Future<void> onTaskRemoved() => _release();
+
+  /// BaseAudioHandler routes this to stop() which wipes the queue
+  @override
+  Future<void> onNotificationDeleted() => _release();
+
+  @override
   Future<void> play() async {
+    _dismissed = false;
     //activate session before anything else
     final session = await AudioSession.instance;
     await session.setActive(true);
@@ -348,16 +364,7 @@ class SonoAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   @override
   Future<void> stop() async {
-    //clean up cover file on stop
-    if (_previousCoverFile != null) {
-      try {
-        await _previousCoverFile!.delete();
-      } catch (_) {}
-      _previousCoverFile = null;
-    }
-    await _audio.stop();
-    final session = await AudioSession.instance;
-    await session.setActive(false);
+    await _release();
     await super.stop();
   }
 
