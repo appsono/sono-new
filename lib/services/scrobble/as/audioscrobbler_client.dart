@@ -59,6 +59,41 @@ class AudioScrobblerClient {
     return (sessionKey: key, username: name);
   }
 
+  Future<void> updateNowPlaying(
+    ScrobbleTrack track, {
+    required String sessionKey,
+  }) async {
+    await send('track.updateNowPlaying', {
+      ..._trackParams(track, ''),
+      'sk': sessionKey,
+    });
+  }
+
+  Future<ScrobbleBatchResult> scrobble(
+    List<ScrobbleTrack> tracks, {
+    required String sessionKey,
+  }) async {
+    if (tracks.isEmpty) {
+      return const ScrobbleBatchResult(accepted: 0, refused: 0);
+    }
+
+    final params = <String, String>{'sk': sessionKey};
+    for (var i = 0; i < tracks.length; i++) {
+      final track = tracks[i];
+      params
+        ..addAll(_trackParams(track, '[$i]'))
+        ..['timestamp[$i]'] = '${_seconds(track.startedAt)}';
+    }
+
+    final body = await send('track.scrobble', params);
+    final scrobbles = body['scrobbles'];
+    final attr = scrobbles is Map ? scrobbles['@attr'] : null;
+    return ScrobbleBatchResult(
+      accepted: _asInt(attr is Map ? attr['accepted'] : null) ?? tracks.length,
+      refused: _asInt(attr is Map ? attr['ignored'] : null) ?? 0,
+    );
+  }
+
   Future<Map<String, dynamic>> send(
     String method,
     Map<String, String> params, {
@@ -97,6 +132,19 @@ class AudioScrobblerClient {
     }
     return decoded;
   }
+
+  Map<String, String> _trackParams(ScrobbleTrack track, String suffix) => {
+    'artist$suffix': track.artist,
+    'track$suffix': track.track,
+    if (track.album != null) 'album$suffix': track.album!,
+    if (track.durationMs != null)
+      'duration$suffix': '${track.durationMs! ~/ 1000}',
+  };
+
+  static int _seconds(DateTime at) => at.millisecondsSinceEpoch ~/ 1000;
+
+  static int? _asInt(Object? value) =>
+      value is int ? value : int.tryParse('$value');
 
   String _sign(Map<String, String> params) {
     final buffer = StringBuffer();

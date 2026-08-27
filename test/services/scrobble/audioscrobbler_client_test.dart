@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:sono/services/scrobble/audioscrobbler_client.dart';
+import 'package:sono/services/scrobble/as/audioscrobbler_client.dart';
 import 'package:sono/services/scrobble/models.dart';
 
 const _root = 'https://ws.audioscrobbler.com/2.0/';
