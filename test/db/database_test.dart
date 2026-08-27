@@ -314,4 +314,105 @@ void main() {
       expect(albums.first.title, 'Demon Days');
     });
   });
+
+  group('Scrobbles', () {
+    final now = DateTime(2026, 8, 27, 12);
+    final since = now.subtract(const Duration(days: 30));
+    final cutoff = now.subtract(const Duration(days: 14));
+
+    Future<int> addPlay({
+      required DateTime startedAt,
+      int playedMs = 200 * 1000,
+      int? durationMs = 300 * 1000,
+      bool imported = false,
+    }) async {
+      final id = await db.recordPlay(
+        title: 'Song',
+        artist: 'Artist',
+        durationMs: durationMs,
+        startedAt: startedAt,
+        playedMs: playedMs,
+      );
+      if (imported) {
+        await db.customStatement('UPDATE plays SET imported = 1 WHERE id = ?', [
+          id,
+        ]);
+      }
+      return id;
+    }
+
+    test('qualifying play is pending', () async {
+      final id = await addPlay(startedAt: now);
+      final pending = await db.getPendingScrobbles(
+        'lastfm',
+        since: since,
+        cutoff: cutoff,
+      );
+      expect(pending.map((p) => p.id), [id]);
+    });
+
+    test('play below the threshold is not pending', () async {
+      await addPlay(startedAt: now, playedMs: 10 * 1000);
+      final pending = await db.getPendingScrobbles(
+        'lastfm',
+        since: since,
+        cutoff: cutoff,
+      );
+      expect(pending, isEmpty);
+    });
+
+    test('play older than since or cutoff is not pending', () async {
+      await addPlay(startedAt: since.subtract(const Duration(days: 1)));
+      await addPlay(startedAt: cutoff.subtract(const Duration(days: 1)));
+      final pending = await db.getPendingScrobbles(
+        'lastfm',
+        since: since,
+        cutoff: cutoff,
+      );
+      expect(pending, isEmpty);
+    });
+
+    test('imported play is never pending', () async {
+      await addPlay(startedAt: now, imported: true);
+      final pending = await db.getPendingScrobbles(
+        'lastfm',
+        since: since,
+        cutoff: cutoff,
+      );
+      expect(pending, isEmpty);
+    });
+
+    test('settling one provider leaves the other pending', () async {
+      final id = await addPlay(startedAt: now);
+      await db.settleScrobbles('lastfm', [id], now);
+
+      expect(
+        await db.getPendingScrobbles('lastfm', since: since, cutoff: cutoff),
+        isEmpty,
+      );
+      final other = await db.getPendingScrobbles(
+        'librefm',
+        since: since,
+        cutoff: cutoff,
+      );
+      expect(other.map((p) => p.id), [id]);
+    });
+
+    test('settling twice does not throw', () async {
+      final id = await addPlay(startedAt: now);
+      await db.settleScrobbles('lastfm', [id], now);
+      await db.settleScrobbles('lastfm', [id], now);
+    });
+
+    test('deleting a play drops its scrobble rows', () async {
+      final id = await addPlay(
+        startedAt: cutoff.subtract(const Duration(days: 1)),
+      );
+      await db.settleScrobbles('lastfm', [id], now);
+      await db.deletePlaysBefore(cutoff);
+
+      final rows = await db.customSelect('SELECT * FROM scrobbles').get();
+      expect(rows, isEmpty);
+    });
+  });
 }

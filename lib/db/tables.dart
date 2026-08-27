@@ -195,6 +195,22 @@ class Plays extends Table {
 
   /// excludes pauses and rewound stretches
   IntColumn get playedMs => integer()();
+
+  /// restored from a backup, may already sit on a scrobble account
+  BoolColumn get imported => boolean().withDefault(const Constant(false))();
+}
+
+/// Plays a scrobble account is done with, sent or permanently refused
+/// > no row means still pending. freshly link starts empty
+/// > provider is account key. so instances stay apart
+class Scrobbles extends Table {
+  IntColumn get playId =>
+      integer().references(Plays, #id, onDelete: KeyAction.cascade)();
+  TextColumn get provider => text()();
+  DateTimeColumn get settledAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {playId, provider};
 }
 
 /// Legacy settings from old Sono app

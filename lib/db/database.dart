@@ -33,6 +33,7 @@ part 'database.g.dart';
     Playlists,
     PlaylistSongs,
     Plays,
+    Scrobbles,
     SongArtists,
     LegacySettings,
   ],
@@ -43,7 +44,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 20;
+  int get schemaVersion => 21;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -160,8 +161,12 @@ class SonoDatabase extends _$SonoDatabase {
           "VALUES ('$forceRescanKey', '1')",
         );
       }
+      if (from < 21) {
+        await m.addColumn(plays, plays.imported);
+        await m.createTable(scrobbles);
+      }
       //future migrations go here:
-      // if (from < 21) { .. }
+      // if (from < 22) { .. }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -1701,6 +1706,53 @@ class SonoDatabase extends _$SonoDatabase {
     ];
   }
 
+  /// ==== Scrobbles ====
+
+  /// Qualifying plays [provider] has not settles yet, oldest first
+  ///
+  /// [since] holds back history from before account link
+  /// [cutoff] drops too old entries
+  Future<List<Play>> getPendingScrobbles(
+    String provider, {
+    required DateTime since,
+    required DateTime cutoff,
+    int limit = 50,
+  }) => customSelect(
+    'SELECT p.* FROM plays p '
+    'WHERE p.imported = 0 AND p.started_at >= ? AND p.started_at >= ? '
+    'AND $_countsAsPlay '
+    'AND NOT EXISTS ('
+    'SELECT 1 FROM scrobbles s WHERE s.play_id = p.id AND s.provider = ?'
+    ') '
+    'ORDER BY p.started_at ASC LIMIT ?',
+    variables: [
+      Variable.withInt(_epoch(since)),
+      Variable.withInt(_epoch(cutoff)),
+      Variable.withString(provider),
+      Variable.withInt(limit),
+    ],
+    readsFrom: {plays, scrobbles},
+  ).map((row) => plays.map(row.data)).get();
+
+  Future<void> settleScrobbles(
+    String provider,
+    Iterable<int> playIds,
+    DateTime at,
+  ) async {
+    final rows = [
+      for (final id in playIds)
+        ScrobblesCompanion.insert(
+          playId: id,
+          provider: provider,
+          settledAt: at,
+        ),
+    ];
+    if (rows.isEmpty) return;
+    await batch(
+      (b) => b.insertAll(scrobbles, rows, mode: InsertMode.insertOrIgnore),
+    );
+  }
+
   /// Albums where this artist is credited on every song
   Future<List<int>> getCollabAlbumIds(int artistId) async {
     final rows = await customSelect(
@@ -1946,6 +1998,7 @@ class SonoDatabase extends _$SonoDatabase {
           durationMs: Value(e.durationMs),
           startedAt: e.startedAt,
           playedMs: e.playedMs,
+          imported: const Value(true),
         ),
       );
     }

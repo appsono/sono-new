@@ -3047,6 +3047,21 @@ class $PlaysTable extends Plays with TableInfo<$PlaysTable, Play> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _importedMeta = const VerificationMeta(
+    'imported',
+  );
+  @override
+  late final GeneratedColumn<bool> imported = GeneratedColumn<bool>(
+    'imported',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("imported" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3057,6 +3072,7 @@ class $PlaysTable extends Plays with TableInfo<$PlaysTable, Play> {
     durationMs,
     startedAt,
     playedMs,
+    imported,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3121,6 +3137,12 @@ class $PlaysTable extends Plays with TableInfo<$PlaysTable, Play> {
     } else if (isInserting) {
       context.missing(_playedMsMeta);
     }
+    if (data.containsKey('imported')) {
+      context.handle(
+        _importedMeta,
+        imported.isAcceptableOrUnknown(data['imported']!, _importedMeta),
+      );
+    }
     return context;
   }
 
@@ -3162,6 +3184,10 @@ class $PlaysTable extends Plays with TableInfo<$PlaysTable, Play> {
         DriftSqlType.int,
         data['${effectivePrefix}played_ms'],
       )!,
+      imported: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}imported'],
+      )!,
     );
   }
 
@@ -3186,6 +3212,9 @@ class Play extends DataClass implements Insertable<Play> {
 
   /// excludes pauses and rewound stretches
   final int playedMs;
+
+  /// restored from a backup, may already sit on a scrobble account
+  final bool imported;
   const Play({
     required this.id,
     this.songId,
@@ -3195,6 +3224,7 @@ class Play extends DataClass implements Insertable<Play> {
     this.durationMs,
     required this.startedAt,
     required this.playedMs,
+    required this.imported,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3215,6 +3245,7 @@ class Play extends DataClass implements Insertable<Play> {
     }
     map['started_at'] = Variable<DateTime>(startedAt);
     map['played_ms'] = Variable<int>(playedMs);
+    map['imported'] = Variable<bool>(imported);
     return map;
   }
 
@@ -3236,6 +3267,7 @@ class Play extends DataClass implements Insertable<Play> {
           : Value(durationMs),
       startedAt: Value(startedAt),
       playedMs: Value(playedMs),
+      imported: Value(imported),
     );
   }
 
@@ -3253,6 +3285,7 @@ class Play extends DataClass implements Insertable<Play> {
       durationMs: serializer.fromJson<int?>(json['durationMs']),
       startedAt: serializer.fromJson<DateTime>(json['startedAt']),
       playedMs: serializer.fromJson<int>(json['playedMs']),
+      imported: serializer.fromJson<bool>(json['imported']),
     );
   }
   @override
@@ -3267,6 +3300,7 @@ class Play extends DataClass implements Insertable<Play> {
       'durationMs': serializer.toJson<int?>(durationMs),
       'startedAt': serializer.toJson<DateTime>(startedAt),
       'playedMs': serializer.toJson<int>(playedMs),
+      'imported': serializer.toJson<bool>(imported),
     };
   }
 
@@ -3279,6 +3313,7 @@ class Play extends DataClass implements Insertable<Play> {
     Value<int?> durationMs = const Value.absent(),
     DateTime? startedAt,
     int? playedMs,
+    bool? imported,
   }) => Play(
     id: id ?? this.id,
     songId: songId.present ? songId.value : this.songId,
@@ -3288,6 +3323,7 @@ class Play extends DataClass implements Insertable<Play> {
     durationMs: durationMs.present ? durationMs.value : this.durationMs,
     startedAt: startedAt ?? this.startedAt,
     playedMs: playedMs ?? this.playedMs,
+    imported: imported ?? this.imported,
   );
   Play copyWithCompanion(PlaysCompanion data) {
     return Play(
@@ -3301,6 +3337,7 @@ class Play extends DataClass implements Insertable<Play> {
           : this.durationMs,
       startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
       playedMs: data.playedMs.present ? data.playedMs.value : this.playedMs,
+      imported: data.imported.present ? data.imported.value : this.imported,
     );
   }
 
@@ -3314,7 +3351,8 @@ class Play extends DataClass implements Insertable<Play> {
           ..write('album: $album, ')
           ..write('durationMs: $durationMs, ')
           ..write('startedAt: $startedAt, ')
-          ..write('playedMs: $playedMs')
+          ..write('playedMs: $playedMs, ')
+          ..write('imported: $imported')
           ..write(')'))
         .toString();
   }
@@ -3329,6 +3367,7 @@ class Play extends DataClass implements Insertable<Play> {
     durationMs,
     startedAt,
     playedMs,
+    imported,
   );
   @override
   bool operator ==(Object other) =>
@@ -3341,7 +3380,8 @@ class Play extends DataClass implements Insertable<Play> {
           other.album == this.album &&
           other.durationMs == this.durationMs &&
           other.startedAt == this.startedAt &&
-          other.playedMs == this.playedMs);
+          other.playedMs == this.playedMs &&
+          other.imported == this.imported);
 }
 
 class PlaysCompanion extends UpdateCompanion<Play> {
@@ -3353,6 +3393,7 @@ class PlaysCompanion extends UpdateCompanion<Play> {
   final Value<int?> durationMs;
   final Value<DateTime> startedAt;
   final Value<int> playedMs;
+  final Value<bool> imported;
   const PlaysCompanion({
     this.id = const Value.absent(),
     this.songId = const Value.absent(),
@@ -3362,6 +3403,7 @@ class PlaysCompanion extends UpdateCompanion<Play> {
     this.durationMs = const Value.absent(),
     this.startedAt = const Value.absent(),
     this.playedMs = const Value.absent(),
+    this.imported = const Value.absent(),
   });
   PlaysCompanion.insert({
     this.id = const Value.absent(),
@@ -3372,6 +3414,7 @@ class PlaysCompanion extends UpdateCompanion<Play> {
     this.durationMs = const Value.absent(),
     required DateTime startedAt,
     required int playedMs,
+    this.imported = const Value.absent(),
   }) : title = Value(title),
        startedAt = Value(startedAt),
        playedMs = Value(playedMs);
@@ -3384,6 +3427,7 @@ class PlaysCompanion extends UpdateCompanion<Play> {
     Expression<int>? durationMs,
     Expression<DateTime>? startedAt,
     Expression<int>? playedMs,
+    Expression<bool>? imported,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3394,6 +3438,7 @@ class PlaysCompanion extends UpdateCompanion<Play> {
       if (durationMs != null) 'duration_ms': durationMs,
       if (startedAt != null) 'started_at': startedAt,
       if (playedMs != null) 'played_ms': playedMs,
+      if (imported != null) 'imported': imported,
     });
   }
 
@@ -3406,6 +3451,7 @@ class PlaysCompanion extends UpdateCompanion<Play> {
     Value<int?>? durationMs,
     Value<DateTime>? startedAt,
     Value<int>? playedMs,
+    Value<bool>? imported,
   }) {
     return PlaysCompanion(
       id: id ?? this.id,
@@ -3416,6 +3462,7 @@ class PlaysCompanion extends UpdateCompanion<Play> {
       durationMs: durationMs ?? this.durationMs,
       startedAt: startedAt ?? this.startedAt,
       playedMs: playedMs ?? this.playedMs,
+      imported: imported ?? this.imported,
     );
   }
 
@@ -3446,6 +3493,9 @@ class PlaysCompanion extends UpdateCompanion<Play> {
     if (playedMs.present) {
       map['played_ms'] = Variable<int>(playedMs.value);
     }
+    if (imported.present) {
+      map['imported'] = Variable<bool>(imported.value);
+    }
     return map;
   }
 
@@ -3459,7 +3509,275 @@ class PlaysCompanion extends UpdateCompanion<Play> {
           ..write('album: $album, ')
           ..write('durationMs: $durationMs, ')
           ..write('startedAt: $startedAt, ')
-          ..write('playedMs: $playedMs')
+          ..write('playedMs: $playedMs, ')
+          ..write('imported: $imported')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ScrobblesTable extends Scrobbles
+    with TableInfo<$ScrobblesTable, Scrobble> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ScrobblesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _playIdMeta = const VerificationMeta('playId');
+  @override
+  late final GeneratedColumn<int> playId = GeneratedColumn<int>(
+    'play_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES plays (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _providerMeta = const VerificationMeta(
+    'provider',
+  );
+  @override
+  late final GeneratedColumn<String> provider = GeneratedColumn<String>(
+    'provider',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _settledAtMeta = const VerificationMeta(
+    'settledAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> settledAt = GeneratedColumn<DateTime>(
+    'settled_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [playId, provider, settledAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'scrobbles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Scrobble> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('play_id')) {
+      context.handle(
+        _playIdMeta,
+        playId.isAcceptableOrUnknown(data['play_id']!, _playIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_playIdMeta);
+    }
+    if (data.containsKey('provider')) {
+      context.handle(
+        _providerMeta,
+        provider.isAcceptableOrUnknown(data['provider']!, _providerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_providerMeta);
+    }
+    if (data.containsKey('settled_at')) {
+      context.handle(
+        _settledAtMeta,
+        settledAt.isAcceptableOrUnknown(data['settled_at']!, _settledAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_settledAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {playId, provider};
+  @override
+  Scrobble map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Scrobble(
+      playId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}play_id'],
+      )!,
+      provider: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}provider'],
+      )!,
+      settledAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}settled_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ScrobblesTable createAlias(String alias) {
+    return $ScrobblesTable(attachedDatabase, alias);
+  }
+}
+
+class Scrobble extends DataClass implements Insertable<Scrobble> {
+  final int playId;
+  final String provider;
+  final DateTime settledAt;
+  const Scrobble({
+    required this.playId,
+    required this.provider,
+    required this.settledAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['play_id'] = Variable<int>(playId);
+    map['provider'] = Variable<String>(provider);
+    map['settled_at'] = Variable<DateTime>(settledAt);
+    return map;
+  }
+
+  ScrobblesCompanion toCompanion(bool nullToAbsent) {
+    return ScrobblesCompanion(
+      playId: Value(playId),
+      provider: Value(provider),
+      settledAt: Value(settledAt),
+    );
+  }
+
+  factory Scrobble.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Scrobble(
+      playId: serializer.fromJson<int>(json['playId']),
+      provider: serializer.fromJson<String>(json['provider']),
+      settledAt: serializer.fromJson<DateTime>(json['settledAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'playId': serializer.toJson<int>(playId),
+      'provider': serializer.toJson<String>(provider),
+      'settledAt': serializer.toJson<DateTime>(settledAt),
+    };
+  }
+
+  Scrobble copyWith({int? playId, String? provider, DateTime? settledAt}) =>
+      Scrobble(
+        playId: playId ?? this.playId,
+        provider: provider ?? this.provider,
+        settledAt: settledAt ?? this.settledAt,
+      );
+  Scrobble copyWithCompanion(ScrobblesCompanion data) {
+    return Scrobble(
+      playId: data.playId.present ? data.playId.value : this.playId,
+      provider: data.provider.present ? data.provider.value : this.provider,
+      settledAt: data.settledAt.present ? data.settledAt.value : this.settledAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Scrobble(')
+          ..write('playId: $playId, ')
+          ..write('provider: $provider, ')
+          ..write('settledAt: $settledAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(playId, provider, settledAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Scrobble &&
+          other.playId == this.playId &&
+          other.provider == this.provider &&
+          other.settledAt == this.settledAt);
+}
+
+class ScrobblesCompanion extends UpdateCompanion<Scrobble> {
+  final Value<int> playId;
+  final Value<String> provider;
+  final Value<DateTime> settledAt;
+  final Value<int> rowid;
+  const ScrobblesCompanion({
+    this.playId = const Value.absent(),
+    this.provider = const Value.absent(),
+    this.settledAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ScrobblesCompanion.insert({
+    required int playId,
+    required String provider,
+    required DateTime settledAt,
+    this.rowid = const Value.absent(),
+  }) : playId = Value(playId),
+       provider = Value(provider),
+       settledAt = Value(settledAt);
+  static Insertable<Scrobble> custom({
+    Expression<int>? playId,
+    Expression<String>? provider,
+    Expression<DateTime>? settledAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (playId != null) 'play_id': playId,
+      if (provider != null) 'provider': provider,
+      if (settledAt != null) 'settled_at': settledAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ScrobblesCompanion copyWith({
+    Value<int>? playId,
+    Value<String>? provider,
+    Value<DateTime>? settledAt,
+    Value<int>? rowid,
+  }) {
+    return ScrobblesCompanion(
+      playId: playId ?? this.playId,
+      provider: provider ?? this.provider,
+      settledAt: settledAt ?? this.settledAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (playId.present) {
+      map['play_id'] = Variable<int>(playId.value);
+    }
+    if (provider.present) {
+      map['provider'] = Variable<String>(provider.value);
+    }
+    if (settledAt.present) {
+      map['settled_at'] = Variable<DateTime>(settledAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ScrobblesCompanion(')
+          ..write('playId: $playId, ')
+          ..write('provider: $provider, ')
+          ..write('settledAt: $settledAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -4611,6 +4929,7 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
   late final $PlaylistsTable playlists = $PlaylistsTable(this);
   late final $PlaylistSongsTable playlistSongs = $PlaylistSongsTable(this);
   late final $PlaysTable plays = $PlaysTable(this);
+  late final $ScrobblesTable scrobbles = $ScrobblesTable(this);
   late final $SongArtistsTable songArtists = $SongArtistsTable(this);
   late final $LegacySettingsTable legacySettings = $LegacySettingsTable(this);
   late final $SongWithArtistViewView songWithArtistView =
@@ -4639,6 +4958,7 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
     playlists,
     playlistSongs,
     plays,
+    scrobbles,
     songArtists,
     legacySettings,
     songWithArtistView,
@@ -4689,6 +5009,13 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('plays', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'plays',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('scrobbles', kind: UpdateKind.delete)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -7804,6 +8131,7 @@ typedef $$PlaysTableCreateCompanionBuilder =
       Value<int?> durationMs,
       required DateTime startedAt,
       required int playedMs,
+      Value<bool> imported,
     });
 typedef $$PlaysTableUpdateCompanionBuilder =
     PlaysCompanion Function({
@@ -7815,6 +8143,7 @@ typedef $$PlaysTableUpdateCompanionBuilder =
       Value<int?> durationMs,
       Value<DateTime> startedAt,
       Value<int> playedMs,
+      Value<bool> imported,
     });
 
 final class $$PlaysTableReferences
@@ -7835,6 +8164,24 @@ final class $$PlaysTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$ScrobblesTable, List<Scrobble>>
+  _scrobblesRefsTable(_$SonoDatabase db) => MultiTypedResultKey.fromTable(
+    db.scrobbles,
+    aliasName: $_aliasNameGenerator(db.plays.id, db.scrobbles.playId),
+  );
+
+  $$ScrobblesTableProcessedTableManager get scrobblesRefs {
+    final manager = $$ScrobblesTableTableManager(
+      $_db,
+      $_db.scrobbles,
+    ).filter((f) => f.playId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_scrobblesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
@@ -7882,6 +8229,11 @@ class $$PlaysTableFilterComposer extends Composer<_$SonoDatabase, $PlaysTable> {
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get imported => $composableBuilder(
+    column: $table.imported,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$SongsTableFilterComposer get songId {
     final $$SongsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -7903,6 +8255,31 @@ class $$PlaysTableFilterComposer extends Composer<_$SonoDatabase, $PlaysTable> {
           ),
     );
     return composer;
+  }
+
+  Expression<bool> scrobblesRefs(
+    Expression<bool> Function($$ScrobblesTableFilterComposer f) f,
+  ) {
+    final $$ScrobblesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.scrobbles,
+      getReferencedColumn: (t) => t.playId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ScrobblesTableFilterComposer(
+            $db: $db,
+            $table: $db.scrobbles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 }
 
@@ -7947,6 +8324,11 @@ class $$PlaysTableOrderingComposer
 
   ColumnOrderings<int> get playedMs => $composableBuilder(
     column: $table.playedMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get imported => $composableBuilder(
+    column: $table.imported,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -8006,6 +8388,9 @@ class $$PlaysTableAnnotationComposer
   GeneratedColumn<int> get playedMs =>
       $composableBuilder(column: $table.playedMs, builder: (column) => column);
 
+  GeneratedColumn<bool> get imported =>
+      $composableBuilder(column: $table.imported, builder: (column) => column);
+
   $$SongsTableAnnotationComposer get songId {
     final $$SongsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -8028,6 +8413,31 @@ class $$PlaysTableAnnotationComposer
     );
     return composer;
   }
+
+  Expression<T> scrobblesRefs<T extends Object>(
+    Expression<T> Function($$ScrobblesTableAnnotationComposer a) f,
+  ) {
+    final $$ScrobblesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.scrobbles,
+      getReferencedColumn: (t) => t.playId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ScrobblesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.scrobbles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$PlaysTableTableManager
@@ -8043,7 +8453,7 @@ class $$PlaysTableTableManager
           $$PlaysTableUpdateCompanionBuilder,
           (Play, $$PlaysTableReferences),
           Play,
-          PrefetchHooks Function({bool songId})
+          PrefetchHooks Function({bool songId, bool scrobblesRefs})
         > {
   $$PlaysTableTableManager(_$SonoDatabase db, $PlaysTable table)
     : super(
@@ -8066,6 +8476,7 @@ class $$PlaysTableTableManager
                 Value<int?> durationMs = const Value.absent(),
                 Value<DateTime> startedAt = const Value.absent(),
                 Value<int> playedMs = const Value.absent(),
+                Value<bool> imported = const Value.absent(),
               }) => PlaysCompanion(
                 id: id,
                 songId: songId,
@@ -8075,6 +8486,7 @@ class $$PlaysTableTableManager
                 durationMs: durationMs,
                 startedAt: startedAt,
                 playedMs: playedMs,
+                imported: imported,
               ),
           createCompanionCallback:
               ({
@@ -8086,6 +8498,7 @@ class $$PlaysTableTableManager
                 Value<int?> durationMs = const Value.absent(),
                 required DateTime startedAt,
                 required int playedMs,
+                Value<bool> imported = const Value.absent(),
               }) => PlaysCompanion.insert(
                 id: id,
                 songId: songId,
@@ -8095,6 +8508,7 @@ class $$PlaysTableTableManager
                 durationMs: durationMs,
                 startedAt: startedAt,
                 playedMs: playedMs,
+                imported: imported,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -8102,10 +8516,10 @@ class $$PlaysTableTableManager
                     (e.readTable(table), $$PlaysTableReferences(db, table, e)),
               )
               .toList(),
-          prefetchHooksCallback: ({songId = false}) {
+          prefetchHooksCallback: ({songId = false, scrobblesRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [],
+              explicitlyWatchedTables: [if (scrobblesRefs) db.scrobbles],
               addJoins:
                   <
                     T extends TableManagerState<
@@ -8139,7 +8553,19 @@ class $$PlaysTableTableManager
                     return state;
                   },
               getPrefetchedDataCallback: (items) async {
-                return [];
+                return [
+                  if (scrobblesRefs)
+                    await $_getPrefetchedData<Play, $PlaysTable, Scrobble>(
+                      currentTable: table,
+                      referencedTable: $$PlaysTableReferences
+                          ._scrobblesRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$PlaysTableReferences(db, table, p0).scrobblesRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.playId == item.id),
+                      typedResults: items,
+                    ),
+                ];
               },
             );
           },
@@ -8159,7 +8585,287 @@ typedef $$PlaysTableProcessedTableManager =
       $$PlaysTableUpdateCompanionBuilder,
       (Play, $$PlaysTableReferences),
       Play,
-      PrefetchHooks Function({bool songId})
+      PrefetchHooks Function({bool songId, bool scrobblesRefs})
+    >;
+typedef $$ScrobblesTableCreateCompanionBuilder =
+    ScrobblesCompanion Function({
+      required int playId,
+      required String provider,
+      required DateTime settledAt,
+      Value<int> rowid,
+    });
+typedef $$ScrobblesTableUpdateCompanionBuilder =
+    ScrobblesCompanion Function({
+      Value<int> playId,
+      Value<String> provider,
+      Value<DateTime> settledAt,
+      Value<int> rowid,
+    });
+
+final class $$ScrobblesTableReferences
+    extends BaseReferences<_$SonoDatabase, $ScrobblesTable, Scrobble> {
+  $$ScrobblesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $PlaysTable _playIdTable(_$SonoDatabase db) => db.plays.createAlias(
+    $_aliasNameGenerator(db.scrobbles.playId, db.plays.id),
+  );
+
+  $$PlaysTableProcessedTableManager get playId {
+    final $_column = $_itemColumn<int>('play_id')!;
+
+    final manager = $$PlaysTableTableManager(
+      $_db,
+      $_db.plays,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_playIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ScrobblesTableFilterComposer
+    extends Composer<_$SonoDatabase, $ScrobblesTable> {
+  $$ScrobblesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get provider => $composableBuilder(
+    column: $table.provider,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get settledAt => $composableBuilder(
+    column: $table.settledAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PlaysTableFilterComposer get playId {
+    final $$PlaysTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playId,
+      referencedTable: $db.plays,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlaysTableFilterComposer(
+            $db: $db,
+            $table: $db.plays,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScrobblesTableOrderingComposer
+    extends Composer<_$SonoDatabase, $ScrobblesTable> {
+  $$ScrobblesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get provider => $composableBuilder(
+    column: $table.provider,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get settledAt => $composableBuilder(
+    column: $table.settledAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PlaysTableOrderingComposer get playId {
+    final $$PlaysTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playId,
+      referencedTable: $db.plays,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlaysTableOrderingComposer(
+            $db: $db,
+            $table: $db.plays,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScrobblesTableAnnotationComposer
+    extends Composer<_$SonoDatabase, $ScrobblesTable> {
+  $$ScrobblesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get provider =>
+      $composableBuilder(column: $table.provider, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get settledAt =>
+      $composableBuilder(column: $table.settledAt, builder: (column) => column);
+
+  $$PlaysTableAnnotationComposer get playId {
+    final $$PlaysTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.playId,
+      referencedTable: $db.plays,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlaysTableAnnotationComposer(
+            $db: $db,
+            $table: $db.plays,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScrobblesTableTableManager
+    extends
+        RootTableManager<
+          _$SonoDatabase,
+          $ScrobblesTable,
+          Scrobble,
+          $$ScrobblesTableFilterComposer,
+          $$ScrobblesTableOrderingComposer,
+          $$ScrobblesTableAnnotationComposer,
+          $$ScrobblesTableCreateCompanionBuilder,
+          $$ScrobblesTableUpdateCompanionBuilder,
+          (Scrobble, $$ScrobblesTableReferences),
+          Scrobble,
+          PrefetchHooks Function({bool playId})
+        > {
+  $$ScrobblesTableTableManager(_$SonoDatabase db, $ScrobblesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ScrobblesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ScrobblesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ScrobblesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> playId = const Value.absent(),
+                Value<String> provider = const Value.absent(),
+                Value<DateTime> settledAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ScrobblesCompanion(
+                playId: playId,
+                provider: provider,
+                settledAt: settledAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int playId,
+                required String provider,
+                required DateTime settledAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ScrobblesCompanion.insert(
+                playId: playId,
+                provider: provider,
+                settledAt: settledAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ScrobblesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({playId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (playId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.playId,
+                                referencedTable: $$ScrobblesTableReferences
+                                    ._playIdTable(db),
+                                referencedColumn: $$ScrobblesTableReferences
+                                    ._playIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ScrobblesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$SonoDatabase,
+      $ScrobblesTable,
+      Scrobble,
+      $$ScrobblesTableFilterComposer,
+      $$ScrobblesTableOrderingComposer,
+      $$ScrobblesTableAnnotationComposer,
+      $$ScrobblesTableCreateCompanionBuilder,
+      $$ScrobblesTableUpdateCompanionBuilder,
+      (Scrobble, $$ScrobblesTableReferences),
+      Scrobble,
+      PrefetchHooks Function({bool playId})
     >;
 typedef $$SongArtistsTableCreateCompanionBuilder =
     SongArtistsCompanion Function({
@@ -8759,6 +9465,8 @@ class $SonoDatabaseManager {
       $$PlaylistSongsTableTableManager(_db, _db.playlistSongs);
   $$PlaysTableTableManager get plays =>
       $$PlaysTableTableManager(_db, _db.plays);
+  $$ScrobblesTableTableManager get scrobbles =>
+      $$ScrobblesTableTableManager(_db, _db.scrobbles);
   $$SongArtistsTableTableManager get songArtists =>
       $$SongArtistsTableTableManager(_db, _db.songArtists);
   $$LegacySettingsTableTableManager get legacySettings =>
