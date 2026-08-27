@@ -29,7 +29,7 @@
     "navHome": "Avaleht",
     "navLibrary": "Muusikakogu",
     "navSearch": "Otsi",
-    "homeActionCreatePlaylist": "Loo esitusloend",
+    "homeActionCreatePlaylist": "Koosta esitusloend",
     "homeHeaderNewsAndUpdates": "Uudised ja uuendused",
     "homeHeaderSettings": "Seadistused",
     "homeSectionRecentlyAdded": "Hiljuti lisatud",
@@ -295,7 +295,7 @@
     "@commonMoreOptions": {
         "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
     },
-    "commonCreatePlaylist": "Loo esitusloend",
+    "commonCreatePlaylist": "Koosta esitusloend",
     "@commonCreatePlaylist": {
         "description": "Button and action label for creating a new playlist."
     },
@@ -538,7 +538,7 @@
     "@settingsProfileUnnamed": {
         "description": "Name shown on the profile row in settings when no username has been set yet."
     },
-    "settingsProfileSubtitle": "Nimi ja tunnuspilt",
+    "settingsProfileSubtitle": "Nimi, tunnuspilt ja kuulamiste statistika",
     "@settingsProfileSubtitle": {
         "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
     },
@@ -717,5 +717,496 @@
     "settingsProfileStats": "Kuulamise statistika",
     "@settingsProfileStats": {
         "description": "Row for play counts and listening history. Currently marked as planned."
+    },
+    "artistInPlaylists": "Sinu esitusloendites",
+    "@artistInPlaylists": {
+        "description": "Heading above playlists that contain a song by this artist."
+    },
+    "migrationCountPlaylists": "{count, plural, =0{esitusloendeid pole} =1{1 esitusloend} other{{count} esitusloendit}}",
+    "@migrationCountPlaylists": {
+        "description": "Playlist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsBackupImportSkipped": "Selles seadmes {songs, plural, =0{ei leidunud ühtegi lugu} =1{leidus 1 lugu} other{leidus {songs} lugu}} ja {playlists, plural, =0{ei leidunud ühtegi esitusloendit} =1{leidus 1 esitusloend} other{leidus {playlists} esitusloendit}}",
+    "@settingsBackupImportSkipped": {
+        "description": "Second snackbar after an import, listing what could not be matched to local files.",
+        "placeholders": {
+            "songs": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "homeSectionRecentlyPlayed": "Hiljuti esitatud",
+    "artistFilterSinglesEps": "Singlid ja EP-d",
+    "@artistFilterSinglesEps": {
+        "description": "Discography filter chip for short releases."
+    },
+    "artistDiscographyNoMatches": "Nendele filtritele ei vasta mitte midagi :/",
+    "@artistDiscographyNoMatches": {
+        "description": "Shown on the discography page when the selected filter chips leave no releases."
+    },
+    "artistDiscographyEmpty": "Sellelt esitajalt ei leidu veel midagi :(",
+    "@artistDiscographyEmpty": {
+        "description": "Shown on the discography page when the artist has no releases at all."
+    },
+    "artistTopSongs": "Populaarsemad lood",
+    "@artistTopSongs": {
+        "description": "Heading above the users most played songs by this artist."
+    },
+    "artistTopSongsPlays": "{count, plural, =1{1 esitamine} other{{count} esitamist}}",
+    "@artistTopSongsPlays": {
+        "description": "How often the user played a song, shown at the end of each ranked row.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "artistListeningTime": "Sa oled kuulanud",
+    "@artistListeningTime": {
+        "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
+    },
+    "artistListeningPlays": "Esitamisi",
+    "@artistListeningPlays": {
+        "description": "Label above how many songs by this artist the user has played."
+    },
+    "artistListeningFirstHeard": "Esimest korda kuuldud",
+    "@artistListeningFirstHeard": {
+        "description": "Label above the date the user first played this artist."
+    },
+    "artistRelated": "Tihti esineb üheskoos",
+    "@artistRelated": {
+        "description": "Heading above artists this one shares songs with."
+    },
+    "settingsProfileStatsWindow": "Sel nädalal",
+    "@settingsProfileStatsWindow": {
+        "description": "Subtitle under the stats card title, naming the window every number covers. Monday to Sunday of the current week."
+    },
+    "settingsProfileStatsPlays": "Esitamisi kokku",
+    "@settingsProfileStatsPlays": {
+        "description": "Label above the number of songs played."
+    },
+    "settingsProfileStatsTopArtist": "Populaarseim esitaja",
+    "@settingsProfileStatsTopArtist": {
+        "description": "Label above the most played artist."
+    },
+    "settingsProfileStatsTopSong": "Populaarseim lugu",
+    "@settingsProfileStatsTopSong": {
+        "description": "Label above the most played song."
+    },
+    "settingsProfileStatsPlayCount": "{count, plural, =1{1 esitamine} other{{count} esitamist}}",
+    "@settingsProfileStatsPlayCount": {
+        "description": "How often the top song or artist was played, shown after the name.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfileStatsHoursMinutes": "{hours} t {minutes} min",
+    "@settingsProfileStatsHoursMinutes": {
+        "description": "Listening time of an hour or more. Minutes are zero padded.",
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsMinutes": "{minutes} min",
+    "@settingsProfileStatsMinutes": {
+        "description": "Listening time under an hour.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsEmpty": "Siin pole veel midagi. Kuula lugusid ja sisu tekib kiiresti.",
+    "@settingsProfileStatsEmpty": {
+        "description": "Shown in place of the numbers when nothing was played this week."
+    },
+    "settingsProfileStatsNone": "Midagi veel pole",
+    "@settingsProfileStatsNone": {
+        "description": "Placeholder where a top song or artist would go when there is none."
+    },
+    "settingsAppearanceSeeAllText": "Tekst",
+    "@settingsAppearanceSeeAllText": {
+        "description": "Option name for the see all control drawn as a plain text label."
+    },
+    "settingsAppearanceSeeAllArrow": "Tekst + nool",
+    "@settingsAppearanceSeeAllArrow": {
+        "description": "Option name for the see all control drawn as a text label followed by a chevron."
+    },
+    "settingsAppearanceGridDensity": "Ruudustikuvaate tihedus",
+    "@settingsAppearanceGridDensity": {
+        "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
+    },
+    "settingsAppearanceTrackNumbers": "Näita lugude numbreid",
+    "@settingsAppearanceTrackNumbers": {
+        "description": "Row toggling track numbers in album track lists. Currently marked as planned."
+    },
+    "settingsLanguageSearchHint": "Otsi keeli",
+    "@settingsLanguageSearchHint": {
+        "description": "Placeholder inside the search field on the language subpage."
+    },
+    "settingsLanguageSystemSubtitle": "Hetkel on kasutusel: {language}",
+    "@settingsLanguageSystemSubtitle": {
+        "description": "Subtitle under the system default option, naming the language the device settings currently resolve to. The language name is in its own language, e.g. Deutsch.",
+        "placeholders": {
+            "language": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLanguageSectionAvailable": "Saadaval",
+    "@settingsLanguageSectionAvailable": {
+        "description": "Section label above the list of translated languages on the language subpage."
+    },
+    "settingsLanguageNoMatches": "Sellele ei vasta ükski keel :/",
+    "@settingsLanguageNoMatches": {
+        "description": "Shown on the language subpage when the search field filters out every language."
+    },
+    "settingsLanguageHelpTranslate": "Aita Sono rakendust tõlkida",
+    "@settingsLanguageHelpTranslate": {
+        "description": "Row that opens the Weblate project where translations are contributed."
+    },
+    "settingsLanguageHelpTranslateSubtitle": "Ava Weblate oma veebibrauseris",
+    "@settingsLanguageHelpTranslateSubtitle": {
+        "description": "Subtitle under the help translate row."
+    },
+    "settingsPlaybackSectionTransitions": "Üleminekud",
+    "@settingsPlaybackSectionTransitions": {
+        "description": "Section label above gapless, crossfade and fade options on the playback subpage."
+    },
+    "settingsPlaybackGapless": "Lünkadeta taasesitus",
+    "@settingsPlaybackGapless": {
+        "description": "Toggle that preloads the next track so it starts without a gap."
+    },
+    "settingsPlaybackGaplessSubtitle": "Järgmine lugu on eellaaditud",
+    "@settingsPlaybackGaplessSubtitle": {
+        "description": "Subtitle under the gapless playback row."
+    },
+    "settingsPlaybackCrossfade": "Risthajutamine",
+    "@settingsPlaybackCrossfade": {
+        "description": "Row for fading one song into the next. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPause": "Peatamisel hajuta välja",
+    "@settingsPlaybackFadeOnPause": {
+        "description": "Row for fading out on pause rather than cutting. Currently marked as planned."
+    },
+    "settingsPlaybackFadeOnPauseSubtitle": "Järsu lõpetamise asemel on kasutusel lühike hajutamine",
+    "@settingsPlaybackFadeOnPauseSubtitle": {
+        "description": "Subtitle under the fade on pause row."
+    },
+    "settingsPlaybackSectionSound": "Heli",
+    "@settingsPlaybackSectionSound": {
+        "description": "Section label above the equalizer, normalisation and volume options on the playback subpage."
+    },
+    "settingsPlaybackNormalisation": "Helivaljuse normaliseerimine",
+    "@settingsPlaybackNormalisation": {
+        "description": "Row for evening out loudness between tracks using ReplayGain tags."
+    },
+    "settingsPlaybackVolume": "Rakendusesisene helivaljus",
+    "@settingsPlaybackVolume": {
+        "description": "Slider controlling Sono's own output volume, separate from the device volume."
+    },
+    "settingsPlaybackVolumeValue": "{value}%",
+    "@settingsPlaybackVolumeValue": {
+        "description": "Value shown next to the in-app volume slider.",
+        "placeholders": {
+            "value": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsPlaybackSectionBehaviour": "Käitumine",
+    "@settingsPlaybackSectionBehaviour": {
+        "description": "Section label above the sleep timer and headphone options on the playback subpage."
+    },
+    "settingsPlaybackSleepTimer": "Unetaimer",
+    "@settingsPlaybackSleepTimer": {
+        "description": "Row on the playback subpage that opens the sleep timer sheet."
+    },
+    "settingsPlaybackSleepTimerOff": "Pole kasutusel",
+    "@settingsPlaybackSleepTimerOff": {
+        "description": "Value shown next to the sleep timer row when no timer is running."
+    },
+    "settingsPlaybackResumeOnConnect": "Taasesituse jätkumine kõrvaklappidega",
+    "@settingsPlaybackResumeOnConnect": {
+        "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
+    },
+    "settingsPlaybackPauseOnDisconnect": "Lahtiühendamisel peata esitus",
+    "@settingsPlaybackPauseOnDisconnect": {
+        "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
+    },
+    "sleepTitle": "Unetaimer",
+    "@sleepTitle": {
+        "description": "Title of the sleep timer sheet."
+    },
+    "sleepSubtitle": "Taimeri lõppemisel esitus hajub vaikselt ja peatub",
+    "@sleepSubtitle": {
+        "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+    },
+    "sleepMinutes": "{count, plural, =1{1 minut} other{{count} minutit}}",
+    "@sleepMinutes": {
+        "description": "Preset duration option in the sleep timer sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepUnderMinute": "< 1 minut",
+    "@sleepUnderMinute": {
+        "description": "Sleep timer value shown when less than a minute is left."
+    },
+    "settingsPlaybackSleepTimerFade": "Hajumise kestus",
+    "@settingsPlaybackSleepTimerFade": {
+        "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+    },
+    "settingsPlaybackSleepTimerFadeValue": "{seconds} sek",
+    "@settingsPlaybackSleepTimerFadeValue": {
+        "description": "Value shown next to the fade out length slider, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepEndOfSong": "Loo lõpp",
+    "@sleepEndOfSong": {
+        "description": "Sleep timer option that stops playback when the current song finishes."
+    },
+    "sleepEndOfQueue": "Esitusloendi lõpp",
+    "@sleepEndOfQueue": {
+        "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+    },
+    "sleepCustom": "Sinu valitud kestus",
+    "@sleepCustom": {
+        "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+    },
+    "sleepRemaining": "{minutes}:{seconds}",
+    "@sleepRemaining": {
+        "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            },
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "sleepRemainingEndOfSong": "Kuni lugu lõppeb",
+    "@sleepRemainingEndOfSong": {
+        "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+    },
+    "sleepRemainingEndOfQueue": "Kuni esitusjärjekord lõppeb",
+    "@sleepRemainingEndOfQueue": {
+        "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+    },
+    "sleepExtend": "+{count, plural, =1{1 minut} other{{count} minutit}}",
+    "@sleepExtend": {
+        "description": "Button that adds more time to a running sleep timer.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepCustomTitle": "Sinu määratud kestus",
+    "@sleepCustomTitle": {
+        "description": "Title of the sheet for entering an arbitrary sleep timer length."
+    },
+    "sleepCustomStart": "Käivita taimer",
+    "@sleepCustomStart": {
+        "description": "Button that starts the sleep timer with the entered number of minutes."
+    },
+    "sleepCancel": "Tühista taimer",
+    "@sleepCancel": {
+        "description": "Button that stops a running sleep timer without pausing playback."
+    },
+    "sleepStarted": "Unetaimer on seadistatud",
+    "@sleepStarted": {
+        "description": "Confirmation shown after a sleep timer is started."
+    },
+    "sleepCancelled": "Unetaimer on tühistatud",
+    "@sleepCancelled": {
+        "description": "Confirmation shown after a running sleep timer is cancelled."
+    },
+    "settingsEqPresetFlat": "Ühetasane",
+    "@settingsEqPresetFlat": {
+        "description": "Equalizer preset, every band at zero."
+    },
+    "settingsEqPresetBass": "Bass",
+    "@settingsEqPresetBass": {
+        "description": "Equalizer preset, lifts the lows."
+    },
+    "settingsEqPresetTreble": "Kõrged toonid",
+    "@settingsEqPresetTreble": {
+        "description": "Equalizer preset, lifts the highs."
+    },
+    "settingsEqPresetVocal": "Laul",
+    "@settingsEqPresetVocal": {
+        "description": "Equalizer preset, lifts the mids where voices sit."
+    },
+    "settingsEqPresetRock": "Rokk",
+    "@settingsEqPresetRock": {
+        "description": "Equalizer preset, lifts the lows and highs."
+    },
+    "settingsEqPresetElectronic": "Elektrooniline muusika",
+    "@settingsEqPresetElectronic": {
+        "description": "Equalizer preset for electronic music, lifts the lows and highs."
+    },
+    "settingsEqPresetBrainFryer": "Ajuküpsetaja",
+    "@settingsEqPresetBrainFryer": {
+        "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
+    },
+    "settingsEqPresetFryerUltimate": "Raju ajuküpsetaja",
+    "@settingsEqPresetFryerUltimate": {
+        "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
+    },
+    "settingsEqPresetCustom": "Sinu seadistatud",
+    "@settingsEqPresetCustom": {
+        "description": "Shown instead of a preset name when the curve matches none of them."
+    },
+    "settingsEqTitle": "Ekvalaiser",
+    "@settingsEqTitle": {
+        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+    },
+    "settingsEqEnable": "Ekvalaiser",
+    "@settingsEqEnable": {
+        "description": "Toggle that switches the equalizer on and off."
+    },
+    "settingsLibraryLastScan": "Viimane skaneerimine {date} kell {time}",
+    "@settingsLibraryLastScan": {
+        "description": "First footer line on the library subpage, showing when the last scan finished.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsLibraryCountSongs": "{count, plural, =0{lugusid pole} =1{1 lugu} other{{count} lugu}}",
+    "@settingsLibraryCountSongs": {
+        "description": "Song total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryMusicFolders": "Muusika kaustad",
+    "@settingsLibraryMusicFolders": {
+        "description": "Extra folders to scan. Desktop only, Android uses MediaStore."
+    },
+    "settingsLibraryMusicFoldersEmpty": "Täiendavaid kaustu veel pole",
+    "@settingsLibraryMusicFoldersEmpty": {
+        "description": "Shown in the music folders editor when the list is empty."
+    },
+    "settingsLibraryExcludedFolders": "Välistatud kaustad",
+    "@settingsLibraryExcludedFolders": {
+        "description": "Folders skipped when scanning."
+    },
+    "settingsLibraryExcludedFoldersEmpty": "Sa pole veel midagi välistanud",
+    "@settingsLibraryExcludedFoldersEmpty": {
+        "description": "Shown in the excluded folders editor when the list is empty."
+    },
+    "settingsLibraryFolderField": "Kausta asukoht",
+    "@settingsLibraryFolderField": {
+        "description": "Label of the text field in the folder editors."
+    },
+    "settingsLibraryFolderAdd": "Lisa kaust",
+    "@settingsLibraryFolderAdd": {
+        "description": "Action that adds the typed path to the folder list."
+    },
+    "settingsLibraryMinLength": "Minimaalne kestus",
+    "@settingsLibraryMinLength": {
+        "description": "Files shorter than this are skipped when scanning."
+    },
+    "settingsLibraryMinLengthHelp": "Sellest lühemad lood jäävad vahele. Kui jätad tühjaks, siis laaditakse kõik lood.",
+    "@settingsLibraryMinLengthHelp": {
+        "description": "Explanation at the top of the minimum length sheet."
+    },
+    "settingsLibraryMinLengthField": "Sekundit",
+    "@settingsLibraryMinLengthField": {
+        "description": "Label of the text field in the minimum length sheet."
+    },
+    "settingsLibraryMinLengthValue": "{seconds} sek",
+    "@settingsLibraryMinLengthValue": {
+        "description": "Minimum length shown on the row, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsLibraryMinLengthOff": "Pole kasutusel",
+    "@settingsLibraryMinLengthOff": {
+        "description": "Shown when no minimum length is set."
+    },
+    "settingsLibrarySectionGrouping": "Rühmitamine",
+    "@settingsLibrarySectionGrouping": {
+        "description": "Section label above album grouping and sorting options."
+    },
+    "settingsLibraryGroupByFolder": "Rühmita albumid kausta kaupa",
+    "@settingsLibraryGroupByFolder": {
+        "description": "Toggle that groups albums by the song's folder instead of its album tag."
+    },
+    "settingsLibraryCountAlbums": "{count, plural, =0{albumeid pole} =1{1 album} other{{count} albumit}}",
+    "@settingsLibraryCountAlbums": {
+        "description": "Album total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsLibraryCountArtists": "{count, plural, =0{esitajaid pole} =1{1 esitaja} other{{count} esitajat}}",
+    "@settingsLibraryCountArtists": {
+        "description": "Artist total in the library footer. Written out in full, not abbreviated.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "decimalPattern"
+            }
+        }
+    },
+    "settingsDiscordTitle": "Discord",
+    "@settingsDiscordTitle": {
+        "description": "Title of the Discord subpage. Shorter than the row label, which is 'Discord presence'."
+    },
+    "settingsDiscordConnect": "Ühenda Discordiga",
+    "@settingsDiscordConnect": {
+        "description": "Action that opens the Discord login flow."
+    },
+    "settingsDiscordConnecting": "Ühendan…",
+    "@settingsDiscordConnecting": {
+        "description": "Replaces the connect label while the login is in progress."
+    },
+    "settingsDiscordConnected": "Ühendatud",
+    "@settingsDiscordConnected": {
+        "description": "Status under the Discord account name when a token is loaded."
+    },
+    "settingsDiscordDisconnect": "Katkesta ühendus",
+    "@settingsDiscordDisconnect": {
+        "description": "Destructive action that logs out of Discord and clears the presence."
     }
 }
