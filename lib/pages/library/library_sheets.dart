@@ -260,7 +260,7 @@ class LibrarySheets {
             PlaylistSheets.openAddAlbumToPlaylist(
               context: context,
               db: db,
-              albumdId: album.id,
+              albumId: album.id,
             );
           });
         },

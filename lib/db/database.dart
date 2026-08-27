@@ -1304,40 +1304,59 @@ class SonoDatabase extends _$SonoDatabase {
   }
 
   /// Append an album to end of playlist
-  /// Returns false for songs already in the album
+  /// Returns ids of songs that were added, existing are skipped
   Future<List<int>> addAlbumToPlaylist(int playlistId, int albumId) async {
-    final maxRow =
-        await (selectOnly(playlistSongs)
-              ..addColumns([playlistSongs.position.max()])
-              ..where(playlistSongs.playlistId.equals(playlistId)))
-            .getSingle();
-    var next = (maxRow.read(playlistSongs.position.max()) ?? -1) + 1;
     final album = await getSongsByAlbum(albumId);
-    final addedSongIds = <int>[];
 
-    for (final song in album) {
-      try {
-        await into(playlistSongs).insert(
+    if (album.isEmpty) return const [];
+
+    return transaction(() async {
+      final present = {
+        for (final row in await (select(
+          playlistSongs,
+        )..where((ps) => ps.playlistId.equals(playlistId))).get())
+          row.songId,
+      };
+      final maxRow =
+          await (selectOnly(playlistSongs)
+                ..addColumns([playlistSongs.position.max()])
+                ..where(playlistSongs.playlistId.equals(playlistId)))
+              .getSingle();
+      var next = (maxRow.read(playlistSongs.position.max()) ?? -1) + 1;
+
+      final addedAt = DateTime.now();
+      final rows = <PlaylistSongsCompanion>[];
+      final addedSongIds = <int>[];
+
+      for (final song in album) {
+        if (!present.add(song.id)) continue;
+        rows.add(
           PlaylistSongsCompanion.insert(
             playlistId: playlistId,
             songId: song.id,
             position: next,
-            addedAt: DateTime.now(),
+            addedAt: addedAt,
           ),
         );
         addedSongIds.add(song.id);
         next++;
-      } catch (_) {
-        //song in playlist
       }
-    }
 
-    return addedSongIds;
+      if (rows.isNotEmpty) await batch((b) => b.insertAll(playlistSongs, rows));
+      return addedSongIds;
+    });
   }
 
-  Future<void> removeSongFromPlaylist(int playlistId, int songId) async {
+  Future<void> removeSongFromPlaylist(int playlistId, int songId) =>
+      removeSongsFromPlaylist(playlistId, [songId]);
+
+  /// Positions are compacted once for whole removal
+  Future<void> removeSongsFromPlaylist(
+    int playlistId,
+    List<int> songIds,
+  ) async {
     await (delete(playlistSongs)..where(
-          (ps) => ps.playlistId.equals(playlistId) & ps.songId.equals(songId),
+          (ps) => ps.playlistId.equals(playlistId) & ps.songId.isIn(songIds),
         ))
         .go();
     await _compactPlaylistPositions(playlistId);

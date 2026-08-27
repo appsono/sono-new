@@ -137,7 +137,7 @@ class PlaylistSheets {
   static Future<void> openAddAlbumToPlaylist({
     required BuildContext context,
     required SonoDatabase db,
-    required int albumdId,
+    required int albumId,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -145,7 +145,7 @@ class PlaylistSheets {
       barrierColor: Colors.black.withValues(alpha: 0.4),
       isScrollControlled: true,
       builder: (_) =>
-          _AddToPlaylistSheet(db: db, albumId: albumdId, outerContext: context),
+          _AddToPlaylistSheet(db: db, albumId: albumId, outerContext: context),
     );
   }
 }
@@ -440,48 +440,46 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
     setState(() => _playlists = playlists);
   }
 
-  Future<void> _addToExisting(Playlist playlist) async {
-    final albumSongId = widget.albumId != null
-        ? await widget.db.addAlbumToPlaylist(playlist.id, widget.albumId!)
-        : null;
-    final added = widget.albumId == null
-        ? await widget.db.addSongToPlaylist(playlist.id, widget.songId!)
-        : albumSongId!.isNotEmpty;
-    if (!mounted) return;
-    Navigator.of(context).maybePop();
+  Future<List<int>> _add(int playlistId) async {
+    final albumId = widget.albumId;
+    if (albumId != null) {
+      return widget.db.addAlbumToPlaylist(playlistId, albumId);
+    }
+    final songId = widget.songId!;
+    final added = await widget.db.addSongToPlaylist(playlistId, songId);
+    return added ? [songId] : const [];
+  }
 
-    if (!widget.outerContext.mounted) return;
+  void _showResult(Playlist playlist, List<int> added) {
     final l = AppLocalizations.of(widget.outerContext);
-    if (added) {
-      _messenger.showSnackBar(
-        SnackBar(
-          duration: const Duration(seconds: 4),
-          content: Text(l.playlistAdded(playlist.name)),
-          action: SnackBarAction(
-            label: l.commonUndo,
-            onPressed: () async {
-              if (widget.albumId != null) {
-                for (final songId in albumSongId!) {
-                  await widget.db.removeSongFromPlaylist(playlist.id, songId);
-                }
-              } else {
-                await widget.db.removeSongFromPlaylist(
-                  playlist.id,
-                  widget.songId!,
-                );
-              }
-            },
-          ),
-        ),
-      );
-    } else {
+    if (added.isEmpty) {
       _messenger.showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 4),
           content: Text(l.playlistAlreadyContains(playlist.name)),
         ),
       );
+      return;
     }
+    _messenger.showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 4),
+        content: Text(l.playlistAdded(playlist.name)),
+        action: SnackBarAction(
+          label: l.commonUndo,
+          onPressed: () =>
+              widget.db.removeSongsFromPlaylist(playlist.id, added),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _addToExisting(Playlist playlist) async {
+    final added = await _add(playlist.id);
+    if (!mounted) return;
+    Navigator.of(context).maybePop();
+    if (!widget.outerContext.mounted) return;
+    _showResult(playlist, added);
   }
 
   Future<void> _createAndAdd() async {
@@ -495,40 +493,11 @@ class _AddToPlaylistSheetState extends State<_AddToPlaylistSheet> {
     );
     if (newId == null || !widget.outerContext.mounted) return;
 
-    final albumSongId = widget.albumId != null
-        ? await widget.db.addAlbumToPlaylist(newId, widget.albumId!)
-        : null;
-    final added = widget.albumId == null
-        ? await widget.db.addSongToPlaylist(newId, widget.songId!)
-        : albumSongId!.isNotEmpty;
-
+    final added = await _add(newId);
     final playlist = await widget.db.getPlaylistById(newId);
 
     if (!widget.outerContext.mounted || playlist == null) return;
-    final l = AppLocalizations.of(widget.outerContext);
-    _messenger.showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 4),
-        content: Text(l.playlistAdded(playlist.name)),
-        action: added && widget.albumId == null
-            ? SnackBarAction(
-                label: l.commonUndo,
-                onPressed: () async {
-                  if (widget.albumId != null) {
-                    for (final songId in albumSongId!) {
-                      await widget.db.removeSongFromPlaylist(newId, songId);
-                    }
-                  } else {
-                    await widget.db.removeSongFromPlaylist(
-                      newId,
-                      widget.songId!,
-                    );
-                  }
-                },
-              )
-            : null,
-      ),
-    );
+    _showResult(playlist, added);
   }
 
   @override
