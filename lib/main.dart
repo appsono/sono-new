@@ -35,6 +35,8 @@ import 'package:sono/services/audio/audio_handler.dart';
 import 'package:sono/services/audio/audio_service.dart' as sono;
 import 'package:sono/services/audio/audio_effects_service.dart';
 import 'package:sono/services/discord_rpc/discord_rpc_service.dart';
+import 'package:sono/services/scrobble/audio_binder.dart';
+import 'package:sono/services/scrobble/scrobble_service.dart';
 import 'package:sono/services/smtc_service.dart';
 import 'package:sono/services/update_service.dart';
 import 'package:sono/services/theme_service.dart';
@@ -123,6 +125,10 @@ void main() async {
 
   SmtcService.instance.attachDb(db);
   unawaited(SmtcService.instance.init());
+
+  ScrobbleService.instance.attachDb(db);
+  unawaited(ScrobbleService.instance.loadState());
+  ScrobbleAudioBinder.start(db);
 
   UpdateService.instance.attachDb(db);
 
