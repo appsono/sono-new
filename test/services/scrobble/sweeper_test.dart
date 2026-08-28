@@ -2,41 +2,9 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/scrobble/models.dart';
-import 'package:sono/services/scrobble/scrobble_provider.dart';
 import 'package:sono/services/scrobble/sweeper.dart';
 
-class FakeProvider implements ScrobbleProvider {
-  FakeProvider({this.batchSize = 50, this.error, this.refusePerBatch = 0});
-
-  final int batchSize;
-  final ScrobbleException? error;
-  final int refusePerBatch;
-
-  final batches = <List<ScrobbleTrack>>[];
-
-  @override
-  String get key => 'lastfm';
-
-  @override
-  int get maxBatchSize => batchSize;
-
-  @override
-  Future<void> updateNowPlaying(ScrobbleTrack track) async {}
-
-  @override
-  Future<ScrobbleBatchResult> scrobble(List<ScrobbleTrack> tracks) async {
-    batches.add(tracks);
-    final failure = error;
-    if (failure != null) throw failure;
-    return ScrobbleBatchResult(
-      accepted: tracks.length - refusePerBatch,
-      refused: refusePerBatch,
-    );
-  }
-
-  @override
-  void dispose() {}
-}
+import 'fakes.dart';
 
 void main() {
   late SonoDatabase db;
