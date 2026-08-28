@@ -29,6 +29,7 @@ enum SettingsDestination {
   equalizer,
   library,
   discord,
+  scrobbling,
   backup,
   about,
 }
@@ -51,6 +52,7 @@ List<SettingsSearchEntry> settingsSearchIndex(AppLocalizations l) {
   const equalizer = SettingsDestination.equalizer;
   const library = SettingsDestination.library;
   const discord = SettingsDestination.discord;
+  const scrobbling = SettingsDestination.scrobbling;
   const backup = SettingsDestination.backup;
   const about = SettingsDestination.about;
   const root = SettingsDestination.root;
@@ -106,6 +108,10 @@ List<SettingsSearchEntry> settingsSearchIndex(AppLocalizations l) {
     SettingsSearchEntry(l.settingsDiscordShowButton, discord),
     SettingsSearchEntry(l.settingsDiscordOnlyWhilePlaying, discord),
 
+    SettingsSearchEntry(l.settingsScrobbling, scrobbling),
+    SettingsSearchEntry(l.settingsScrobblingProviders, scrobbling),
+    SettingsSearchEntry(l.settingsScrobblingAddCustom, scrobbling),
+
     SettingsSearchEntry(l.settingsBackup, backup),
     SettingsSearchEntry(l.settingsBackupExport, backup),
     SettingsSearchEntry(l.settingsBackupImport, backup),
@@ -148,6 +154,7 @@ String destinationLabel(AppLocalizations l, SettingsDestination d) {
     SettingsDestination.equalizer => l.settingsEqualizer,
     SettingsDestination.library => l.settingsLibrary,
     SettingsDestination.discord => l.settingsDiscord,
+    SettingsDestination.scrobbling => l.settingsScrobbling,
     SettingsDestination.backup => l.settingsBackup,
     SettingsDestination.about => l.settingsAbout,
   };
@@ -163,6 +170,7 @@ String destinationIcon(SettingsDestination d) {
     SettingsDestination.equalizer => IconsSheet.equalizerOutlined,
     SettingsDestination.library => IconsSheet.libraryOutlined,
     SettingsDestination.discord => SonoBrands.discord,
+    SettingsDestination.scrobbling => SonoBrands.lastfm,
     SettingsDestination.backup => IconsSheet.backupOutlined,
     SettingsDestination.about => IconsSheet.infoOutlined,
   };
@@ -178,6 +186,7 @@ Color destinationAccent(SonoColors c, SettingsDestination d) {
     SettingsDestination.equalizer => c.accentAmber,
     SettingsDestination.library => c.accentTeal,
     SettingsDestination.discord => c.accentLightBlue,
+    SettingsDestination.scrobbling => c.accentRed,
     SettingsDestination.backup => c.accentOrange,
     SettingsDestination.about => c.accentRed,
   };

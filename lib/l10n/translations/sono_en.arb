@@ -696,6 +696,10 @@
   "@settingsDiscordDisconnected": {
     "description": "Value on the Discord row when no Discord account is linked."
   },
+  "settingsScrobbling": "Scrobbling",
+  "@settingsScrobbling": {
+    "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
+  },
   "settingsBackup": "Backup & restore",
   "@settingsBackup": {
     "description": "Label of the row opening the backup subpage, and the title of that subpage."
@@ -1436,6 +1440,22 @@
   "settingsDiscordPreviewButton": "Try Sono",
   "@settingsDiscordPreviewButton": {
     "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
+  },
+  "settingsScrobblingProviders": "Providers",
+  "@settingsScrobblingProviders": {
+    "description": "Section label above the list of scrobbling services on the scrobbling subpage."
+  },
+  "settingsScrobblingAddCustom": "Add custom instance",
+  "@settingsScrobblingAddCustom": {
+    "description": "Button that starts connecting a self hosted scrobbling server."
+  },
+  "settingsScrobblingCustomNote": "Works with any Audioscrobbler compatible server. Yes, even GUN FM",
+  "@settingsScrobblingCustomNote": {
+    "description": "Note under the add custom instance button explaining what kind of server can be connected"
+  },
+  "settingsScrobblingAbout": "About scrobbling",
+  "@settingsScrobblingAbout": {
+    "description": "Tooltip of the info button in the scrobbling subpage header."
   },
   "settingsBackupExport": "Export backup",
   "@settingsBackupExport": {

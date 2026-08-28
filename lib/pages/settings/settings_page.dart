@@ -41,12 +41,18 @@ import 'package:sono/pages/settings/subpages/settings_playback_page.dart';
 import 'package:sono/pages/settings/subpages/settings_equalizer_page.dart';
 import 'package:sono/pages/settings/subpages/settings_library_page.dart';
 import 'package:sono/pages/settings/subpages/settings_discord_page.dart';
+import 'package:sono/pages/settings/subpages/settings_scrobbling_page.dart';
 import 'package:sono/pages/settings/subpages/settings_backup_page.dart';
 import 'package:sono/pages/settings/subpages/settings_about_page.dart';
 import 'package:sono/pages/settings/subpages/settings_shots_page.dart';
 
 import 'package:sono/pages/settings/eq_labels.dart';
 import 'package:sono/pages/settings/settings_search.dart';
+
+const _brandDestinations = {
+  SettingsDestination.discord,
+  SettingsDestination.scrobbling,
+};
 
 /// Settings root
 class SettingsPage extends StatefulWidget {
@@ -203,7 +209,7 @@ class _SettingsPageState extends State<SettingsPage> {
           for (final entry in matches)
             SettingsRow(
               icon: destinationIcon(entry.destination),
-              brand: entry.destination == SettingsDestination.discord,
+              brand: _brandDestinations.contains(entry.destination),
               accent: destinationAccent(c, entry.destination),
               label: entry.label,
               //includes page name, so identical labels stay distinct
@@ -236,6 +242,7 @@ class _SettingsPageState extends State<SettingsPage> {
         scanProgress: widget.scanProgress,
       ),
       SettingsDestination.discord => SettingsDiscordPage(db: db),
+      SettingsDestination.scrobbling => SettingsScrobblingPage(db: db),
       SettingsDestination.backup => SettingsBackupPage(
         db: db,
         onRescan: widget.onRescan,
@@ -419,6 +426,16 @@ class _SettingsPageState extends State<SettingsPage> {
             );
             if (mounted) _loadMeta();
           },
+        ),
+        SettingsRow(
+          icon: SonoBrands.lastfm,
+          accent: c.accentRed,
+          label: l.settingsScrobbling,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SettingsScrobblingPage(db: widget.db),
+            ),
+          ),
         ),
         SettingsRow(
           icon: IconsSheet.backupOutlined,

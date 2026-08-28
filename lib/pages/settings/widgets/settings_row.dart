@@ -26,7 +26,7 @@ const double _rowMinHeight = 56;
 const double _tileSize = 30;
 //solid glyphs lack viewbox padding, so they look heavier at same size
 const double _tileBrandIconSize = 16;
-const double _tileIconSize = 19;
+const double _tileIconSize = 21;
 const double _tileTintAlpha = 0.18;
 const double _plannedOpacity = 0.55;
 const double _disabledOpacity = 0.45;
@@ -72,7 +72,7 @@ class SettingsRow extends StatelessWidget {
 
     final body = Row(
       children: [
-        _Tile(icon: icon, accent: accent, brand: brand),
+        SettingsIconTile(icon: icon, accent: accent, brand: brand),
         const SizedBox(width: 14),
         Expanded(
           child: Column(
@@ -158,7 +158,7 @@ class SettingsRow extends StatelessWidget {
     }
 
     if (planned) {
-      out.addAll([const SizedBox(width: 10), const _PlannedBadge()]);
+      out.addAll([const SizedBox(width: 10), const SettingsPlannedBadge()]);
       return out;
     }
 
@@ -420,12 +420,17 @@ class SettingsActionRow extends StatelessWidget {
 }
 
 // ==== icon tile ====
-class _Tile extends StatelessWidget {
+class SettingsIconTile extends StatelessWidget {
   final String icon;
   final Color accent;
   final bool brand;
 
-  const _Tile({required this.icon, required this.accent, this.brand = false});
+  const SettingsIconTile({
+    required this.icon,
+    required this.accent,
+    this.brand = false,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -440,15 +445,15 @@ class _Tile extends StatelessWidget {
       child: IconsSheet.svg(
         icon,
         size: brand ? _tileBrandIconSize : _tileIconSize,
-        color: accent,
+        color: SonoBrands.multicolour.contains(icon) ? null : accent,
       ),
     );
   }
 }
 
 // ==== planned badge ====
-class _PlannedBadge extends StatelessWidget {
-  const _PlannedBadge();
+class SettingsPlannedBadge extends StatelessWidget {
+  const SettingsPlannedBadge({super.key});
 
   @override
   Widget build(BuildContext context) {
