@@ -1449,7 +1449,7 @@
   "@settingsScrobblingAddCustom": {
     "description": "Button that starts connecting a self hosted scrobbling server."
   },
-  "settingsScrobblingCustomNote": "Works with any Audioscrobbler compatible server. Yes, even GUN FM",
+  "settingsScrobblingCustomNote": "Works with any Audioscrobbler compatible server. Yes, even GNU FM",
   "@settingsScrobblingCustomNote": {
     "description": "Note under the add custom instance button explaining what kind of server can be connected"
   },
