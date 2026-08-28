@@ -85,7 +85,7 @@ class DbScrobbleAccountStore implements ScrobbleAccountStore {
     );
     await _db.setSetting('scrobble.$id.api_key', account.apiKey);
     await _db.setSetting('scrobble.$id.api_secret', account.apiSecret);
-    if (account.service == ScrobbleService.custom) {
+    if (account.service == ScrobbleServiceKind.custom) {
       await _db.setSetting('scrobble.$id.root', '${account.endpoints.root}');
       await _db.setSetting(
         'scrobble.$id.auth_root',
@@ -118,7 +118,7 @@ class DbScrobbleAccountStore implements ScrobbleAccountStore {
     Map<String, String> fields,
     String? sessionKey,
   ) {
-    final named = ScrobbleService.values.where(
+    final named = ScrobbleServiceKind.values.where(
       (s) => s.name == fields['service'],
     );
     final linkedAt = int.tryParse(fields['linked_at'] ?? '');

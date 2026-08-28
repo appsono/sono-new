@@ -41,7 +41,7 @@ void main() {
     test('builds a provider per linked account', () async {
       final store = FakeAccountStore([
         fakeAccount(),
-        fakeAccount(key: 'librefm', service: ScrobbleService.librefm),
+        fakeAccount(key: 'librefm', service: ScrobbleServiceKind.librefm),
       ]);
       final providers = {
         'lastfm': FakeProvider(),
@@ -200,7 +200,7 @@ void main() {
     test('one failing account does not hold up another', () async {
       final store = FakeAccountStore([
         fakeAccount(),
-        fakeAccount(key: 'librefm', service: ScrobbleService.librefm),
+        fakeAccount(key: 'librefm', service: ScrobbleServiceKind.librefm),
       ]);
       final broken = FakeProvider(
         error: const ScrobbleException(11, 'offline'),
@@ -286,7 +286,7 @@ void main() {
     test('goes out to every linked account', () async {
       final store = FakeAccountStore([
         fakeAccount(),
-        fakeAccount(key: 'librefm', service: ScrobbleService.librefm),
+        fakeAccount(key: 'librefm', service: ScrobbleServiceKind.librefm),
       ]);
       final providers = {
         'lastfm': FakeProvider(),

@@ -20,7 +20,7 @@ class FakeSecretStore implements ScrobbleSecretStore {
 
 ScrobbleAccount _account({
   String key = 'lastfm',
-  ScrobbleService service = ScrobbleService.lastfm,
+  ScrobbleServiceKind service = ScrobbleServiceKind.lastfm,
   AudioScrobblerEndpoints? endpoints,
   String apiKey = 'user-key',
   String apiSecret = 'user-secret',
@@ -64,7 +64,7 @@ void main() {
       final loaded = (await store.load()).single;
 
       expect(loaded.key, 'lastfm');
-      expect(loaded.service, ScrobbleService.lastfm);
+      expect(loaded.service, ScrobbleServiceKind.lastfm);
       expect(loaded.username, 'mathis');
       expect(loaded.apiKey, 'user-key');
       expect(loaded.apiSecret, 'user-secret');
@@ -78,7 +78,7 @@ void main() {
       await store.save(
         _account(
           key: 'librefm',
-          service: ScrobbleService.librefm,
+          service: ScrobbleServiceKind.librefm,
           username: 'ecstacy',
           sessionKey: 'sk2',
         ),
@@ -128,7 +128,7 @@ void main() {
 
     test('custom instances round trip their urls', () async {
       await store.save(
-        _account(key: 'custom-abc', service: ScrobbleService.custom),
+        _account(key: 'custom-abc', service: ScrobbleServiceKind.custom),
       );
       final loaded = (await store.load()).single;
 
@@ -168,7 +168,7 @@ void main() {
     test('leaves other accounts alone', () async {
       await store.save(_account());
       await store.save(
-        _account(key: 'librefm', service: ScrobbleService.librefm),
+        _account(key: 'librefm', service: ScrobbleServiceKind.librefm),
       );
       await store.remove('lastfm');
 

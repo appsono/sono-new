@@ -14,7 +14,7 @@ import 'dart:math';
 
 import 'package:sono/services/scrobble/as/audioscrobbler_provider.dart';
 
-enum ScrobbleService { lastfm, librefm, custom }
+enum ScrobbleServiceKind { lastfm, librefm, custom }
 
 /// Shipped credential, overriden by whatever the account carries
 class ScrobbleApiDefaults {
@@ -23,17 +23,18 @@ class ScrobbleApiDefaults {
   static const librefmKey = String.fromEnvironment('LIBREFM_API_KEY');
   static const librefmSecret = String.fromEnvironment('LIBREFM_API_SECRET');
 
-  static ({String key, String secret}) forService(ScrobbleService service) =>
-      switch (service) {
-        ScrobbleService.lastfm => (key: lastfmKey, secret: lastfmSecret),
-        ScrobbleService.librefm => (key: librefmKey, secret: librefmSecret),
-        ScrobbleService.custom => (key: '', secret: ''),
-      };
+  static ({String key, String secret}) forService(
+    ScrobbleServiceKind service,
+  ) => switch (service) {
+    ScrobbleServiceKind.lastfm => (key: lastfmKey, secret: lastfmSecret),
+    ScrobbleServiceKind.librefm => (key: librefmKey, secret: librefmSecret),
+    ScrobbleServiceKind.custom => (key: '', secret: ''),
+  };
 }
 
 class ScrobbleAccount {
   final String key;
-  final ScrobbleService service;
+  final ScrobbleServiceKind service;
   final AudioScrobblerEndpoints endpoints;
   final String apiKey;
   final String apiSecret;
@@ -61,17 +62,17 @@ class ScrobbleAccount {
   bool get canScrobble => enabled && sessionKey != null && apiKey.isNotEmpty;
 
   /// Only one account per known service => so the key can be fixed
-  static String keyFor(ScrobbleService service) => switch (service) {
-    ScrobbleService.lastfm => 'lastfm',
-    ScrobbleService.librefm => 'librefm',
-    ScrobbleService.custom => 'custom-${_randomId()}',
+  static String keyFor(ScrobbleServiceKind service) => switch (service) {
+    ScrobbleServiceKind.lastfm => 'lastfm',
+    ScrobbleServiceKind.librefm => 'librefm',
+    ScrobbleServiceKind.custom => 'custom-${_randomId()}',
   };
 
-  static AudioScrobblerEndpoints? endpointsFor(ScrobbleService service) =>
+  static AudioScrobblerEndpoints? endpointsFor(ScrobbleServiceKind service) =>
       switch (service) {
-        ScrobbleService.lastfm => AudioScrobblerEndpoints.lastfm,
-        ScrobbleService.librefm => AudioScrobblerEndpoints.librefm,
-        ScrobbleService.custom => null,
+        ScrobbleServiceKind.lastfm => AudioScrobblerEndpoints.lastfm,
+        ScrobbleServiceKind.librefm => AudioScrobblerEndpoints.librefm,
+        ScrobbleServiceKind.custom => null,
       };
 
   ScrobbleAccount copyWith({

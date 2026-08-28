@@ -71,7 +71,7 @@ class FakeAccountStore implements ScrobbleAccountStore {
 
 ScrobbleAccount fakeAccount({
   String key = 'lastfm',
-  ScrobbleService service = ScrobbleService.lastfm,
+  ScrobbleServiceKind service = ScrobbleServiceKind.lastfm,
   String apiKey = 'api-key',
   String apiSecret = 'api-secret',
   String username = 'mathis',
