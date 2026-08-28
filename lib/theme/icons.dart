@@ -312,4 +312,10 @@ abstract final class SonoBrands {
   static const String discord = 'assets/app/brands/discord_symbol.svg';
   static const String kofi = 'assets/app/brands/kofi_symbol.svg';
   static const String lastfm = 'assets/app/brands/lastfm_symbol.svg';
+  static const String librefm = 'assets/app/brands/librefm_symbol.svg';
+  static const String listenbrainz =
+      'assets/app/brands/listenbrainz_symbol.svg';
+
+  /// marks whose own colours carry identity
+  static const Set<String> multicolour = {librefm, listenbrainz};
 }
