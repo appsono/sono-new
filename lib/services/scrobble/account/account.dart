@@ -18,17 +18,25 @@ enum ScrobbleServiceKind { lastfm, librefm, custom }
 
 /// Shipped credential, overriden by whatever the account carries
 class ScrobbleApiDefaults {
+  static const placeholderKey = 'sono00000000000000000000000000ff';
+
   static const lastfmKey = String.fromEnvironment('LASTFM_API_KEY');
   static const lastfmSecret = String.fromEnvironment('LASTFM_API_SECRET');
-  static const librefmKey = String.fromEnvironment('LIBREFM_API_KEY');
-  static const librefmSecret = String.fromEnvironment('LIBREFM_API_SECRET');
+  static const librefmKey = String.fromEnvironment(
+    'LIBREFM_API_KEY',
+    defaultValue: placeholderKey,
+  );
+  static const librefmSecret = String.fromEnvironment(
+    'LIBREFM_API_SECRET',
+    defaultValue: placeholderKey,
+  );
 
   static ({String key, String secret}) forService(
     ScrobbleServiceKind service,
   ) => switch (service) {
     ScrobbleServiceKind.lastfm => (key: lastfmKey, secret: lastfmSecret),
     ScrobbleServiceKind.librefm => (key: librefmKey, secret: librefmSecret),
-    ScrobbleServiceKind.custom => (key: '', secret: ''),
+    ScrobbleServiceKind.custom => (key: placeholderKey, secret: placeholderKey),
   };
 }
 

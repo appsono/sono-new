@@ -145,6 +145,32 @@ void main() {
       expect(loaded.apiKey, ScrobbleApiDefaults.lastfmKey);
       expect(loaded.apiSecret, ScrobbleApiDefaults.lastfmSecret);
     });
+
+    test('servers that issue no keys still get one', () {
+      for (final kind in [
+        ScrobbleServiceKind.librefm,
+        ScrobbleServiceKind.custom,
+      ]) {
+        final defaults = ScrobbleApiDefaults.forService(kind);
+        expect(defaults.key, hasLength(32));
+        expect(defaults.secret, isNotEmpty);
+      }
+    });
+
+    test('an account key still wins over the shipped one', () async {
+      await store.save(
+        _account(
+          key: 'librefm',
+          service: ScrobbleServiceKind.librefm,
+          apiKey: 'mine',
+          apiSecret: 'xtsy',
+        ),
+      );
+      final loaded = (await store.load()).single;
+
+      expect(loaded.apiKey, 'mine');
+      expect(loaded.apiSecret, 'xtsy');
+    });
   });
 
   group('remove', () {

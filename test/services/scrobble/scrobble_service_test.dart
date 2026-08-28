@@ -7,7 +7,6 @@ import 'package:http/testing.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/scrobble/account/account.dart';
 import 'package:sono/services/scrobble/as/audioscrobbler_client.dart';
-import 'package:sono/services/scrobble/as/audioscrobbler_provider.dart';
 import 'package:sono/services/scrobble/models.dart';
 import 'package:sono/services/scrobble/runner.dart';
 import 'package:sono/services/scrobble/scrobble_service.dart';
@@ -84,6 +83,19 @@ void main() {
       expect(url.queryParameters['token'], 'tok');
     });
 
+    test('libre.fm links with no credentials from the user', () async {
+      final s = service(
+        clientFactory: _factory(
+          (_) async => http.Response('{"token":"tok"}', 200),
+        ),
+      );
+
+      final url = await s.beginLink(kind: ScrobbleServiceKind.librefm);
+
+      expect(url.host, 'libre.fm');
+      expect(url.queryParameters['token'], 'tok');
+    });
+
     test('rejects a custom instance without endpoints', () async {
       final s = service();
 
@@ -93,17 +105,20 @@ void main() {
       );
     });
 
-    test('rejects a service with no credentials', () async {
-      final s = service();
+    test(
+      'rejects a service with no credentials',
+      () async {
+        final s = service();
 
-      await expectLater(
-        s.beginLink(
-          kind: ScrobbleServiceKind.custom,
-          endpoints: AudioScrobblerEndpoints.librefm,
-        ),
-        throwsA(isA<ScrobbleException>()),
-      );
-    });
+        await expectLater(
+          s.beginLink(kind: ScrobbleServiceKind.lastfm),
+          throwsA(isA<ScrobbleException>()),
+        );
+      },
+      skip: ScrobbleApiDefaults.lastfmKey.isEmpty
+          ? null
+          : 'built with a shipped last.fm key',
+    );
 
     test('completing stores the account and its session', () async {
       final s = service(
