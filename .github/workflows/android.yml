@@ -76,11 +76,7 @@ jobs:
       - name: Write env.json
         env:
           ENV_JSON: ${{ secrets.ENV_JSON }}
-        run: |
-          if [ -n "$ENV_JSON" ]; then
-            printf '%s' "$ENV_JSON" > env.json
-          else
-            cp env.example.json env.json
+        run: printf '%s' "${ENV_JSON:-$(cat env.example.json)}" > env.json
 
       - name: Build APKs
         env:
