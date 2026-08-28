@@ -1734,6 +1734,12 @@ class SonoDatabase extends _$SonoDatabase {
     readsFrom: {plays, scrobbles},
   ).map((row) => plays.map(row.data)).get();
 
+  /// Called on unlink otherwise relinking under the same key would treat
+  /// old plays as already sent
+  Future<void> clearScrobbles(String provider) async {
+    await (delete(scrobbles)..where((s) => s.provider.equals(provider))).go();
+  }
+
   Future<void> settleScrobbles(
     String provider,
     Iterable<int> playIds,

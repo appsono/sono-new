@@ -34,6 +34,8 @@ const _notExported = {
   'update.last_status',
 };
 
+const _notExportedPrefixes = {'scrobble.'};
+
 const _iso = '2026-01-01T00:00:00.000Z';
 
 String _backup([Map<String, dynamic> overrides = const {}]) => jsonEncode({
@@ -87,6 +89,7 @@ void main() {
           return;
         }
         if (_notExported.contains(key)) return;
+        if (_notExportedPrefixes.any(key.startsWith)) return;
         unclassified[key] = path;
       });
 
@@ -100,7 +103,7 @@ void main() {
     });
 
     test('queue, account and update state stay out of backups', () {
-      for (final key in _notExported) {
+      for (final key in {..._notExported, ..._notExportedPrefixes}) {
         expect(
           BackupExportService.exportableSettingKeys.contains(key) ||
               BackupExportService.exportableSettingPrefixes.any(key.startsWith),
