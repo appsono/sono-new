@@ -7,6 +7,7 @@ import 'package:http/testing.dart';
 import 'package:sono/db/database.dart';
 import 'package:sono/services/scrobble/account/account.dart';
 import 'package:sono/services/scrobble/as/audioscrobbler_client.dart';
+import 'package:sono/services/scrobble/as/audioscrobbler_provider.dart';
 import 'package:sono/services/scrobble/models.dart';
 import 'package:sono/services/scrobble/runner.dart';
 import 'package:sono/services/scrobble/scrobble_service.dart';
@@ -83,16 +84,22 @@ void main() {
       expect(url.queryParameters['token'], 'tok');
     });
 
-    test('libre.fm links with no credentials from the user', () async {
+    test('self hosted instance links with no credentials', () async {
       final s = service(
         clientFactory: _factory(
           (_) async => http.Response('{"token":"tok"}', 200),
         ),
       );
 
-      final url = await s.beginLink(kind: ScrobbleServiceKind.librefm);
+      final url = await s.beginLink(
+        kind: ScrobbleServiceKind.custom,
+        endpoints: AudioScrobblerEndpoints(
+          root: Uri.parse('https://gnu.invalid/2.0/'),
+          authRoot: Uri.parse('https://gnu.invalid/api/auth/'),
+        ),
+      );
 
-      expect(url.host, 'libre.fm');
+      expect(url.host, 'gnu.invalid');
       expect(url.queryParameters['token'], 'tok');
     });
 

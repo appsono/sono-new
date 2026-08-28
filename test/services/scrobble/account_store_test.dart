@@ -147,14 +147,11 @@ void main() {
     });
 
     test('servers that issue no keys still get one', () {
-      for (final kind in [
-        ScrobbleServiceKind.librefm,
+      final defaults = ScrobbleApiDefaults.forService(
         ScrobbleServiceKind.custom,
-      ]) {
-        final defaults = ScrobbleApiDefaults.forService(kind);
-        expect(defaults.key, hasLength(32));
-        expect(defaults.secret, isNotEmpty);
-      }
+      );
+      expect(defaults.key, hasLength(32));
+      expect(defaults.secret, isNotEmpty);
     });
 
     test('an account key still wins over the shipped one', () async {

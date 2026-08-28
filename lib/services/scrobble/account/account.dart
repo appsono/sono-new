@@ -22,14 +22,8 @@ class ScrobbleApiDefaults {
 
   static const lastfmKey = String.fromEnvironment('LASTFM_API_KEY');
   static const lastfmSecret = String.fromEnvironment('LASTFM_API_SECRET');
-  static const librefmKey = String.fromEnvironment(
-    'LIBREFM_API_KEY',
-    defaultValue: placeholderKey,
-  );
-  static const librefmSecret = String.fromEnvironment(
-    'LIBREFM_API_SECRET',
-    defaultValue: placeholderKey,
-  );
+  static const librefmKey = String.fromEnvironment('LIBREFM_API_KEY');
+  static const librefmSecret = String.fromEnvironment('LIBREFM_API_SECRET');
 
   static ({String key, String secret}) forService(
     ScrobbleServiceKind service,
