@@ -73,6 +73,15 @@ jobs:
         if: ${{ inputs.mode == 'release' && (!inputs.sign || env.HAS_KEYSTORE != 'true') }}
         run: echo "::warning::release build without key.properties, the APKs will be unsigned and will not install"
 
+      - name: Write env.json
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+        run: |
+          if [ -n "$ENV_JSON" ]; then
+            printf '%s' "$ENV_JSON" > env.json
+          else
+            cp env.example.json env.json
+
       - name: Build APKs
         env:
           FLAVOR: ${{ inputs.flavor }}
@@ -82,7 +91,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          ARGS=("--$MODE" --flavor "$FLAVOR")
+          ARGS=("--$MODE" --flavor "$FLAVOR" --dart-define-from=env.json)
           if [ -n "$BUILD_NAME" ]; then
             ARGS+=("--build-name=$BUILD_NAME")
           fi

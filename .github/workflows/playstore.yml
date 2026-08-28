@@ -139,13 +139,23 @@ jobs:
           storeFile=sono.jks
           EOF
 
+      - name: Write env.json
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+        run: |
+          if [ -n "$ENV_JSON" ]; then
+            printf '%s' "$ENV_JSON" > env.json
+          else
+            cp env.example.json env.json
+
       - name: Build signed App Bundle
         run: |
           flutter build appbundle \
             --release \
             --flavor play \
             --build-name="${{ steps.version.outputs.name }}" \
-            --build-number="${{ steps.version.outputs.code }}"
+            --build-number="${{ steps.version.outputs.code }}" \
+            --dart-define-from-file=env.json
 
       - name: Locate mapping file
         id: mapping
@@ -174,3 +184,4 @@ jobs:
           tracks: ${{ inputs.track }}
           status: ${{ inputs.status }}
           userFraction: ${{ inputs.user_fraction }}
+

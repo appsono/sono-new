@@ -30,7 +30,8 @@ If something is listed there, it's fair game.
 git clone https://github.com/appsono/sono-new.git
 cd sono-new
 flutter pub get
-flutter run --flavor dev
+cp env.example.json env.json # then fill it with your API keys
+flutter run --flavor dev --dart-define-from-file=env.json
 ```
 
 Use `flutter run --flavor prod` to test the app in production mode.
@@ -133,4 +134,5 @@ my point of view.
 ## Questions
 
 Open an issue or join one of our community servers ([Discord](https://discord.gg/48fvsUCNwu),
-[Nerimity](https://nerimity.com/i/sono), [Stoat/Revolt](https://stt.gg/3chxJMWT)) if you want to talk something through first.
+[Nerimity](https://nerimity.com/i/sono),
+[Stoat/Revolt](https://stt.gg/3chxJMWT)) if you want to talk something through first.

@@ -19,12 +19,20 @@ jobs:
 
       - run: flutter pub get
       - run: dart run scripts/compute_translation_progress.dart
-
-      - run: flutter build windows --release
+      - name: Write env.json
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+        run: |
+          if [ -n "$ENV_JSON" ]; then
+            printf '%s' "$ENV_JSON" > env.json
+          else
+            cp env.example.json env.json
+      - run: flutter build windows --release --dart-define-from-file=env.json
 
       - name: Read version
         id: v
-        run: echo "version=$(grep '^version:' pubspec.yaml | awk '{print $2}')" >>
+        run:
+          echo "version=$(grep '^version:' pubspec.yaml | awk '{print $2}')" >>
           "$GITHUB_OUTPUT"
 
       - name: Package portable zip

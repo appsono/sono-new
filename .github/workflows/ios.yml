@@ -19,8 +19,17 @@ jobs:
         run: flutter pub get
       - run: dart run scripts/compute_translation_progress.dart
 
+      - name: Write env.json
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+        run: |
+          if [ -n "$ENV_JSON" ]; then
+            printf '%s' "$ENV_JSON" > env.json
+          else
+            cp env.example.json env.json
+
       - name: Build iOS (unsigned)
-        run: flutter build ios --release --no-codesign
+        run: flutter build ios --release --no-codesign --dart-define-from-file=env.json
 
       - name: Package unsigned IPA
         run: |
@@ -33,4 +42,3 @@ jobs:
         with:
           name: sono-ios-unsigned
           path: sono-unsigned.ipa
-
