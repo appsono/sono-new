@@ -1852,5 +1852,34 @@
                 "type": "String"
             }
         }
+    },
+    "settingsScrobblingScrobble": "Scrobble",
+    "@settingsScrobblingScrobble": {
+        "description": "Toogle inside a linked provider card that turns sending listens on and off."
+    },
+    "settingsScrobblingDisconnect": "Trennen",
+    "@settingsScrobblingDisconnect": {
+        "description": "Button inside a linked provider card that removes/unlinks the account."
+    },
+    "settingsScrobblingReconnect": "Wiederverbinden",
+    "@settingsScrobblingReconnect": {
+        "description": "Button on a provider card whose session was rejected, starts linking again."
+    },
+    "settingsScrobblingSessionExpired": "Session wurde vom Dienst abgelehnt. Stelle die Verbindung erneut her, um weiter zu scrobblen",
+    "@settingsScrobblingSessionExpired": {
+        "description": "Replaces the logged in line when the session key no longer works."
+    },
+    "settingsScrobblingDisconnectTitle": "{provider} trennen?",
+    "@settingsScrobblingDisconnectTitle": {
+        "description": "Title of the conformation sheet before removing a scrobbling account.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingDisconnectNote": "Bereits gesendete Scrobbles bleiben auf deinem Konto. Noch ausstehende werden bei einer erneuten Verbindung möglicherweise erneut gesendet ;)",
+    "@settingsScrobblingDisconnectNote": {
+        "description": "Explanation in the disconnect confirmation sheet."
     }
 }
