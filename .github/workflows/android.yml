@@ -87,7 +87,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          ARGS=("--$MODE" --flavor "$FLAVOR" --dart-define-from=env.json)
+          ARGS=("--$MODE" --flavor "$FLAVOR" --dart-define-from-file=env.json)
           if [ -n "$BUILD_NAME" ]; then
             ARGS+=("--build-name=$BUILD_NAME")
           fi
