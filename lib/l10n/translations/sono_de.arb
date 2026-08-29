@@ -1795,5 +1795,62 @@
                 "type": "String"
             }
         }
+    },
+    "settingsScrobblingInstanceUrl": "Instanz Adresse",
+    "@settingsScrobblingInstanceUrl": {
+        "description": "Text field for the base address of a self hosted scrobbling server."
+    },
+    "settingsScrobblingOwnKey": "Meinen API-Schlüssel benutzen",
+    "@settingsScrobblingOwnKey": {
+        "description": "Toggle in the connect sheet that swaps the default credentials with the user's own."
+    },
+    "settingsScrobblingApiKey": "API-Schlüssel",
+    "@settingsScrobblingApiKey": {
+        "description": "Text field for the user's own API key."
+    },
+    "settingsScrobblingApiSecret": "API-Secret",
+    "@settingsScrobblingApiSecret": {
+        "description": "Text field for the user's own API secret."
+    },
+    "settingsScrobblingOpenBrowser": "Öffne im Browser",
+    "@settingsScrobblingOpenBrowser": {
+        "description": "Button in the connect sheet that starts the approval flow."
+    },
+    "settingsScrobblingInvalidUrl": "Gebe die vollständige Adresse ein, mit https://",
+    "@settingsScrobblingInvalidUrl": {
+        "description": "Error in the connect sheet when the instance address cannot be parsed."
+    },
+    "settingsScrobblingLinkFailed": "Service konnte nicht erreicht werden. Überprüfe die details und versuche es erneut",
+    "@settingsScrobblingLinkFailed": {
+        "description": "Error in the connect sheet when requesting a token failed."
+    },
+    "settingsScrobblingWaiting": "Warte auf Genehmigung",
+    "@settingsScrobblingWaiting": {
+        "description": "Line on a provider card while the user is approving Sono in their browser."
+    },
+    "settingsScrobblingContinue": "Fortsetzen",
+    "@settingsScrobblingContinue": {
+        "description": "Button on a waiting provider card, pressed after approving in the browser."
+    },
+    "settingsScrobblingCancel": "Abbrechen",
+    "@settingsScrobblingCancel": {
+        "description": "Button on a waiting provider card that abandons the link attempt."
+    },
+    "settingsScrobblingNotApproved": "Noch nicht genehmigt. Schließe den Vorgang im Browser ab und fahre dann fort",
+    "@settingsScrobblingNotApproved": {
+        "description": "Shown when the user presses Continue before approving access. The attempt stays open."
+    },
+    "settingsScrobblingConnectFailed": "Verbindung fehlgeschlagen. Vielleicht erneut versuchen?",
+    "@settingsScrobblingConnectFailed": {
+        "description": "Shown when exchanging the approval for a session failed for any other reason."
+    },
+    "settingsScrobblingLoggedInAs": "Eingeloggt als {username}",
+    "@settingsScrobblingLoggedInAs": {
+        "description": "Subtitle on a linked provider card.",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
     }
 }
