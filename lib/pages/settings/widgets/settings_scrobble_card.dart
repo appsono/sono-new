@@ -141,11 +141,15 @@ class SettingsScrobbleCard extends StatelessWidget {
 class SettingsScrobbleButton extends StatelessWidget {
   final String label;
   final Color tint;
+  final Color? fill;
+  final Color? border;
   final VoidCallback? onTap;
 
   const SettingsScrobbleButton({
     required this.label,
     required this.tint,
+    this.fill,
+    this.border,
     this.onTap,
     super.key,
   });
@@ -154,12 +158,16 @@ class SettingsScrobbleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.sono;
     final tap = onTap;
+    final outline = border;
 
     final pill = Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
       decoration: BoxDecoration(
-        color: c.bgSurface,
+        color: fill ?? c.bgSurface,
         borderRadius: BorderRadius.circular(SonoSizes.borderRadiusSm),
+        border: outline == null
+            ? null
+            : Border.all(color: outline, width: SonoSizes.borderWidth),
       ),
       child: Text(
         label,

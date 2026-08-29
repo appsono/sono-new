@@ -1519,6 +1519,33 @@
       "username": { "type": "String" }
     }
   },
+  "settingsScrobblingScrobble": "Scrobble",
+  "@settingsScrobblingScrobble": {
+    "description": "Toogle inside a linked provider card that turns sending listens on and off."
+  },
+  "settingsScrobblingDisconnect": "Disconnect",
+  "@settingsScrobblingDisconnect": {
+    "description": "Button inside a linked provider card that removes/unlinks the account."
+  },
+  "settingsScrobblingReconnect": "Reconnect",
+  "@settingsScrobblingReconnect": {
+    "description": "Button on a provider card whose session was rejected, starts linking again."
+  },
+  "settingsScrobblingSessionExpired": "Session got rejected by service. Reconnect to keep scrobbling",
+  "@settingsScrobblingSessionExpired": {
+    "description": "Replaces the logged in line when the session key no longer works."
+  },
+  "settingsScrobblingDisconnectTitle": "Disconnect {provider}?",
+  "@settingsScrobblingDisconnectTitle": {
+    "description": "Title of the conformation sheet before removing a scrobbling account.",
+    "placeholders": {
+      "provider": { "type": "String" }
+    }
+  },
+  "settingsScrobblingDisconnectNote": "Existing scrobbles stay on the account. Anything still queued may be sent again on a reconnect ;)",
+  "@settingsScrobblingDisconnectNote": {
+    "description": "Explanation in the disconnect confirmation sheet."
+  },
   "settingsBackupExport": "Export backup",
   "@settingsBackupExport": {
     "description": "Row that writes a backup file."

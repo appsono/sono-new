@@ -17,6 +17,7 @@ import 'package:sono/pages/settings/widgets/settings_row.dart';
 import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 import 'package:sono/pages/settings/widgets/settings_scrobble_card.dart';
 import 'package:sono/pages/settings/widgets/settings_scrobble_connect_sheet.dart';
+import 'package:sono/pages/settings/widgets/settings_scrobble_disconnect_sheet.dart';
 
 const String _lastfmName = 'Last.fm';
 const String _librefmName = 'Libre.fm';
@@ -33,6 +34,7 @@ class SettingsScrobblingPage extends StatefulWidget {
 
 class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
   ScrobbleServiceKind? _awaiting;
+  String? _awaitingRelinkKey;
   String? _awaitingError;
   bool _busy = false;
 
@@ -58,6 +60,14 @@ class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
     }
     return null;
   }
+
+  List<ScrobbleAccount> get _customAccounts => [
+    for (final account in ScrobbleService.instance.accounts)
+      if (account.service == ScrobbleServiceKind.custom) account,
+  ];
+
+  bool _isAwaiting(ScrobbleServiceKind kind, {String? accountKey}) =>
+      _awaiting == kind && _awaitingRelinkKey == accountKey;
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +112,15 @@ class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
                   label: _listenbrainzName,
                   planned: true,
                 ),
+                for (final account in _customAccounts)
+                  _customCard(context, account),
+                if (_isAwaiting(ScrobbleServiceKind.custom))
+                  SettingsScrobbleCard(
+                    icon: IconsSheet.editOutlined,
+                    accent: c.accentTeal,
+                    label: l.settingsScrobblingAddCustom,
+                    body: [_waitingBody(context)],
+                  ),
                 const SizedBox(height: 4),
                 SettingsGroup(
                   note: l.settingsScrobblingCustomNote,
@@ -131,10 +150,9 @@ class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
     required Color accent,
     required String name,
   }) {
-    final l = AppLocalizations.of(context);
     final account = _accountFor(kind);
 
-    if (_awaiting == kind) {
+    if (_isAwaiting(kind, accountKey: account?.key)) {
       return SettingsScrobbleCard(
         icon: icon,
         accent: accent,
@@ -143,16 +161,145 @@ class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
       );
     }
 
-    return SettingsScrobbleCard(
+    if (account == null) {
+      return SettingsScrobbleCard(
+        icon: icon,
+        accent: accent,
+        label: name,
+        onTap: () => _connect(context, kind: kind, name: name),
+      );
+    }
+
+    return _linkedCard(
+      context,
+      account,
       icon: icon,
       accent: accent,
-      label: name,
-      subtitle: account == null
-          ? null
-          : l.settingsScrobblingLoggedInAs(account.username),
-      onTap: account != null
-          ? null
-          : () => _connect(context, kind: kind, name: name),
+      name: name,
+    );
+  }
+
+  Widget _customCard(BuildContext context, ScrobbleAccount account) {
+    final c = context.sono;
+    final host = account.endpoints.root.host;
+
+    if (_isAwaiting(ScrobbleServiceKind.custom, accountKey: account.key)) {
+      return SettingsScrobbleCard(
+        icon: IconsSheet.editOutlined,
+        accent: c.accentTeal,
+        label: host,
+        body: [_waitingBody(context)],
+      );
+    }
+
+    return _linkedCard(
+      context,
+      account,
+      icon: IconsSheet.editOutlined,
+      accent: c.accentTeal,
+      name: host,
+    );
+  }
+
+  Widget _linkedCard(
+    BuildContext context,
+    ScrobbleAccount account, {
+    required String icon,
+    required Color accent,
+    required String name,
+  }) => SettingsScrobbleCard(
+    icon: icon,
+    accent: accent,
+    label: name,
+    body: [_linkedBody(context, account, name: name)],
+  );
+
+  Widget _linkedBody(
+    BuildContext context,
+    ScrobbleAccount account, {
+    required String name,
+  }) {
+    final c = context.sono;
+    final l = AppLocalizations.of(context);
+    final rejected = account.sessionKey == null;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final danger = isDark ? c.errorBorder : c.errorText;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l.settingsScrobblingScrobble,
+                  style: TextStyle(
+                    fontFamily: SonoFonts.primary,
+                    fontSize: 14.5,
+                    color: c.textPrimary,
+                  ),
+                ),
+              ),
+              Switch(
+                value: account.enabled,
+                onChanged: (value) =>
+                    ScrobbleService.instance.setEnabled(account.key, value),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                rejected
+                    ? l.settingsScrobblingSessionExpired
+                    : l.settingsScrobblingLoggedInAs(account.username),
+                style: TextStyle(
+                  fontFamily: SonoFonts.primary,
+                  fontSize: 13,
+                  height: 1.5,
+                  color: rejected ? danger : c.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (rejected) ...[
+                    SettingsScrobbleButton(
+                      label: l.settingsScrobblingReconnect,
+                      tint: c.primary,
+                      onTap: () => _connect(
+                        context,
+                        kind: account.service,
+                        name: name,
+                        relinkKey: account.key,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  SettingsScrobbleButton(
+                    label: l.settingsScrobblingDisconnect,
+                    tint: danger,
+                    fill: c.errorBg,
+                    border: danger,
+                    onTap: () => SettingsScrobbleDisconnectSheet.show(
+                      context,
+                      accountKey: account.key,
+                      providerName: name,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -200,12 +347,15 @@ class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
     BuildContext context, {
     required ScrobbleServiceKind kind,
     required String name,
+    String? relinkKey,
   }) => SettingsScrobbleConnectSheet.show(
     context,
     kind: kind,
     providerName: name,
+    relinkKey: relinkKey,
     onStarted: () => setState(() {
       _awaiting = kind;
+      _awaitingRelinkKey = relinkKey;
       _awaitingError = null;
     }),
   );
@@ -214,6 +364,7 @@ class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
     ScrobbleService.instance.cancelLink();
     setState(() {
       _awaiting = null;
+      _awaitingRelinkKey = null;
       _awaitingError = null;
     });
   }
@@ -224,7 +375,12 @@ class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
 
     try {
       await ScrobbleService.instance.completeLink();
-      if (mounted) setState(() => _awaiting = null);
+      if (mounted) {
+        setState(() {
+          _awaiting = null;
+          _awaitingRelinkKey = null;
+        });
+      }
     } on ScrobbleException catch (e) {
       //14 == browser step unfinished => token still good
       if (mounted) {
