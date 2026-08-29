@@ -1766,5 +1766,34 @@
                 "type": "int"
             }
         }
+    },
+    "settingsScrobbling": "Scrobbling",
+    "@settingsScrobbling": {
+        "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
+    },
+    "settingsScrobblingProviders": "Anbieter",
+    "@settingsScrobblingProviders": {
+        "description": "Section label above the list of scrobbling services on the scrobbling subpage."
+    },
+    "settingsScrobblingAddCustom": "Custom Instanz hinzufügen",
+    "@settingsScrobblingAddCustom": {
+        "description": "Button that starts connecting a self hosted scrobbling server."
+    },
+    "settingsScrobblingCustomNote": "Funktioniert mit allen Audioscrobbler-kompatiblen Servern. Ja, sogar GNU FM",
+    "@settingsScrobblingCustomNote": {
+        "description": "Note under the add custom instance button explaining what kind of server can be connected"
+    },
+    "settingsScrobblingAbout": "Über Scrobbling",
+    "@settingsScrobblingAbout": {
+        "description": "Tooltip of the info button in the scrobbling subpage header."
+    },
+    "settingsScrobblingConnectIntro": "Öffnet {provider} in deinem Browser. Bestätige dort den Zugriff und kehre dann zurück, um fortzufahren",
+    "@settingsScrobblingConnectIntro": {
+        "description": "Explanation at the top of the connect sheet. The placeholder is a service name like Last.fm.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
     }
 }
