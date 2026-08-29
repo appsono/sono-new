@@ -1457,6 +1457,68 @@
   "@settingsScrobblingAbout": {
     "description": "Tooltip of the info button in the scrobbling subpage header."
   },
+  "settingsScrobblingConnectIntro": "Opens {provider} in your browser. Approve access there, then come back and continue",
+  "@settingsScrobblingConnectIntro": {
+    "description": "Explanation at the top of the connect sheet. The placeholder is a service name like Last.fm.",
+    "placeholders": {
+      "provider": { "type": "String" }
+    }
+  },
+  "settingsScrobblingInstanceUrl": "Instance address",
+  "@settingsScrobblingInstanceUrl": {
+    "description": "Text field for the base address of a self hosted scrobbling server."
+  },
+  "settingsScrobblingOwnKey": "Use my own API key",
+  "@settingsScrobblingOwnKey": {
+    "description": "Toggle in the connect sheet that swaps the default credentials with the user's own."
+  },
+  "settingsScrobblingApiKey": "API key",
+  "@settingsScrobblingApiKey": {
+    "description": "Text field for the user's own API key."
+  },
+  "settingsScrobblingApiSecret": "API secret",
+  "@settingsScrobblingApiSecret": {
+    "description": "Text field for the user's own API secret."
+  },
+  "settingsScrobblingOpenBrowser": "Open in browser",
+  "@settingsScrobblingOpenBrowser": {
+    "description": "Button in the connect sheet that starts the approval flow."
+  },
+  "settingsScrobblingInvalidUrl": "Enter a full address, including https://",
+  "@settingsScrobblingInvalidUrl": {
+    "description": "Error in the connect sheet when the instance address cannot be parsed."
+  },
+  "settingsScrobblingLinkFailed": "Could not reach the service, check the details and try again",
+  "@settingsScrobblingLinkFailed": {
+    "description": "Error in the connect sheet when requesting a token failed."
+  },
+  "settingsScrobblingWaiting": "Waiting for approval",
+  "@settingsScrobblingWaiting": {
+    "description": "Line on a provider card while the user is approving Sono in their browser."
+  },
+  "settingsScrobblingContinue": "Continue",
+  "@settingsScrobblingContinue": {
+    "description": "Button on a waiting provider card, pressed after approving in the browser."
+  },
+  "settingsScrobblingCancel": "Cancel",
+  "@settingsScrobblingCancel": {
+    "description": "Button on a waiting provider card that abandons the link attempt."
+  },
+  "settingsScrobblingNotApproved": "Not approved yet. Finish in your browser, then continue",
+  "@settingsScrobblingNotApproved": {
+    "description": "Shown when the user presses Continue before approving access. The attempt stays open."
+  },
+  "settingsScrobblingConnectFailed": "Connecting failed, maybe try again :/",
+  "@settingsScrobblingConnectFailed": {
+    "description": "Shown when exchanging the approval for a session failed for any other reason."
+  },
+  "settingsScrobblingLoggedInAs": "Logged in as {username}",
+  "@settingsScrobblingLoggedInAs": {
+    "description": "Subtitle on a linked provider card.",
+    "placeholders": {
+      "username": { "type": "String" }
+    }
+  },
   "settingsBackupExport": "Export backup",
   "@settingsBackupExport": {
     "description": "Row that writes a backup file."
