@@ -430,7 +430,9 @@ class DiscordRpcService {
       final list = jsonDecode(res.body) as List<dynamic>;
       if (list.isEmpty) return null;
 
-      final proxyUrl = (list[0] as Map<String, dynamic>)['url'] as String?;
+      final path =
+          (list[0] as Map<String, dynamic>)['external_asset_path'] as String?;
+      final proxyUrl = path == null ? null : 'mp:$path';
       if (proxyUrl != null) {
         if (_externalImageCache.length >= 50) {
           _externalImageCache.remove(_externalImageCache.keys.first);
