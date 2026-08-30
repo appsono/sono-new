@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   singles and EPs, and features, with filter chips
 - Add an `Add to Playlist` action for albums, allowing full albums to be
   added directly to playlists
+- Added Scrobbling support for Last.fm, Libre.fm and self-hosted AudioScrobbler
+  instances. Multi-account support, own API Key option, and offline queue
+  until the service is reachable again
+  ([#43](https://github.com/appsono/sono-new/issues/43))
 
 ### Changed
 
