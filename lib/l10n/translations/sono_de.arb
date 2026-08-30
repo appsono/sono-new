@@ -1881,5 +1881,35 @@
     "settingsScrobblingDisconnectNote": "Bereits gesendete Scrobbles bleiben auf deinem Konto. Noch ausstehende werden bei einer erneuten Verbindung möglicherweise erneut gesendet ;)",
     "@settingsScrobblingDisconnectNote": {
         "description": "Explanation in the disconnect confirmation sheet."
+    },
+    "settingsScrobblingAboutWhat": "Scrobbling sendet deine gehörten Songs an einen externen Diesnt, welcher daraus eine Hörhistorie und Statistiken erstellt. Beim Verknüpfen eines Kontos werden Title, Künstler, Album und Länge des aktuellen Songs an den Dienst gesendet.",
+    "@settingsScrobblingAboutWhat": {
+        "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+    },
+    "settingsScrobblingAboutQueue": "Sono speichert deine gehörten Songs bereits auf deinem Gerät, sodass offline nichts verloren geht. Sobald der Dienst wieder erreichbar ist, sendet Sono sie automatisch ;)",
+    "@settingsScrobblingAboutQueue": {
+        "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+    },
+    "settingsScrobblingAboutThreshold": "Ein Song zählt als Scrobble, sobald du die Hälfte order vier Minuten gehört hast, je nachdem, was zuerst eintritt. Überspringst du ihn vorher, wird er nicht gescrobbelt.",
+    "@settingsScrobblingAboutThreshold": {
+        "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+    },
+    "settingsScrobblingDocs": "{provider} API-Dokumentation",
+    "@settingsScrobblingDocs": {
+        "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingLinksChecked": "Links zuletzt geprüft am {date}",
+    "@settingsScrobblingLinksChecked": {
+        "description": "Line at the bottom of the scrobbling info sheet. The date is maintained by hand.",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
     }
 }
