@@ -1546,7 +1546,7 @@
   "@settingsScrobblingDisconnectNote": {
     "description": "Explanation in the disconnect confirmation sheet."
   },
-  "settingsScrobblingAboutWhat": "Scrobbling sends what you listen to to an outside service, which builds a history and statistics from it. When linking an account, the title, artist, album  and length of the current song will be send to the service.",
+  "settingsScrobblingAboutWhat": "Scrobbling sends what you listen to to an outside service, which builds a history and statistics from it. When linking an account, the title, artist, album and length of the current song will be send to the service.",
   "@settingsScrobblingAboutWhat": {
     "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
   },
