@@ -19,7 +19,7 @@
 - [x] ~~EQ and bass boost sometimes have no audible effect~~
 - [ ] Engine-death process kill only registers from `MainActivity`. Move it
       into `sono_query`'s `onAttachedToEngine` to cover service-first engines
-- [ ] Swiping away Samsung Now Bar killing playback
+- [x] ~~Swiping away Samsung Now Bar killing playback~~
 
 ## UI
 
@@ -49,14 +49,17 @@
       the first played file, plus a toggle to trade fidelity for gapless across
       differently encoded files
 - [ ] Tag editor:
-  - Edit multiple songs at once
-  - Change album cover
+  - [ ] Edit multiple songs at once
+  - [ ] Change album cover
 - [ ] Playlists:
-  - Add a whole album or queue at once
-  - Import / export (M3U)
+  - [x] ~~Add a whole album~~
+  - [ ] Add queue
+  - [ ] Import / export (M3U)
 - [x] ~~Backup: export / import app data (likes, favorites, playlists, settings,
       scan paths, etc.)~~
-- [ ] Scrobbling Support (Last.fm, Libre.fm, etc.)
+- [ ] Scrobbling Support
+  - [x] ~~Last.fm, Libre.fm Support~~
+  - [ ] ListenBrainz Support
 - [ ] Lyrics:
   - [ ] fetch .lrc files from local files
   - [ ] allow searching for synced lyrics
