@@ -1546,6 +1546,32 @@
   "@settingsScrobblingDisconnectNote": {
     "description": "Explanation in the disconnect confirmation sheet."
   },
+  "settingsScrobblingAboutWhat": "Scrobbling sends what you listen to to an outside service, which builds a history and statistics from it. When linking an account, the title, artist, album  and length of the current song will be send to the service.",
+  "@settingsScrobblingAboutWhat": {
+    "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+  },
+  "settingsScrobblingAboutQueue": "Sono already records your listens on your device, which means nothing is lost while you're offline. Sono sends them as soon as it can reach the service again ;)",
+  "@settingsScrobblingAboutQueue": {
+    "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+  },
+  "settingsScrobblingAboutThreshold": "A song counts once you have listened to half of it, or four minutes, whichever comes first. Skipping earlier means that the song will not be scrobbled.",
+  "@settingsScrobblingAboutThreshold": {
+    "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+  },
+  "settingsScrobblingDocs": "{provider} docs",
+  "@settingsScrobblingDocs": {
+    "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+    "placeholders": {
+      "provider": { "type": "String" }
+    }
+  },
+  "settingsScrobblingLinksChecked": "Links last checked {date}",
+  "@settingsScrobblingLinksChecked": {
+    "description": "Line at the bottom of the scrobbling info sheet. The date is maintained by hand.",
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
   "settingsBackupExport": "Export backup",
   "@settingsBackupExport": {
     "description": "Row that writes a backup file."

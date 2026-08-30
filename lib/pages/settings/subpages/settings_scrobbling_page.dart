@@ -18,6 +18,7 @@ import 'package:sono/pages/settings/widgets/settings_scaffold.dart';
 import 'package:sono/pages/settings/widgets/settings_scrobble_card.dart';
 import 'package:sono/pages/settings/widgets/settings_scrobble_connect_sheet.dart';
 import 'package:sono/pages/settings/widgets/settings_scrobble_disconnect_sheet.dart';
+import 'package:sono/pages/settings/widgets/settings_scrobble_info_sheet.dart';
 
 const String _lastfmName = 'Last.fm';
 const String _librefmName = 'Libre.fm';
@@ -81,7 +82,7 @@ class _SettingsScrobblingPageState extends State<SettingsScrobblingPage> {
         SonoHeaderAction(
           icon: IconsSheet.infoOutlined,
           tooltip: l.settingsScrobblingAbout,
-          onTap: () {}, // TODO: open informational modal tm
+          onTap: () => SettingsScrobbleInfoSheet.show(context),
         ),
       ],
       slivers: [
