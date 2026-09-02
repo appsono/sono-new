@@ -64,7 +64,7 @@
   - [ ] fetch .lrc files from local files
   - [ ] allow searching for synced lyrics
 - [ ] Theming:
-  - [ ] allow editing oevery single app theme token
+  - [ ] allow editing every single app theme token
   - [ ] export/import custom theme
 
 ## Improvements (pre-UI)
