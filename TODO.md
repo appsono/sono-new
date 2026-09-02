@@ -57,12 +57,15 @@
   - [ ] Import / export (M3U)
 - [x] ~~Backup: export / import app data (likes, favorites, playlists, settings,
       scan paths, etc.)~~
-- [ ] Scrobbling Support
+- [ ] Scrobbling Support:
   - [x] ~~Last.fm, Libre.fm Support~~
   - [ ] ListenBrainz Support
 - [ ] Lyrics:
   - [ ] fetch .lrc files from local files
   - [ ] allow searching for synced lyrics
+- [ ] Theming:
+  - [ ] allow editing oevery single app theme token
+  - [ ] export/import custom theme
 
 ## Improvements (pre-UI)
 
