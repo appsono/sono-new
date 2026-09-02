@@ -1208,5 +1208,708 @@
     "settingsDiscordDisconnect": "Katkesta ühendus",
     "@settingsDiscordDisconnect": {
         "description": "Destructive action that logs out of Discord and clears the presence."
+    },
+    "artistAppearsOn": "Esineb veel",
+    "@artistAppearsOn": {
+        "description": "Heading above releases by other artists that this artist is credited on."
+    },
+    "artistFilterFeatured": "Kaasesineja",
+    "@artistFilterFeatured": {
+        "description": "Discography filter chip for albums the artist only appears on."
+    },
+    "artistFullDiscography": "Täismahuline diskograafia",
+    "@artistFullDiscography": {
+        "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
+    },
+    "artistRelatedShared": "{count, plural, =1{1 üheskoos tehtud lugu} other{{count} üheskoos tehtud lugu}}",
+    "@artistRelatedShared": {
+        "description": "How many songs the two artists are both credited on.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsProfilePickBadImage": "vaat kus lops, antud fail seal... üldsegi POLE pilt",
+    "@settingsProfilePickBadImage": {
+        "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
+    },
+    "settingsAppearanceSectionTheme": "Kujundus",
+    "@settingsAppearanceSectionTheme": {
+        "description": "Section label above the theme picker on the appearance subpage."
+    },
+    "settingsAppearanceThemeNote": "Järgib sinu seadme heledat või tumedat kujundust koos nende võimaliku dünaamilise vahetumisega.",
+    "@settingsAppearanceThemeNote": {
+        "description": "Note under the theme picker explaining what the System option does. The schedule belongs to the operating system, not to Sono."
+    },
+    "settingsAppearanceSectionPlayer": "Pleier",
+    "@settingsAppearanceSectionPlayer": {
+        "description": "Section label above the player appearance options on the appearance subpage."
+    },
+    "settingsAppearanceSeeAll": "„Vaata kõiki“ nupp",
+    "@settingsAppearanceSeeAll": {
+        "description": "Label for the picker that chooses how the see all control on section headers is drawn."
+    },
+    "settingsAppearanceSeeAllButton": "Nupp",
+    "@settingsAppearanceSeeAllButton": {
+        "description": "Option name for the see all control drawn as a filled circle with an arrow."
+    },
+    "settingsAppearanceColourFromArt": "Värv kaanepildist",
+    "@settingsAppearanceColourFromArt": {
+        "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
+    },
+    "normalisationPreampValue": "{db} dB",
+    "@normalisationPreampValue": {
+        "description": "Value shown next to the preamp slider, in decibels.",
+        "placeholders": {
+            "db": {
+                "type": "String"
+            }
+        }
+    },
+    "normalisationPreamp": "Eelvõimendus",
+    "@normalisationPreamp": {
+        "description": "Slider for extra gain applied on top of the ReplayGain value."
+    },
+    "normalisationAlbumSubtitle": "Säilitab helivaljuse erinevused albumi piires",
+    "@normalisationAlbumSubtitle": {
+        "description": "Subtitle of the per album normalisation option."
+    },
+    "normalisationTrack": "Lookohane",
+    "@normalisationTrack": {
+        "description": "Normalisation mode that brings every song to the same loudness."
+    },
+    "normalisationTrackSubtitle": "Kõik lood on sama valjusega",
+    "@normalisationTrackSubtitle": {
+        "description": "Subtitle of the per track normalisation option."
+    },
+    "normalisationAlbum": "Albumikohane",
+    "@normalisationAlbum": {
+        "description": "Normalisation mode that normalises whole albums as one unit."
+    },
+    "normalisationPreventClipping": "Väldi ülevõimendamist",
+    "@normalisationPreventClipping": {
+        "description": "Toggle that lowers the gain instead of letting loud peaks distort."
+    },
+    "normalisationPreventClippingSubtitle": "Helimoonutuse asemel vähenda helivaljuse tundlikkust",
+    "@normalisationPreventClippingSubtitle": {
+        "description": "Subtitle of the prevent clipping toggle."
+    },
+    "normalisationResetTooltip": "Lähtesta normaliseerimine",
+    "@normalisationResetTooltip": {
+        "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
+    },
+    "normalisationOff": "Väljas",
+    "@normalisationOff": {
+        "description": "Normalisation mode that applies no gain."
+    },
+    "settingsAppearanceSectionLibrary": "Muusikakogu",
+    "@settingsAppearanceSectionLibrary": {
+        "description": "Section label above the library appearance options on the appearance subpage."
+    },
+    "sleepCustomField": "Minutid",
+    "@sleepCustomField": {
+        "description": "Label of the field for entering the sleep timer length in minutes."
+    },
+    "settingsScrobbling": "Kraasimine",
+    "@settingsScrobbling": {
+        "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
+    },
+    "settingsAppearanceBlurredBackdrops": "Hägustatud taustad",
+    "@settingsAppearanceBlurredBackdrops": {
+        "description": "Row that enables blurred cover backdrops behind the player. Currently marked as planned."
+    },
+    "settingsAppearanceBlurredBackdropsSubtitle": "Vanemates nutiseadmetes tähendab see suuremat energiatarbimist",
+    "@settingsAppearanceBlurredBackdropsSubtitle": {
+        "description": "Subtitle under the blurred backdrops row, warning about the performance cost."
+    },
+    "settingsAppearanceReduceMotion": "Vähenda liikumist",
+    "@settingsAppearanceReduceMotion": {
+        "description": "Row that disables animations across the app. Currently marked as planned."
+    },
+    "settingsAppearanceReduceMotionSubtitle": "Lülita välja edev graafika ja üleminekud",
+    "@settingsAppearanceReduceMotionSubtitle": {
+        "description": "Subtitle under the reduce motion row."
+    },
+    "settingsEqEnableSubtitle": "Kehtib tervele mpv-filtriahelale",
+    "@settingsEqEnableSubtitle": {
+        "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
+    },
+    "settingsEqSectionPreset": "Eelseadistused",
+    "@settingsEqSectionPreset": {
+        "description": "Section label above the preset chips on the equalizer subpage."
+    },
+    "settingsEqSectionEffects": "Efektid",
+    "@settingsEqSectionEffects": {
+        "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
+    },
+    "settingsEqBassBoost": "Võimsam bass",
+    "@settingsEqBassBoost": {
+        "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
+    },
+    "settingsEqValueRate": "{value} x",
+    "@settingsEqValueRate": {
+        "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsEqResetAll": "Lähtesta kõik efektid",
+    "@settingsEqResetAll": {
+        "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
+    },
+    "settingsEqResetTooltip": "Lähtesta ekvalaiser",
+    "@settingsEqResetTooltip": {
+        "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
+    },
+    "settingsLibraryDelimiterAdd": "Lisa eraldaja",
+    "@settingsLibraryDelimiterAdd": {
+        "description": "Action that adds the typed delimiter to the list."
+    },
+    "settingsLibraryProtectedArtistField": "Esitaja nimi",
+    "@settingsLibraryProtectedArtistField": {
+        "description": "Label of the text field in the protected artists editor."
+    },
+    "settingsLibraryProtectedArtistAdd": "Lisa esitaja",
+    "@settingsLibraryProtectedArtistAdd": {
+        "description": "Action that adds the typed artist to the protected list."
+    },
+    "settingsLibraryRescan": "Skaneeri muusikakogu uuesti läbi",
+    "@settingsLibraryRescan": {
+        "description": "Action that runs a full rescan of the music library."
+    },
+    "settingsLibraryRescanRunning": "Skaneerin…",
+    "@settingsLibraryRescanRunning": {
+        "description": "Replaces the rescan label while a scan is in progress."
+    },
+    "settingsDiscordLoginFailed": "Discordi sisselogimine ei õnnestunud",
+    "@settingsDiscordLoginFailed": {
+        "description": "Snackbar shown when the Discord login could not be completed. The error follows after a colon."
+    },
+    "settingsDiscordSectionVisible": "Inimesed näevad seda",
+    "@settingsDiscordSectionVisible": {
+        "description": "Section label above the toggles controlling what the presence card shows."
+    },
+    "settingsDiscordShowSong": "Näita praeguse loo pealkirja",
+    "@settingsDiscordShowSong": {
+        "description": "Master toggle for the presence. Off means nothing is shown on Discord at all."
+    },
+    "settingsDiscordShowArt": "Näita praeguse loo kaanepilti",
+    "@settingsDiscordShowArt": {
+        "description": "Toggle for sending the cover with the presence."
+    },
+    "settingsDiscordShowArtSubtitle": "Selle asemel Discord näitab kohatäidet",
+    "@settingsDiscordShowArtSubtitle": {
+        "description": "Subtitle under the album art row, explaining that turning it off does not remove the image, Discord substitutes a generic one."
+    },
+    "settingsScrobblingOwnKey": "Kasuta minu oma API-võtit",
+    "@settingsScrobblingOwnKey": {
+        "description": "Toggle in the connect sheet that swaps the default credentials with the user's own."
+    },
+    "settingsScrobblingApiKey": "API-võti",
+    "@settingsScrobblingApiKey": {
+        "description": "Text field for the user's own API key."
+    },
+    "settingsScrobblingApiSecret": "API saladus",
+    "@settingsScrobblingApiSecret": {
+        "description": "Text field for the user's own API secret."
+    },
+    "settingsScrobblingOpenBrowser": "Ava veebibrauser",
+    "@settingsScrobblingOpenBrowser": {
+        "description": "Button in the connect sheet that starts the approval flow."
+    },
+    "settingsScrobblingInvalidUrl": "Sisesta täismahus aadress, sealhulgas https://",
+    "@settingsScrobblingInvalidUrl": {
+        "description": "Error in the connect sheet when the instance address cannot be parsed."
+    },
+    "settingsScrobblingLinkFailed": "Teenus polnud leitav, kontrolli üksikasju ja proovi uuesti",
+    "@settingsScrobblingLinkFailed": {
+        "description": "Error in the connect sheet when requesting a token failed."
+    },
+    "settingsScrobblingWaiting": "Heakskiitmise ootel",
+    "@settingsScrobblingWaiting": {
+        "description": "Line on a provider card while the user is approving Sono in their browser."
+    },
+    "settingsScrobblingContinue": "Jätka",
+    "@settingsScrobblingContinue": {
+        "description": "Button on a waiting provider card, pressed after approving in the browser."
+    },
+    "settingsScrobblingCancel": "Tühista",
+    "@settingsScrobblingCancel": {
+        "description": "Button on a waiting provider card that abandons the link attempt."
+    },
+    "settingsScrobblingNotApproved": "Pole veel heakskiidetud. Lõpeta oma veebibrauseris ja siis jätka",
+    "@settingsScrobblingNotApproved": {
+        "description": "Shown when the user presses Continue before approving access. The attempt stays open."
+    },
+    "settingsScrobblingConnectFailed": "Ühendamine ei õnnestunud, võib-olla proovi uuesti :/",
+    "@settingsScrobblingConnectFailed": {
+        "description": "Shown when exchanging the approval for a session failed for any other reason."
+    },
+    "settingsScrobblingLoggedInAs": "Logitud sisse kasutajana {username}",
+    "@settingsScrobblingLoggedInAs": {
+        "description": "Subtitle on a linked provider card.",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingScrobble": "Kraasi",
+    "@settingsScrobblingScrobble": {
+        "description": "Toogle inside a linked provider card that turns sending listens on and off."
+    },
+    "settingsScrobblingDisconnect": "Katkesta ühendus",
+    "@settingsScrobblingDisconnect": {
+        "description": "Button inside a linked provider card that removes/unlinks the account."
+    },
+    "settingsScrobblingReconnect": "Ühenda uuesti",
+    "@settingsScrobblingReconnect": {
+        "description": "Button on a provider card whose session was rejected, starts linking again."
+    },
+    "settingsBackupExportSaved": "Salvestatud asukohta {path}",
+    "@settingsBackupExportSaved": {
+        "description": "Snackbar confirming where the backup file was written.",
+        "placeholders": {
+            "path": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsBackupExportFailed": "Varukoopia tegemine ei õnnestunud",
+    "@settingsBackupExportFailed": {
+        "description": "Snackbar shown when writing the backup failed. The error follows after a colon."
+    },
+    "settingsBackupImport": "Impordi varukoopia",
+    "@settingsBackupImport": {
+        "description": "Row that reads a backup file back in."
+    },
+    "settingsBackupImporting": "Impordi…",
+    "@settingsBackupImporting": {
+        "description": "Replaces the import label while a backup is being restored."
+    },
+    "settingsBackupImportSubtitle": "Mestib sinu muusikakogu ja siis skaneerib uuesti",
+    "@settingsBackupImportSubtitle": {
+        "description": "Subtitle under the import row."
+    },
+    "settingsBackupImportConfirmTitle": "Kas impordid varukoopia?",
+    "@settingsBackupImportConfirmTitle": {
+        "description": "Title of the sheet shown before choosing a backup file."
+    },
+    "settingsBackupSectionAutomatic": "Automaatne",
+    "@settingsBackupSectionAutomatic": {
+        "description": "Section label above the scheduled backup option."
+    },
+    "settingsBackupWeekly": "Iganädalane varukoopia",
+    "@settingsBackupWeekly": {
+        "description": "Toggle for writing a backup once a week. Currently marked as planned."
+    },
+    "settingsBackupWeeklySubtitle": "Kirjutatud sinu muusikakausta",
+    "@settingsBackupWeeklySubtitle": {
+        "description": "Subtitle under the weekly backup row."
+    },
+    "settingsBackupLastExport": "Viimane eksport {date} kell {time}",
+    "@settingsBackupLastExport": {
+        "description": "Footer line showing when a backup was last written. Both placeholders receive the same timestamp.",
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            },
+            "time": {
+                "type": "DateTime",
+                "format": "jm"
+            }
+        }
+    },
+    "settingsUpdatesChecking": "Kontrollin…",
+    "@settingsUpdatesChecking": {
+        "description": "Value on the updates row while a check is running."
+    },
+    "settingsUpdatesUpToDate": "Uuendatud",
+    "@settingsUpdatesUpToDate": {
+        "description": "Value on the updates row when the installed version is the newest release."
+    },
+    "settingsUpdatesAvailable": "Versioon {version} on saadaval",
+    "@settingsUpdatesAvailable": {
+        "description": "Value on the updates row when a newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetUpToDateTitle": "Kasutad juba viimast versiooni :D",
+    "@settingsUpdateSheetUpToDateTitle": {
+        "description": "Title of the update sheet when no newer release exists."
+    },
+    "settingsUpdateSheetUpToDateBody": "Sono {version} on viimane versioon.",
+    "@settingsUpdateSheetUpToDateBody": {
+        "description": "Body of the update sheet when no newer release exists.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetAvailableTitle": "Saadaval on Sono versioon {version}",
+    "@settingsUpdateSheetAvailableTitle": {
+        "description": "Title of the update sheet when a newer release was found.",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsUpdateSheetSkip": "Jäta see versioon vahele",
+    "@settingsUpdateSheetSkip": {
+        "description": "Action that dismisses a release so it stops being announced."
+    },
+    "migrationFailed": "Import vanast Sono versioonist ei õnnestunud :/",
+    "@migrationFailed": {
+        "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
+    },
+    "migrationUnresolved": "{count, plural, =1{1 lugu} other{{count} lugu}} enam polnud selles seadmes",
+    "@migrationUnresolved": {
+        "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationDoneNothing": "Vanast Sonost polnud võimalik mitte midagi importida :/",
+    "@migrationDoneNothing": {
+        "description": "Snackbar shown when a migration ran but matched nothing on this device."
+    },
+    "migrationCountArtists": "{count, plural, =0{mitte ühtegi esitajat} =1{1 esitaja} other{{count} esitajat}}",
+    "@migrationCountArtists": {
+        "description": "Favorite artist count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountAlbums": "{count, plural, =0{mitte ühtegi albumit} =1{1 album} other{{count} albumit}}",
+    "@migrationCountAlbums": {
+        "description": "Favorite album count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationCountLiked": "{count, plural, =0{mitte ühtegi meeldimist} =1{1 meeldimine} other{{count} meeldimist}}",
+    "@migrationCountLiked": {
+        "description": "Liked song count listed in the migration sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsUpdateSheetFailedTitle": "Versiooniuuenduste kontrollimine ei õnnestunud",
+    "@settingsUpdateSheetFailedTitle": {
+        "description": "Title of the update sheet when the check could not reach GitHub."
+    },
+    "settingsUpdateSheetFailedBody": "Sono ei suutnud GitHubi leida. Kontrolli, kas sinu nutiseadme võrguühendus toimib ja proovi uuesti.",
+    "@settingsUpdateSheetFailedBody": {
+        "description": "Body of the update sheet when the check failed."
+    },
+    "settingsUpdateSheetSkipSubtitle": "Lõpetab selle versiooni kohta teate kuvamise",
+    "@settingsUpdateSheetSkipSubtitle": {
+        "description": "Subtitle under the skip action in the update sheet."
+    },
+    "settingsUpdateSheetOpen": "Ava selle versiooni teave",
+    "@settingsUpdateSheetOpen": {
+        "description": "Action that opens the GitHub release page in the browser."
+    },
+    "settingsUpdateSheetFrom": "Hetkel kasutad {current} versiooni, aga viimane on {latest}.",
+    "@settingsUpdateSheetFrom": {
+        "description": "Line above the release notes comparing the installed and newest versions.",
+        "placeholders": {
+            "current": {
+                "type": "String"
+            },
+            "latest": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsLibraryIgnoreLeadingThe": "Eira nimede alguses olevat „The“ artiklit",
+    "@settingsLibraryIgnoreLeadingThe": {
+        "description": "Sorts artists ignoring a leading 'The'. Currently marked as planned. Keep the English article in quotes."
+    },
+    "settingsLibraryIgnoreLeadingTheSubtitle": "Esitajate järjestamisel",
+    "@settingsLibraryIgnoreLeadingTheSubtitle": {
+        "description": "Subtitle under the ignore leading The row."
+    },
+    "settingsDiscordShowElapsed": "Näita edenemisriba",
+    "@settingsDiscordShowElapsed": {
+        "description": "Toggle for sending playback timestamps, which Discord draws as a progress bar."
+    },
+    "settingsDiscordShowButton": "Näita lingi nuppu",
+    "@settingsDiscordShowButton": {
+        "description": "Toggle for the button under the presence card."
+    },
+    "settingsScrobblingInstanceUrl": "Serveri aadress",
+    "@settingsScrobblingInstanceUrl": {
+        "description": "Text field for the base address of a self hosted scrobbling server."
+    },
+    "settingsScrobblingDisconnectTitle": "Kas katkestad ühenduse teenusepakkujaga {provider}?",
+    "@settingsScrobblingDisconnectTitle": {
+        "description": "Title of the conformation sheet before removing a scrobbling account.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingLinksChecked": "Viimati kontrollitud {date}",
+    "@settingsScrobblingLinksChecked": {
+        "description": "Line at the bottom of the scrobbling info sheet. The date is maintained by hand.",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsBackupExporting": "Ekspordin…",
+    "@settingsBackupExporting": {
+        "description": "Replaces the export label while a backup is being written."
+    },
+    "settingsBackupExport": "Varunda",
+    "@settingsBackupExport": {
+        "description": "Row that writes a backup file."
+    },
+    "settingsBackupImportChoose": "Vali fail",
+    "@settingsBackupImportChoose": {
+        "description": "Action in the import confirmation sheet that opens the file picker."
+    },
+    "settingsBackupImportFailed": "Varukoopia importimine ei õnnestunud",
+    "@settingsBackupImportFailed": {
+        "description": "Snackbar shown when reading the backup failed. The error follows after a colon."
+    },
+    "migrationNever": "Ära kunagi küsi uuesti",
+    "@migrationNever": {
+        "description": "Action permanently dismissing the migration sheet without importing."
+    },
+    "migrationLater": "Mitte praegu",
+    "@migrationLater": {
+        "description": "Action dismissing the migration sheet until the next launch."
+    },
+    "migrationImport": "Impordi",
+    "@migrationImport": {
+        "description": "Action confirming the import in the migration sheet."
+    },
+    "settingsBackupNote": "Importimisel säilib kõik, mis sul juba on. Lood, mida selles seadmes ei leidu jäävad vahele ja saad sellekohase teate.",
+    "@settingsBackupNote": {
+        "description": "Note under the export and import rows, clarifying that importing is not destructive."
+    },
+    "settingsLibrarySectionSources": "Allikad",
+    "@settingsLibrarySectionSources": {
+        "description": "Section label above folder and length options on the library subpage."
+    },
+    "settingsLibraryGroupByFolderSubtitle": "Albumi sildi asemel kasuta loo kausta",
+    "@settingsLibraryGroupByFolderSubtitle": {
+        "description": "Subtitle under the group albums by folder row."
+    },
+    "settingsLibrarySectionArtistParsing": "Esitajate parsimine",
+    "@settingsLibrarySectionArtistParsing": {
+        "description": "Section label above the multi-artist splitting options."
+    },
+    "settingsLibrarySplitArtists": "Jaga mitme esitajaga sildid",
+    "@settingsLibrarySplitArtists": {
+        "description": "Toggle that splits an artist tag into several artists at the delimiters."
+    },
+    "settingsLibraryDelimiters": "Eraldajad",
+    "@settingsLibraryDelimiters": {
+        "description": "Characters that separate artists in a tag, such as a comma or a slash."
+    },
+    "settingsLibraryDelimitersEmpty": "Kasutades vaikimisi väärtusi",
+    "@settingsLibraryDelimitersEmpty": {
+        "description": "Shown in the delimiter editor when the list is empty, meaning the built-in delimiters apply."
+    },
+    "settingsLibraryDelimiterField": "Eraldaja",
+    "@settingsLibraryDelimiterField": {
+        "description": "Label of the text field in the delimiter editor."
+    },
+    "settingsLibraryProtectedArtists": "Kaitstud esitajad",
+    "@settingsLibraryProtectedArtists": {
+        "description": "Artist names never split, for acts whose name contains a delimiter."
+    },
+    "settingsLibraryProtectedArtistsEmpty": "Kaitstud esitajaid veel pole",
+    "@settingsLibraryProtectedArtistsEmpty": {
+        "description": "Shown in the protected artists editor when the list is empty."
+    },
+    "settingsDiscordShowElapsedSubtitle": "Selle asemel arvutab Discord alates käivitamisest",
+    "@settingsDiscordShowElapsedSubtitle": {
+        "description": "Subtitle under the progress bar row, explaining that turning it off leaves Discord's own timer running."
+    },
+    "settingsDiscordShowButtonSubtitle": "Lisab vahekaardi alla märke „Proovi Sono rakendust“",
+    "@settingsDiscordShowButtonSubtitle": {
+        "description": "Subtitle under the link button row. The quoted text is the button's own label and is not translated."
+    },
+    "settingsDiscordOnlyWhilePlaying": "Vaid esitamisel",
+    "@settingsDiscordOnlyWhilePlaying": {
+        "description": "Toggle that clears the presence shortly after playback pauses."
+    },
+    "settingsDiscordOnlyWhilePlayingSubtitle": "Kui paus kestab üle minuti, siis kohalolekuteade eemaldatakse",
+    "@settingsDiscordOnlyWhilePlayingSubtitle": {
+        "description": "Subtitle under the only while playing row."
+    },
+    "settingsDiscordPreviewHeading": "Kuulamas rakendust Sono",
+    "@settingsDiscordPreviewHeading": {
+        "description": "First line of the preview card, matching what Discord displays above the song."
+    },
+    "settingsDiscordPreviewIdle": "Mitte midagi pole esitamisel",
+    "@settingsDiscordPreviewIdle": {
+        "description": "Shown in the preview card in place of a song title when nothing is playing."
+    },
+    "settingsDiscordPreviewButton": "Proovi Sono rakendust",
+    "@settingsDiscordPreviewButton": {
+        "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
+    },
+    "settingsScrobblingProviders": "Teenusepakkujad",
+    "@settingsScrobblingProviders": {
+        "description": "Section label above the list of scrobbling services on the scrobbling subpage."
+    },
+    "settingsScrobblingAddCustom": "Lisa oma soovitud server",
+    "@settingsScrobblingAddCustom": {
+        "description": "Button that starts connecting a self hosted scrobbling server."
+    },
+    "settingsScrobblingCustomNote": "Toimib ükspuha mis serveriga, mis ühildub Audioscrobbleriga. Jah, isegi GNU FM-iga",
+    "@settingsScrobblingCustomNote": {
+        "description": "Note under the add custom instance button explaining what kind of server can be connected"
+    },
+    "settingsScrobblingAbout": "Teave kraadimise kohta",
+    "@settingsScrobblingAbout": {
+        "description": "Tooltip of the info button in the scrobbling subpage header."
+    },
+    "settingsScrobblingConnectIntro": "Avab {provider} teenusepakkuja lehe sinu veebibrauseris. Luba ligipääs seal, tule siia tagasi ja jätka",
+    "@settingsScrobblingConnectIntro": {
+        "description": "Explanation at the top of the connect sheet. The placeholder is a service name like Last.fm.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingSessionExpired": "Teenusepakkuja keeldus sessiooni loomisest. Kraasimise jätkamiseks ühenda rakendus uuesti teenusepakkujaga",
+    "@settingsScrobblingSessionExpired": {
+        "description": "Replaces the logged in line when the session key no longer works."
+    },
+    "settingsAppearanceHomeTint": "Avalehe värvitoon",
+    "@settingsAppearanceHomeTint": {
+        "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
+    },
+    "settingsAppearanceHomeTintSubtitle": "Värvi avalehe ülaosa hetkel esitamisel loo värvidega",
+    "@settingsAppearanceHomeTintSubtitle": {
+        "description": "Subtitle under the home tint row."
+    },
+    "settingsAppearanceColourFromArtSubtitle": "Värvi kogu pleier hetkel esitamisel loo värvidega",
+    "@settingsAppearanceColourFromArtSubtitle": {
+        "description": "Subtitle under the colour from album art row."
+    },
+    "normalisationSectionMode": "Režiim",
+    "@normalisationSectionMode": {
+        "description": "Section label above the normalisation mode options."
+    },
+    "normalisationSectionTuning": "Häälestus",
+    "@normalisationSectionTuning": {
+        "description": "Section label above the preamp and clipping options."
+    },
+    "settingsEqSpeed": "Kiirus",
+    "@settingsEqSpeed": {
+        "description": "Slider controlling playback rate without changing pitch."
+    },
+    "settingsEqPitch": "Helikõrgus",
+    "@settingsEqPitch": {
+        "description": "Slider controlling pitch without changing playback rate."
+    },
+    "settingsEqValueDb": "{value} dB",
+    "@settingsEqValueDb": {
+        "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsDiscordNote": "Discordi olekuteade toimib liideseta sessiooni alusel. Ühenduse katkestamisel lõppeb ka teate kuvamine ja serverisse ei seadistata mitte midagi.",
+    "@settingsDiscordNote": {
+        "description": "Note explaining how the Discord connection works and that no data is kept remotely."
+    },
+    "settingsDiscordPreview": "Eelvaade",
+    "@settingsDiscordPreview": {
+        "description": "Heading of the card showing how the presence will look. Rendered in uppercase."
+    },
+    "settingsScrobblingDisconnectNote": "Olemasolevad kraasmed jäävad salvestatuks kasutajakonto juures. Mis iganes oli veel saatmise ootel edastatakse ühenduse taastamisel ;)",
+    "@settingsScrobblingDisconnectNote": {
+        "description": "Explanation in the disconnect confirmation sheet."
+    },
+    "settingsScrobblingDocs": "Dokumendid: {provider}",
+    "@settingsScrobblingDocs": {
+        "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingAboutWhat": "Kraasimine saadab teabe selle kohta, mida sa kuulad, välisele teenusele, mis koostab andmete põhjal kuulamisajaloo ja statistika. Konto sidumisel saadetakse teenusele parajasti esitatava loo pealkiri, esitaja, album ja loo kestus.",
+    "@settingsScrobblingAboutWhat": {
+        "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+    },
+    "settingsScrobblingAboutQueue": "Sono juba niikuinii salvestab sinu kuulamiste ajaloo sinu nutiseadmesse. Mis tähendab, et võrguühenduse puudumisel ei lähe mitte midagi kaotsi. Kui kraasimise teenus on jälle leitav, siis Sono edastab asjakohased andmed ;)",
+    "@settingsScrobblingAboutQueue": {
+        "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+    },
+    "settingsScrobblingAboutThreshold": "Lugu läheb arvesse, kui oled teda kuulanud neli minutit või tema kestusest poole ära kuulanud (kumb iganes neist varem kätte jõuab). Kirjeldatust varem loo vahetamine tähendab, et lugu jääb kraasimata.",
+    "@settingsScrobblingAboutThreshold": {
+        "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+    },
+    "settingsBackupImportConfirmBody": "Sinu seadistused kirjutatakse üle ja täismahuline muusikafailide otsing käivitub. Alles jäävad meeldimised, lemmikud ja esitusloendid ning varukoopias leiduv lisatakse olemasolevale.",
+    "@settingsBackupImportConfirmBody": {
+        "description": "Explanation in the import confirmation sheet."
+    },
+    "settingsBackupImportDone": "Taastasin {liked, plural, =0{mitte ühtegi meeldimist} =1{1 meeldimise} other{{liked} meeldimist}}, {albums, plural, =0{mitte ühtegi albumit} =1{1 albumi} other{{albums} albumit}}, {artists, plural, =0{mitte ühtegi esitajat} =1{1 esitaja} other{{artists} esitajat}}, {playlists, plural, =0{mitte ühtegi esitusloendit} =1{1 esitusloendi} other{{playlists} esitusloendit}}",
+    "@settingsBackupImportDone": {
+        "description": "Snackbar summarising a successful import.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationDone": "Importisin {liked, plural, =0{mitte ühtegi meeldimist} =1{1 meeldimise} other{{liked} meeldimist}}, {albums, plural, =0{mitte ühtegi albumit} =1{1 albumi} other{{albums} albumit}}, {artists, plural, =0{mitte ühtegi esitajat} =1{1 esitaja} other{{artists} esitajat}}, {playlists, plural, =0{mitte ühtegi esitusloendit} =1{1 esitusloendi} other{{playlists} esitusloendit}}",
+    "@migrationDone": {
+        "description": "Snackbar summarising a successful migration from the old Sono.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
     }
 }

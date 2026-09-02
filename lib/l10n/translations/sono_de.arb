@@ -1766,5 +1766,150 @@
                 "type": "int"
             }
         }
+    },
+    "settingsScrobbling": "Scrobbling",
+    "@settingsScrobbling": {
+        "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
+    },
+    "settingsScrobblingProviders": "Anbieter",
+    "@settingsScrobblingProviders": {
+        "description": "Section label above the list of scrobbling services on the scrobbling subpage."
+    },
+    "settingsScrobblingAddCustom": "Custom Instanz hinzufügen",
+    "@settingsScrobblingAddCustom": {
+        "description": "Button that starts connecting a self hosted scrobbling server."
+    },
+    "settingsScrobblingCustomNote": "Funktioniert mit allen Audioscrobbler-kompatiblen Servern. Ja, sogar GNU FM",
+    "@settingsScrobblingCustomNote": {
+        "description": "Note under the add custom instance button explaining what kind of server can be connected"
+    },
+    "settingsScrobblingAbout": "Über Scrobbling",
+    "@settingsScrobblingAbout": {
+        "description": "Tooltip of the info button in the scrobbling subpage header."
+    },
+    "settingsScrobblingConnectIntro": "Öffnet {provider} in deinem Browser. Bestätige dort den Zugriff und kehre dann zurück, um fortzufahren",
+    "@settingsScrobblingConnectIntro": {
+        "description": "Explanation at the top of the connect sheet. The placeholder is a service name like Last.fm.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingInstanceUrl": "Instanz Adresse",
+    "@settingsScrobblingInstanceUrl": {
+        "description": "Text field for the base address of a self hosted scrobbling server."
+    },
+    "settingsScrobblingOwnKey": "Meinen API-Schlüssel benutzen",
+    "@settingsScrobblingOwnKey": {
+        "description": "Toggle in the connect sheet that swaps the default credentials with the user's own."
+    },
+    "settingsScrobblingApiKey": "API-Schlüssel",
+    "@settingsScrobblingApiKey": {
+        "description": "Text field for the user's own API key."
+    },
+    "settingsScrobblingApiSecret": "API-Secret",
+    "@settingsScrobblingApiSecret": {
+        "description": "Text field for the user's own API secret."
+    },
+    "settingsScrobblingOpenBrowser": "Öffne im Browser",
+    "@settingsScrobblingOpenBrowser": {
+        "description": "Button in the connect sheet that starts the approval flow."
+    },
+    "settingsScrobblingInvalidUrl": "Gebe die vollständige Adresse ein, mit https://",
+    "@settingsScrobblingInvalidUrl": {
+        "description": "Error in the connect sheet when the instance address cannot be parsed."
+    },
+    "settingsScrobblingLinkFailed": "Service konnte nicht erreicht werden. Überprüfe die details und versuche es erneut",
+    "@settingsScrobblingLinkFailed": {
+        "description": "Error in the connect sheet when requesting a token failed."
+    },
+    "settingsScrobblingWaiting": "Warte auf Genehmigung",
+    "@settingsScrobblingWaiting": {
+        "description": "Line on a provider card while the user is approving Sono in their browser."
+    },
+    "settingsScrobblingContinue": "Fortsetzen",
+    "@settingsScrobblingContinue": {
+        "description": "Button on a waiting provider card, pressed after approving in the browser."
+    },
+    "settingsScrobblingCancel": "Abbrechen",
+    "@settingsScrobblingCancel": {
+        "description": "Button on a waiting provider card that abandons the link attempt."
+    },
+    "settingsScrobblingNotApproved": "Noch nicht genehmigt. Schließe den Vorgang im Browser ab und fahre dann fort",
+    "@settingsScrobblingNotApproved": {
+        "description": "Shown when the user presses Continue before approving access. The attempt stays open."
+    },
+    "settingsScrobblingConnectFailed": "Verbindung fehlgeschlagen. Vielleicht erneut versuchen?",
+    "@settingsScrobblingConnectFailed": {
+        "description": "Shown when exchanging the approval for a session failed for any other reason."
+    },
+    "settingsScrobblingLoggedInAs": "Eingeloggt als {username}",
+    "@settingsScrobblingLoggedInAs": {
+        "description": "Subtitle on a linked provider card.",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingScrobble": "Scrobble",
+    "@settingsScrobblingScrobble": {
+        "description": "Toogle inside a linked provider card that turns sending listens on and off."
+    },
+    "settingsScrobblingDisconnect": "Trennen",
+    "@settingsScrobblingDisconnect": {
+        "description": "Button inside a linked provider card that removes/unlinks the account."
+    },
+    "settingsScrobblingReconnect": "Wiederverbinden",
+    "@settingsScrobblingReconnect": {
+        "description": "Button on a provider card whose session was rejected, starts linking again."
+    },
+    "settingsScrobblingSessionExpired": "Session wurde vom Dienst abgelehnt. Stelle die Verbindung erneut her, um weiter zu scrobblen",
+    "@settingsScrobblingSessionExpired": {
+        "description": "Replaces the logged in line when the session key no longer works."
+    },
+    "settingsScrobblingDisconnectTitle": "{provider} trennen?",
+    "@settingsScrobblingDisconnectTitle": {
+        "description": "Title of the conformation sheet before removing a scrobbling account.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingDisconnectNote": "Bereits gesendete Scrobbles bleiben auf deinem Konto. Noch ausstehende werden bei einer erneuten Verbindung möglicherweise erneut gesendet ;)",
+    "@settingsScrobblingDisconnectNote": {
+        "description": "Explanation in the disconnect confirmation sheet."
+    },
+    "settingsScrobblingAboutWhat": "Scrobbling sendet deine gehörten Songs an einen externen Diesnt, welcher daraus eine Hörhistorie und Statistiken erstellt. Beim Verknüpfen eines Kontos werden Title, Künstler, Album und Länge des aktuellen Songs an den Dienst gesendet.",
+    "@settingsScrobblingAboutWhat": {
+        "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+    },
+    "settingsScrobblingAboutQueue": "Sono speichert deine gehörten Songs bereits auf deinem Gerät, sodass offline nichts verloren geht. Sobald der Dienst wieder erreichbar ist, sendet Sono sie automatisch ;)",
+    "@settingsScrobblingAboutQueue": {
+        "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+    },
+    "settingsScrobblingAboutThreshold": "Ein Song zählt als Scrobble, sobald du die Hälfte order vier Minuten gehört hast, je nachdem, was zuerst eintritt. Überspringst du ihn vorher, wird er nicht gescrobbelt.",
+    "@settingsScrobblingAboutThreshold": {
+        "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+    },
+    "settingsScrobblingDocs": "{provider} API-Dokumentation",
+    "@settingsScrobblingDocs": {
+        "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingLinksChecked": "Links zuletzt geprüft am {date}",
+    "@settingsScrobblingLinksChecked": {
+        "description": "Line at the bottom of the scrobbling info sheet. The date is maintained by hand.",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
     }
 }
