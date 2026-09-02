@@ -1801,5 +1801,115 @@
     "settingsScrobblingSessionExpired": "Teenusepakkuja keeldus sessiooni loomisest. Kraasimise jätkamiseks ühenda rakendus uuesti teenusepakkujaga",
     "@settingsScrobblingSessionExpired": {
         "description": "Replaces the logged in line when the session key no longer works."
+    },
+    "settingsAppearanceHomeTint": "Avalehe värvitoon",
+    "@settingsAppearanceHomeTint": {
+        "description": "Row that toggles the coloured tint drawn behind the home header, sampled from the current song's cover."
+    },
+    "settingsAppearanceHomeTintSubtitle": "Värvi avalehe ülaosa hetkel esitamisel loo värvidega",
+    "@settingsAppearanceHomeTintSubtitle": {
+        "description": "Subtitle under the home tint row."
+    },
+    "settingsAppearanceColourFromArtSubtitle": "Värvi kogu pleier hetkel esitamisel loo värvidega",
+    "@settingsAppearanceColourFromArtSubtitle": {
+        "description": "Subtitle under the colour from album art row."
+    },
+    "normalisationSectionMode": "Režiim",
+    "@normalisationSectionMode": {
+        "description": "Section label above the normalisation mode options."
+    },
+    "normalisationSectionTuning": "Häälestus",
+    "@normalisationSectionTuning": {
+        "description": "Section label above the preamp and clipping options."
+    },
+    "settingsEqSpeed": "Kiirus",
+    "@settingsEqSpeed": {
+        "description": "Slider controlling playback rate without changing pitch."
+    },
+    "settingsEqPitch": "Helikõrgus",
+    "@settingsEqPitch": {
+        "description": "Slider controlling pitch without changing playback rate."
+    },
+    "settingsEqValueDb": "{value} dB",
+    "@settingsEqValueDb": {
+        "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsDiscordNote": "Discordi olekuteade toimib liideseta sessiooni alusel. Ühenduse katkestamisel lõppeb ka teate kuvamine ja serverisse ei seadistata mitte midagi.",
+    "@settingsDiscordNote": {
+        "description": "Note explaining how the Discord connection works and that no data is kept remotely."
+    },
+    "settingsDiscordPreview": "Eelvaade",
+    "@settingsDiscordPreview": {
+        "description": "Heading of the card showing how the presence will look. Rendered in uppercase."
+    },
+    "settingsScrobblingDisconnectNote": "Olemasolevad kraasmed jäävad salvestatuks kasutajakonto juures. Mis iganes oli veel saatmise ootel edastatakse ühenduse taastamisel ;)",
+    "@settingsScrobblingDisconnectNote": {
+        "description": "Explanation in the disconnect confirmation sheet."
+    },
+    "settingsScrobblingDocs": "Dokumendid: {provider}",
+    "@settingsScrobblingDocs": {
+        "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingAboutWhat": "Kraasimine saadab teabe selle kohta, mida sa kuulad, välisele teenusele, mis koostab andmete põhjal kuulamisajaloo ja statistika. Konto sidumisel saadetakse teenusele parajasti esitatava loo pealkiri, esitaja, album ja loo kestus.",
+    "@settingsScrobblingAboutWhat": {
+        "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+    },
+    "settingsScrobblingAboutQueue": "Sono juba niikuinii salvestab sinu kuulamiste ajaloo sinu nutiseadmesse. Mis tähendab, et võrguühenduse puudumisel ei lähe mitte midagi kaotsi. Kui kraasimise teenus on jälle leitav, siis Sono edastab asjakohased andmed ;)",
+    "@settingsScrobblingAboutQueue": {
+        "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+    },
+    "settingsScrobblingAboutThreshold": "Lugu läheb arvesse, kui oled teda kuulanud neli minutit või tema kestusest poole ära kuulanud (kumb iganes neist varem kätte jõuab). Kirjeldatust varem loo vahetamine tähendab, et lugu jääb kraasimata.",
+    "@settingsScrobblingAboutThreshold": {
+        "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+    },
+    "settingsBackupImportConfirmBody": "Sinu seadistused kirjutatakse üle ja täismahuline muusikafailide otsing käivitub. Alles jäävad meeldimised, lemmikud ja esitusloendid ning varukoopias leiduv lisatakse olemasolevale.",
+    "@settingsBackupImportConfirmBody": {
+        "description": "Explanation in the import confirmation sheet."
+    },
+    "settingsBackupImportDone": "Taastasin {liked, plural, =0{mitte ühtegi meeldimist} =1{1 meeldimise} other{{liked} meeldimist}}, {albums, plural, =0{mitte ühtegi albumit} =1{1 albumi} other{{albums} albumit}}, {artists, plural, =0{mitte ühtegi esitajat} =1{1 esitaja} other{{artists} esitajat}}, {playlists, plural, =0{mitte ühtegi esitusloendit} =1{1 esitusloendi} other{{playlists} esitusloendit}}",
+    "@settingsBackupImportDone": {
+        "description": "Snackbar summarising a successful import.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
+    },
+    "migrationDone": "Importisin {liked, plural, =0{mitte ühtegi meeldimist} =1{1 meeldimise} other{{liked} meeldimist}}, {albums, plural, =0{mitte ühtegi albumit} =1{1 albumi} other{{albums} albumit}}, {artists, plural, =0{mitte ühtegi esitajat} =1{1 esitaja} other{{artists} esitajat}}, {playlists, plural, =0{mitte ühtegi esitusloendit} =1{1 esitusloendi} other{{playlists} esitusloendit}}",
+    "@migrationDone": {
+        "description": "Snackbar summarising a successful migration from the old Sono.",
+        "placeholders": {
+            "liked": {
+                "type": "int"
+            },
+            "albums": {
+                "type": "int"
+            },
+            "artists": {
+                "type": "int"
+            },
+            "playlists": {
+                "type": "int"
+            }
+        }
     }
 }
