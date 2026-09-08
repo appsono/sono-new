@@ -1495,5 +1495,14 @@
     "settingsAppearanceHomeTintSubtitle": "Teintez le haut de l'écran d'accueil aux couleurs de la chanson en cours",
     "@settingsAppearanceHomeTintSubtitle": {
         "description": "Subtitle under the home tint row."
+    },
+    "homeSectionRecentlyPlayed": "Écouté récemment",
+    "artistDiscographyEmpty": "Aucune musique de cet artiste :(",
+    "@artistDiscographyEmpty": {
+        "description": "Shown on the discography page when the artist has no releases at all."
+    },
+    "artistDiscographyNoMatches": "Rien ne correspond à ces filtres :/",
+    "@artistDiscographyNoMatches": {
+        "description": "Shown on the discography page when the selected filter chips leave no releases."
     }
 }

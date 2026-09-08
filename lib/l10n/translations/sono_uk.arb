@@ -1610,7 +1610,7 @@
     "@sleepSubtitle": {
         "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
     },
-    "sleepMinutes": "{count, plural, =1{1 хвилина} one{{count} хвилина} few{{count} хвилини} many{{count} хвилин} other{{count} хвилин}}",
+    "sleepMinutes": "{count, plural, one{{count} хвилина} few{{count} хвилини} many{{count} хвилин} other{{count} хвилин}}",
     "@sleepMinutes": {
         "description": "Preset duration option in the sleep timer sheet.",
         "placeholders": {
