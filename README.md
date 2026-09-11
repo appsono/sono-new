@@ -3,8 +3,7 @@
 # Sono
 
 <p align="center">
-Welcome to this repository. It contains the full source code of the app.<br>
-The app is new and currently in a very early stage.
+Welcome to this repository. It contains the full source code of the app.<br
 </p>
 
 <p align="center">
@@ -18,8 +17,9 @@ Sono is yet another local music player, it's cross platform and NOT material
 design. Yes, I took inspiration from Material Design for the Fullscreen Player,
 but I just like extracting colors from stuff and make them bouncy :]
 
-It is built with Flutter and and has all the features you need.
-Not yet, but soon :D
+It is built with Flutter and already does most of what you‘d expect: gapless
+playback, EQ, Replay Gain, sleep timer, scrobbling and backups and more!!
+Not everything yet, but soon :D
 
 Good news: Sono even runs on a Samsung Galaxy Tab A6 from 2016!! :D
 
