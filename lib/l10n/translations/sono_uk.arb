@@ -1766,5 +1766,150 @@
                 "type": "int"
             }
         }
+    },
+    "settingsScrobbling": "Скробблінґ",
+    "@settingsScrobbling": {
+        "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
+    },
+    "settingsScrobblingProviders": "Постачальники",
+    "@settingsScrobblingProviders": {
+        "description": "Section label above the list of scrobbling services on the scrobbling subpage."
+    },
+    "settingsScrobblingAddCustom": "Додати власний екземпляр",
+    "@settingsScrobblingAddCustom": {
+        "description": "Button that starts connecting a self hosted scrobbling server."
+    },
+    "settingsScrobblingCustomNote": "Працює з будь-яким сервером, сумісним з Audioscrobbler. Так, навіть із GNU FM",
+    "@settingsScrobblingCustomNote": {
+        "description": "Note under the add custom instance button explaining what kind of server can be connected"
+    },
+    "settingsScrobblingAbout": "Про скробблінґ",
+    "@settingsScrobblingAbout": {
+        "description": "Tooltip of the info button in the scrobbling subpage header."
+    },
+    "settingsScrobblingConnectIntro": "Відкриває {provider} у вашому браузері. Схваліть доступ там, а потім поверніться сюди, щоби продовжити",
+    "@settingsScrobblingConnectIntro": {
+        "description": "Explanation at the top of the connect sheet. The placeholder is a service name like Last.fm.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingInstanceUrl": "Адреса екземпляра",
+    "@settingsScrobblingInstanceUrl": {
+        "description": "Text field for the base address of a self hosted scrobbling server."
+    },
+    "settingsScrobblingOwnKey": "Використовувати власний ключ API",
+    "@settingsScrobblingOwnKey": {
+        "description": "Toggle in the connect sheet that swaps the default credentials with the user's own."
+    },
+    "settingsScrobblingApiKey": "Ключ API",
+    "@settingsScrobblingApiKey": {
+        "description": "Text field for the user's own API key."
+    },
+    "settingsScrobblingApiSecret": "Секрет API",
+    "@settingsScrobblingApiSecret": {
+        "description": "Text field for the user's own API secret."
+    },
+    "settingsScrobblingOpenBrowser": "Відкрити в браузері",
+    "@settingsScrobblingOpenBrowser": {
+        "description": "Button in the connect sheet that starts the approval flow."
+    },
+    "settingsScrobblingInvalidUrl": "Введіть повну адресу, включаючи https://",
+    "@settingsScrobblingInvalidUrl": {
+        "description": "Error in the connect sheet when the instance address cannot be parsed."
+    },
+    "settingsScrobblingLinkFailed": "Не вдалося зв’язатися із сервісом, перевірте дані та спробуйте ще раз",
+    "@settingsScrobblingLinkFailed": {
+        "description": "Error in the connect sheet when requesting a token failed."
+    },
+    "settingsScrobblingWaiting": "Очікування на схвалення",
+    "@settingsScrobblingWaiting": {
+        "description": "Line on a provider card while the user is approving Sono in their browser."
+    },
+    "settingsScrobblingContinue": "Продовжити",
+    "@settingsScrobblingContinue": {
+        "description": "Button on a waiting provider card, pressed after approving in the browser."
+    },
+    "settingsScrobblingCancel": "Скасувати",
+    "@settingsScrobblingCancel": {
+        "description": "Button on a waiting provider card that abandons the link attempt."
+    },
+    "settingsScrobblingNotApproved": "Ще не затверджено. Завершіть у своєму браузері, а потім продовжуйте",
+    "@settingsScrobblingNotApproved": {
+        "description": "Shown when the user presses Continue before approving access. The attempt stays open."
+    },
+    "settingsScrobblingConnectFailed": "Помилка з'єднання, можливо, спробуйте ще раз :/",
+    "@settingsScrobblingConnectFailed": {
+        "description": "Shown when exchanging the approval for a session failed for any other reason."
+    },
+    "settingsScrobblingLoggedInAs": "Ви ввійшли як {username}",
+    "@settingsScrobblingLoggedInAs": {
+        "description": "Subtitle on a linked provider card.",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingScrobble": "Скроббл",
+    "@settingsScrobblingScrobble": {
+        "description": "Toogle inside a linked provider card that turns sending listens on and off."
+    },
+    "settingsScrobblingDisconnect": "Від’єднатися",
+    "@settingsScrobblingDisconnect": {
+        "description": "Button inside a linked provider card that removes/unlinks the account."
+    },
+    "settingsScrobblingReconnect": "Перепід’єднатися",
+    "@settingsScrobblingReconnect": {
+        "description": "Button on a provider card whose session was rejected, starts linking again."
+    },
+    "settingsScrobblingSessionExpired": "Сеанс відхилено сервісом. Перепід’єднайтеся, щоби продовжити скробблінґ",
+    "@settingsScrobblingSessionExpired": {
+        "description": "Replaces the logged in line when the session key no longer works."
+    },
+    "settingsScrobblingDisconnectTitle": "Від’єднати {provider}?",
+    "@settingsScrobblingDisconnectTitle": {
+        "description": "Title of the conformation sheet before removing a scrobbling account.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingDisconnectNote": "Наявні скроббли залишаються в обліковому записі. Усе, що залишилося в черзі, може бути надіслано повторно після відновлення з’єднання ;)",
+    "@settingsScrobblingDisconnectNote": {
+        "description": "Explanation in the disconnect confirmation sheet."
+    },
+    "settingsScrobblingAboutWhat": "Скробблінґ надсилає інформацію про те, що ви слухаєте, зовнішньому сервісу, який на основі цих даних формує історію та статистику. Під час прив’язки облікового запису назва, виконавець, альбом і тривалість поточної пісні будуть надіслані сервісу.",
+    "@settingsScrobblingAboutWhat": {
+        "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+    },
+    "settingsScrobblingAboutQueue": "Sono вже записує ваші прослуховування на вашому пристрої, а це означає, що нічого не буде втрачено, поки ви поза мережею. Sono надішле їх, як тільки знову з’явиться зв’язок із сервісом ;)",
+    "@settingsScrobblingAboutQueue": {
+        "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+    },
+    "settingsScrobblingAboutThreshold": "Пісня зараховується, як тільки ви прослухали її половину або чотири хвилини, залежно від того, що настане раніше. Якщо ви пропустите її раніше, пісня не буде заскробблена.",
+    "@settingsScrobblingAboutThreshold": {
+        "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+    },
+    "settingsScrobblingDocs": "Документація {provider}",
+    "@settingsScrobblingDocs": {
+        "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingLinksChecked": "Посилання востаннє перевірено {date}",
+    "@settingsScrobblingLinksChecked": {
+        "description": "Line at the bottom of the scrobbling info sheet. The date is maintained by hand.",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
     }
 }
