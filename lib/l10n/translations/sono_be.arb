@@ -522,11 +522,11 @@
     "@settingsPageTitle": {
         "description": "Title shown in the header of the settings root page."
     },
-    "settingsSearchTooltip": "Налады пошуку",
+    "settingsSearchTooltip": "Пошук праз налады",
     "@settingsSearchTooltip": {
         "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
     },
-    "settingsSearchHint": "Налады пошуку",
+    "settingsSearchHint": "Пошук праз налады",
     "@settingsSearchHint": {
         "description": "Placeholder inside the search field at the top of the settings root page."
     },
