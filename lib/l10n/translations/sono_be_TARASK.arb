@@ -1864,5 +1864,18 @@
     "settingsScrobblingReconnect": "Перападлучыцца",
     "@settingsScrobblingReconnect": {
         "description": "Button on a provider card whose session was rejected, starts linking again."
+    },
+    "settingsScrobblingSessionExpired": "Сэанс быў адхілены сэрвісам. Злучыцеся ізноў, каб працягнуць скроблінґ",
+    "@settingsScrobblingSessionExpired": {
+        "description": "Replaces the logged in line when the session key no longer works."
+    },
+    "settingsScrobblingDisconnectTitle": "Адлучыць {provider}?",
+    "@settingsScrobblingDisconnectTitle": {
+        "description": "Title of the conformation sheet before removing a scrobbling account.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
     }
 }
