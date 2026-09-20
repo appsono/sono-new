@@ -1877,5 +1877,17 @@
                 "type": "String"
             }
         }
+    },
+    "settingsScrobblingDisconnectNote": "Існуючыя скробблы застануцца на вашым уліковым запісу. Усё, што яшчэ ў чарзе, можа быць даслана пры перападлучэньні ;)",
+    "@settingsScrobblingDisconnectNote": {
+        "description": "Explanation in the disconnect confirmation sheet."
+    },
+    "settingsScrobblingAboutWhat": "Скробблінґ дасылае тое, што вы слухаеце, на вонкавы сэрвіс, які стварае з гэтага гісторыю і статыстыку. Пры падлучэньні ўліковага запісу сэрвісу будуць дасланыя назва, выканаўца, альбом і даўжыня бягучае песьні.",
+    "@settingsScrobblingAboutWhat": {
+        "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+    },
+    "settingsScrobblingAboutQueue": "Sono ўжо запісвае праслухоўваньні ў вас на прыладзе, гэта значыць, што па-за сеткаю вы нічога не губляеце. Sono дасылае іх як толькі зноў дасягае сеткі ;)",
+    "@settingsScrobblingAboutQueue": {
+        "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
     }
 }
