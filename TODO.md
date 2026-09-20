@@ -64,8 +64,11 @@
   - [ ] fetch .lrc files from local files
   - [ ] allow searching for synced lyrics
 - [ ] Theming:
-  - [ ] allow editing every single app theme token
+  - [ ] allow editing every single app theme  token
   - [ ] export/import custom theme
+- [ ] Library:
+  - [ ] Redesign Folder Exclusion to be interactive
+  - [ ] Allow Exclusion of individual songs
 
 ## Improvements (pre-UI)
 
