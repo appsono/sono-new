@@ -1840,7 +1840,7 @@
     "@settingsScrobblingNotApproved": {
         "description": "Shown when the user presses Continue before approving access. The attempt stays open."
     },
-    "settingsScrobblingConnectFailed": "Ня ўдалося злучыцца, мабыць паспрабаваць яшчэ раз :/",
+    "settingsScrobblingConnectFailed": "Ня ўдалося злучыцца, мабыць, паспрабаваць яшчэ раз :/",
     "@settingsScrobblingConnectFailed": {
         "description": "Shown when exchanging the approval for a session failed for any other reason."
     },
@@ -1865,7 +1865,7 @@
     "@settingsScrobblingReconnect": {
         "description": "Button on a provider card whose session was rejected, starts linking again."
     },
-    "settingsScrobblingSessionExpired": "Сэанс быў адхілены сэрвісам. Злучыцеся ізноў, каб працягнуць скроблінґ",
+    "settingsScrobblingSessionExpired": "Сэанс быў адхілены сэрвісам. Злучыцеся ізноў, каб працягнуць скробблінґ",
     "@settingsScrobblingSessionExpired": {
         "description": "Replaces the logged in line when the session key no longer works."
     },
@@ -1889,5 +1889,27 @@
     "settingsScrobblingAboutQueue": "Sono ўжо запісвае праслухоўваньні ў вас на прыладзе, гэта значыць, што па-за сеткаю вы нічога не губляеце. Sono дасылае іх як толькі зноў дасягае сеткі ;)",
     "@settingsScrobblingAboutQueue": {
         "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+    },
+    "settingsScrobblingAboutThreshold": "Песьня залічаецца, калі вы праслухалі яе напалову, або чатыры хвіліны, што настане першым. Калі вы прапусьціце песьню раней, яна заскробблена ня будзе.",
+    "@settingsScrobblingAboutThreshold": {
+        "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+    },
+    "settingsScrobblingDocs": "Дакумэнтацыя {provider}",
+    "@settingsScrobblingDocs": {
+        "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingLinksChecked": "Апошняя праверка спасылак {date}",
+    "@settingsScrobblingLinksChecked": {
+        "description": "Line at the bottom of the scrobbling info sheet. The date is maintained by hand.",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
     }
 }
