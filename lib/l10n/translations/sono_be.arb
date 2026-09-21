@@ -522,11 +522,11 @@
     "@settingsPageTitle": {
         "description": "Title shown in the header of the settings root page."
     },
-    "settingsSearchTooltip": "Налады пошуку",
+    "settingsSearchTooltip": "Пошук праз налады",
     "@settingsSearchTooltip": {
         "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
     },
-    "settingsSearchHint": "Налады пошуку",
+    "settingsSearchHint": "Пошук праз налады",
     "@settingsSearchHint": {
         "description": "Placeholder inside the search field at the top of the settings root page."
     },
@@ -1766,5 +1766,150 @@
     "sleepCancelled": "Таймер сну скасаваны",
     "@sleepCancelled": {
         "description": "Confirmation shown after a running sleep timer is cancelled."
+    },
+    "settingsScrobbling": "Скробблінг",
+    "@settingsScrobbling": {
+        "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
+    },
+    "settingsScrobblingProviders": "Пастаўшчыкі",
+    "@settingsScrobblingProviders": {
+        "description": "Section label above the list of scrobbling services on the scrobbling subpage."
+    },
+    "settingsScrobblingAddCustom": "Дадаць адмысловую інстанцыю",
+    "@settingsScrobblingAddCustom": {
+        "description": "Button that starts connecting a self hosted scrobbling server."
+    },
+    "settingsScrobblingCustomNote": "Працуе з любым серверам, сумясцімым з Audioscrobbler. Так, нават з GNU FM",
+    "@settingsScrobblingCustomNote": {
+        "description": "Note under the add custom instance button explaining what kind of server can be connected"
+    },
+    "settingsScrobblingAbout": "Пра скробблінг",
+    "@settingsScrobblingAbout": {
+        "description": "Tooltip of the info button in the scrobbling subpage header."
+    },
+    "settingsScrobblingConnectIntro": "Адкрывае {provider} у вашым браўзеры. Дайце доступ там, затым вярніцеся сюды і працягніце",
+    "@settingsScrobblingConnectIntro": {
+        "description": "Explanation at the top of the connect sheet. The placeholder is a service name like Last.fm.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingInstanceUrl": "Адрас інстанцыі",
+    "@settingsScrobblingInstanceUrl": {
+        "description": "Text field for the base address of a self hosted scrobbling server."
+    },
+    "settingsScrobblingOwnKey": "Скарыстацца маім ключом API",
+    "@settingsScrobblingOwnKey": {
+        "description": "Toggle in the connect sheet that swaps the default credentials with the user's own."
+    },
+    "settingsScrobblingApiKey": "Ключ API",
+    "@settingsScrobblingApiKey": {
+        "description": "Text field for the user's own API key."
+    },
+    "settingsScrobblingApiSecret": "Сакрэт API",
+    "@settingsScrobblingApiSecret": {
+        "description": "Text field for the user's own API secret."
+    },
+    "settingsScrobblingOpenBrowser": "Адкрыць у браўзеры",
+    "@settingsScrobblingOpenBrowser": {
+        "description": "Button in the connect sheet that starts the approval flow."
+    },
+    "settingsScrobblingInvalidUrl": "Увядзіце поўны адрас, разам з https://",
+    "@settingsScrobblingInvalidUrl": {
+        "description": "Error in the connect sheet when the instance address cannot be parsed."
+    },
+    "settingsScrobblingLinkFailed": "Не ўдалося дасягнуць сервера, праглядзіце падрабязнасці і паспрабуйце яшчэ раз",
+    "@settingsScrobblingLinkFailed": {
+        "description": "Error in the connect sheet when requesting a token failed."
+    },
+    "settingsScrobblingWaiting": "Чаканне ўхвалення",
+    "@settingsScrobblingWaiting": {
+        "description": "Line on a provider card while the user is approving Sono in their browser."
+    },
+    "settingsScrobblingContinue": "Працягнуць",
+    "@settingsScrobblingContinue": {
+        "description": "Button on a waiting provider card, pressed after approving in the browser."
+    },
+    "settingsScrobblingCancel": "Скасаваць",
+    "@settingsScrobblingCancel": {
+        "description": "Button on a waiting provider card that abandons the link attempt."
+    },
+    "settingsScrobblingNotApproved": "Яшчэ не было пацверджана. Завяршыце працэс у браўзеры, затым працягніце",
+    "@settingsScrobblingNotApproved": {
+        "description": "Shown when the user presses Continue before approving access. The attempt stays open."
+    },
+    "settingsScrobblingConnectFailed": "Не ўдалося злучыцца, мабыць, паспрабаваць яшчэ раз :/",
+    "@settingsScrobblingConnectFailed": {
+        "description": "Shown when exchanging the approval for a session failed for any other reason."
+    },
+    "settingsScrobblingLoggedInAs": "Вы ўвайшлі як {username}",
+    "@settingsScrobblingLoggedInAs": {
+        "description": "Subtitle on a linked provider card.",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingScrobble": "Скроббл",
+    "@settingsScrobblingScrobble": {
+        "description": "Toogle inside a linked provider card that turns sending listens on and off."
+    },
+    "settingsScrobblingDisconnect": "Адлучыцца",
+    "@settingsScrobblingDisconnect": {
+        "description": "Button inside a linked provider card that removes/unlinks the account."
+    },
+    "settingsScrobblingReconnect": "Перападлучыцца",
+    "@settingsScrobblingReconnect": {
+        "description": "Button on a provider card whose session was rejected, starts linking again."
+    },
+    "settingsScrobblingSessionExpired": "Сеанс быў адхілены сэрвісам. Злучыцеся ізноў, каб працягнуць скробблінг",
+    "@settingsScrobblingSessionExpired": {
+        "description": "Replaces the logged in line when the session key no longer works."
+    },
+    "settingsScrobblingDisconnectTitle": "Адлучыць {provider}?",
+    "@settingsScrobblingDisconnectTitle": {
+        "description": "Title of the conformation sheet before removing a scrobbling account.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingDisconnectNote": "Існуючыя скробблы застануцца на вашым уліковым запісу. Усё, што яшчэ ў чарзе, можа быць адпраўлена пры перападлучэнні ;)",
+    "@settingsScrobblingDisconnectNote": {
+        "description": "Explanation in the disconnect confirmation sheet."
+    },
+    "settingsScrobblingAboutWhat": "Скробблінг адпраўляе тое, што вы слухаеце, на вонкавы сэрвіс, які стварае з гэтага гісторыю і статыстыку. Пры падлучэнні ўліковага запісу сэрвісу будуць адпраўленыя назва, выканаўца, альбом і даўжыня бягучай песні.",
+    "@settingsScrobblingAboutWhat": {
+        "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+    },
+    "settingsScrobblingAboutQueue": "Sono ўжо запісвае праслухоўванні ў вас на прыладзе, гэта значыць, што па-за сеткай вы нічога не губляеце. Sono адпраўляе іх як толькі зноў дасягае сеткі ;)",
+    "@settingsScrobblingAboutQueue": {
+        "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+    },
+    "settingsScrobblingAboutThreshold": "Песня залічаецца, калі вы праслухалі яе напалову, або чатыры хвіліны, што настане першым. Калі вы прапусціце песню раней, яна заскробблена не будзе.",
+    "@settingsScrobblingAboutThreshold": {
+        "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+    },
+    "settingsScrobblingDocs": "Дакументацыя {provider}",
+    "@settingsScrobblingDocs": {
+        "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingLinksChecked": "Апошняя праверка спасылак {date}",
+    "@settingsScrobblingLinksChecked": {
+        "description": "Line at the bottom of the scrobbling info sheet. The date is maintained by hand.",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
     }
 }
