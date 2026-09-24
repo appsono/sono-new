@@ -3,7 +3,8 @@
 # Sono
 
 <p align="center">
-Welcome to this repository. It contains the full source code of the app.<br
+Welcome to this repository. It contains the full source code of the app.<br>
+The app is in active development.
 </p>
 
 <p align="center">
