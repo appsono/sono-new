@@ -108,6 +108,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
   Ukrainian (100%)
 
+## [0.12.1+15] - 2026-09-30
+
+### Fixed
+
+- Fixed songs not playing on Android 10
+
 ## [0.12.0+14] - 2026-08-09
 
 ### Added
@@ -1251,7 +1257,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.12.0+14...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.12.1+15...HEAD
+[0.12.1+15]: https://github.com/appsono/sono-new/compare/v0.12.0+14...v0.12.1+15
 [0.12.0+14]: https://github.com/appsono/sono-new/compare/v0.11.1+13...v0.12.0+14
 [0.11.1+13]: https://github.com/appsono/sono-new/compare/v0.11.0+12...v0.11.1+13
 [0.11.0+12]: https://github.com/appsono/sono-new/compare/v0.10.1+11...v0.11.0+12
