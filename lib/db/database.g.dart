@@ -1817,6 +1817,277 @@ class LyricsCacheCompanion extends UpdateCompanion<LyricsCacheData> {
   }
 }
 
+class $DiscordCoversTable extends DiscordCovers
+    with TableInfo<$DiscordCoversTable, DiscordCover> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DiscordCoversTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _contentKeyMeta = const VerificationMeta(
+    'contentKey',
+  );
+  @override
+  late final GeneratedColumn<String> contentKey = GeneratedColumn<String>(
+    'content_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _proxyUrlMeta = const VerificationMeta(
+    'proxyUrl',
+  );
+  @override
+  late final GeneratedColumn<String> proxyUrl = GeneratedColumn<String>(
+    'proxy_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _storedAtMeta = const VerificationMeta(
+    'storedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> storedAt = GeneratedColumn<DateTime>(
+    'stored_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [contentKey, proxyUrl, storedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'discord_covers';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DiscordCover> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('content_key')) {
+      context.handle(
+        _contentKeyMeta,
+        contentKey.isAcceptableOrUnknown(data['content_key']!, _contentKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentKeyMeta);
+    }
+    if (data.containsKey('proxy_url')) {
+      context.handle(
+        _proxyUrlMeta,
+        proxyUrl.isAcceptableOrUnknown(data['proxy_url']!, _proxyUrlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_proxyUrlMeta);
+    }
+    if (data.containsKey('stored_at')) {
+      context.handle(
+        _storedAtMeta,
+        storedAt.isAcceptableOrUnknown(data['stored_at']!, _storedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_storedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {contentKey};
+  @override
+  DiscordCover map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DiscordCover(
+      contentKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_key'],
+      )!,
+      proxyUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}proxy_url'],
+      )!,
+      storedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}stored_at'],
+      )!,
+    );
+  }
+
+  @override
+  $DiscordCoversTable createAlias(String alias) {
+    return $DiscordCoversTable(attachedDatabase, alias);
+  }
+}
+
+class DiscordCover extends DataClass implements Insertable<DiscordCover> {
+  final String contentKey;
+  final String proxyUrl;
+  final DateTime storedAt;
+  const DiscordCover({
+    required this.contentKey,
+    required this.proxyUrl,
+    required this.storedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['content_key'] = Variable<String>(contentKey);
+    map['proxy_url'] = Variable<String>(proxyUrl);
+    map['stored_at'] = Variable<DateTime>(storedAt);
+    return map;
+  }
+
+  DiscordCoversCompanion toCompanion(bool nullToAbsent) {
+    return DiscordCoversCompanion(
+      contentKey: Value(contentKey),
+      proxyUrl: Value(proxyUrl),
+      storedAt: Value(storedAt),
+    );
+  }
+
+  factory DiscordCover.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DiscordCover(
+      contentKey: serializer.fromJson<String>(json['contentKey']),
+      proxyUrl: serializer.fromJson<String>(json['proxyUrl']),
+      storedAt: serializer.fromJson<DateTime>(json['storedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'contentKey': serializer.toJson<String>(contentKey),
+      'proxyUrl': serializer.toJson<String>(proxyUrl),
+      'storedAt': serializer.toJson<DateTime>(storedAt),
+    };
+  }
+
+  DiscordCover copyWith({
+    String? contentKey,
+    String? proxyUrl,
+    DateTime? storedAt,
+  }) => DiscordCover(
+    contentKey: contentKey ?? this.contentKey,
+    proxyUrl: proxyUrl ?? this.proxyUrl,
+    storedAt: storedAt ?? this.storedAt,
+  );
+  DiscordCover copyWithCompanion(DiscordCoversCompanion data) {
+    return DiscordCover(
+      contentKey: data.contentKey.present
+          ? data.contentKey.value
+          : this.contentKey,
+      proxyUrl: data.proxyUrl.present ? data.proxyUrl.value : this.proxyUrl,
+      storedAt: data.storedAt.present ? data.storedAt.value : this.storedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DiscordCover(')
+          ..write('contentKey: $contentKey, ')
+          ..write('proxyUrl: $proxyUrl, ')
+          ..write('storedAt: $storedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(contentKey, proxyUrl, storedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DiscordCover &&
+          other.contentKey == this.contentKey &&
+          other.proxyUrl == this.proxyUrl &&
+          other.storedAt == this.storedAt);
+}
+
+class DiscordCoversCompanion extends UpdateCompanion<DiscordCover> {
+  final Value<String> contentKey;
+  final Value<String> proxyUrl;
+  final Value<DateTime> storedAt;
+  final Value<int> rowid;
+  const DiscordCoversCompanion({
+    this.contentKey = const Value.absent(),
+    this.proxyUrl = const Value.absent(),
+    this.storedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DiscordCoversCompanion.insert({
+    required String contentKey,
+    required String proxyUrl,
+    required DateTime storedAt,
+    this.rowid = const Value.absent(),
+  }) : contentKey = Value(contentKey),
+       proxyUrl = Value(proxyUrl),
+       storedAt = Value(storedAt);
+  static Insertable<DiscordCover> custom({
+    Expression<String>? contentKey,
+    Expression<String>? proxyUrl,
+    Expression<DateTime>? storedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (contentKey != null) 'content_key': contentKey,
+      if (proxyUrl != null) 'proxy_url': proxyUrl,
+      if (storedAt != null) 'stored_at': storedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DiscordCoversCompanion copyWith({
+    Value<String>? contentKey,
+    Value<String>? proxyUrl,
+    Value<DateTime>? storedAt,
+    Value<int>? rowid,
+  }) {
+    return DiscordCoversCompanion(
+      contentKey: contentKey ?? this.contentKey,
+      proxyUrl: proxyUrl ?? this.proxyUrl,
+      storedAt: storedAt ?? this.storedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (contentKey.present) {
+      map['content_key'] = Variable<String>(contentKey.value);
+    }
+    if (proxyUrl.present) {
+      map['proxy_url'] = Variable<String>(proxyUrl.value);
+    }
+    if (storedAt.present) {
+      map['stored_at'] = Variable<DateTime>(storedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DiscordCoversCompanion(')
+          ..write('contentKey: $contentKey, ')
+          ..write('proxyUrl: $proxyUrl, ')
+          ..write('storedAt: $storedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -4924,6 +5195,7 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
   late final $AlbumsTable albums = $AlbumsTable(this);
   late final $SongsTable songs = $SongsTable(this);
   late final $LyricsCacheTable lyricsCache = $LyricsCacheTable(this);
+  late final $DiscordCoversTable discordCovers = $DiscordCoversTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
   late final $ProfilesTable profiles = $ProfilesTable(this);
   late final $PlaylistsTable playlists = $PlaylistsTable(this);
@@ -4953,6 +5225,7 @@ abstract class _$SonoDatabase extends GeneratedDatabase {
     albums,
     songs,
     lyricsCache,
+    discordCovers,
     settings,
     profiles,
     playlists,
@@ -7141,6 +7414,170 @@ typedef $$LyricsCacheTableProcessedTableManager =
       (LyricsCacheData, $$LyricsCacheTableReferences),
       LyricsCacheData,
       PrefetchHooks Function({bool songId})
+    >;
+typedef $$DiscordCoversTableCreateCompanionBuilder =
+    DiscordCoversCompanion Function({
+      required String contentKey,
+      required String proxyUrl,
+      required DateTime storedAt,
+      Value<int> rowid,
+    });
+typedef $$DiscordCoversTableUpdateCompanionBuilder =
+    DiscordCoversCompanion Function({
+      Value<String> contentKey,
+      Value<String> proxyUrl,
+      Value<DateTime> storedAt,
+      Value<int> rowid,
+    });
+
+class $$DiscordCoversTableFilterComposer
+    extends Composer<_$SonoDatabase, $DiscordCoversTable> {
+  $$DiscordCoversTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get contentKey => $composableBuilder(
+    column: $table.contentKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get proxyUrl => $composableBuilder(
+    column: $table.proxyUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get storedAt => $composableBuilder(
+    column: $table.storedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DiscordCoversTableOrderingComposer
+    extends Composer<_$SonoDatabase, $DiscordCoversTable> {
+  $$DiscordCoversTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get contentKey => $composableBuilder(
+    column: $table.contentKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get proxyUrl => $composableBuilder(
+    column: $table.proxyUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get storedAt => $composableBuilder(
+    column: $table.storedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DiscordCoversTableAnnotationComposer
+    extends Composer<_$SonoDatabase, $DiscordCoversTable> {
+  $$DiscordCoversTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get contentKey => $composableBuilder(
+    column: $table.contentKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get proxyUrl =>
+      $composableBuilder(column: $table.proxyUrl, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get storedAt =>
+      $composableBuilder(column: $table.storedAt, builder: (column) => column);
+}
+
+class $$DiscordCoversTableTableManager
+    extends
+        RootTableManager<
+          _$SonoDatabase,
+          $DiscordCoversTable,
+          DiscordCover,
+          $$DiscordCoversTableFilterComposer,
+          $$DiscordCoversTableOrderingComposer,
+          $$DiscordCoversTableAnnotationComposer,
+          $$DiscordCoversTableCreateCompanionBuilder,
+          $$DiscordCoversTableUpdateCompanionBuilder,
+          (
+            DiscordCover,
+            BaseReferences<_$SonoDatabase, $DiscordCoversTable, DiscordCover>,
+          ),
+          DiscordCover,
+          PrefetchHooks Function()
+        > {
+  $$DiscordCoversTableTableManager(_$SonoDatabase db, $DiscordCoversTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DiscordCoversTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DiscordCoversTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DiscordCoversTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> contentKey = const Value.absent(),
+                Value<String> proxyUrl = const Value.absent(),
+                Value<DateTime> storedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DiscordCoversCompanion(
+                contentKey: contentKey,
+                proxyUrl: proxyUrl,
+                storedAt: storedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String contentKey,
+                required String proxyUrl,
+                required DateTime storedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => DiscordCoversCompanion.insert(
+                contentKey: contentKey,
+                proxyUrl: proxyUrl,
+                storedAt: storedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DiscordCoversTableProcessedTableManager =
+    ProcessedTableManager<
+      _$SonoDatabase,
+      $DiscordCoversTable,
+      DiscordCover,
+      $$DiscordCoversTableFilterComposer,
+      $$DiscordCoversTableOrderingComposer,
+      $$DiscordCoversTableAnnotationComposer,
+      $$DiscordCoversTableCreateCompanionBuilder,
+      $$DiscordCoversTableUpdateCompanionBuilder,
+      (
+        DiscordCover,
+        BaseReferences<_$SonoDatabase, $DiscordCoversTable, DiscordCover>,
+      ),
+      DiscordCover,
+      PrefetchHooks Function()
     >;
 typedef $$SettingsTableCreateCompanionBuilder =
     SettingsCompanion Function({
@@ -9455,6 +9892,8 @@ class $SonoDatabaseManager {
       $$SongsTableTableManager(_db, _db.songs);
   $$LyricsCacheTableTableManager get lyricsCache =>
       $$LyricsCacheTableTableManager(_db, _db.lyricsCache);
+  $$DiscordCoversTableTableManager get discordCovers =>
+      $$DiscordCoversTableTableManager(_db, _db.discordCovers);
   $$SettingsTableTableManager get settings =>
       $$SettingsTableTableManager(_db, _db.settings);
   $$ProfilesTableTableManager get profiles =>

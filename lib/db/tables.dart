@@ -71,6 +71,17 @@ class LyricsCache extends Table {
   Set<Column> get primaryKey => {songId};
 }
 
+/// Covers already handed to discords media proxy
+/// > keyed by image content, same art is one upload across every song
+class DiscordCovers extends Table {
+  TextColumn get contentKey => text()();
+  TextColumn get proxyUrl => text()();
+  DateTimeColumn get storedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {contentKey};
+}
+
 /// Key-value store for app settings (EQ, playback state, prefernces, etc.)
 class Settings extends Table {
   TextColumn get settingKey => text()();

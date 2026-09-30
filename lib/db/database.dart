@@ -28,6 +28,7 @@ part 'database.g.dart';
     Albums,
     Songs,
     LyricsCache,
+    DiscordCovers,
     Settings,
     Profiles,
     Playlists,
@@ -44,7 +45,7 @@ class SonoDatabase extends _$SonoDatabase {
   SonoDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 21;
+  int get schemaVersion => 22;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -165,8 +166,11 @@ class SonoDatabase extends _$SonoDatabase {
         await m.addColumn(plays, plays.imported);
         await m.createTable(scrobbles);
       }
+      if (from < 22) {
+        await m.createTable(discordCovers);
+      }
       //future migrations go here:
-      // if (from < 22) { .. }
+      // if (from < 23) { .. }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -1115,6 +1119,39 @@ class SonoDatabase extends _$SonoDatabase {
   }
 
   Future<void> clearAllLyricsCache() => delete(lyricsCache).go();
+
+  ///
+  ///
+  /// ==== Discord covers ====
+  ///
+  ///
+
+  Future<DiscordCover?> getDiscordCover(String contentKey) => (select(
+    discordCovers,
+  )..where((c) => c.contentKey.equals(contentKey))).getSingleOrNull();
+
+  Future<void> cacheDiscordCover(String contentKey, String proxyUrl) async {
+    await into(discordCovers).insertOnConflictUpdate(
+      DiscordCoversCompanion(
+        contentKey: Value(contentKey),
+        proxyUrl: Value(proxyUrl),
+        storedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  /// Called when discord no longer serves the asset
+  Future<void> dropDiscordCover(String contentKey) async {
+    await (delete(
+      discordCovers,
+    )..where((c) => c.contentKey.equals(contentKey))).go();
+  }
+
+  Future<void> pruneDiscordCovers(DateTime before) async {
+    await (delete(
+      discordCovers,
+    )..where((c) => c.storedAt.isSmallerThanValue(before))).go();
+  }
 
   ///
   ///
