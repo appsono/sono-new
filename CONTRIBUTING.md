@@ -119,11 +119,7 @@ The design direction is set (Figma designs exist). If you're touching UI:
 
 ---
 
-## What's most needed right now
-
-Based on TODO.md, the biggest open areas are:
-
-- **Bug reports**: especially on Windows and iOS, which get less testing
+## Where to start
 
 If you're new to the codebase, `lib/widgets/` is the safest place to start.
 It's self-contained with a low risk of breaking things, again that's out of
