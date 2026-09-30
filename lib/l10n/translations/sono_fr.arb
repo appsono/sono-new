@@ -1525,7 +1525,7 @@
     "@artistTopSongs": {
         "description": "Heading above the users most played songs by this artist."
     },
-    "artistTopSongsPlays": "{count, plural, =all{joué {count} fois}}",
+    "artistTopSongsPlays": "{count, plural, =1{1 fois} other{{count} fois}}",
     "@artistTopSongsPlays": {
         "description": "How often the user played a song, shown at the end of each ranked row.",
         "placeholders": {
@@ -1554,7 +1554,7 @@
     "@artistRelated": {
         "description": "Heading above artists this one shares songs with."
     },
-    "artistRelatedShared": "{{count} chansons ensemble}",
+    "artistRelatedShared": "{count, plural, =1{1 chanson écoutée ensemble} other{{count} chansons écoutées ensemble}}",
     "@artistRelatedShared": {
         "description": "How many songs the two artists are both credited on.",
         "placeholders": {
