@@ -39,6 +39,10 @@ class DiscordRpcService {
   /// How long after pausing before presence is cleared
   static const _pauseClearDisplay = Duration(minutes: 1);
 
+  static const _coverCacheTtl = Duration(days: 3);
+
+  static const _headTimeout = Duration(seconds: 10);
+
   // ==== static ====
   DiscordTokenManager? _tokenManager;
   final _coverUploader = CoverUploader();
@@ -56,7 +60,6 @@ class DiscordRpcService {
 
   final Completer<void> _ready = Completer<void>();
 
-  /// Completes once [loadState] has finished its keystore read
   Future<void> get ready => _ready.future;
 
   StreamSubscription? _songSub;
@@ -70,7 +73,6 @@ class DiscordRpcService {
   bool get showButton => _showButton;
   bool get onlyWhilePlaying => _onlyWhilePlaying;
 
-  /// Wether a discord token is loaded (user logged in)
   bool get isConnected => _userToken != null;
 
   String? _userToken;
@@ -113,6 +115,7 @@ class DiscordRpcService {
           (await db.getSetting('discord.only_while_playing')) != 'false';
       _sessionToken =
           legacySession ?? await _secure.read(key: 'discord.session_token');
+      unawaited(db.pruneDiscordCovers(DateTime.now().subtract(_coverCacheTtl)));
     } on PlatformException catch (e) {
       debugPrint('Discord RPC: secure storage unavailable: $e');
       _userToken = null;
@@ -167,7 +170,6 @@ class DiscordRpcService {
     return (name: name, username: username, avatarUrl: avatarUrl);
   }
 
-  /// Disconnect discord rpc
   Future<void> logout() async {
     _stop();
 
@@ -200,7 +202,6 @@ class DiscordRpcService {
     }
   }
 
-  /// Toggle discord rpc on/off
   Future<void> setEnabled(bool value) async {
     _enabled = value;
     await _db?.setSetting('discord.enabled', value.toString());
@@ -213,21 +214,18 @@ class DiscordRpcService {
     }
   }
 
-  /// Toggle wether cover is sent
   Future<void> setShowArt(bool value) async {
     _showArt = value;
     await _db?.setSetting('discord.show_art', value.toString());
     _scheduleUpdate();
   }
 
-  /// Toggle wether playback timestamps are sent
   Future<void> setShowElapsed(bool value) async {
     _showElapsed = value;
     await _db?.setSetting('discord.show_elapsed', value.toString());
     _scheduleUpdate();
   }
 
-  /// Toggle wether cover is sent
   Future<void> setShowButton(bool value) async {
     _showButton = value;
     await _db?.setSetting('discord.show_button', value.toString());
@@ -247,9 +245,8 @@ class DiscordRpcService {
 
   void _start() {
     _initTokenManager();
-    _stop(); //clean up old subs
+    _stop();
 
-    //clear any session left over from a previous run
     if (_sessionToken != null) _clearPresence();
 
     final audio = sa.AudioService.instance;
@@ -301,7 +298,6 @@ class DiscordRpcService {
 
     final expectedPath = song.path;
 
-    //resolve artist name
     String? artistName = audio.currentArtistName;
     if (artistName == null && song.artistId != null && _db != null) {
       final artist = await _db!.getArtistById(song.artistId!);
@@ -317,22 +313,17 @@ class DiscordRpcService {
         final bytes = await CoverThumbs.get(song.path);
         if (bytes != null && bytes.isNotEmpty) {
           final contentKey = coverContentKey(bytes);
-          final hit = _proxyByContent[contentKey];
+          final hit = await _db?.getDiscordCover(contentKey);
           if (hit != null &&
-              DateTime.now().difference(hit.at) < const Duration(hours: 1)) {
-            coverURL = hit.url;
+              DateTime.now().difference(hit.storedAt) < _coverCacheTtl) {
+            coverURL = hit.proxyUrl;
+            unawaited(_verifyCover(contentKey, hit.proxyUrl));
           } else {
             final publicUrl = await _coverUploader.upload(bytes);
             if (publicUrl != null) {
               coverURL = await _toDiscordImageUrl(publicUrl);
               if (coverURL != null) {
-                if (_proxyByContent.length >= 64) {
-                  _proxyByContent.remove(_proxyByContent.keys.first);
-                }
-                _proxyByContent[contentKey] = (
-                  url: coverURL,
-                  at: DateTime.now(),
-                );
+                await _db?.cacheDiscordCover(contentKey, coverURL);
               }
             }
           }
@@ -387,7 +378,6 @@ class DiscordRpcService {
       if (kDebugMode) print('Discord RPC: failed to post activity: $e');
     }
 
-    //if paused, schedule clearing after timeout
     if (!isPlaying) {
       if (!_onlyWhilePlaying) return;
       _clearTimer = Timer(_pauseClearDisplay, () async {
@@ -402,7 +392,7 @@ class DiscordRpcService {
 
   /// Cache public URL > mp:external/... proxy URL
   final Map<String, String> _externalImageCache = {};
-  final Map<String, ({String url, DateTime at})> _proxyByContent = {};
+  final Set<String> _verifiedCovers = {};
 
   /// Register public image URL with discord and return mp:external proxy URL
   Future<String?> _toDiscordImageUrl(String publicUrl) async {
@@ -444,6 +434,25 @@ class DiscordRpcService {
     } catch (_) {
       return null;
     }
+  }
+
+  Future<void> _verifyCover(String contentKey, String proxyUrl) async {
+    if (!_verifiedCovers.add(contentKey)) return;
+    if (!proxyUrl.startsWith('mp:')) return;
+
+    try {
+      final res = await _client
+          .head(
+            Uri.parse('https://media.discordapp.net/${proxyUrl.substring(3)}'),
+          )
+          .timeout(_headTimeout);
+      if (res.statusCode == 200) return;
+    } catch (_) {
+      return;
+    }
+
+    _verifiedCovers.remove(contentKey);
+    await _db?.dropDiscordCover(contentKey);
   }
 
   Future<Map<String, dynamic>> _getUserDetails() async {
@@ -536,12 +545,10 @@ class DiscordRpcService {
     }
     _sessionToken = null;
     await _secure.delete(key: 'discord.session_token');
-    //kept so any legacy DB entry is also cleared
+    //old versions saved the token directly in the db
     await _db?.removeSetting('discord.session_token');
   }
 
-  /// Full teardown of the service. Called when the app is shutting down
-  /// this service for good (not just toggling it off)
   @visibleForTesting
   void disposeForTesting() {
     _stop();
