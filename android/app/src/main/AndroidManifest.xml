@@ -17,7 +17,7 @@
         android:name="com.google.android.gms.permission.AD_ID"
         tools:node="remove" />
 
-  <application
+    <application
     android:requestLegacyExternalStorage="true"
     android:label="${appName}"
         android:name="${applicationName}"
