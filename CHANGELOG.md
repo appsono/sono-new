@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing yet.
 
+## [0.13.1+17] - 2026-10-02
+
+### Added
+
+- If Sono fails to start, it now shows what went wrong instead of a black
+  screen, so the error can be copied into an issue
+
+### Fixed
+
+- Updating from 0.12.x no longer leaves Sono stuck on a black screen. Installs
+  that already ran into this start normally again after updating
+- Fixed an error in the french translation
+  ([#63](https://github.com/appsono/sono-new/pull/63))
+
+### Internal
+
+- Test for upgrading the database from 0.12.x
+
 ## [0.13.0+16] - 2026-10-01
 
 ### Added
@@ -1278,7 +1296,8 @@ Nothing yet.
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.13.0+16...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.13.1+17...HEAD
+[0.13.1+17]: https://github.com/appsono/sono-new/compare/v0.13.0+16...v0.13.1+17
 [0.13.0+16]: https://github.com/appsono/sono-new/compare/v0.12.1+15...v0.13.0+16
 [0.12.1+15]: https://github.com/appsono/sono-new/compare/v0.12.0+14...v0.12.1+15
 [0.12.0+14]: https://github.com/appsono/sono-new/compare/v0.11.1+13...v0.12.0+14
