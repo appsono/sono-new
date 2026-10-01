@@ -40,11 +40,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   which lowers memory use during playback
 - Volume slider now uses a squared scale instead of mpv's cubic one, so the
   lower half of the range is actually usable
+- Discord presence no longer re-uploads album art for every songs and uploads
+  nothing at all when cover art is off
+  ([#59](https://github.com/apps/sono-new/issues/59))
 
 ### Fixed
 
 - Fixed a media button receiver pointing at a library that is not bundled
   with the app, which could fail when headset buttons were pressed
+- Discord presence sent album art as a raw uploader link, so covers stopped
+  showing once the upload expired
+  ([#59](https://github.com/apps/sono-new/issues/59))
 - Artists who only ever appear as a feature are no longer removed at the end
   of a scan
 - Album sheets now list every artist on the record instead of only the one it
@@ -94,6 +100,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an addAlbumToPlaylist() db query
 - `onTaskRemoved`, `onNotificationDeleted` and `stop` share one release path
 - Flutter is now pinned in `pubspec.yaml`, workflows read it
+- Added `scrobbles` table keyed by play and account, so the play table
+  doubles as the offline queue
+- Plays restored from a backup are flagged `imported` and never sent
+- `AudioScrobblerClient` covers last.fm, libre.fm and gnu fm instances, with
+  endpoints injected per account
+- `ScrobbleSweeper` settles nothing on a transient failure, `ScrobblerRunner`
+  backs off per account and clears a rejected session
+- Session keys live in `FlutterSecureStorage`, scrobble settings stay out of
+  backups
+- Added a `discord_covers` table replacing an in memory cache, verified
+  against the media proxy once per launch
 
 ### Translation
 
