@@ -117,11 +117,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Sasha Glazko](https://hosted.weblate.org/user/lenify/) translated Sono into
   Belarusian (100%) and Belarusian (be_TARASK) (100%)
 - [Priit Jõerüüt](https://hosted.weblate.org/user/jrthwlate/) translated Sono
-  into Estonian (72%)
+  into Estonian (100%)
 - [mathis](https://hosted.weblate.org/user/mathiiiiiis/) translated Sono into
   German (100%)
 - [JVVAV](https://hosted.weblate.org/user/JVVAV/) started translating Sono into
-  Portuguese (100%)
+  Portuguese (93%)
 - [Dan](https://hosted.weblate.org/user/kefir2105/) translated Sono into
   Ukrainian (100%)
 
