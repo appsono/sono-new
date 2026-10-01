@@ -560,7 +560,7 @@
     "@settingsProfileUnnamed": {
         "description": "Name shown on the profile row in settings when no username has been set yet."
     },
-    "settingsProfileSubtitle": "Nom et avatar",
+    "settingsProfileSubtitle": "Nom, avatar et statistiques d'écoute",
     "@settingsProfileSubtitle": {
         "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
     },
@@ -802,7 +802,7 @@
     "@settingsPlaybackSleepTimer": {
         "description": "Row for stopping playback after a set time. Currently marked as planned."
     },
-    "settingsPlaybackResumeOnConnect": "Reprendre lors de la connection d'écouteurs",
+    "settingsPlaybackResumeOnConnect": "Reprendre lors de la connection",
     "@settingsPlaybackResumeOnConnect": {
         "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
     },
@@ -1504,5 +1504,418 @@
     "artistDiscographyNoMatches": "Rien ne correspond à ces filtres :/",
     "@artistDiscographyNoMatches": {
         "description": "Shown on the discography page when the selected filter chips leave no releases."
+    },
+    "artistAppearsOn": "Apparaît sur",
+    "@artistAppearsOn": {
+        "description": "Heading above releases by other artists that this artist is credited on."
+    },
+    "artistFilterSinglesEps": "Singles & EPs",
+    "@artistFilterSinglesEps": {
+        "description": "Discography filter chip for short releases."
+    },
+    "artistFilterFeatured": "En avant",
+    "@artistFilterFeatured": {
+        "description": "Discography filter chip for albums the artist only appears on."
+    },
+    "artistFullDiscography": "Discographie complète",
+    "@artistFullDiscography": {
+        "description": "Opens a page listing everything by this artist, shown at the end of the albums row."
+    },
+    "artistTopSongs": "Meilleurs chansons",
+    "@artistTopSongs": {
+        "description": "Heading above the users most played songs by this artist."
+    },
+    "artistTopSongsPlays": "{count, plural, =1{1 fois} other{{count} fois}}",
+    "@artistTopSongsPlays": {
+        "description": "How often the user played a song, shown at the end of each ranked row.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "artistInPlaylists": "Dans vos playlists",
+    "@artistInPlaylists": {
+        "description": "Heading above playlists that contain a song by this artist."
+    },
+    "artistListeningTime": "Vous avez écouté",
+    "@artistListeningTime": {
+        "description": "Label above how long the user has spent listening to this artist. Distinct from the artists own catalogue duration shown in the hero."
+    },
+    "artistListeningPlays": "Écoutes",
+    "@artistListeningPlays": {
+        "description": "Label above how many songs by this artist the user has played."
+    },
+    "artistListeningFirstHeard": "Première Écoute",
+    "@artistListeningFirstHeard": {
+        "description": "Label above the date the user first played this artist."
+    },
+    "artistRelated": "Souvent avec",
+    "@artistRelated": {
+        "description": "Heading above artists this one shares songs with."
+    },
+    "artistRelatedShared": "{count, plural, =1{1 chanson en commun} other{{count} chansons en commun}}",
+    "@artistRelatedShared": {
+        "description": "How many songs the two artists are both credited on.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "settingsScrobbling": "Scrobbling",
+    "@settingsScrobbling": {
+        "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
+    },
+    "settingsProfileStatsWindow": "Cette semaine",
+    "@settingsProfileStatsWindow": {
+        "description": "Subtitle under the stats card title, naming the window every number covers. Monday to Sunday of the current week."
+    },
+    "settingsProfileStatsPlays": "Écoutes totales",
+    "@settingsProfileStatsPlays": {
+        "description": "Label above the number of songs played."
+    },
+    "settingsProfileStatsTopArtist": "Meilleur artiste",
+    "@settingsProfileStatsTopArtist": {
+        "description": "Label above the most played artist."
+    },
+    "settingsProfileStatsTopSong": "Meilleure chanson",
+    "@settingsProfileStatsTopSong": {
+        "description": "Label above the most played song."
+    },
+    "settingsProfileStatsHoursMinutes": "{hours} h {minutes} m",
+    "@settingsProfileStatsHoursMinutes": {
+        "description": "Listening time of an hour or more. Minutes are zero padded.",
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsMinutes": "{minutes} m",
+    "@settingsProfileStatsMinutes": {
+        "description": "Listening time under an hour.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsEmpty": "Rien ici. Joue quelque chose et ça se remplira.",
+    "@settingsProfileStatsEmpty": {
+        "description": "Shown in place of the numbers when nothing was played this week."
+    },
+    "settingsProfileStatsNone": "Rien pour l'instant",
+    "@settingsProfileStatsNone": {
+        "description": "Placeholder where a top song or artist would go when there is none."
+    },
+    "settingsPlaybackSleepTimerOff": "Désactivé",
+    "@settingsPlaybackSleepTimerOff": {
+        "description": "Value shown next to the sleep timer row when no timer is running."
+    },
+    "normalisationSectionMode": "Mode",
+    "@normalisationSectionMode": {
+        "description": "Section label above the normalisation mode options."
+    },
+    "normalisationSectionTuning": "Réglage",
+    "@normalisationSectionTuning": {
+        "description": "Section label above the preamp and clipping options."
+    },
+    "normalisationResetTooltip": "Réinitialiser la normalisation",
+    "@normalisationResetTooltip": {
+        "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
+    },
+    "normalisationOff": "Désactivé",
+    "@normalisationOff": {
+        "description": "Normalisation mode that applies no gain."
+    },
+    "normalisationTrack": "Par chanson",
+    "@normalisationTrack": {
+        "description": "Normalisation mode that brings every song to the same loudness."
+    },
+    "normalisationTrackSubtitle": "Chaque chanson à la même intensité",
+    "@normalisationTrackSubtitle": {
+        "description": "Subtitle of the per track normalisation option."
+    },
+    "normalisationAlbum": "Par album",
+    "@normalisationAlbum": {
+        "description": "Normalisation mode that normalises whole albums as one unit."
+    },
+    "normalisationAlbumSubtitle": "Garde les différences d'intensité dans un album",
+    "@normalisationAlbumSubtitle": {
+        "description": "Subtitle of the per album normalisation option."
+    },
+    "normalisationPreampValue": "{db} dB",
+    "@normalisationPreampValue": {
+        "description": "Value shown next to the preamp slider, in decibels.",
+        "placeholders": {
+            "db": {
+                "type": "String"
+            }
+        }
+    },
+    "normalisationPreventClipping": "Empêcher le coupage",
+    "@normalisationPreventClipping": {
+        "description": "Toggle that lowers the gain instead of letting loud peaks distort."
+    },
+    "normalisationPreventClippingSubtitle": "Baissez le gain au lieu de laisser les pics déformer",
+    "@normalisationPreventClippingSubtitle": {
+        "description": "Subtitle of the prevent clipping toggle."
+    },
+    "sleepTitle": "Minuterie de mise en veille",
+    "@sleepTitle": {
+        "description": "Title of the sleep timer sheet."
+    },
+    "sleepSubtitle": "Disparaît en fondu et s'interrompt lorsque le minuteur est épuisé",
+    "@sleepSubtitle": {
+        "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+    },
+    "sleepUnderMinute": "< 1 minute",
+    "@sleepUnderMinute": {
+        "description": "Sleep timer value shown when less than a minute is left."
+    },
+    "settingsPlaybackSleepTimerFade": "Longueur du fondu",
+    "@settingsPlaybackSleepTimerFade": {
+        "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+    },
+    "settingsPlaybackSleepTimerFadeValue": "{seconds}s",
+    "@settingsPlaybackSleepTimerFadeValue": {
+        "description": "Value shown next to the fade out length slider, in seconds.",
+        "placeholders": {
+            "seconds": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepEndOfSong": "Fin de la chanson",
+    "@sleepEndOfSong": {
+        "description": "Sleep timer option that stops playback when the current song finishes."
+    },
+    "sleepEndOfQueue": "Fin de la file",
+    "@sleepEndOfQueue": {
+        "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+    },
+    "sleepCustom": "Personnalisé",
+    "@sleepCustom": {
+        "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+    },
+    "sleepRemaining": "{minutes}:{seconds}",
+    "@sleepRemaining": {
+        "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            },
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "sleepRemainingEndOfSong": "Jusqu'à la fin de la chanson",
+    "@sleepRemainingEndOfSong": {
+        "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+    },
+    "sleepRemainingEndOfQueue": "Jusqu'à la fin de la file",
+    "@sleepRemainingEndOfQueue": {
+        "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+    },
+    "sleepCustomTitle": "Temps personnalisé",
+    "@sleepCustomTitle": {
+        "description": "Title of the sheet for entering an arbitrary sleep timer length."
+    },
+    "sleepCustomField": "Minutes",
+    "@sleepCustomField": {
+        "description": "Label of the field for entering the sleep timer length in minutes."
+    },
+    "sleepCustomStart": "Démarrer le minuteur",
+    "@sleepCustomStart": {
+        "description": "Button that starts the sleep timer with the entered number of minutes."
+    },
+    "sleepCancel": "Annuler le minuteur",
+    "@sleepCancel": {
+        "description": "Button that stops a running sleep timer without pausing playback."
+    },
+    "sleepStarted": "Temps de sommeil réglé",
+    "@sleepStarted": {
+        "description": "Confirmation shown after a sleep timer is started."
+    },
+    "sleepCancelled": "Temps de sommeil annulé",
+    "@sleepCancelled": {
+        "description": "Confirmation shown after a running sleep timer is cancelled."
+    },
+    "settingsScrobblingProviders": "Fournisseurs",
+    "@settingsScrobblingProviders": {
+        "description": "Section label above the list of scrobbling services on the scrobbling subpage."
+    },
+    "settingsScrobblingAddCustom": "Ajouter une instance personnalisée",
+    "@settingsScrobblingAddCustom": {
+        "description": "Button that starts connecting a self hosted scrobbling server."
+    },
+    "settingsScrobblingCustomNote": "Fonctionne avec tout serveur compatible Audioscrobbler. Oui, même GNU FM",
+    "@settingsScrobblingCustomNote": {
+        "description": "Note under the add custom instance button explaining what kind of server can be connected"
+    },
+    "settingsScrobblingAbout": "À propos de scrobbling",
+    "@settingsScrobblingAbout": {
+        "description": "Tooltip of the info button in the scrobbling subpage header."
+    },
+    "settingsScrobblingConnectIntro": "Ouvre {provider} dans votre navigateur. Approuver l'accès là, puis revenir et continuer",
+    "@settingsScrobblingConnectIntro": {
+        "description": "Explanation at the top of the connect sheet. The placeholder is a service name like Last.fm.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingInstanceUrl": "Adresse de l'instance",
+    "@settingsScrobblingInstanceUrl": {
+        "description": "Text field for the base address of a self hosted scrobbling server."
+    },
+    "settingsScrobblingOwnKey": "Utiliser ma propre clé API",
+    "@settingsScrobblingOwnKey": {
+        "description": "Toggle in the connect sheet that swaps the default credentials with the user's own."
+    },
+    "settingsScrobblingApiKey": "Clé API",
+    "@settingsScrobblingApiKey": {
+        "description": "Text field for the user's own API key."
+    },
+    "settingsScrobblingApiSecret": "API secret",
+    "@settingsScrobblingApiSecret": {
+        "description": "Text field for the user's own API secret."
+    },
+    "settingsScrobblingOpenBrowser": "Ouvrir dans le navigateur",
+    "@settingsScrobblingOpenBrowser": {
+        "description": "Button in the connect sheet that starts the approval flow."
+    },
+    "settingsScrobblingInvalidUrl": "Entrez une adresse complète, y compris https://",
+    "@settingsScrobblingInvalidUrl": {
+        "description": "Error in the connect sheet when the instance address cannot be parsed."
+    },
+    "settingsScrobblingLinkFailed": "Nous n'avons pas pu atteindre le service, vérifier les détails et essayer de nouveau",
+    "@settingsScrobblingLinkFailed": {
+        "description": "Error in the connect sheet when requesting a token failed."
+    },
+    "settingsScrobblingWaiting": "En attente d'approbation",
+    "@settingsScrobblingWaiting": {
+        "description": "Line on a provider card while the user is approving Sono in their browser."
+    },
+    "settingsScrobblingContinue": "Continuer",
+    "@settingsScrobblingContinue": {
+        "description": "Button on a waiting provider card, pressed after approving in the browser."
+    },
+    "settingsScrobblingCancel": "Annuler",
+    "@settingsScrobblingCancel": {
+        "description": "Button on a waiting provider card that abandons the link attempt."
+    },
+    "settingsScrobblingNotApproved": "Pas encore approuvé. Terminez dans votre navigateur, puis continuer",
+    "@settingsScrobblingNotApproved": {
+        "description": "Shown when the user presses Continue before approving access. The attempt stays open."
+    },
+    "settingsScrobblingConnectFailed": "Connexion échouée, tentez de réessayer :/",
+    "@settingsScrobblingConnectFailed": {
+        "description": "Shown when exchanging the approval for a session failed for any other reason."
+    },
+    "settingsScrobblingLoggedInAs": "Connecté en tant que {username}",
+    "@settingsScrobblingLoggedInAs": {
+        "description": "Subtitle on a linked provider card.",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingScrobble": "Scrobble",
+    "@settingsScrobblingScrobble": {
+        "description": "Toogle inside a linked provider card that turns sending listens on and off."
+    },
+    "settingsScrobblingDisconnect": "Déconnecter",
+    "@settingsScrobblingDisconnect": {
+        "description": "Button inside a linked provider card that removes/unlinks the account."
+    },
+    "settingsScrobblingReconnect": "Reconnecter",
+    "@settingsScrobblingReconnect": {
+        "description": "Button on a provider card whose session was rejected, starts linking again."
+    },
+    "settingsScrobblingSessionExpired": "La session a été rejetée par le service. Reconnectez-vous pour continuer à scrobble",
+    "@settingsScrobblingSessionExpired": {
+        "description": "Replaces the logged in line when the session key no longer works."
+    },
+    "settingsScrobblingDisconnectTitle": "Déconnecter {provider} ?",
+    "@settingsScrobblingDisconnectTitle": {
+        "description": "Title of the conformation sheet before removing a scrobbling account.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingDisconnectNote": "Les scrobbles existants restent sur le compte. Tout ce qui reste dans la file peut être envoyé à nouveau avec une reconnection ;)",
+    "@settingsScrobblingDisconnectNote": {
+        "description": "Explanation in the disconnect confirmation sheet."
+    },
+    "settingsScrobblingAboutWhat": "Scrobbling envoie ce que vous écoutez à un service extérieur, qui construit un historique et des statistiques. En liant un compte, le titre, l'artiste, l'album et la longueur de la chanson actuelle seront envoyés au service.",
+    "@settingsScrobblingAboutWhat": {
+        "description": "First paragraph in the scrobbling info sheet, explaining what scrobbling is."
+    },
+    "settingsScrobblingAboutQueue": "Sono enregistre déjà vos écoutes sur votre appareil, ce qui signifie que rien n'est perdu pendant que vous êtes hors ligne. Sono les envoie dès qu'il peut atteindre le service à nouveau ;)",
+    "@settingsScrobblingAboutQueue": {
+        "description": "Second paragraph in the scrobbling info sheet, about the offline queue."
+    },
+    "settingsScrobblingAboutThreshold": "Une chanson compte une fois que vous en avez écouté la moitié, ou quatre minutes, quelle que soit la première. Sauter plus tôt signifie que la chanson ne sera pas scrobée.",
+    "@settingsScrobblingAboutThreshold": {
+        "description": "Third paragraph in the scrobbling info sheet, explaining when a play counts as a scrobble."
+    },
+    "settingsScrobblingDocs": "Documentation de {provider}",
+    "@settingsScrobblingDocs": {
+        "description": "Link in the scrobbling info sheet that opens a service's API documentation.",
+        "placeholders": {
+            "provider": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsScrobblingLinksChecked": "Liens dernièrement vérifié le {date}",
+    "@settingsScrobblingLinksChecked": {
+        "description": "Line at the bottom of the scrobbling info sheet. The date is maintained by hand.",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsProfileStatsPlayCount": "{count, plural, =1{1 joué} other{{count} joués}}",
+    "@settingsProfileStatsPlayCount": {
+        "description": "How often the top song or artist was played, shown after the name.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "normalisationPreamp": "Preamp",
+    "@normalisationPreamp": {
+        "description": "Slider for extra gain applied on top of the ReplayGain value."
+    },
+    "sleepMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
+    "@sleepMinutes": {
+        "description": "Preset duration option in the sleep timer sheet.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "sleepExtend": "+{count, plural, =1{1 minute} other{{count} minutes}}",
+    "@sleepExtend": {
+        "description": "Button that adds more time to a running sleep timer.",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
     }
 }
