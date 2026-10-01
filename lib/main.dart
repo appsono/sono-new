@@ -24,6 +24,7 @@ import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
 import 'package:sono/l10n/localizations.dart';
+import 'package:sono/pages/startup_error_page.dart';
 import 'package:sono/services/audio/sleep_timer_service.dart';
 import 'package:sono/services/covers/cover_memory_pressure.dart';
 import 'package:sono/services/device_profile.dart';
@@ -62,45 +63,17 @@ void main() async {
       kShots ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
     );
   }
-  MediaKit.ensureInitialized();
-  //DateFormat throws on a locale showse data was never loaded
-  await initializeDateFormatting();
-  await DeviceProfile.detect();
 
-  final db = SonoDatabase();
-
-  await sono.AudioService.instance.init();
-  audioHandler = await AudioService.init(
-    builder: () => SonoAudioHandler(db),
-    config: AudioServiceConfig(
-      androidNotificationChannelId: 'wtf.sono.audio',
-      androidNotificationChannelName: Platform.isAndroid
-          ? 'Now Playing'
-          : 'Sono',
-      androidStopForegroundOnPause: false,
-      androidShowNotificationBadge: true,
-      androidNotificationClickStartsActivity: true,
-      androidResumeOnClick: true,
-      androidNotificationIcon: 'drawable/ic_notification',
-      artDownscaleWidth: 512,
-      artDownscaleHeight: 512,
-    ),
-  );
-
-  sono.AudioService.instance.attachDb(db);
-  AudioEffectsService.instance.attachDb(db);
-  LocaleService.instance.attachDb(db);
-  ThemeService.instance.attachDb(db);
-  AppearanceService.instance.attachDb(db);
-  SleepTimerService.instance.attach(sono.AudioService.instance);
-  SleepTimerService.instance.attachDb(db);
-
-  //only locale, theme and appearance gate first frame
-  await Future.wait([
-    LocaleService.instance.loadSaved(),
-    ThemeService.instance.loadSaved(),
-    AppearanceService.instance.loadSaved(),
-  ]);
+  final SonoDatabase db;
+  try {
+    db = await _startup();
+  } catch (error, stack) {
+    FlutterError.reportError(
+      FlutterErrorDetails(exception: error, stack: stack, library: 'startup'),
+    );
+    runApp(StartupErrorApp(error: error, stack: stack));
+    return;
+  }
 
   PaintingBinding.instance.imageCache
     ..maximumSize = DeviceProfile.imageCacheEntries
@@ -141,6 +114,51 @@ void main() async {
   );
 
   if (Platform.isIOS) unawaited(_createIosReadme());
+}
+
+/// Everything that has to finish before first frame
+Future<SonoDatabase> _startup() async {
+  MediaKit.ensureInitialized();
+  //DateFormat throws on a locale showse data was never loaded
+  await initializeDateFormatting();
+  await DeviceProfile.detect();
+
+  final db = SonoDatabase();
+
+  await sono.AudioService.instance.init();
+  audioHandler = await AudioService.init(
+    builder: () => SonoAudioHandler(db),
+    config: AudioServiceConfig(
+      androidNotificationChannelId: 'wtf.sono.audio',
+      androidNotificationChannelName: Platform.isAndroid
+          ? 'Now Playing'
+          : 'Sono',
+      androidStopForegroundOnPause: false,
+      androidShowNotificationBadge: true,
+      androidNotificationClickStartsActivity: true,
+      androidResumeOnClick: true,
+      androidNotificationIcon: 'drawable/ic_notification',
+      artDownscaleWidth: 512,
+      artDownscaleHeight: 512,
+    ),
+  );
+
+  sono.AudioService.instance.attachDb(db);
+  AudioEffectsService.instance.attachDb(db);
+  LocaleService.instance.attachDb(db);
+  ThemeService.instance.attachDb(db);
+  AppearanceService.instance.attachDb(db);
+  SleepTimerService.instance.attach(sono.AudioService.instance);
+  SleepTimerService.instance.attachDb(db);
+
+  //only locale, theme and appearance gate first frame
+  await Future.wait([
+    LocaleService.instance.loadSaved(),
+    ThemeService.instance.loadSaved(),
+    AppearanceService.instance.loadSaved(),
+  ]);
+
+  return db;
 }
 
 class SonoApp extends StatefulWidget {
