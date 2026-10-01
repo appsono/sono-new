@@ -5,7 +5,7 @@
     },
     "commonUnknown": "Inconnue",
     "commonUnknownArtist": "Artist inconnu",
-    "commonSongsCount": "\"{count, plural, =0{pas de musiques} =1{1 musique} other{{count} musiques}}\"",
+    "commonSongsCount": "{count, plural, =0{pas de musiques} =1{1 musique} other{{count} musiques}}",
     "@commonSongsCount": {
         "description": "Number of songs for an artist/album/playlist",
         "placeholders": {
