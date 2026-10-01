@@ -163,7 +163,8 @@ class SonoDatabase extends _$SonoDatabase {
         );
       }
       if (from < 21) {
-        await m.addColumn(plays, plays.imported);
+        //from < 19 created plays with current schema
+        if (from >= 19) await m.addColumn(plays, plays.imported);
         await m.createTable(scrobbles);
       }
       if (from < 22) {
