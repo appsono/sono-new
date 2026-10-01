@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.13.0+16] - 2026-10-01
+
 ### Added
 
 - Sleep timer, reachable from playback settings. Fades out and pauses after a
@@ -1274,7 +1278,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent double-advance on track completion with repeat-all
 - Clean up the previous cover temp file on song change
 
-[unreleased]: https://github.com/appsono/sono-new/compare/v0.12.1+15...HEAD
+[unreleased]: https://github.com/appsono/sono-new/compare/v0.13.0+16...HEAD
+[0.13.0+16]: https://github.com/appsono/sono-new/compare/v0.12.1+15...v0.13.0+16
 [0.12.1+15]: https://github.com/appsono/sono-new/compare/v0.12.0+14...v0.12.1+15
 [0.12.0+14]: https://github.com/appsono/sono-new/compare/v0.11.1+13...v0.12.0+14
 [0.11.1+13]: https://github.com/appsono/sono-new/compare/v0.11.0+12...v0.11.1+13
