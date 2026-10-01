@@ -46,7 +46,7 @@ Nothing yet.
   lower half of the range is actually usable
 - Discord presence no longer re-uploads album art for every songs and uploads
   nothing at all when cover art is off
-  ([#59](https://github.com/apps/sono-new/issues/59))
+  ([#59](https://github.com/appsono/sono-new/issues/59))
 
 ### Fixed
 
@@ -54,7 +54,7 @@ Nothing yet.
   with the app, which could fail when headset buttons were pressed
 - Discord presence sent album art as a raw uploader link, so covers stopped
   showing once the upload expired
-  ([#59](https://github.com/apps/sono-new/issues/59))
+  ([#59](https://github.com/appsono/sono-new/issues/59))
 - Artists who only ever appear as a feature are no longer removed at the end
   of a scan
 - Album sheets now list every artist on the record instead of only the one it
