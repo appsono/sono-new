@@ -124,7 +124,7 @@
         }
     },
     "lyricsMenuResetSaved": "Скінуць захаваны тэкст",
-    "lyricsMenuResetSavedSubtitle": "Ачысціць кэш і паўторна загрузіць тэкст",
+    "lyricsMenuResetSavedSubtitle": "Ачысьціць кэш і паўторна загрузіць тэкст",
     "lyricsMenuRepeatOff": "Выключана",
     "@lyricsMenuRepeatOff": {
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
@@ -162,11 +162,11 @@
     "@commonRemoveFromQueue": {
         "description": "Remove a song from the playback queue. Imperative form."
     },
-    "commonGoToAlbum": "Перайсці да альбому",
+    "commonGoToAlbum": "Перайсьці да альбому",
     "@commonGoToAlbum": {
         "description": "Navigate to the album page. Imperative form."
     },
-    "commonGoToArtist": "Перайсці да выканаўцы",
+    "commonGoToArtist": "Перайсьці да выканаўцы",
     "@commonGoToArtist": {
         "description": "Navigate to the artist page. Imperative form."
     },
@@ -1319,7 +1319,7 @@
     "@settingsUpdateSheetOpen": {
         "description": "Action that opens the GitHub release page in the browser."
     },
-    "settingsUpdateSheetSkip": "Прапусціць гэтую вэрсію",
+    "settingsUpdateSheetSkip": "Прапусьціць гэтую вэрсію",
     "@settingsUpdateSheetSkip": {
         "description": "Action that dismisses a release so it stops being announced."
     },
