@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+### Changed
+
+- Updated the privacy policy for scrobbling, play history, the contributors
+  page and how Discord presence handles album art and sign-in
+
+### Fixed
+
+- Fixed the privacy policy claiming the Discord token never leaves the  device,
+  when it is sent to Discord to set the presence
 
 ## [0.13.1+17] - 2026-10-02
 
