@@ -837,7 +837,7 @@
     "@settingsEqualizerPresetTreble": {
         "description": "Equalizer preset, lifts the highs."
     },
-    "settingsEqualizerPresetElectronic": "Electronic",
+    "settingsEqualizerPresetElectronic": "Elektronisch",
     "@settingsEqualizerPresetElectronic": {
         "description": "Equalizer preset for electronic music, lifts the lows and highs."
     },
