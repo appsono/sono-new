@@ -385,7 +385,7 @@
     "@albumTypeCompilation": {
         "description": "Type label for a compilation album (3+ distinct contributing artists) shown on the artist detail page."
     },
-    "albumTypeCollaboration": "Collaboration",
+    "albumTypeCollaboration": "Kollaboration",
     "@albumTypeCollaboration": {
         "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
     },
