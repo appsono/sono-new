@@ -29,7 +29,7 @@ enum AlbumType {
   String label(AppLocalizations l) => switch (this) {
     AlbumType.single => l.albumTypeSingle,
     AlbumType.ep => l.albumTypeEp,
-    AlbumType.album => l.albumTypeAlbum,
+    AlbumType.album => l.commonAlbum,
     AlbumType.compilation => l.albumTypeCompilation,
     AlbumType.collaboration => l.albumTypeCollaboration,
   };

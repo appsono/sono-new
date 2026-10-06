@@ -94,7 +94,7 @@ class SettingsAppearancePage extends StatelessWidget {
                   ],
                 ),
 
-                SettingsGroupLabel(text: l.settingsAppearanceSectionLibrary),
+                SettingsGroupLabel(text: l.commonLibrary),
                 SettingsGroup(
                   children: [
                     SettingsRow(

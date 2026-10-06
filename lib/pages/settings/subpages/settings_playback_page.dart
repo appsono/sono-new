@@ -58,7 +58,7 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
 
   String _sleepValue(AppLocalizations l) {
     final sleep = SleepTimerService.instance;
-    if (!sleep.isActive) return l.settingsPlaybackSleepTimerOff;
+    if (!sleep.isActive) return l.settingsValueOff;
     switch (sleep.mode) {
       case SleepMode.endOfSong:
         return l.sleepEndOfSong;
@@ -75,9 +75,9 @@ class _SettingsPlaybackPageState extends State<SettingsPlaybackPage> {
 
   String _normalisationValue(AppLocalizations l) =>
       switch (AudioEffectsService.instance.normalisation) {
-        NormalisationMode.off => l.normalisationOff,
-        NormalisationMode.track => l.normalisationTrack,
-        NormalisationMode.album => l.normalisationAlbum,
+        NormalisationMode.off => l.settingsEffectOff,
+        NormalisationMode.track => l.settingsNormalisationTrack,
+        NormalisationMode.album => l.settingsNormalisationAlbum,
       };
 
   @override

@@ -382,7 +382,7 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SonoSectionHeader(
-            title: l.homeSectionAlbums,
+            title: l.commonAlbums,
             titleStyle: const TextStyle(fontSize: 20),
             onSeeAll: () => _push(AlbumsPage(db: widget.db)),
           ),
@@ -402,7 +402,7 @@ class _HomePageState extends State<HomePage> {
       );
     } else if (fallback != null && fallback.isNotEmpty) {
       body = SonoSection(
-        title: l.homeSectionAlbums,
+        title: l.commonAlbums,
         titleStyle: const TextStyle(fontSize: 20),
         onSeeAll: () => _push(AlbumsPage(db: widget.db)),
         itemExtent: 168,
@@ -521,7 +521,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 SonoHeaderAction(
                                   icon: IconsSheet.settingsOutlined,
-                                  tooltip: l.homeHeaderSettings,
+                                  tooltip: l.commonSettings,
                                   onTap: () => widget.onOpenSettings?.call(),
                                 ),
                               ],
@@ -607,7 +607,7 @@ class _HomePageState extends State<HomePage> {
                 const SliverToBoxAdapter(child: SizedBox(height: 24)),
                 SliverToBoxAdapter(
                   child: SonoSection(
-                    title: l.homeSectionArtists,
+                    title: l.commonArtists,
                     titleStyle: const TextStyle(fontSize: 20),
                     onSeeAll: () => _push(ArtistsPage(db: widget.db)),
                     itemExtent: 168,

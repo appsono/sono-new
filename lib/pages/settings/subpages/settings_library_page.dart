@@ -257,7 +257,7 @@ class _SettingsLibraryPageState extends State<SettingsLibraryPage> {
               accent: c.accentOrange,
               label: l.settingsLibraryMinLength,
               value: config.minDuration == null
-                  ? l.settingsLibraryMinLengthOff
+                  ? l.settingsValueOff
                   : l.settingsLibraryMinLengthValue(
                       config.minDuration!.inSeconds,
                     ),

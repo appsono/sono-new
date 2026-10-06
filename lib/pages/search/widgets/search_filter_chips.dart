@@ -37,8 +37,8 @@ class SearchFilterChips extends StatelessWidget {
     String label(SearchFilter f) => switch (f) {
       SearchFilter.all => l.searchFilterAll,
       SearchFilter.songs => l.libraryCardSongs,
-      SearchFilter.albums => l.libraryCardAlbums,
-      SearchFilter.artists => l.libraryCardArtists,
+      SearchFilter.albums => l.commonAlbums,
+      SearchFilter.artists => l.commonArtists,
       SearchFilter.playlists => l.libraryCardPlaylists,
       SearchFilter.genres => l.libraryCardGenres,
     };

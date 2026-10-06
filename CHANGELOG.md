@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the privacy policy claiming the Discord token never leaves the  device,
   when it is sent to Discord to set the presence
 
+### Internal
+
+- Merged duplicate translation strings and removed unused ones, existing
+  translations were kept
+
 ## [0.13.1+17] - 2026-10-02
 
 ### Added

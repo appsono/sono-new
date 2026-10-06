@@ -88,11 +88,11 @@ class _SettingsEqualizerPageState extends State<SettingsEqualizerPage> {
 
     return SettingsScaffold(
       db: widget.db,
-      title: l.settingsEqTitle,
+      title: l.settingsEqualizerTitle,
       actions: [
         SonoHeaderAction(
           icon: IconsSheet.updateOutlined,
-          tooltip: l.settingsEqResetTooltip,
+          tooltip: l.settingsEqualizerResetTooltip,
           onTap: _resetBands,
         ),
       ],
@@ -108,8 +108,8 @@ class _SettingsEqualizerPageState extends State<SettingsEqualizerPage> {
                     SettingsRow(
                       icon: IconsSheet.equalizerOutlined,
                       accent: c.accentAmber,
-                      label: l.settingsEqEnable,
-                      subtitle: l.settingsEqEnableSubtitle,
+                      label: l.settingsEqualizerTitle,
+                      subtitle: l.settingsEqualizerEnableSubtitle,
                       toggle: _enabled,
                       onToggle: (value) {
                         setState(() => _enabled = value);
@@ -119,7 +119,7 @@ class _SettingsEqualizerPageState extends State<SettingsEqualizerPage> {
                   ],
                 ),
 
-                SettingsGroupLabel(text: l.settingsEqSectionPreset),
+                SettingsGroupLabel(text: l.settingsEqualizerSectionPreset),
                 SettingsGroup(
                   children: [
                     SizedBox(
@@ -137,7 +137,7 @@ class _SettingsEqualizerPageState extends State<SettingsEqualizerPage> {
                           //only shown while curve matches no preset
                           if (i == EqPresets.all.length) {
                             return SonoChip(
-                              label: l.settingsEqPresetCustom,
+                              label: l.settingsEqualizerPresetCustom,
                               selected: true,
                               onTap: () {},
                             );
@@ -168,12 +168,14 @@ class _SettingsEqualizerPageState extends State<SettingsEqualizerPage> {
                   ],
                 ),
 
-                SettingsGroupLabel(text: l.settingsEqSectionEffects),
+                SettingsGroupLabel(text: l.settingsEqualizerSectionEffects),
                 SettingsGroup(
                   children: [
                     SettingsSliderRow(
-                      label: l.settingsEqBassBoost,
-                      value: l.settingsEqValueDb(_bassBoost.toStringAsFixed(1)),
+                      label: l.settingsEqualizerBassBoost,
+                      value: l.settingsEqualizerValueDb(
+                        _bassBoost.toStringAsFixed(1),
+                      ),
                       current: _bassBoost,
                       min: 0,
                       max: 20,
@@ -184,8 +186,10 @@ class _SettingsEqualizerPageState extends State<SettingsEqualizerPage> {
                       },
                     ),
                     SettingsSliderRow(
-                      label: l.settingsEqSpeed,
-                      value: l.settingsEqValueRate(_speed.toStringAsFixed(2)),
+                      label: l.settingsEqualizerSpeed,
+                      value: l.settingsEqualizerValueRate(
+                        _speed.toStringAsFixed(2),
+                      ),
                       current: _speed,
                       min: 0.25,
                       max: 4,
@@ -196,8 +200,10 @@ class _SettingsEqualizerPageState extends State<SettingsEqualizerPage> {
                       },
                     ),
                     SettingsSliderRow(
-                      label: l.settingsEqPitch,
-                      value: l.settingsEqValueRate(_pitch.toStringAsFixed(2)),
+                      label: l.settingsEqualizerPitch,
+                      value: l.settingsEqualizerValueRate(
+                        _pitch.toStringAsFixed(2),
+                      ),
                       current: _pitch,
                       min: 0.25,
                       max: 4,
@@ -213,7 +219,7 @@ class _SettingsEqualizerPageState extends State<SettingsEqualizerPage> {
                 SettingsGroup(
                   children: [
                     SettingsActionRow(
-                      label: l.settingsEqResetAll,
+                      label: l.settingsEqualizerResetAll,
                       destructive: true,
                       onTap: _resetEverything,
                     ),

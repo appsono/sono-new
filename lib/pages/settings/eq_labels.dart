@@ -20,14 +20,14 @@ import 'package:sono/services/audio/eq_presets.dart';
 /// Falls back t raw id if missing
 String eqPresetName(AppLocalizations l, EqPreset preset) {
   return switch (preset.id) {
-    'flat' => l.settingsEqPresetFlat,
-    'bass' => l.settingsEqPresetBass,
-    'treble' => l.settingsEqPresetTreble,
-    'vocal' => l.settingsEqPresetVocal,
-    'rock' => l.settingsEqPresetRock,
-    'electronic' => l.settingsEqPresetElectronic,
-    'brain_fryer' => l.settingsEqPresetBrainFryer,
-    'fryer_ultimate' => l.settingsEqPresetFryerUltimate,
+    'flat' => l.settingsEqualizerPresetFlat,
+    'bass' => l.settingsEqualizerPresetBass,
+    'treble' => l.settingsEqualizerPresetTreble,
+    'vocal' => l.settingsEqualizerPresetVocal,
+    'rock' => l.settingsEqualizerPresetRock,
+    'electronic' => l.settingsEqualizerPresetElectronic,
+    'brain_fryer' => l.settingsEqualizerPresetBrainFryer,
+    'fryer_ultimate' => l.settingsEqualizerPresetFryerUltimate,
     _ => preset.id,
   };
 }
@@ -37,8 +37,10 @@ String eqPresetName(AppLocalizations l, EqPreset preset) {
 /// Shows Off, preset name, or Custom
 String eqSummary(AppLocalizations l) {
   final fx = AudioEffectsService.instance;
-  if (!fx.eqEnabled) return l.settingsEqualizerOff;
+  if (!fx.eqEnabled) return l.settingsEffectOff;
 
   final preset = fx.currentPreset;
-  return preset == null ? l.settingsEqPresetCustom : eqPresetName(l, preset);
+  return preset == null
+      ? l.settingsEqualizerPresetCustom
+      : eqPresetName(l, preset);
 }

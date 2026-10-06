@@ -425,7 +425,7 @@ class _ArtistDetailPageState extends State<ArtistDetailPage> {
               if (_albums != null && _albums!.isNotEmpty)
                 SliverToBoxAdapter(
                   child: SonoSection(
-                    title: l.homeSectionAlbums,
+                    title: l.commonAlbums,
                     titleStyle: const TextStyle(fontSize: 20),
                     itemExtent: _albumExtent,
                     onSeeAll: _openDiscography,

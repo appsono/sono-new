@@ -90,7 +90,7 @@ class _SettingsContributorsPageState extends State<SettingsContributorsPage> {
 
     return SettingsScaffold(
       db: widget.db,
-      title: l.settingsContributors,
+      title: l.settingsAboutContributors,
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
@@ -125,7 +125,7 @@ class _SettingsContributorsPageState extends State<SettingsContributorsPage> {
     final contributors = _contributors ?? const <Contributor>[];
 
     return [
-      SettingsGroupLabel(text: l.contributorsCodeSection),
+      SettingsGroupLabel(text: l.contributorsSectionCode),
       SettingsGroup(
         //rate limit and empty repi list identical otherwis
         note: _failed ? l.contributorsLoadFailed : null,
@@ -149,7 +149,7 @@ class _SettingsContributorsPageState extends State<SettingsContributorsPage> {
       ..sort((a, b) => a.key.compareTo(b.key));
 
     return [
-      SettingsGroupLabel(text: l.contributorsTranslatorSection),
+      SettingsGroupLabel(text: l.contributorsSectionTranslations),
       SettingsGroup(
         dividerInset: 0,
         children: [

@@ -151,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return SettingsScaffold(
       db: widget.db,
-      title: l.settingsPageTitle,
+      title: l.commonSettings,
       actions: [
         SonoHeaderAction(
           icon: IconsSheet.searchOutlined,

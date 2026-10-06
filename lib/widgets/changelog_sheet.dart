@@ -70,8 +70,8 @@ class _ChangelogSheetState extends State<ChangelogSheet> {
       items.addAll([
         BottomSheetAction(
           icon: IconsSheet.openLinkOutlined,
-          label: l.settingsUpdateSheetAvailableTitle(update.latestVersion),
-          subtitle: l.settingsUpdateSheetFrom(
+          label: l.settingsUpdatesSheetAvailableTitle(update.latestVersion),
+          subtitle: l.settingsUpdatesSheetFrom(
             update.currentVersion,
             update.latestVersion,
           ),

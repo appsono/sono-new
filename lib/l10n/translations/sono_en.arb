@@ -13,20 +13,6 @@
       "count": { "type": "int", "format": "compact" }
     }
   },
-  "commonAlbumsCount": "{count, plural, =0{no albums} =1{1 album} other{{count} albums}}",
-  "@commonAlbumsCount": {
-    "description": "Number of albums, used in library totals",
-    "placeholders": {
-      "count": { "type": "int", "format": "compact" }
-    }
-  },
-  "commonArtistsCount": "{count, plural, =0{no artists} =1{1 artist} other{{count} artists}}",
-  "@commonArtistsCount": {
-    "description": "Number of artists, used in library totals",
-    "placeholders": {
-      "count": { "type": "int", "format": "compact" }
-    }
-  },
   "commonDurationLong": "{hours}h {minutes}m",
   "@commonDurationLong": {
     "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
@@ -42,7 +28,6 @@
       "minutes": { "type": "int" }
     }
   },
-
   "commonPlay": "Play",
   "@commonPlay": {
     "description": "Play action. Button label and tooltip across the player, mini player, queue view, and media sheets. Imperative verb form."
@@ -63,7 +48,6 @@
   "@commonRepeat": {
     "description": "Repeat playback action label. Imperative form."
   },
-
   "commonLike": "Like",
   "@commonLike": {
     "description": "Like a song. Imperative verb. Used in the lyrics menu, song sheet action card, and elsewhere. After-state is commonLiked."
@@ -80,14 +64,9 @@
   "@commonFavorited": {
     "description": "State label shown after an album or artist has been favorited."
   },
-
   "commonSeeAll": "See all",
   "@commonSeeAll": {
     "description": "Affordance in a section header that opens the full list of matches for that category."
-  },
-  "commonMoreOptions": "More options",
-  "@commonMoreOptions": {
-    "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
   },
   "commonShare": "Share",
   "@commonShare": {
@@ -125,7 +104,6 @@
   "@commonGoToArtist": {
     "description": "Navigate to the artist page. Imperative form."
   },
-
   "commonTitle": "Title",
   "@commonTitle": {
     "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
@@ -136,7 +114,7 @@
   },
   "commonAlbum": "Album",
   "@commonAlbum": {
-    "description": "Noun label for the album metadata field. Shown in info/details views."
+    "description": "Noun label for a single album. Used for the album metadata field in info/details views and as the release type of a standard album on the artist page, next to EP and Single."
   },
   "commonGenre": "Genre",
   "@commonGenre": {
@@ -154,14 +132,25 @@
   "@commonPath": {
     "description": "Label for the filesystem path metadata field."
   },
-
+  "commonAlbums": "Albums",
+  "@commonAlbums": {
+    "description": "Plural noun for albums. Used as a section header on the home and artist pages, as the library card and page title for all albums, and as a search filter."
+  },
+  "commonArtists": "Artists",
+  "@commonArtists": {
+    "description": "Plural noun for artists. Used as a section header on the home page and as the library card and page title for all artists."
+  },
+  "commonLibrary": "Library",
+  "@commonLibrary": {
+    "description": "The user's music library. Used as the bottom navigation tab, the library page title, and a section label on the appearance settings page."
+  },
+  "commonSettings": "Settings",
+  "@commonSettings": {
+    "description": "Settings. Used as the settings page title and as the tooltip of the settings button in page headers."
+  },
   "commonEdit": "Edit",
   "@commonEdit": {
     "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
-  },
-  "commonRename": "Rename",
-  "@commonRename": {
-    "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
   },
   "commonDelete": "Delete",
   "@commonDelete": {
@@ -185,8 +174,46 @@
   },
 
   "navHome": "Home",
-  "navLibrary": "Library",
   "navSearch": "Search",
+
+  "homeActionCreatePlaylist": "Create Playlist",
+  "@homeActionCreatePlaylist": {
+    "description": "Shown on the Home Pages's Create Playlist action. Please keep the string as short as possible."
+  },
+  "homeHeaderNewsAndUpdates": "News & Updates",
+  "homeSectionRecentlyAdded": "Recently Added",
+  "homeSectionRecentlyPlayed": "Recently Played",
+  "homeNewBadge": "NEW",
+  "@homeNewBadge": {
+    "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+  },
+  "homeGreetingEarlyBird": "Wow early bird",
+  "@homeGreetingEarlyBird": { "description": "Greeting shown roughly 04:00–06:00" },
+  "homeGreetingMorning": "Morning",
+  "@homeGreetingMorning": { "description": "Greeting shown roughly 06:00–11:00" },
+  "homeGreetingMidday": "Midday",
+  "@homeGreetingMidday": { "description": "Greeting shown roughly 11:00–14:00" },
+  "homeGreetingAfternoon": "Afternoon",
+  "@homeGreetingAfternoon": { "description": "Greeting shown roughly 14:00–17:00" },
+  "homeGreetingEvening": "Evening",
+  "@homeGreetingEvening": { "description": "Greeting shown roughly 17:00–20:00" },
+  "homeGreetingNight": "Night",
+  "@homeGreetingNight": { "description": "Greeting shown roughly 20:00–24:00" },
+  "homeGreetingLate": "Heyyy sleep",
+  "@homeGreetingLate": { "description": "Greeting shown roughly 00:00–04:00" },
+  "homeFallbackPhrase1": "have fun doing whatever",
+  "@homeFallbackPhrase1": {
+    "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
+  },
+  "homeFallbackPhrase2": "enjoy the listen!",
+  "homeFallbackPhrase3": "what's on today?",
+  "homeFallbackPhrase4": "welcome back :D",
+  "homeFallbackPhrase5": "b- baka!",
+  "homeFallbackPhrase6": "what we fellin'?",
+  "homeFallbackPhrase7": "hehe >:D",
+  "homeFallbackPhrase8": "mweh :3",
+  "homeFallbackPhrase9": "who are you?!",
+  "homeFallbackPhrase10": "set your username..",
 
   "changelogTitle": "What's new",
   "@changelogTitle": {
@@ -199,53 +226,6 @@
   "changelogUnavailable": "Couldn't load the changelog",
   "@changelogUnavailable": {
     "description": "Shown in the changelog modal when the changelog file is missing or no release block could be parsed."
-  },
-
-  "homeActionCreatePlaylist": "Create Playlist",
-  "@homeActionCreatePlaylist": {
-    "description": "Shown on the Home Pages's Create Playlist action. Please keep the string as short as possible."
-  },
-
-  "homeHeaderNewsAndUpdates": "News & Updates",
-  "homeHeaderSettings": "Settings",
-
-  "homeSectionRecentlyAdded": "Recently Added",
-  "homeSectionRecentlyPlayed": "Recently Played",
-  "homeSectionAlbums": "Albums",
-  "homeSectionArtists": "Artists",
-
-  "homeNewBadge": "NEW",
-  "@homeNewBadge": {
-    "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
-  },
-
-  "homeGreetingEarlyBird": "Wow early bird",
-  "homeGreetingMorning": "Morning",
-  "homeGreetingMidday": "Midday",
-  "homeGreetingAfternoon": "Afternoon",
-  "homeGreetingEvening": "Evening",
-  "homeGreetingNight": "Night",
-  "homeGreetingLate": "Heyyy sleep",
-  "@homeGreetingEarlyBird": { "description": "Greeting shown roughly 04:00–06:00" },
-  "@homeGreetingMorning": { "description": "Greeting shown roughly 06:00–11:00" },
-  "@homeGreetingMidday": { "description": "Greeting shown roughly 11:00–14:00" },
-  "@homeGreetingAfternoon": { "description": "Greeting shown roughly 14:00–17:00" },
-  "@homeGreetingEvening": { "description": "Greeting shown roughly 17:00–20:00" },
-  "@homeGreetingNight": { "description": "Greeting shown roughly 20:00–24:00" },
-  "@homeGreetingLate": { "description": "Greeting shown roughly 00:00–04:00" },
-
-  "homeFallbackPhrase1": "have fun doing whatever",
-  "homeFallbackPhrase2": "enjoy the listen!",
-  "homeFallbackPhrase3": "what's on today?",
-  "homeFallbackPhrase4": "welcome back :D",
-  "homeFallbackPhrase5": "b- baka!",
-  "homeFallbackPhrase6": "what we fellin'?",
-  "homeFallbackPhrase7": "hehe >:D",
-  "homeFallbackPhrase8": "mweh :3",
-  "homeFallbackPhrase9": "who are you?!",
-  "homeFallbackPhrase10": "set your username..",
-  "@homeFallbackPhrase1": {
-    "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
   },
 
   "searchPageTitle": "Search",
@@ -281,11 +261,6 @@
     "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
   },
 
-
-  "libraryPageTitle": "Library",
-  "@libraryPageTitle": {
-    "description": "Shown in the header next to the profile picture at the top of the page."
-  },
   "libraryCardGenres": "Genres",
   "@libraryCardGenres": {
     "description": "Library page card label. Opens a list of genres."
@@ -306,19 +281,10 @@
   "@libraryCardFavoriteArtists": {
     "description": "Library page card label. Opens the list of artists the user has favorited."
   },
-  "libraryCardArtists": "Artists",
-  "@libraryCardArtists": {
-    "description": "Library page card label. Opens the full list of artists in the library."
-  },
   "libraryCardSongs": "Songs",
   "@libraryCardSongs": {
     "description": "Library page card label. Opens the full list of songs in the library."
   },
-  "libraryCardAlbums": "Albums",
-  "@libraryCardAlbums": {
-    "description": "Library page card label. Opens the full list of albums in the library."
-  },
-
   "libraryEmptyPlaylists": "No playlists yet :/",
   "@libraryEmptyPlaylists": {
     "description": "Empty state on the Playlists list page when the user has not created any playlists."
@@ -378,10 +344,6 @@
   "playlistEmpty": "This playlist is empty…sadly",
   "@playlistEmpty": {
     "description": "Empty state shown on a playlist detail page when no songs have been added yet."
-  },
-  "playlistActionReorder": "Reorder songs",
-  "@playlistActionReorder": {
-    "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
   },
   "playlistAdded": "Added to \"{name}\"",
   "@playlistAdded": {
@@ -460,10 +422,7 @@
       "count": { "type": "int" }
     }
   },
-  "albumTypeAlbum": "Album",
-  "@albumTypeAlbum": {
-    "description": "Type label for a standard album shown on the artist detail page."
-  },
+
   "albumTypeEp": "EP",
   "@albumTypeEp": {
     "description": "Type label for an EP (extended play) album shown on the artist detail page."
@@ -481,7 +440,6 @@
     "description": "Type label for a collaboration album (2 distinct contributing artists) shown on the artist detail page."
   },
 
-
   "playerNowPlaying": "Now Playing",
   "@playerNowPlaying": {
     "description": "Used in the player top bar and on the queue view's collapse button."
@@ -490,25 +448,21 @@
   "@playerOriginAllSongs": {
     "description": "Fallback shown when the queue has no specific origin label (e.g. not played from an album, artist, or section)."
   },
-
   "playerTooltipSkipNext": "Next",
-
   "playerTooltipShuffleOn": "Shuffling songs",
-  "playerTooltipShuffleOff": "Shuffle off",
   "@playerTooltipShuffleOn": {
     "description": "Tooltip shown when shuffle is currently active. Tapping toggles it off."
   },
+  "playerTooltipShuffleOff": "Shuffle off",
   "@playerTooltipShuffleOff": {
     "description": "Tooltip shown when shuffle is currently off. Tapping toggles it on."
   },
-
   "playerTooltipRepeatOff": "Repeat off",
-  "playerTooltipRepeatAll": "Repeats all",
-  "playerTooltipRepeatOne": "Repeats one",
   "@playerTooltipRepeatOff": {
     "description": "Tooltip describing the current repeat mode. Tapping cycles to the next mode."
   },
-
+  "playerTooltipRepeatAll": "Repeats all",
+  "playerTooltipRepeatOne": "Repeats one",
   "playerTooltipOpenQueue": "Open Queue",
   "playerTooltipOpenLyrics": "Open Lyrics",
 
@@ -520,7 +474,6 @@
   "lyricsPillSynced": "Synced",
   "lyricsPillStatic": "Static",
   "lyricsProviderCredit": "Lyrics provided by lrclib.net",
-
   "lyricsMenuTitle": "Lyrics & Playback",
   "lyricsMenuSectionLyrics": "Lyrics",
   "lyricsMenuSectionPlayback": "Playback",
@@ -536,14 +489,13 @@
   "lyricsMenuResetSaved": "Reset saved lyrics",
   "lyricsMenuResetSavedSubtitle": "Clear cached and re-fetch lyrics",
   "lyricsMenuRepeatOff": "Off",
-  "lyricsMenuRepeatAll": "Repeat all",
-  "lyricsMenuRepeatOne": "Repeat one",
   "@lyricsMenuRepeatOff": {
     "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
   },
-
+  "lyricsMenuRepeatAll": "Repeat all",
+  "lyricsMenuRepeatOne": "Repeat one",
   "lyricsTooltipBackToPlayer": "Back to player",
-  "lyricsTooltiplMore": "More",
+  "lyricsTooltipMore": "More",
 
   "songSheetTabOptions": "Options",
   "@songSheetTabOptions": {
@@ -565,7 +517,6 @@
   "@songSheetUnknownValue": {
     "description": "Italic placeholder shown for a metadata field whose value is missing or empty."
   },
-
 
   "editTagsTitle": "Edit tags",
   "@editTagsTitle": {
@@ -604,14 +555,162 @@
     "description": "Hint shown inside the genres field on the edit tags page to indicate how to enter multiple genres."
   },
 
-
-  "authSignIn": "Sign in",
-
-
-  "settingsPageTitle": "Settings",
-  "@settingsPageTitle": {
-    "description": "Title shown in the header of the settings root page."
+  "migrationFoundTitle": "Data from the old Sono",
+  "@migrationFoundTitle": {
+    "description": "Title of the sheet offering to import data from the previous Sono install."
   },
+  "migrationFoundBody": "Your previous install still has data on this device.",
+  "@migrationFoundBody": {
+    "description": "Body text above the counts in the migration sheet."
+  },
+  "migrationCountLiked": "{count, plural, =0{no likes} =1{1 like} other{{count} likes}}",
+  "@migrationCountLiked": {
+    "description": "Liked song count listed in the migration sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationCountAlbums": "{count, plural, =0{no albums} =1{1 album} other{{count} albums}}",
+  "@migrationCountAlbums": {
+    "description": "Favorite album count listed in the migration sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationCountArtists": "{count, plural, =0{no artists} =1{1 artist} other{{count} artists}}",
+  "@migrationCountArtists": {
+    "description": "Favorite artist count listed in the migration sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationCountPlaylists": "{count, plural, =0{no playlists} =1{1 playlist} other{{count} playlists}}",
+  "@migrationCountPlaylists": {
+    "description": "Playlist count listed in the migration sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationImport": "Import",
+  "@migrationImport": {
+    "description": "Action confirming the import in the migration sheet."
+  },
+  "migrationLater": "Not now",
+  "@migrationLater": {
+    "description": "Action dismissing the migration sheet until the next launch."
+  },
+  "migrationNever": "Never ask again",
+  "@migrationNever": {
+    "description": "Action permanently dismissing the migration sheet without importing."
+  },
+  "migrationDone": "Imported {liked, plural, =0{no likes} =1{1 like} other{{liked} likes}}, {albums, plural, =0{no albums} =1{1 album} other{{albums} albums}}, {artists, plural, =0{no artists} =1{1 artist} other{{artists} artists}}, {playlists, plural, =0{no playlists} =1{1 playlist} other{{playlists} playlists}} :D",
+  "@migrationDone": {
+    "description": "Snackbar summarising a successful migration from the old Sono.",
+    "placeholders": {
+      "liked": { "type": "int" },
+      "albums": { "type": "int" },
+      "artists": { "type": "int" },
+      "playlists": { "type": "int" }
+    }
+  },
+  "migrationDoneNothing": "Nothing could be imported from the old Sono :/",
+  "@migrationDoneNothing": {
+    "description": "Snackbar shown when a migration ran but matched nothing on this device."
+  },
+  "migrationUnresolved": "{count, plural, =1{1 song was} other{{count} songs were}} no longer on this device",
+  "@migrationUnresolved": {
+    "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "migrationFailed": "Import from the old Sono failed :/",
+  "@migrationFailed": {
+    "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
+  },
+
+  "sleepTitle": "Sleep timer",
+  "@sleepTitle": {
+    "description": "Title of the sleep timer sheet."
+  },
+  "sleepSubtitle": "Fades out and pauses when the timer runs out",
+  "@sleepSubtitle": {
+    "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
+  },
+  "sleepMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
+  "@sleepMinutes": {
+    "description": "Preset duration option in the sleep timer sheet.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sleepUnderMinute": "< 1 minute",
+  "@sleepUnderMinute": {
+    "description": "Sleep timer value shown when less than a minute is left."
+  },
+  "sleepFadeLength": "Fade out length",
+  "@sleepFadeLength": {
+    "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
+  },
+  "sleepFadeLengthValue": "{seconds}s",
+  "@sleepFadeLengthValue": {
+    "description": "Value shown next to the fade out length slider, in seconds.",
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "sleepEndOfSong": "End of song",
+  "@sleepEndOfSong": {
+    "description": "Sleep timer option that stops playback when the current song finishes."
+  },
+  "sleepEndOfQueue": "End of queue",
+  "@sleepEndOfQueue": {
+    "description": "Sleep timer option that stops playback when the last song in the queue finishes."
+  },
+  "sleepCustom": "Custom",
+  "@sleepCustom": {
+    "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
+  },
+  "sleepRemaining": "{minutes}:{seconds}",
+  "@sleepRemaining": {
+    "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
+    "placeholders": {
+      "minutes": { "type": "String" },
+      "seconds": { "type": "String" }
+    }
+  },
+  "sleepRemainingEndOfSong": "Until the song ends",
+  "@sleepRemainingEndOfSong": {
+    "description": "Status text shown while the sleep timer is waiting for the current song to finish."
+  },
+  "sleepRemainingEndOfQueue": "Until the queue ends",
+  "@sleepRemainingEndOfQueue": {
+    "description": "Status text shown while the sleep timer is waiting for the queue to finish."
+  },
+  "sleepExtend": "+{count, plural, =1{1 minute} other{{count} minutes}}",
+  "@sleepExtend": {
+    "description": "Button that adds more time to a running sleep timer.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sleepCustomTitle": "Custom time",
+  "@sleepCustomTitle": {
+    "description": "Title of the sheet for entering an arbitrary sleep timer length."
+  },
+  "sleepCustomField": "Minutes",
+  "@sleepCustomField": {
+    "description": "Label of the field for entering the sleep timer length in minutes."
+  },
+  "sleepCustomStart": "Start timer",
+  "@sleepCustomStart": {
+    "description": "Button that starts the sleep timer with the entered number of minutes."
+  },
+  "sleepCancel": "Cancel timer",
+  "@sleepCancel": {
+    "description": "Button that stops a running sleep timer without pausing playback."
+  },
+
   "settingsSearchTooltip": "Search settings",
   "@settingsSearchTooltip": {
     "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
@@ -640,85 +739,13 @@
   "@settingsPlannedFollowSubtitle": {
     "description": "Subtitle under the GitHub action in the planned feature sheet."
   },
-  "settingsProfileUnnamed": "Your profile",
-  "@settingsProfileUnnamed": {
-    "description": "Name shown on the profile row in settings when no username has been set yet."
-  },
-  "settingsProfileSubtitle": "Name, avatar and listening stats",
-  "@settingsProfileSubtitle": {
-    "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
-  },
-  "settingsAppearance": "Appearance",
-  "@settingsAppearance": {
-    "description": "Label of the row opening the appearance subpage, and the title of that subpage."
-  },
-  "settingsLanguage": "Language",
-  "@settingsLanguage": {
-    "description": "Label of the row opening the language subpage, and the title of that subpage."
-  },
-  "settingsThemeSystem": "System",
-  "@settingsThemeSystem": {
-    "description": "Theme option that follows the device light/dark setting. Shown as the value on the appearance row and as an option in the theme picker."
-  },
-  "settingsThemeDark": "Dark",
-  "@settingsThemeDark": {
-    "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
-  },
-  "settingsThemeLight": "Light",
-  "@settingsThemeLight": {
-    "description": "Name of the light theme. Shown as the value on the appearance row and as an option in the theme picker."
-  },
-  "settingsLanguageSystem": "System default",
-  "@settingsLanguageSystem": {
-    "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
-  },
-  "settingsPlayback": "Playback",
-  "@settingsPlayback": {
-    "description": "Label of the row opening the playback subpage, and the title of that subpage."
-  },
-  "settingsEqualizer": "Equalizer & effects",
-  "@settingsEqualizer": {
-    "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
-  },
-  "settingsEqualizerOff": "Off",
-  "@settingsEqualizerOff": {
-    "description": "Value on the equalizer row when the equalizer is disabled."
-  },
-  "settingsLibrary": "Library & scanning",
-  "@settingsLibrary": {
-    "description": "Label of the row opening the library subpage, and the title of that subpage."
-  },
-  "settingsDiscord": "Discord presence",
-  "@settingsDiscord": {
-    "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
-  },
-  "settingsDiscordDisconnected": "Not connected",
-  "@settingsDiscordDisconnected": {
-    "description": "Value on the Discord row when no Discord account is linked."
-  },
-  "settingsScrobbling": "Scrobbling",
-  "@settingsScrobbling": {
-    "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
-  },
-  "settingsBackup": "Backup & restore",
-  "@settingsBackup": {
-    "description": "Label of the row opening the backup subpage, and the title of that subpage."
+  "settingsEffectOff": "Off",
+  "@settingsEffectOff": {
+    "description": "Shown when an audio effect is turned off. Value on the equalizer row when the equalizer is disabled, and the normalisation mode that applies no gain."
   },
   "settingsStorage": "Storage",
   "@settingsStorage": {
     "description": "Label of the storage row. Currently marked as planned."
-  },
-  "settingsUpdates": "Updates",
-  "@settingsUpdates": {
-    "description": "Label of the row that checks for a newer release. Its value is the installed version."
-  },
-  "settingsUpdatesViaPlay": "Managed",
-  "@settingsUpdatesViaPlay": {
-    "description": "Value on the Updates row for Play builds, which open the store listing instead of checking GitHub."
-  },
-  "settingsAbout": "About Sono",
-  "@settingsAbout": {
-    "description": "Label of the row opening the about subpage, and the title of that subpage."
   },
   "settingsVersionLine": "Sono {version} • build {build}",
   "@settingsVersionLine": {
@@ -731,6 +758,19 @@
   "settingsLicenseLine": "Free software under GPL-3.0",
   "@settingsLicenseLine": {
     "description": "Second footnote line at the bottom of the settings root."
+  },
+  "settingsValueOff": "Off",
+  "@settingsValueOff": {
+    "description": "Shown on a settings row when nothing is set: no sleep timer running, or no minimum song length."
+  },
+
+  "settingsProfileUnnamed": "Your profile",
+  "@settingsProfileUnnamed": {
+    "description": "Name shown on the profile row in settings when no username has been set yet."
+  },
+  "settingsProfileSubtitle": "Name, avatar and listening stats",
+  "@settingsProfileSubtitle": {
+    "description": "Subtitle on the profile row in settings, describing what the profile subpage contains."
   },
   "settingsProfileTitle": "Profile",
   "@settingsProfileTitle": {
@@ -810,6 +850,23 @@
   "@settingsProfilePickBadImage": {
     "description": "Snackbar shown when an avatar file has an image extension but cannot be decoded. Casual/playful tone, match the tone rather than the literal words."
   },
+
+  "settingsAppearance": "Appearance",
+  "@settingsAppearance": {
+    "description": "Label of the row opening the appearance subpage, and the title of that subpage."
+  },
+  "settingsThemeSystem": "System",
+  "@settingsThemeSystem": {
+    "description": "Theme option that follows the device light/dark setting. Shown as the value on the appearance row and as an option in the theme picker."
+  },
+  "settingsThemeDark": "Dark",
+  "@settingsThemeDark": {
+    "description": "Name of the dark theme. Shown as the value on the appearance row and as an option in the theme picker."
+  },
+  "settingsThemeLight": "Light",
+  "@settingsThemeLight": {
+    "description": "Name of the light theme. Shown as the value on the appearance row and as an option in the theme picker."
+  },
   "settingsAppearanceSectionTheme": "Theme",
   "@settingsAppearanceSectionTheme": {
     "description": "Section label above the theme picker on the appearance subpage."
@@ -870,10 +927,6 @@
   "@settingsAppearanceReduceMotionSubtitle": {
     "description": "Subtitle under the reduce motion row."
   },
-  "settingsAppearanceSectionLibrary": "Library",
-  "@settingsAppearanceSectionLibrary": {
-    "description": "Section label above the library appearance options on the appearance subpage."
-  },
   "settingsAppearanceGridDensity": "Grid density",
   "@settingsAppearanceGridDensity": {
     "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
@@ -881,6 +934,15 @@
   "settingsAppearanceTrackNumbers": "Show track numbers",
   "@settingsAppearanceTrackNumbers": {
     "description": "Row toggling track numbers in album track lists. Currently marked as planned."
+  },
+
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Label of the row opening the language subpage, and the title of that subpage."
+  },
+  "settingsLanguageSystem": "System default",
+  "@settingsLanguageSystem": {
+    "description": "Shown as the language value when the app follows the device locale instead of a chosen one."
   },
   "settingsLanguageSearchHint": "Search languages",
   "@settingsLanguageSearchHint": {
@@ -908,6 +970,11 @@
   "settingsLanguageHelpTranslateSubtitle": "Opens Weblate in your browser",
   "@settingsLanguageHelpTranslateSubtitle": {
     "description": "Subtitle under the help translate row."
+  },
+
+  "settingsPlayback": "Playback",
+  "@settingsPlayback": {
+    "description": "Label of the row opening the playback subpage, and the title of that subpage."
   },
   "settingsPlaybackSectionTransitions": "Transitions",
   "@settingsPlaybackSectionTransitions": {
@@ -960,10 +1027,6 @@
   "@settingsPlaybackSleepTimer": {
     "description": "Row on the playback subpage that opens the sleep timer sheet."
   },
-  "settingsPlaybackSleepTimerOff": "Off",
-  "@settingsPlaybackSleepTimerOff": {
-    "description": "Value shown next to the sleep timer row when no timer is running."
-  },
   "settingsPlaybackResumeOnConnect": "Resume when connect",
   "@settingsPlaybackResumeOnConnect": {
     "description": "Row for resuming playback when headphones are plugged in or connect over bluetooth. Currently marked as planned."
@@ -973,241 +1036,148 @@
     "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
   },
 
-  "normalisationSectionMode": "Mode",
-  "@normalisationSectionMode": {
+  "settingsNormalisationSectionMode": "Mode",
+  "@settingsNormalisationSectionMode": {
     "description": "Section label above the normalisation mode options."
   },
-  "normalisationSectionTuning": "Tuning",
-  "@normalisationSectionTuning": {
+  "settingsNormalisationSectionTuning": "Tuning",
+  "@settingsNormalisationSectionTuning": {
     "description": "Section label above the preamp and clipping options."
   },
-  "normalisationResetTooltip": "Reset normalisation",
-  "@normalisationResetTooltip": {
+  "settingsNormalisationResetTooltip": "Reset normalisation",
+  "@settingsNormalisationResetTooltip": {
     "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
   },
-  "normalisationOff": "Off",
-  "@normalisationOff": {
-    "description": "Normalisation mode that applies no gain."
-  },
-  "normalisationTrack": "Per song",
-  "@normalisationTrack": {
+  "settingsNormalisationTrack": "Per song",
+  "@settingsNormalisationTrack": {
     "description": "Normalisation mode that brings every song to the same loudness."
   },
-  "normalisationTrackSubtitle": "Every song at the same loudness",
-  "@normalisationTrackSubtitle": {
+  "settingsNormalisationTrackSubtitle": "Every song at the same loudness",
+  "@settingsNormalisationTrackSubtitle": {
     "description": "Subtitle of the per track normalisation option."
   },
-  "normalisationAlbum": "Per album",
-  "@normalisationAlbum": {
+  "settingsNormalisationAlbum": "Per album",
+  "@settingsNormalisationAlbum": {
     "description": "Normalisation mode that normalises whole albums as one unit."
   },
-  "normalisationAlbumSubtitle": "Keeps loudness differences within an album",
-  "@normalisationAlbumSubtitle": {
+  "settingsNormalisationAlbumSubtitle": "Keeps loudness differences within an album",
+  "@settingsNormalisationAlbumSubtitle": {
     "description": "Subtitle of the per album normalisation option."
   },
-  "normalisationPreamp": "Preamp",
-  "@normalisationPreamp": {
+  "settingsNormalisationPreamp": "Preamp",
+  "@settingsNormalisationPreamp": {
     "description": "Slider for extra gain applied on top of the ReplayGain value."
   },
-  "normalisationPreampValue": "{db} dB",
-  "@normalisationPreampValue": {
+  "settingsNormalisationPreampValue": "{db} dB",
+  "@settingsNormalisationPreampValue": {
     "description": "Value shown next to the preamp slider, in decibels.",
     "placeholders": {
       "db": { "type": "String" }
     }
   },
-  "normalisationPreventClipping": "Prevent clipping",
-  "@normalisationPreventClipping": {
+  "settingsNormalisationPreventClipping": "Prevent clipping",
+  "@settingsNormalisationPreventClipping": {
     "description": "Toggle that lowers the gain instead of letting loud peaks distort."
   },
-  "normalisationPreventClippingSubtitle": "Lower the gain instead of letting peaks distort",
-  "@normalisationPreventClippingSubtitle": {
+  "settingsNormalisationPreventClippingSubtitle": "Lower the gain instead of letting peaks distort",
+  "@settingsNormalisationPreventClippingSubtitle": {
     "description": "Subtitle of the prevent clipping toggle."
   },
 
-
-  "sleepTitle": "Sleep timer",
-  "@sleepTitle": {
-    "description": "Title of the sleep timer sheet."
+  "settingsEqualizer": "Equalizer & effects",
+  "@settingsEqualizer": {
+    "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
   },
-  "sleepSubtitle": "Fades out and pauses when the timer runs out",
-  "@sleepSubtitle": {
-    "description": "Subtitle under the sleep timer sheet title, explaining what happens when the timer ends."
-  },
-  "sleepMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
-  "@sleepMinutes": {
-    "description": "Preset duration option in the sleep timer sheet.",
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "sleepUnderMinute": "< 1 minute",
-  "@sleepUnderMinute": {
-    "description": "Sleep timer value shown when less than a minute is left."
-  },
-  "settingsPlaybackSleepTimerFade": "Fade out length",
-  "@settingsPlaybackSleepTimerFade": {
-    "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
-  },
-  "settingsPlaybackSleepTimerFadeValue": "{seconds}s",
-  "@settingsPlaybackSleepTimerFadeValue": {
-    "description": "Value shown next to the fade out length slider, in seconds.",
-    "placeholders": {
-      "seconds": { "type": "int" }
-    }
-  },
-  "sleepEndOfSong": "End of song",
-  "@sleepEndOfSong": {
-    "description": "Sleep timer option that stops playback when the current song finishes."
-  },
-  "sleepEndOfQueue": "End of queue",
-  "@sleepEndOfQueue": {
-    "description": "Sleep timer option that stops playback when the last song in the queue finishes."
-  },
-  "sleepCustom": "Custom",
-  "@sleepCustom": {
-    "description": "Sleep timer option that opens a picker for an arbitrary number of minutes."
-  },
-  "sleepRemaining": "{minutes}:{seconds}",
-  "@sleepRemaining": {
-    "description": "Countdown shown while a sleep timer is running, minutes and zero padded seconds.",
-    "placeholders": {
-      "minutes": { "type": "String" },
-      "seconds": { "type": "String" }
-    }
-  },
-  "sleepRemainingEndOfSong": "Until the song ends",
-  "@sleepRemainingEndOfSong": {
-    "description": "Status text shown while the sleep timer is waiting for the current song to finish."
-  },
-  "sleepRemainingEndOfQueue": "Until the queue ends",
-  "@sleepRemainingEndOfQueue": {
-    "description": "Status text shown while the sleep timer is waiting for the queue to finish."
-  },
-  "sleepExtend": "+{count, plural, =1{1 minute} other{{count} minutes}}",
-  "@sleepExtend": {
-    "description": "Button that adds more time to a running sleep timer.",
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "sleepCustomTitle": "Custom time",
-  "@sleepCustomTitle": {
-    "description": "Title of the sheet for entering an arbitrary sleep timer length."
-  },
-  "sleepCustomField": "Minutes",
-  "@sleepCustomField": {
-    "description": "Label of the field for entering the sleep timer length in minutes."
-  },
-  "sleepCustomStart": "Start timer",
-  "@sleepCustomStart": {
-    "description": "Button that starts the sleep timer with the entered number of minutes."
-  },
-  "sleepCancel": "Cancel timer",
-  "@sleepCancel": {
-    "description": "Button that stops a running sleep timer without pausing playback."
-  },
-  "sleepStarted": "Sleep timer set",
-  "@sleepStarted": {
-    "description": "Confirmation shown after a sleep timer is started."
-  },
-  "sleepCancelled": "Sleep timer cancelled",
-  "@sleepCancelled": {
-    "description": "Confirmation shown after a running sleep timer is cancelled."
-  },
-
-
-  "settingsEqPresetFlat": "Flat",
-  "@settingsEqPresetFlat": {
+  "settingsEqualizerPresetFlat": "Flat",
+  "@settingsEqualizerPresetFlat": {
     "description": "Equalizer preset, every band at zero."
   },
-  "settingsEqPresetBass": "Bass",
-  "@settingsEqPresetBass": {
+  "settingsEqualizerPresetBass": "Bass",
+  "@settingsEqualizerPresetBass": {
     "description": "Equalizer preset, lifts the lows."
   },
-  "settingsEqPresetTreble": "Treble",
-  "@settingsEqPresetTreble": {
+  "settingsEqualizerPresetTreble": "Treble",
+  "@settingsEqualizerPresetTreble": {
     "description": "Equalizer preset, lifts the highs."
   },
-  "settingsEqPresetVocal": "Vocal",
-  "@settingsEqPresetVocal": {
+  "settingsEqualizerPresetVocal": "Vocal",
+  "@settingsEqualizerPresetVocal": {
     "description": "Equalizer preset, lifts the mids where voices sit."
   },
-  "settingsEqPresetRock": "Rock",
-  "@settingsEqPresetRock": {
+  "settingsEqualizerPresetRock": "Rock",
+  "@settingsEqualizerPresetRock": {
     "description": "Equalizer preset, lifts the lows and highs."
   },
-  "settingsEqPresetElectronic": "Electronic",
-  "@settingsEqPresetElectronic": {
+  "settingsEqualizerPresetElectronic": "Electronic",
+  "@settingsEqualizerPresetElectronic": {
     "description": "Equalizer preset for electronic music, lifts the lows and highs."
   },
-  "settingsEqPresetBrainFryer": "Brain Fryer",
-  "@settingsEqPresetBrainFryer": {
+  "settingsEqualizerPresetBrainFryer": "Brain Fryer",
+  "@settingsEqualizerPresetBrainFryer": {
     "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
   },
-  "settingsEqPresetFryerUltimate": "Fryer Ultimate",
-  "@settingsEqPresetFryerUltimate": {
+  "settingsEqualizerPresetFryerUltimate": "Fryer Ultimate",
+  "@settingsEqualizerPresetFryerUltimate": {
     "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
   },
-  "settingsEqPresetCustom": "Custom",
-  "@settingsEqPresetCustom": {
+  "settingsEqualizerPresetCustom": "Custom",
+  "@settingsEqualizerPresetCustom": {
     "description": "Shown instead of a preset name when the curve matches none of them."
   },
-
-
-  "settingsEqTitle": "Equalizer",
-  "@settingsEqTitle": {
-    "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+  "settingsEqualizerTitle": "Equalizer",
+  "@settingsEqualizerTitle": {
+    "description": "Title of the equalizer subpage and label of the toggle that switches the equalizer on and off. Shorter than the row label, which is 'Equalizer & effects'."
   },
-  "settingsEqEnable": "Equalizer",
-  "@settingsEqEnable": {
-    "description": "Toggle that switches the equalizer on and off."
-  },
-  "settingsEqEnableSubtitle": "Applied through the mpv filter chain",
-  "@settingsEqEnableSubtitle": {
+  "settingsEqualizerEnableSubtitle": "Applied through the mpv filter chain",
+  "@settingsEqualizerEnableSubtitle": {
     "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
   },
-  "settingsEqSectionPreset": "Preset",
-  "@settingsEqSectionPreset": {
+  "settingsEqualizerSectionPreset": "Preset",
+  "@settingsEqualizerSectionPreset": {
     "description": "Section label above the preset chips on the equalizer subpage."
   },
-  "settingsEqSectionEffects": "Effects",
-  "@settingsEqSectionEffects": {
+  "settingsEqualizerSectionEffects": "Effects",
+  "@settingsEqualizerSectionEffects": {
     "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
   },
-  "settingsEqBassBoost": "Bass boost",
-  "@settingsEqBassBoost": {
+  "settingsEqualizerBassBoost": "Bass boost",
+  "@settingsEqualizerBassBoost": {
     "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
   },
-  "settingsEqSpeed": "Speed",
-  "@settingsEqSpeed": {
+  "settingsEqualizerSpeed": "Speed",
+  "@settingsEqualizerSpeed": {
     "description": "Slider controlling playback rate without changing pitch."
   },
-  "settingsEqPitch": "Pitch",
-  "@settingsEqPitch": {
+  "settingsEqualizerPitch": "Pitch",
+  "@settingsEqualizerPitch": {
     "description": "Slider controlling pitch without changing playback rate."
   },
-  "settingsEqValueDb": "{value} dB",
-  "@settingsEqValueDb": {
+  "settingsEqualizerValueDb": "{value} dB",
+  "@settingsEqualizerValueDb": {
     "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
     "placeholders": {
       "value": { "type": "String" }
     }
   },
-  "settingsEqValueRate": "{value}x",
-  "@settingsEqValueRate": {
+  "settingsEqualizerValueRate": "{value}x",
+  "@settingsEqualizerValueRate": {
     "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
     "placeholders": {
       "value": { "type": "String" }
     }
   },
-  "settingsEqResetAll": "Reset all effects",
-  "@settingsEqResetAll": {
+  "settingsEqualizerResetAll": "Reset all effects",
+  "@settingsEqualizerResetAll": {
     "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
   },
-  "settingsEqResetTooltip": "Reset the equalizer",
-  "@settingsEqResetTooltip": {
+  "settingsEqualizerResetTooltip": "Reset the equalizer",
+  "@settingsEqualizerResetTooltip": {
     "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
+  },
+
+  "settingsLibrary": "Library & scanning",
+  "@settingsLibrary": {
+    "description": "Label of the row opening the library subpage, and the title of that subpage."
   },
   "settingsLibrarySectionSources": "Sources",
   "@settingsLibrarySectionSources": {
@@ -1255,10 +1225,6 @@
     "placeholders": {
       "seconds": { "type": "int" }
     }
-  },
-  "settingsLibraryMinLengthOff": "Off",
-  "@settingsLibraryMinLengthOff": {
-    "description": "Shown when no minimum length is set."
   },
   "settingsLibrarySectionGrouping": "Grouping",
   "@settingsLibrarySectionGrouping": {
@@ -1357,6 +1323,15 @@
       "count": { "type": "int", "format": "decimalPattern" }
     }
   },
+
+  "settingsDiscord": "Discord presence",
+  "@settingsDiscord": {
+    "description": "Label of the row opening the Discord rich presence subpage, and the title of that subpage."
+  },
+  "settingsDiscordDisconnected": "Not connected",
+  "@settingsDiscordDisconnected": {
+    "description": "Value on the Discord row when no Discord account is linked."
+  },
   "settingsDiscordTitle": "Discord",
   "@settingsDiscordTitle": {
     "description": "Title of the Discord subpage. Shorter than the row label, which is 'Discord presence'."
@@ -1440,6 +1415,11 @@
   "settingsDiscordPreviewButton": "Try Sono",
   "@settingsDiscordPreviewButton": {
     "description": "Label of the button in the preview card. Matches the real Discord button and should not be translated."
+  },
+
+  "settingsScrobbling": "Scrobbling",
+  "@settingsScrobbling": {
+    "description": "Label of the row opening the scrobbling subpage, and the title of that subpage."
   },
   "settingsScrobblingProviders": "Providers",
   "@settingsScrobblingProviders": {
@@ -1572,6 +1552,11 @@
       "date": { "type": "String" }
     }
   },
+
+  "settingsBackup": "Backup & restore",
+  "@settingsBackup": {
+    "description": "Label of the row opening the backup subpage, and the title of that subpage."
+  },
   "settingsBackupExport": "Export backup",
   "@settingsBackupExport": {
     "description": "Row that writes a backup file."
@@ -1661,6 +1646,15 @@
       "time": { "type": "DateTime", "format": "jm" }
     }
   },
+
+  "settingsUpdates": "Updates",
+  "@settingsUpdates": {
+    "description": "Label of the row that checks for a newer release. Its value is the installed version."
+  },
+  "settingsUpdatesViaPlay": "Managed",
+  "@settingsUpdatesViaPlay": {
+    "description": "Value on the Updates row for Play builds, which open the store listing instead of checking GitHub."
+  },
   "settingsUpdatesChecking": "Checking…",
   "@settingsUpdatesChecking": {
     "description": "Value on the updates row while a check is running."
@@ -1676,51 +1670,56 @@
       "version": { "type": "String" }
     }
   },
-  "settingsUpdateSheetUpToDateTitle": "You're up to date :D",
-  "@settingsUpdateSheetUpToDateTitle": {
+  "settingsUpdatesSheetUpToDateTitle": "You're up to date :D",
+  "@settingsUpdatesSheetUpToDateTitle": {
     "description": "Title of the update sheet when no newer release exists."
   },
-  "settingsUpdateSheetUpToDateBody": "Sono {version} is the newest release.",
-  "@settingsUpdateSheetUpToDateBody": {
+  "settingsUpdatesSheetUpToDateBody": "Sono {version} is the newest release.",
+  "@settingsUpdatesSheetUpToDateBody": {
     "description": "Body of the update sheet when no newer release exists.",
     "placeholders": {
       "version": { "type": "String" }
     }
   },
-  "settingsUpdateSheetAvailableTitle": "Sono {version} is available",
-  "@settingsUpdateSheetAvailableTitle": {
+  "settingsUpdatesSheetAvailableTitle": "Sono {version} is available",
+  "@settingsUpdatesSheetAvailableTitle": {
     "description": "Title of the update sheet when a newer release was found.",
     "placeholders": {
       "version": { "type": "String" }
     }
   },
-  "settingsUpdateSheetFrom": "You're on {current}, the newest is {latest}.",
-  "@settingsUpdateSheetFrom": {
+  "settingsUpdatesSheetFrom": "You're on {current}, the newest is {latest}.",
+  "@settingsUpdatesSheetFrom": {
     "description": "Line above the release notes comparing the installed and newest versions.",
     "placeholders": {
       "current": { "type": "String" },
       "latest": { "type": "String" }
     }
   },
-  "settingsUpdateSheetOpen": "Open the release",
-  "@settingsUpdateSheetOpen": {
+  "settingsUpdatesSheetOpen": "Open the release",
+  "@settingsUpdatesSheetOpen": {
     "description": "Action that opens the GitHub release page in the browser."
   },
-  "settingsUpdateSheetSkip": "Skip this version",
-  "@settingsUpdateSheetSkip": {
+  "settingsUpdatesSheetSkip": "Skip this version",
+  "@settingsUpdatesSheetSkip": {
     "description": "Action that dismisses a release so it stops being announced."
   },
-  "settingsUpdateSheetSkipSubtitle": "Stops the banner for this release",
-  "@settingsUpdateSheetSkipSubtitle": {
+  "settingsUpdatesSheetSkipSubtitle": "Stops the banner for this release",
+  "@settingsUpdatesSheetSkipSubtitle": {
     "description": "Subtitle under the skip action in the update sheet."
   },
-  "settingsUpdateSheetFailedTitle": "Couldn't check for updates",
-  "@settingsUpdateSheetFailedTitle": {
+  "settingsUpdatesSheetFailedTitle": "Couldn't check for updates",
+  "@settingsUpdatesSheetFailedTitle": {
     "description": "Title of the update sheet when the check could not reach GitHub."
   },
-  "settingsUpdateSheetFailedBody": "Sono couldn't reach GitHub. Check your connection and try again.",
-  "@settingsUpdateSheetFailedBody": {
+  "settingsUpdatesSheetFailedBody": "Sono couldn't reach GitHub. Check your connection and try again.",
+  "@settingsUpdatesSheetFailedBody": {
     "description": "Body of the update sheet when the check failed."
+  },
+
+  "settingsAbout": "About Sono",
+  "@settingsAbout": {
+    "description": "Label of the row opening the about subpage, and the title of that subpage."
   },
   "settingsAboutTitle": "About",
   "@settingsAboutTitle": {
@@ -1742,7 +1741,7 @@
   "@settingsAboutLicences": {
     "description": "Row that opens the licence list, covering Sono and every dependency."
   },
-  "settingsSupportKofi": "Support me",
+  "settingsAboutKofi": "Support me",
   "settingsAboutKofiSubtitle": "Pays for the signing key and a lot of coffee",
   "@settingsAboutKofiSubtitle": {
     "description": "Subtitle under the Ko-fi row."
@@ -1751,90 +1750,14 @@
   "@settingsAboutFooterBuilt": {
     "description": "First footer line on the about page. The name is a username and stays as is."
   },
-  "settingsContributors": "Contributors",
+  "settingsAboutContributors": "Contributors",
 
   "contributorsMaintainer": "Maintainer",
-  "contributorsCodeSection": "Code",
-  "contributorsTranslatorSection": "Translations",
+  "contributorsSectionCode": "Code",
+  "contributorsSectionTranslations": "Translations",
   "contributorsPlaceholder": "this could be you",
   "@contributorsPlaceholder": {
     "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."
   },
-  "contributorsLoadFailed": "Couldn't load contributors :/",
-
-
-  "migrationFoundTitle": "Data from the old Sono",
-  "@migrationFoundTitle": {
-    "description": "Title of the sheet offering to import data from the previous Sono install."
-  },
-  "migrationFoundBody": "Your previous install still has data on this device.",
-  "@migrationFoundBody": {
-    "description": "Body text above the counts in the migration sheet."
-  },
-  "migrationCountLiked": "{count, plural, =0{no likes} =1{1 like} other{{count} likes}}",
-  "@migrationCountLiked": {
-    "description": "Liked song count listed in the migration sheet.",
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "migrationCountAlbums": "{count, plural, =0{no albums} =1{1 album} other{{count} albums}}",
-  "@migrationCountAlbums": {
-    "description": "Favorite album count listed in the migration sheet.",
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "migrationCountArtists": "{count, plural, =0{no artists} =1{1 artist} other{{count} artists}}",
-  "@migrationCountArtists": {
-    "description": "Favorite artist count listed in the migration sheet.",
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "migrationCountPlaylists": "{count, plural, =0{no playlists} =1{1 playlist} other{{count} playlists}}",
-  "@migrationCountPlaylists": {
-    "description": "Playlist count listed in the migration sheet.",
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "migrationImport": "Import",
-  "@migrationImport": {
-    "description": "Action confirming the import in the migration sheet."
-  },
-  "migrationLater": "Not now",
-  "@migrationLater": {
-    "description": "Action dismissing the migration sheet until the next launch."
-  },
-  "migrationNever": "Never ask again",
-  "@migrationNever": {
-    "description": "Action permanently dismissing the migration sheet without importing."
-  },
-  "migrationDone": "Imported {liked, plural, =0{no likes} =1{1 like} other{{liked} likes}}, {albums, plural, =0{no albums} =1{1 album} other{{albums} albums}}, {artists, plural, =0{no artists} =1{1 artist} other{{artists} artists}}, {playlists, plural, =0{no playlists} =1{1 playlist} other{{playlists} playlists}} :D",
-  "@migrationDone": {
-    "description": "Snackbar summarising a successful migration from the old Sono.",
-    "placeholders": {
-      "liked": { "type": "int" },
-      "albums": { "type": "int" },
-      "artists": { "type": "int" },
-      "playlists": { "type": "int" }
-    }
-  },
-  "migrationDoneNothing": "Nothing could be imported from the old Sono :/",
-  "@migrationDoneNothing": {
-    "description": "Snackbar shown when a migration ran but matched nothing on this device."
-  },
-  "migrationUnresolved": "{count, plural, =1{1 song was} other{{count} songs were}} no longer on this device",
-  "@migrationUnresolved": {
-    "description": "Second snackbar after a migration, counting song references that could not be matched to local files.",
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "migrationFailed": "Import from the old Sono failed :/",
-  "@migrationFailed": {
-    "description": "Snackbar shown when reading or applying the old database failed. The error follows after a colon."
-  }
+  "contributorsLoadFailed": "Couldn't load contributors :/"
 }
-

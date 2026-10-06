@@ -119,7 +119,7 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
                     SettingsRow(
                       icon: IconsSheet.profileOutlined,
                       accent: c.accentBlue,
-                      label: l.settingsContributors,
+                      label: l.settingsAboutContributors,
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) =>
@@ -151,7 +151,7 @@ class _SettingsAboutPageState extends State<SettingsAboutPage> {
                       icon: SonoBrands.kofi,
                       brand: true,
                       accent: c.primary,
-                      label: l.settingsSupportKofi,
+                      label: l.settingsAboutKofi,
                       subtitle: l.settingsAboutKofiSubtitle,
                       external: true,
                       onTap: () => _open(_kofiUrl),

@@ -27,14 +27,26 @@
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
     "navHome": "Start",
-    "navLibrary": "Biblioteka",
+    "commonLibrary": "Biblioteka",
+    "@commonLibrary": {
+        "description": "The user's music library. Used as the bottom navigation tab, the library page title, and a section label on the appearance settings page."
+    },
     "navSearch": "Wyszukaj",
     "homeActionCreatePlaylist": "Stwórz Playliste",
     "homeHeaderNewsAndUpdates": "Wiadomości i Uaktualnienia",
-    "homeHeaderSettings": "Ustawienia",
+    "commonSettings": "Ustawienia",
+    "@commonSettings": {
+        "description": "Settings. Used as the settings page title and as the tooltip of the settings button in page headers."
+    },
     "homeSectionRecentlyAdded": "Ostatnio Dodane",
-    "homeSectionAlbums": "Albumy",
-    "homeSectionArtists": "Artyści",
+    "commonAlbums": "Albumy",
+    "@commonAlbums": {
+        "description": "Plural noun for albums. Used as a section header on the home and artist pages, as the library card and page title for all albums, and as a search filter."
+    },
+    "commonArtists": "Artyści",
+    "@commonArtists": {
+        "description": "Plural noun for artists. Used as a section header on the home page and as the library card and page title for all artists."
+    },
     "homeGreetingEarlyBird": "Wow, Ranny Ptaszek",
     "homeGreetingMorning": "Dzień Dobry",
     "homeGreetingMidday": "Południe",
@@ -132,6 +144,5 @@
         "description": "Subtitle of the Repeat menu item showing the current mode. Noun form (state), not imperative."
     },
     "lyricsTooltipBackToPlayer": "Spowrotem do odtwarzacza",
-    "lyricsTooltiplMore": "Więcej",
-    "authSignIn": "Zaloguj się"
+    "lyricsTooltipMore": "Więcej"
 }

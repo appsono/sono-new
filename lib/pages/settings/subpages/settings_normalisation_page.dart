@@ -62,7 +62,7 @@ class _SettingsNormalisationPageState extends State<SettingsNormalisationPage> {
       actions: [
         SonoHeaderAction(
           icon: IconsSheet.updateOutlined,
-          tooltip: l.normalisationResetTooltip,
+          tooltip: l.settingsNormalisationResetTooltip,
           onTap: _reset,
         ),
       ],
@@ -73,36 +73,36 @@ class _SettingsNormalisationPageState extends State<SettingsNormalisationPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SettingsGroupLabel(text: l.normalisationSectionMode),
+                SettingsGroupLabel(text: l.settingsNormalisationSectionMode),
                 SettingsGroup(
                   dividerInset: 0,
                   children: [
                     SettingsCheckRow(
-                      label: l.normalisationOff,
+                      label: l.settingsEffectOff,
                       selected: _mode == NormalisationMode.off,
                       onTap: () => _setMode(NormalisationMode.off),
                     ),
                     SettingsCheckRow(
-                      label: l.normalisationTrack,
-                      subtitle: l.normalisationTrackSubtitle,
+                      label: l.settingsNormalisationTrack,
+                      subtitle: l.settingsNormalisationTrackSubtitle,
                       selected: _mode == NormalisationMode.track,
                       onTap: () => _setMode(NormalisationMode.track),
                     ),
                     SettingsCheckRow(
-                      label: l.normalisationAlbum,
-                      subtitle: l.normalisationAlbumSubtitle,
+                      label: l.settingsNormalisationAlbum,
+                      subtitle: l.settingsNormalisationAlbumSubtitle,
                       selected: _mode == NormalisationMode.album,
                       onTap: () => _setMode(NormalisationMode.album),
                     ),
                   ],
                 ),
 
-                SettingsGroupLabel(text: l.normalisationSectionTuning),
+                SettingsGroupLabel(text: l.settingsNormalisationSectionTuning),
                 SettingsGroup(
                   children: [
                     SettingsSliderRow(
-                      label: l.normalisationPreamp,
-                      value: l.normalisationPreampValue(
+                      label: l.settingsNormalisationPreamp,
+                      value: l.settingsNormalisationPreampValue(
                         _preamp.toStringAsFixed(1),
                       ),
                       current: _preamp,
@@ -117,8 +117,8 @@ class _SettingsNormalisationPageState extends State<SettingsNormalisationPage> {
                     SettingsRow(
                       icon: IconsSheet.volumeHighOutlined,
                       accent: c.accentPurple,
-                      label: l.normalisationPreventClipping,
-                      subtitle: l.normalisationPreventClippingSubtitle,
+                      label: l.settingsNormalisationPreventClipping,
+                      subtitle: l.settingsNormalisationPreventClippingSubtitle,
                       toggle: _preventClipping,
                       onToggle: (value) {
                         setState(() => _preventClipping = value);

@@ -78,7 +78,7 @@ class _LibraryPageState extends State<LibraryPage> {
       ),
       (
         short: _CardData(
-          l.libraryCardAlbums,
+          l.commonAlbums,
           IconsSheet.albumFilled,
           c.accentOrange,
           () => _push(AlbumsPage(db: widget.db)),
@@ -93,7 +93,7 @@ class _LibraryPageState extends State<LibraryPage> {
       ),
       (
         short: _CardData(
-          l.libraryCardArtists,
+          l.commonArtists,
           IconsSheet.artistFilled,
           c.accentTeal,
           () => _push(ArtistsPage(db: widget.db)),
@@ -149,7 +149,7 @@ class _LibraryPageState extends State<LibraryPage> {
               final profile = snap.data;
               return SonoStickyHeader(
                 child: SonoHeader(
-                  pageTitle: l.libraryPageTitle,
+                  pageTitle: l.commonLibrary,
                   avatar: profile?.avatar,
                   onProfileTap: () {
                     //will open sidebar later
@@ -163,7 +163,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     ),
                     SonoHeaderAction(
                       icon: IconsSheet.settingsOutlined,
-                      tooltip: l.homeHeaderSettings,
+                      tooltip: l.commonSettings,
                       onTap: () => widget.onOpenSettings?.call(),
                     ),
                   ],

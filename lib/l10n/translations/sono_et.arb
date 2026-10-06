@@ -27,14 +27,26 @@
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
     "navHome": "Avaleht",
-    "navLibrary": "Muusikakogu",
+    "commonLibrary": "Muusikakogu",
+    "@commonLibrary": {
+        "description": "The user's music library. Used as the bottom navigation tab, the library page title, and a section label on the appearance settings page."
+    },
     "navSearch": "Otsi",
     "homeActionCreatePlaylist": "Koosta esitusloend",
     "homeHeaderNewsAndUpdates": "Uudised ja uuendused",
-    "homeHeaderSettings": "Seadistused",
+    "commonSettings": "Seadistused",
+    "@commonSettings": {
+        "description": "Settings. Used as the settings page title and as the tooltip of the settings button in page headers."
+    },
     "homeSectionRecentlyAdded": "Hiljuti lisatud",
-    "homeSectionAlbums": "Albumid",
-    "homeSectionArtists": "Esitajad",
+    "commonAlbums": "Albumid",
+    "@commonAlbums": {
+        "description": "Plural noun for albums. Used as a section header on the home and artist pages, as the library card and page title for all albums, and as a search filter."
+    },
+    "commonArtists": "Esitajad",
+    "@commonArtists": {
+        "description": "Plural noun for artists. Used as a section header on the home page and as the library card and page title for all artists."
+    },
     "homeGreetingEarlyBird": "Küll sa oled varajane",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
@@ -132,13 +144,12 @@
     "lyricsMenuRepeatAll": "Korda kõik",
     "lyricsMenuRepeatOne": "Korda ühte",
     "lyricsTooltipBackToPlayer": "Tagasi pleieri juurde",
-    "lyricsTooltiplMore": "Veel",
-    "authSignIn": "Logi sisse",
-    "settingsSupportKofi": "Toeta arendajat",
-    "settingsContributors": "Kaasautorid",
+    "lyricsTooltipMore": "Veel",
+    "settingsAboutKofi": "Toeta arendajat",
+    "settingsAboutContributors": "Kaasautorid",
     "contributorsMaintainer": "Hooldaja",
-    "contributorsCodeSection": "Lähtekood",
-    "contributorsTranslatorSection": "Tõlked",
+    "contributorsSectionCode": "Lähtekood",
+    "contributorsSectionTranslations": "Tõlked",
     "contributorsLoadFailed": "Kaasautorite laadimine ei õnnestunud :/",
     "commonFavorite": "Lemmik",
     "commonFavorited": "Lemmikuks märgitud",
@@ -180,7 +191,7 @@
     },
     "commonAlbum": "Album",
     "@commonAlbum": {
-        "description": "Noun label for the album metadata field. Shown in info/details views."
+        "description": "Noun label for a single album. Used for the album metadata field in info/details views and as the release type of a standard album on the artist page, next to EP and Single."
     },
     "commonGenre": "Žanr",
     "@commonGenre": {
@@ -238,21 +249,9 @@
     "@libraryCardFavoriteArtists": {
         "description": "Library page card label. Opens the list of artists the user has favorited."
     },
-    "libraryCardArtists": "Esitajad",
-    "@libraryCardArtists": {
-        "description": "Library page card label. Opens the full list of artists in the library."
-    },
     "libraryCardSongs": "Lood",
     "@libraryCardSongs": {
         "description": "Library page card label. Opens the full list of songs in the library."
-    },
-    "libraryCardAlbums": "Albumid",
-    "@libraryCardAlbums": {
-        "description": "Library page card label. Opens the full list of albums in the library."
-    },
-    "libraryPageTitle": "Muusikakogu",
-    "@libraryPageTitle": {
-        "description": "Shown in the header next to the profile picture at the top of the page."
     },
     "libraryEmptySongs": "Sinu muusikakogus pole veel lugusid. :/",
     "@libraryEmptySongs": {
@@ -291,17 +290,9 @@
             }
         }
     },
-    "commonMoreOptions": "Lisavalikud",
-    "@commonMoreOptions": {
-        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
-    },
     "commonCreatePlaylist": "Koosta esitusloend",
     "@commonCreatePlaylist": {
         "description": "Button and action label for creating a new playlist."
-    },
-    "commonRename": "Muuda nime",
-    "@commonRename": {
-        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
     },
     "commonDelete": "Kustuta",
     "@commonDelete": {
@@ -360,10 +351,6 @@
     "@playlistEmpty": {
         "description": "Empty state shown on a playlist detail page when no songs have been added yet."
     },
-    "playlistActionReorder": "Muuda lugude järjestust",
-    "@playlistActionReorder": {
-        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
-    },
     "playlistAdded": "Lisatud „{name}“ esitusloendisse",
     "@playlistAdded": {
         "description": "Snackbar shown after a song has been added to a playlist via the picker.",
@@ -385,10 +372,6 @@
     "libraryEmptyGenres": "Ühtegi žanrit pole veel välja otsitud :/",
     "@libraryEmptyGenres": {
         "description": "Empty state on the Genres list page when no songs have a genre tag."
-    },
-    "albumTypeAlbum": "Album",
-    "@albumTypeAlbum": {
-        "description": "Type label for a standard album shown on the artist detail page."
     },
     "albumTypeEp": "EP",
     "@albumTypeEp": {
@@ -498,33 +481,9 @@
     "@searchBrowseGenres": {
         "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
     },
-    "commonAlbumsCount": "{count, plural, =0{albumeid pole} =1{1 album} other{{count} albumit}}",
-    "@commonAlbumsCount": {
-        "description": "Number of albums, used in library totals",
-        "placeholders": {
-            "count": {
-                "type": "int",
-                "format": "compact"
-            }
-        }
-    },
-    "commonArtistsCount": "{count, plural, =0{esitajaid pole} =1{1 esitaja} other{{count} esitajat}}",
-    "@commonArtistsCount": {
-        "description": "Number of artists, used in library totals",
-        "placeholders": {
-            "count": {
-                "type": "int",
-                "format": "compact"
-            }
-        }
-    },
     "homeNewBadge": "UUS",
     "@homeNewBadge": {
         "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
-    },
-    "settingsPageTitle": "Seadistused",
-    "@settingsPageTitle": {
-        "description": "Title shown in the header of the settings root page."
     },
     "settingsSearchTooltip": "Otsi seadistustest",
     "@settingsSearchTooltip": {
@@ -574,9 +533,9 @@
     "@settingsEqualizer": {
         "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
     },
-    "settingsEqualizerOff": "Väljas",
-    "@settingsEqualizerOff": {
-        "description": "Value on the equalizer row when the equalizer is disabled."
+    "settingsEffectOff": "Väljas",
+    "@settingsEffectOff": {
+        "description": "Shown when an audio effect is turned off. Value on the equalizer row when the equalizer is disabled, and the normalisation mode that applies no gain."
     },
     "contributorsPlaceholder": "see võiksid olla sina",
     "@contributorsPlaceholder": {
@@ -937,9 +896,9 @@
     "@settingsPlaybackSleepTimer": {
         "description": "Row on the playback subpage that opens the sleep timer sheet."
     },
-    "settingsPlaybackSleepTimerOff": "Pole kasutusel",
-    "@settingsPlaybackSleepTimerOff": {
-        "description": "Value shown next to the sleep timer row when no timer is running."
+    "settingsValueOff": "Pole kasutusel",
+    "@settingsValueOff": {
+        "description": "Shown on a settings row when nothing is set: no sleep timer running, or no minimum song length."
     },
     "settingsPlaybackResumeOnConnect": "Taasesituse jätkumine kõrvaklappidega",
     "@settingsPlaybackResumeOnConnect": {
@@ -970,12 +929,12 @@
     "@sleepUnderMinute": {
         "description": "Sleep timer value shown when less than a minute is left."
     },
-    "settingsPlaybackSleepTimerFade": "Hajumise kestus",
-    "@settingsPlaybackSleepTimerFade": {
+    "sleepFadeLength": "Hajumise kestus",
+    "@sleepFadeLength": {
         "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
     },
-    "settingsPlaybackSleepTimerFadeValue": "{seconds} sek",
-    "@settingsPlaybackSleepTimerFadeValue": {
+    "sleepFadeLengthValue": "{seconds} sek",
+    "@sleepFadeLengthValue": {
         "description": "Value shown next to the fade out length slider, in seconds.",
         "placeholders": {
             "seconds": {
@@ -1036,57 +995,45 @@
     "@sleepCancel": {
         "description": "Button that stops a running sleep timer without pausing playback."
     },
-    "sleepStarted": "Unetaimer on seadistatud",
-    "@sleepStarted": {
-        "description": "Confirmation shown after a sleep timer is started."
-    },
-    "sleepCancelled": "Unetaimer on tühistatud",
-    "@sleepCancelled": {
-        "description": "Confirmation shown after a running sleep timer is cancelled."
-    },
-    "settingsEqPresetFlat": "Ühetasane",
-    "@settingsEqPresetFlat": {
+    "settingsEqualizerPresetFlat": "Ühetasane",
+    "@settingsEqualizerPresetFlat": {
         "description": "Equalizer preset, every band at zero."
     },
-    "settingsEqPresetBass": "Bass",
-    "@settingsEqPresetBass": {
+    "settingsEqualizerPresetBass": "Bass",
+    "@settingsEqualizerPresetBass": {
         "description": "Equalizer preset, lifts the lows."
     },
-    "settingsEqPresetTreble": "Kõrged toonid",
-    "@settingsEqPresetTreble": {
+    "settingsEqualizerPresetTreble": "Kõrged toonid",
+    "@settingsEqualizerPresetTreble": {
         "description": "Equalizer preset, lifts the highs."
     },
-    "settingsEqPresetVocal": "Laul",
-    "@settingsEqPresetVocal": {
+    "settingsEqualizerPresetVocal": "Laul",
+    "@settingsEqualizerPresetVocal": {
         "description": "Equalizer preset, lifts the mids where voices sit."
     },
-    "settingsEqPresetRock": "Rokk",
-    "@settingsEqPresetRock": {
+    "settingsEqualizerPresetRock": "Rokk",
+    "@settingsEqualizerPresetRock": {
         "description": "Equalizer preset, lifts the lows and highs."
     },
-    "settingsEqPresetElectronic": "Elektrooniline muusika",
-    "@settingsEqPresetElectronic": {
+    "settingsEqualizerPresetElectronic": "Elektrooniline muusika",
+    "@settingsEqualizerPresetElectronic": {
         "description": "Equalizer preset for electronic music, lifts the lows and highs."
     },
-    "settingsEqPresetBrainFryer": "Ajuküpsetaja",
-    "@settingsEqPresetBrainFryer": {
+    "settingsEqualizerPresetBrainFryer": "Ajuküpsetaja",
+    "@settingsEqualizerPresetBrainFryer": {
         "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
     },
-    "settingsEqPresetFryerUltimate": "Raju ajuküpsetaja",
-    "@settingsEqPresetFryerUltimate": {
+    "settingsEqualizerPresetFryerUltimate": "Raju ajuküpsetaja",
+    "@settingsEqualizerPresetFryerUltimate": {
         "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
     },
-    "settingsEqPresetCustom": "Sinu seadistatud",
-    "@settingsEqPresetCustom": {
+    "settingsEqualizerPresetCustom": "Sinu seadistatud",
+    "@settingsEqualizerPresetCustom": {
         "description": "Shown instead of a preset name when the curve matches none of them."
     },
-    "settingsEqTitle": "Ekvalaiser",
-    "@settingsEqTitle": {
-        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
-    },
-    "settingsEqEnable": "Ekvalaiser",
-    "@settingsEqEnable": {
-        "description": "Toggle that switches the equalizer on and off."
+    "settingsEqualizerTitle": "Ekvalaiser",
+    "@settingsEqualizerTitle": {
+        "description": "Title of the equalizer subpage and label of the toggle that switches the equalizer on and off. Shorter than the row label, which is 'Equalizer & effects'."
     },
     "settingsLibraryLastScan": "Viimane skaneerimine {date} kell {time}",
     "@settingsLibraryLastScan": {
@@ -1156,10 +1103,6 @@
                 "type": "int"
             }
         }
-    },
-    "settingsLibraryMinLengthOff": "Pole kasutusel",
-    "@settingsLibraryMinLengthOff": {
-        "description": "Shown when no minimum length is set."
     },
     "settingsLibrarySectionGrouping": "Rühmitamine",
     "@settingsLibrarySectionGrouping": {
@@ -1258,8 +1201,8 @@
     "@settingsAppearanceColourFromArt": {
         "description": "Row that tints the full player with colours sampled from the cover. Currently marked as planned."
     },
-    "normalisationPreampValue": "{db} dB",
-    "@normalisationPreampValue": {
+    "settingsNormalisationPreampValue": "{db} dB",
+    "@settingsNormalisationPreampValue": {
         "description": "Value shown next to the preamp slider, in decibels.",
         "placeholders": {
             "db": {
@@ -1267,45 +1210,37 @@
             }
         }
     },
-    "normalisationPreamp": "Eelvõimendus",
-    "@normalisationPreamp": {
+    "settingsNormalisationPreamp": "Eelvõimendus",
+    "@settingsNormalisationPreamp": {
         "description": "Slider for extra gain applied on top of the ReplayGain value."
     },
-    "normalisationAlbumSubtitle": "Säilitab helivaljuse erinevused albumi piires",
-    "@normalisationAlbumSubtitle": {
+    "settingsNormalisationAlbumSubtitle": "Säilitab helivaljuse erinevused albumi piires",
+    "@settingsNormalisationAlbumSubtitle": {
         "description": "Subtitle of the per album normalisation option."
     },
-    "normalisationTrack": "Lookohane",
-    "@normalisationTrack": {
+    "settingsNormalisationTrack": "Lookohane",
+    "@settingsNormalisationTrack": {
         "description": "Normalisation mode that brings every song to the same loudness."
     },
-    "normalisationTrackSubtitle": "Kõik lood on sama valjusega",
-    "@normalisationTrackSubtitle": {
+    "settingsNormalisationTrackSubtitle": "Kõik lood on sama valjusega",
+    "@settingsNormalisationTrackSubtitle": {
         "description": "Subtitle of the per track normalisation option."
     },
-    "normalisationAlbum": "Albumikohane",
-    "@normalisationAlbum": {
+    "settingsNormalisationAlbum": "Albumikohane",
+    "@settingsNormalisationAlbum": {
         "description": "Normalisation mode that normalises whole albums as one unit."
     },
-    "normalisationPreventClipping": "Väldi ülevõimendamist",
-    "@normalisationPreventClipping": {
+    "settingsNormalisationPreventClipping": "Väldi ülevõimendamist",
+    "@settingsNormalisationPreventClipping": {
         "description": "Toggle that lowers the gain instead of letting loud peaks distort."
     },
-    "normalisationPreventClippingSubtitle": "Helimoonutuse asemel vähenda helivaljuse tundlikkust",
-    "@normalisationPreventClippingSubtitle": {
+    "settingsNormalisationPreventClippingSubtitle": "Helimoonutuse asemel vähenda helivaljuse tundlikkust",
+    "@settingsNormalisationPreventClippingSubtitle": {
         "description": "Subtitle of the prevent clipping toggle."
     },
-    "normalisationResetTooltip": "Lähtesta normaliseerimine",
-    "@normalisationResetTooltip": {
+    "settingsNormalisationResetTooltip": "Lähtesta normaliseerimine",
+    "@settingsNormalisationResetTooltip": {
         "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
-    },
-    "normalisationOff": "Väljas",
-    "@normalisationOff": {
-        "description": "Normalisation mode that applies no gain."
-    },
-    "settingsAppearanceSectionLibrary": "Muusikakogu",
-    "@settingsAppearanceSectionLibrary": {
-        "description": "Section label above the library appearance options on the appearance subpage."
     },
     "sleepCustomField": "Minutid",
     "@sleepCustomField": {
@@ -1331,24 +1266,24 @@
     "@settingsAppearanceReduceMotionSubtitle": {
         "description": "Subtitle under the reduce motion row."
     },
-    "settingsEqEnableSubtitle": "Kehtib tervele mpv-filtriahelale",
-    "@settingsEqEnableSubtitle": {
+    "settingsEqualizerEnableSubtitle": "Kehtib tervele mpv-filtriahelale",
+    "@settingsEqualizerEnableSubtitle": {
         "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
     },
-    "settingsEqSectionPreset": "Eelseadistused",
-    "@settingsEqSectionPreset": {
+    "settingsEqualizerSectionPreset": "Eelseadistused",
+    "@settingsEqualizerSectionPreset": {
         "description": "Section label above the preset chips on the equalizer subpage."
     },
-    "settingsEqSectionEffects": "Efektid",
-    "@settingsEqSectionEffects": {
+    "settingsEqualizerSectionEffects": "Efektid",
+    "@settingsEqualizerSectionEffects": {
         "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
     },
-    "settingsEqBassBoost": "Võimsam bass",
-    "@settingsEqBassBoost": {
+    "settingsEqualizerBassBoost": "Võimsam bass",
+    "@settingsEqualizerBassBoost": {
         "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
     },
-    "settingsEqValueRate": "{value} x",
-    "@settingsEqValueRate": {
+    "settingsEqualizerValueRate": "{value} x",
+    "@settingsEqualizerValueRate": {
         "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
         "placeholders": {
             "value": {
@@ -1356,12 +1291,12 @@
             }
         }
     },
-    "settingsEqResetAll": "Lähtesta kõik efektid",
-    "@settingsEqResetAll": {
+    "settingsEqualizerResetAll": "Lähtesta kõik efektid",
+    "@settingsEqualizerResetAll": {
         "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
     },
-    "settingsEqResetTooltip": "Lähtesta ekvalaiser",
-    "@settingsEqResetTooltip": {
+    "settingsEqualizerResetTooltip": "Lähtesta ekvalaiser",
+    "@settingsEqualizerResetTooltip": {
         "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
     },
     "settingsLibraryDelimiterAdd": "Lisa eraldaja",
@@ -1541,12 +1476,12 @@
             }
         }
     },
-    "settingsUpdateSheetUpToDateTitle": "Kasutad juba viimast versiooni :D",
-    "@settingsUpdateSheetUpToDateTitle": {
+    "settingsUpdatesSheetUpToDateTitle": "Kasutad juba viimast versiooni :D",
+    "@settingsUpdatesSheetUpToDateTitle": {
         "description": "Title of the update sheet when no newer release exists."
     },
-    "settingsUpdateSheetUpToDateBody": "Sono {version} on viimane versioon.",
-    "@settingsUpdateSheetUpToDateBody": {
+    "settingsUpdatesSheetUpToDateBody": "Sono {version} on viimane versioon.",
+    "@settingsUpdatesSheetUpToDateBody": {
         "description": "Body of the update sheet when no newer release exists.",
         "placeholders": {
             "version": {
@@ -1554,8 +1489,8 @@
             }
         }
     },
-    "settingsUpdateSheetAvailableTitle": "Saadaval on Sono versioon {version}",
-    "@settingsUpdateSheetAvailableTitle": {
+    "settingsUpdatesSheetAvailableTitle": "Saadaval on Sono versioon {version}",
+    "@settingsUpdatesSheetAvailableTitle": {
         "description": "Title of the update sheet when a newer release was found.",
         "placeholders": {
             "version": {
@@ -1563,8 +1498,8 @@
             }
         }
     },
-    "settingsUpdateSheetSkip": "Jäta see versioon vahele",
-    "@settingsUpdateSheetSkip": {
+    "settingsUpdatesSheetSkip": "Jäta see versioon vahele",
+    "@settingsUpdatesSheetSkip": {
         "description": "Action that dismisses a release so it stops being announced."
     },
     "migrationFailed": "Import vanast Sono versioonist ei õnnestunud :/",
@@ -1611,24 +1546,24 @@
             }
         }
     },
-    "settingsUpdateSheetFailedTitle": "Versiooniuuenduste kontrollimine ei õnnestunud",
-    "@settingsUpdateSheetFailedTitle": {
+    "settingsUpdatesSheetFailedTitle": "Versiooniuuenduste kontrollimine ei õnnestunud",
+    "@settingsUpdatesSheetFailedTitle": {
         "description": "Title of the update sheet when the check could not reach GitHub."
     },
-    "settingsUpdateSheetFailedBody": "Sono ei suutnud GitHubi leida. Kontrolli, kas sinu nutiseadme võrguühendus toimib ja proovi uuesti.",
-    "@settingsUpdateSheetFailedBody": {
+    "settingsUpdatesSheetFailedBody": "Sono ei suutnud GitHubi leida. Kontrolli, kas sinu nutiseadme võrguühendus toimib ja proovi uuesti.",
+    "@settingsUpdatesSheetFailedBody": {
         "description": "Body of the update sheet when the check failed."
     },
-    "settingsUpdateSheetSkipSubtitle": "Lõpetab selle versiooni kohta teate kuvamise",
-    "@settingsUpdateSheetSkipSubtitle": {
+    "settingsUpdatesSheetSkipSubtitle": "Lõpetab selle versiooni kohta teate kuvamise",
+    "@settingsUpdatesSheetSkipSubtitle": {
         "description": "Subtitle under the skip action in the update sheet."
     },
-    "settingsUpdateSheetOpen": "Ava selle versiooni teave",
-    "@settingsUpdateSheetOpen": {
+    "settingsUpdatesSheetOpen": "Ava selle versiooni teave",
+    "@settingsUpdatesSheetOpen": {
         "description": "Action that opens the GitHub release page in the browser."
     },
-    "settingsUpdateSheetFrom": "Hetkel kasutad {current} versiooni, aga viimane on {latest}.",
-    "@settingsUpdateSheetFrom": {
+    "settingsUpdatesSheetFrom": "Hetkel kasutad {current} versiooni, aga viimane on {latest}.",
+    "@settingsUpdatesSheetFrom": {
         "description": "Line above the release notes comparing the installed and newest versions.",
         "placeholders": {
             "current": {
@@ -1814,24 +1749,24 @@
     "@settingsAppearanceColourFromArtSubtitle": {
         "description": "Subtitle under the colour from album art row."
     },
-    "normalisationSectionMode": "Režiim",
-    "@normalisationSectionMode": {
+    "settingsNormalisationSectionMode": "Režiim",
+    "@settingsNormalisationSectionMode": {
         "description": "Section label above the normalisation mode options."
     },
-    "normalisationSectionTuning": "Häälestus",
-    "@normalisationSectionTuning": {
+    "settingsNormalisationSectionTuning": "Häälestus",
+    "@settingsNormalisationSectionTuning": {
         "description": "Section label above the preamp and clipping options."
     },
-    "settingsEqSpeed": "Kiirus",
-    "@settingsEqSpeed": {
+    "settingsEqualizerSpeed": "Kiirus",
+    "@settingsEqualizerSpeed": {
         "description": "Slider controlling playback rate without changing pitch."
     },
-    "settingsEqPitch": "Helikõrgus",
-    "@settingsEqPitch": {
+    "settingsEqualizerPitch": "Helikõrgus",
+    "@settingsEqualizerPitch": {
         "description": "Slider controlling pitch without changing playback rate."
     },
-    "settingsEqValueDb": "{value} dB",
-    "@settingsEqValueDb": {
+    "settingsEqualizerValueDb": "{value} dB",
+    "@settingsEqualizerValueDb": {
         "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
         "placeholders": {
             "value": {

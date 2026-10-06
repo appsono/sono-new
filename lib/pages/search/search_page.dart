@@ -404,7 +404,7 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                         SonoHeaderAction(
                           icon: IconsSheet.settingsOutlined,
-                          tooltip: l.homeHeaderSettings,
+                          tooltip: l.commonSettings,
                           onTap: () => widget.onOpenSettings?.call(),
                         ),
                       ],
@@ -482,7 +482,7 @@ class _SearchPageState extends State<SearchPage> {
                 if (_showAlbums && _albums.isNotEmpty) ...[
                   SliverToBoxAdapter(
                     child: SearchSectionHeader(
-                      label: l.libraryCardAlbums,
+                      label: l.commonAlbums,
                       count: _albums.length,
                       onSeeAll:
                           (_filter == SearchFilter.all &&
@@ -543,7 +543,7 @@ class _SearchPageState extends State<SearchPage> {
                 if (_showArtists && _artists.isNotEmpty) ...[
                   SliverToBoxAdapter(
                     child: SearchSectionHeader(
-                      label: l.libraryCardArtists,
+                      label: l.commonArtists,
                       count: _artists.length,
                       onSeeAll:
                           (_filter == SearchFilter.all &&

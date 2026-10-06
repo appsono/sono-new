@@ -16,26 +16,6 @@
             }
         }
     },
-    "commonAlbumsCount": "{count, plural, =0{Sem Álbums} =1{1 Álbum} other{{count} albums}}",
-    "@commonAlbumsCount": {
-        "description": "Number of albums, used in library totals",
-        "placeholders": {
-            "count": {
-                "type": "int",
-                "format": "compact"
-            }
-        }
-    },
-    "commonArtistsCount": "{count, plural, =0{Sem Artistas} =1{1 Artista} other{{count} artists}}",
-    "@commonArtistsCount": {
-        "description": "Number of artists, used in library totals",
-        "placeholders": {
-            "count": {
-                "type": "int",
-                "format": "compact"
-            }
-        }
-    },
     "commonDurationLong": "{hours}h {minutes}m",
     "@commonDurationLong": {
         "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
@@ -97,10 +77,6 @@
     "@commonSeeAll": {
         "description": "Affordance in a section header that opens the full list of matches for that category."
     },
-    "commonMoreOptions": "Mais opções",
-    "@commonMoreOptions": {
-        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
-    },
     "commonShare": "Compartilhar",
     "@commonShare": {
         "description": "Share action. Imperative verb."
@@ -147,7 +123,7 @@
     },
     "commonAlbum": "Álbum",
     "@commonAlbum": {
-        "description": "Noun label for the album metadata field. Shown in info/details views."
+        "description": "Noun label for a single album. Used for the album metadata field in info/details views and as the release type of a standard album on the artist page, next to EP and Single."
     },
     "commonGenre": "Género",
     "@commonGenre": {
@@ -168,10 +144,6 @@
     "commonEdit": "Editar",
     "@commonEdit": {
         "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
-    },
-    "commonRename": "Renomear",
-    "@commonRename": {
-        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
     },
     "commonDelete": "Deletar",
     "@commonDelete": {
@@ -194,7 +166,10 @@
         "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
     },
     "navHome": "Início",
-    "navLibrary": "Biblioteca",
+    "commonLibrary": "Biblioteca",
+    "@commonLibrary": {
+        "description": "The user's music library. Used as the bottom navigation tab, the library page title, and a section label on the appearance settings page."
+    },
     "navSearch": "Pesquisar",
     "changelogTitle": "O que tem de novo",
     "@changelogTitle": {
@@ -213,10 +188,19 @@
         "description": "Shown on the Home Pages's Create Playlist action. Please keep the string as short as possible."
     },
     "homeHeaderNewsAndUpdates": "Noticias & Atualizações",
-    "homeHeaderSettings": "Configurações",
+    "commonSettings": "Configurações",
+    "@commonSettings": {
+        "description": "Settings. Used as the settings page title and as the tooltip of the settings button in page headers."
+    },
     "homeSectionRecentlyAdded": "Recentemente Adicionado",
-    "homeSectionAlbums": "Álbums",
-    "homeSectionArtists": "Artistas",
+    "commonAlbums": "Álbums",
+    "@commonAlbums": {
+        "description": "Plural noun for albums. Used as a section header on the home and artist pages, as the library card and page title for all albums, and as a search filter."
+    },
+    "commonArtists": "Artistas",
+    "@commonArtists": {
+        "description": "Plural noun for artists. Used as a section header on the home page and as the library card and page title for all artists."
+    },
     "homeNewBadge": "NOVO",
     "@homeNewBadge": {
         "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
@@ -294,10 +278,6 @@
     "@searchBrowseGenres": {
         "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
     },
-    "libraryPageTitle": "Biblioteca",
-    "@libraryPageTitle": {
-        "description": "Shown in the header next to the profile picture at the top of the page."
-    },
     "libraryCardGenres": "Géneros",
     "@libraryCardGenres": {
         "description": "Library page card label. Opens a list of genres."
@@ -318,17 +298,9 @@
     "@libraryCardFavoriteArtists": {
         "description": "Library page card label. Opens the list of artists the user has favorited."
     },
-    "libraryCardArtists": "Artistas",
-    "@libraryCardArtists": {
-        "description": "Library page card label. Opens the full list of artists in the library."
-    },
     "libraryCardSongs": "Músicas",
     "@libraryCardSongs": {
         "description": "Library page card label. Opens the full list of songs in the library."
-    },
-    "libraryCardAlbums": "Álbums",
-    "@libraryCardAlbums": {
-        "description": "Library page card label. Opens the full list of albums in the library."
     },
     "libraryEmptyPlaylists": "Sem playlists ainda :/",
     "@libraryEmptyPlaylists": {
@@ -391,10 +363,6 @@
     "@playlistEmpty": {
         "description": "Empty state shown on a playlist detail page when no songs have been added yet."
     },
-    "playlistActionReorder": "Reordenar músicas",
-    "@playlistActionReorder": {
-        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
-    },
     "playlistAdded": "Adicionada a \"{name}\"",
     "@playlistAdded": {
         "description": "Snackbar shown after a song has been added to a playlist via the picker.",
@@ -412,10 +380,6 @@
                 "type": "String"
             }
         }
-    },
-    "albumTypeAlbum": "Álbum",
-    "@albumTypeAlbum": {
-        "description": "Type label for a standard album shown on the artist detail page."
     },
     "albumTypeEp": "EP",
     "@albumTypeEp": {
@@ -489,7 +453,7 @@
     "lyricsMenuRepeatAll": "Repetir todas",
     "lyricsMenuRepeatOne": "Repetir uma",
     "lyricsTooltipBackToPlayer": "Voltar para o reprodutor",
-    "lyricsTooltiplMore": "Mais",
+    "lyricsTooltipMore": "Mais",
     "songSheetTabOptions": "Opções",
     "@songSheetTabOptions": {
         "description": "Bottom toggle on the media options sheet. Switches to the actions grid."
@@ -546,11 +510,6 @@
     "editTagsGenresHint": "Separado por vírgulas",
     "@editTagsGenresHint": {
         "description": "Hint shown inside the genres field on the edit tags page to indicate how to enter multiple genres."
-    },
-    "authSignIn": "Registrar-se",
-    "settingsPageTitle": "Configurações",
-    "@settingsPageTitle": {
-        "description": "Title shown in the header of the settings root page."
     },
     "settingsSearchTooltip": "Pesquisar configurações",
     "@settingsSearchTooltip": {
@@ -620,9 +579,9 @@
     "@settingsEqualizer": {
         "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
     },
-    "settingsEqualizerOff": "Desligado",
-    "@settingsEqualizerOff": {
-        "description": "Value on the equalizer row when the equalizer is disabled."
+    "settingsEffectOff": "Desligado",
+    "@settingsEffectOff": {
+        "description": "Shown when an audio effect is turned off. Value on the equalizer row when the equalizer is disabled, and the normalisation mode that applies no gain."
     },
     "settingsLibrary": "Biblioteca & varredura",
     "@settingsLibrary": {
@@ -818,10 +777,6 @@
     "@settingsAppearanceReduceMotionSubtitle": {
         "description": "Subtitle under the reduce motion row."
     },
-    "settingsAppearanceSectionLibrary": "Biblioteca",
-    "@settingsAppearanceSectionLibrary": {
-        "description": "Section label above the library appearance options on the appearance subpage."
-    },
     "settingsAppearanceGridDensity": "Densidade da grade",
     "@settingsAppearanceGridDensity": {
         "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
@@ -912,9 +867,9 @@
     "@settingsPlaybackSleepTimer": {
         "description": "Row on the playback subpage that opens the sleep timer sheet."
     },
-    "settingsPlaybackSleepTimerOff": "Desligado",
-    "@settingsPlaybackSleepTimerOff": {
-        "description": "Value shown next to the sleep timer row when no timer is running."
+    "settingsValueOff": "Desligado",
+    "@settingsValueOff": {
+        "description": "Shown on a settings row when nothing is set: no sleep timer running, or no minimum song length."
     },
     "settingsPlaybackResumeOnConnect": "Reproduzir quando conectado",
     "@settingsPlaybackResumeOnConnect": {
@@ -924,44 +879,40 @@
     "@settingsPlaybackPauseOnDisconnect": {
         "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
     },
-    "normalisationSectionMode": "Modo",
-    "@normalisationSectionMode": {
+    "settingsNormalisationSectionMode": "Modo",
+    "@settingsNormalisationSectionMode": {
         "description": "Section label above the normalisation mode options."
     },
-    "normalisationSectionTuning": "Sintonia",
-    "@normalisationSectionTuning": {
+    "settingsNormalisationSectionTuning": "Sintonia",
+    "@settingsNormalisationSectionTuning": {
         "description": "Section label above the preamp and clipping options."
     },
-    "normalisationResetTooltip": "Resetar normalização",
-    "@normalisationResetTooltip": {
+    "settingsNormalisationResetTooltip": "Resetar normalização",
+    "@settingsNormalisationResetTooltip": {
         "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
     },
-    "normalisationOff": "Desligado",
-    "@normalisationOff": {
-        "description": "Normalisation mode that applies no gain."
-    },
-    "normalisationTrack": "Por música",
-    "@normalisationTrack": {
+    "settingsNormalisationTrack": "Por música",
+    "@settingsNormalisationTrack": {
         "description": "Normalisation mode that brings every song to the same loudness."
     },
-    "normalisationTrackSubtitle": "Toda música no mesmo volume",
-    "@normalisationTrackSubtitle": {
+    "settingsNormalisationTrackSubtitle": "Toda música no mesmo volume",
+    "@settingsNormalisationTrackSubtitle": {
         "description": "Subtitle of the per track normalisation option."
     },
-    "normalisationAlbum": "Por álbum",
-    "@normalisationAlbum": {
+    "settingsNormalisationAlbum": "Por álbum",
+    "@settingsNormalisationAlbum": {
         "description": "Normalisation mode that normalises whole albums as one unit."
     },
-    "normalisationAlbumSubtitle": "Deixar as diferenças de barulho dentro de um álbum",
-    "@normalisationAlbumSubtitle": {
+    "settingsNormalisationAlbumSubtitle": "Deixar as diferenças de barulho dentro de um álbum",
+    "@settingsNormalisationAlbumSubtitle": {
         "description": "Subtitle of the per album normalisation option."
     },
-    "normalisationPreamp": "Pré-amplificador",
-    "@normalisationPreamp": {
+    "settingsNormalisationPreamp": "Pré-amplificador",
+    "@settingsNormalisationPreamp": {
         "description": "Slider for extra gain applied on top of the ReplayGain value."
     },
-    "normalisationPreampValue": "{db} dB",
-    "@normalisationPreampValue": {
+    "settingsNormalisationPreampValue": "{db} dB",
+    "@settingsNormalisationPreampValue": {
         "description": "Value shown next to the preamp slider, in decibels.",
         "placeholders": {
             "db": {
@@ -1035,12 +986,12 @@
             }
         }
     },
-    "normalisationPreventClipping": "Evitar distorção",
-    "@normalisationPreventClipping": {
+    "settingsNormalisationPreventClipping": "Evitar distorção",
+    "@settingsNormalisationPreventClipping": {
         "description": "Toggle that lowers the gain instead of letting loud peaks distort."
     },
-    "normalisationPreventClippingSubtitle": "Reduz o ganho em vez de deixar os picos distorcerem",
-    "@normalisationPreventClippingSubtitle": {
+    "settingsNormalisationPreventClippingSubtitle": "Reduz o ganho em vez de deixar os picos distorcerem",
+    "@settingsNormalisationPreventClippingSubtitle": {
         "description": "Subtitle of the prevent clipping toggle."
     },
     "sleepTitle": "Hora de dormir",
@@ -1064,12 +1015,12 @@
     "@sleepUnderMinute": {
         "description": "Sleep timer value shown when less than a minute is left."
     },
-    "settingsPlaybackSleepTimerFade": "Duração do desvanecimento",
-    "@settingsPlaybackSleepTimerFade": {
+    "sleepFadeLength": "Duração do desvanecimento",
+    "@sleepFadeLength": {
         "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
     },
-    "settingsPlaybackSleepTimerFadeValue": "{seconds}s",
-    "@settingsPlaybackSleepTimerFadeValue": {
+    "sleepFadeLengthValue": "{seconds}s",
+    "@sleepFadeLengthValue": {
         "description": "Value shown next to the fade out length slider, in seconds.",
         "placeholders": {
             "seconds": {
@@ -1134,84 +1085,72 @@
     "@sleepCancel": {
         "description": "Button that stops a running sleep timer without pausing playback."
     },
-    "sleepStarted": "Definir temporizador",
-    "@sleepStarted": {
-        "description": "Confirmation shown after a sleep timer is started."
-    },
-    "sleepCancelled": "Temporizador de dormir cancelado",
-    "@sleepCancelled": {
-        "description": "Confirmation shown after a running sleep timer is cancelled."
-    },
-    "settingsEqPresetFlat": "Plano",
-    "@settingsEqPresetFlat": {
+    "settingsEqualizerPresetFlat": "Plano",
+    "@settingsEqualizerPresetFlat": {
         "description": "Equalizer preset, every band at zero."
     },
-    "settingsEqPresetBass": "Graves",
-    "@settingsEqPresetBass": {
+    "settingsEqualizerPresetBass": "Graves",
+    "@settingsEqualizerPresetBass": {
         "description": "Equalizer preset, lifts the lows."
     },
-    "settingsEqPresetTreble": "Agudos",
-    "@settingsEqPresetTreble": {
+    "settingsEqualizerPresetTreble": "Agudos",
+    "@settingsEqualizerPresetTreble": {
         "description": "Equalizer preset, lifts the highs."
     },
-    "settingsEqPresetVocal": "Vocal",
-    "@settingsEqPresetVocal": {
+    "settingsEqualizerPresetVocal": "Vocal",
+    "@settingsEqualizerPresetVocal": {
         "description": "Equalizer preset, lifts the mids where voices sit."
     },
-    "settingsEqPresetRock": "Rock",
-    "@settingsEqPresetRock": {
+    "settingsEqualizerPresetRock": "Rock",
+    "@settingsEqualizerPresetRock": {
         "description": "Equalizer preset, lifts the lows and highs."
     },
-    "settingsEqPresetElectronic": "Eletrônico",
-    "@settingsEqPresetElectronic": {
+    "settingsEqualizerPresetElectronic": "Eletrônico",
+    "@settingsEqualizerPresetElectronic": {
         "description": "Equalizer preset for electronic music, lifts the lows and highs."
     },
-    "settingsEqPresetBrainFryer": "Fritador de Cérebro",
-    "@settingsEqPresetBrainFryer": {
+    "settingsEqualizerPresetBrainFryer": "Fritador de Cérebro",
+    "@settingsEqualizerPresetBrainFryer": {
         "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
     },
-    "settingsEqPresetFryerUltimate": "Fritador Supremo",
-    "@settingsEqPresetFryerUltimate": {
+    "settingsEqualizerPresetFryerUltimate": "Fritador Supremo",
+    "@settingsEqualizerPresetFryerUltimate": {
         "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
     },
-    "settingsEqPresetCustom": "Customizado",
-    "@settingsEqPresetCustom": {
+    "settingsEqualizerPresetCustom": "Customizado",
+    "@settingsEqualizerPresetCustom": {
         "description": "Shown instead of a preset name when the curve matches none of them."
     },
-    "settingsEqTitle": "Equalizador",
-    "@settingsEqTitle": {
-        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+    "settingsEqualizerTitle": "Equalizador",
+    "@settingsEqualizerTitle": {
+        "description": "Title of the equalizer subpage and label of the toggle that switches the equalizer on and off. Shorter than the row label, which is 'Equalizer & effects'."
     },
-    "settingsEqEnable": "Equalizador",
-    "@settingsEqEnable": {
-        "description": "Toggle that switches the equalizer on and off."
-    },
-    "settingsEqEnableSubtitle": "Aplicado através da cadeia de filtros do mpv",
-    "@settingsEqEnableSubtitle": {
+    "settingsEqualizerEnableSubtitle": "Aplicado através da cadeia de filtros do mpv",
+    "@settingsEqualizerEnableSubtitle": {
         "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
     },
-    "settingsEqSectionPreset": "Preset",
-    "@settingsEqSectionPreset": {
+    "settingsEqualizerSectionPreset": "Preset",
+    "@settingsEqualizerSectionPreset": {
         "description": "Section label above the preset chips on the equalizer subpage."
     },
-    "settingsEqSectionEffects": "Efeitos",
-    "@settingsEqSectionEffects": {
+    "settingsEqualizerSectionEffects": "Efeitos",
+    "@settingsEqualizerSectionEffects": {
         "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
     },
-    "settingsEqBassBoost": "Aumentar Graves",
-    "@settingsEqBassBoost": {
+    "settingsEqualizerBassBoost": "Aumentar Graves",
+    "@settingsEqualizerBassBoost": {
         "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
     },
-    "settingsEqSpeed": "Velocidade",
-    "@settingsEqSpeed": {
+    "settingsEqualizerSpeed": "Velocidade",
+    "@settingsEqualizerSpeed": {
         "description": "Slider controlling playback rate without changing pitch."
     },
-    "settingsEqPitch": "Tom",
-    "@settingsEqPitch": {
+    "settingsEqualizerPitch": "Tom",
+    "@settingsEqualizerPitch": {
         "description": "Slider controlling pitch without changing playback rate."
     },
-    "settingsEqValueDb": "{value} dB",
-    "@settingsEqValueDb": {
+    "settingsEqualizerValueDb": "{value} dB",
+    "@settingsEqualizerValueDb": {
         "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
         "placeholders": {
             "value": {
@@ -1219,8 +1158,8 @@
             }
         }
     },
-    "settingsEqValueRate": "{value}x",
-    "@settingsEqValueRate": {
+    "settingsEqualizerValueRate": "{value}x",
+    "@settingsEqualizerValueRate": {
         "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
         "placeholders": {
             "value": {
@@ -1228,12 +1167,12 @@
             }
         }
     },
-    "settingsEqResetAll": "Resetar todos efeitos",
-    "@settingsEqResetAll": {
+    "settingsEqualizerResetAll": "Resetar todos efeitos",
+    "@settingsEqualizerResetAll": {
         "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
     },
-    "settingsEqResetTooltip": "Resetar equalizador",
-    "@settingsEqResetTooltip": {
+    "settingsEqualizerResetTooltip": "Resetar equalizador",
+    "@settingsEqualizerResetTooltip": {
         "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
     },
     "settingsLibrarySectionSources": "Fontes",
@@ -1284,10 +1223,6 @@
                 "type": "int"
             }
         }
-    },
-    "settingsLibraryMinLengthOff": "Desligado",
-    "@settingsLibraryMinLengthOff": {
-        "description": "Shown when no minimum length is set."
     },
     "settingsLibrarySectionGrouping": "Agrupar",
     "@settingsLibrarySectionGrouping": {
@@ -1611,12 +1546,12 @@
             }
         }
     },
-    "settingsUpdateSheetUpToDateTitle": "Você esta pronto para atualizar :D",
-    "@settingsUpdateSheetUpToDateTitle": {
+    "settingsUpdatesSheetUpToDateTitle": "Você esta pronto para atualizar :D",
+    "@settingsUpdatesSheetUpToDateTitle": {
         "description": "Title of the update sheet when no newer release exists."
     },
-    "settingsUpdateSheetUpToDateBody": "Sono {version} é a versão mais recente.",
-    "@settingsUpdateSheetUpToDateBody": {
+    "settingsUpdatesSheetUpToDateBody": "Sono {version} é a versão mais recente.",
+    "@settingsUpdatesSheetUpToDateBody": {
         "description": "Body of the update sheet when no newer release exists.",
         "placeholders": {
             "version": {
@@ -1624,8 +1559,8 @@
             }
         }
     },
-    "settingsUpdateSheetAvailableTitle": "Sono {version} esta disponível",
-    "@settingsUpdateSheetAvailableTitle": {
+    "settingsUpdatesSheetAvailableTitle": "Sono {version} esta disponível",
+    "@settingsUpdatesSheetAvailableTitle": {
         "description": "Title of the update sheet when a newer release was found.",
         "placeholders": {
             "version": {
@@ -1633,8 +1568,8 @@
             }
         }
     },
-    "settingsUpdateSheetFrom": "Você esta em {current}, versão mais recente é {latest}.",
-    "@settingsUpdateSheetFrom": {
+    "settingsUpdatesSheetFrom": "Você esta em {current}, versão mais recente é {latest}.",
+    "@settingsUpdatesSheetFrom": {
         "description": "Line above the release notes comparing the installed and newest versions.",
         "placeholders": {
             "current": {
@@ -1645,24 +1580,24 @@
             }
         }
     },
-    "settingsUpdateSheetOpen": "Abrir a release",
-    "@settingsUpdateSheetOpen": {
+    "settingsUpdatesSheetOpen": "Abrir a release",
+    "@settingsUpdatesSheetOpen": {
         "description": "Action that opens the GitHub release page in the browser."
     },
-    "settingsUpdateSheetSkip": "Pular essa versão",
-    "@settingsUpdateSheetSkip": {
+    "settingsUpdatesSheetSkip": "Pular essa versão",
+    "@settingsUpdatesSheetSkip": {
         "description": "Action that dismisses a release so it stops being announced."
     },
-    "settingsUpdateSheetSkipSubtitle": "Para de exibir o banner desta versão",
-    "@settingsUpdateSheetSkipSubtitle": {
+    "settingsUpdatesSheetSkipSubtitle": "Para de exibir o banner desta versão",
+    "@settingsUpdatesSheetSkipSubtitle": {
         "description": "Subtitle under the skip action in the update sheet."
     },
-    "settingsUpdateSheetFailedTitle": "Não foi possível checar atualizações",
-    "@settingsUpdateSheetFailedTitle": {
+    "settingsUpdatesSheetFailedTitle": "Não foi possível checar atualizações",
+    "@settingsUpdatesSheetFailedTitle": {
         "description": "Title of the update sheet when the check could not reach GitHub."
     },
-    "settingsUpdateSheetFailedBody": "Sono não conseguiu abrir GitHub. Cheque sua conexão e tente novamente.",
-    "@settingsUpdateSheetFailedBody": {
+    "settingsUpdatesSheetFailedBody": "Sono não conseguiu abrir GitHub. Cheque sua conexão e tente novamente.",
+    "@settingsUpdatesSheetFailedBody": {
         "description": "Body of the update sheet when the check failed."
     },
     "settingsAboutTitle": "Sobre",
@@ -1689,7 +1624,7 @@
     "@settingsAboutLicences": {
         "description": "Row that opens the licence list, covering Sono and every dependency."
     },
-    "settingsSupportKofi": "Me ajude",
+    "settingsAboutKofi": "Me ajude",
     "settingsAboutKofiSubtitle": "Pagar pela chave de assinatura e um monte de café",
     "@settingsAboutKofiSubtitle": {
         "description": "Subtitle under the Ko-fi row."
@@ -1698,10 +1633,10 @@
     "@settingsAboutFooterBuilt": {
         "description": "First footer line on the about page. The name is a username and stays as is."
     },
-    "settingsContributors": "Contribuidores",
+    "settingsAboutContributors": "Contribuidores",
     "contributorsMaintainer": "Mantenedor",
-    "contributorsCodeSection": "Código",
-    "contributorsTranslatorSection": "Traduções",
+    "contributorsSectionCode": "Código",
+    "contributorsSectionTranslations": "Traduções",
     "contributorsPlaceholder": "esse pode ser você",
     "@contributorsPlaceholder": {
         "description": "Label under the empty avatar at the end of the code contributor grid. Tapping it opens the repository. Casual tone."

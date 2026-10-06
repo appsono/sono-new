@@ -82,8 +82,8 @@ class _AlbumsPageState extends State<AlbumsPage> {
   String _title(AppLocalizations l) {
     if (widget.title != null) widget.title!;
     return switch (widget.source) {
-      AlbumListSource.all => l.libraryCardAlbums,
-      AlbumListSource.search => widget.query ?? l.libraryCardAlbums,
+      AlbumListSource.all => l.commonAlbums,
+      AlbumListSource.search => widget.query ?? l.commonAlbums,
     };
   }
 

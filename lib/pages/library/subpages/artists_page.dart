@@ -86,8 +86,8 @@ class _ArtistsPageState extends State<ArtistsPage> {
   String _title(AppLocalizations l) {
     if (widget.title != null) widget.title!;
     return switch (widget.source) {
-      ArtistListSource.all => l.libraryCardArtists,
-      ArtistListSource.search => widget.query ?? l.libraryCardArtists,
+      ArtistListSource.all => l.commonArtists,
+      ArtistListSource.search => widget.query ?? l.commonArtists,
     };
   }
 

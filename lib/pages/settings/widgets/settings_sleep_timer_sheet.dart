@@ -166,12 +166,12 @@ abstract final class SleepTimerSheet {
   ) => [
     BottomSheetSlider(
       icon: IconsSheet.volumeLowOutlined,
-      label: l.settingsPlaybackSleepTimerFade,
+      label: l.sleepFadeLength,
       value: sleep.fadeLength.inSeconds.toDouble(),
       min: 0,
       max: 60,
       divisions: 12,
-      labelFor: (v) => l.settingsPlaybackSleepTimerFadeValue(v.round()),
+      labelFor: (v) => l.sleepFadeLengthValue(v.round()),
       onChanged: (v) => sleep.setFadeLength(Duration(seconds: v.round())),
     ),
   ];

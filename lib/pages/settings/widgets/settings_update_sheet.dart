@@ -35,9 +35,9 @@ abstract final class SettingsUpdateSheet {
 
     final title = switch (result.status) {
       UpdateStatus.available || UpdateStatus.dismissed =>
-        l.settingsUpdateSheetAvailableTitle(info?.latestVersion ?? ''),
-      UpdateStatus.upToDate => l.settingsUpdateSheetUpToDateTitle,
-      _ => l.settingsUpdateSheetFailedTitle,
+        l.settingsUpdatesSheetAvailableTitle(info?.latestVersion ?? ''),
+      UpdateStatus.upToDate => l.settingsUpdatesSheetUpToDateTitle,
+      _ => l.settingsUpdatesSheetFailedTitle,
     };
 
     return BottomModalSheet.show(
@@ -53,8 +53,8 @@ abstract final class SettingsUpdateSheet {
           return [
             BottomSheetText(
               result.status == UpdateStatus.upToDate
-                  ? l.settingsUpdateSheetUpToDateBody(installedVersion)
-                  : l.settingsUpdateSheetFailedBody,
+                  ? l.settingsUpdatesSheetUpToDateBody(installedVersion)
+                  : l.settingsUpdatesSheetFailedBody,
               muted: true,
             ),
           ];
@@ -64,7 +64,7 @@ abstract final class SettingsUpdateSheet {
 
         return [
           BottomSheetText(
-            l.settingsUpdateSheetFrom(info.currentVersion, info.latestVersion),
+            l.settingsUpdatesSheetFrom(info.currentVersion, info.latestVersion),
             muted: true,
           ),
           if (notes != null && notes.isNotEmpty)
@@ -76,7 +76,7 @@ abstract final class SettingsUpdateSheet {
           const BottomSheetDivider(),
           BottomSheetAction(
             icon: IconsSheet.openLinkOutlined,
-            label: l.settingsUpdateSheetOpen,
+            label: l.settingsUpdatesSheetOpen,
             prominent: true,
             onTap: () => launchUrl(
               Uri.parse(info.releaseUrl),
@@ -85,8 +85,8 @@ abstract final class SettingsUpdateSheet {
           ),
           BottomSheetAction(
             icon: IconsSheet.closeOutlined,
-            label: l.settingsUpdateSheetSkip,
-            subtitle: l.settingsUpdateSheetSkipSubtitle,
+            label: l.settingsUpdatesSheetSkip,
+            subtitle: l.settingsUpdatesSheetSkipSubtitle,
             onTap: () => UpdateService.instance.dismiss(info.latestVersion),
           ),
         ];

@@ -53,7 +53,7 @@ class SonoNavBar extends StatelessWidget {
       case 1:
         return l.navSearch;
       case 2:
-        return l.navLibrary;
+        return l.commonLibrary;
       default:
         return '';
     }

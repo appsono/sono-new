@@ -279,7 +279,7 @@ class _ArtistDiscographyPageState extends State<ArtistDiscographyPage> {
 }
 
 String _filterLabel(AppLocalizations l, DiscographyFilter f) => switch (f) {
-  DiscographyFilter.albums => l.libraryCardAlbums,
+  DiscographyFilter.albums => l.commonAlbums,
   DiscographyFilter.singleEps => l.artistFilterSinglesEps,
   DiscographyFilter.featured => l.artistFilterFeatured,
 };

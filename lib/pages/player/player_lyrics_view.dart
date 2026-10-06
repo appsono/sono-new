@@ -1462,7 +1462,7 @@ class _NormalControlRow extends StatelessWidget {
             background: c.surface,
             foreground: c.onBackground.withValues(alpha: 0.85),
             onTap: onTapMenu,
-            tooltip: l.lyricsTooltiplMore,
+            tooltip: l.lyricsTooltipMore,
             height: rowHeight,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(smallRadius),

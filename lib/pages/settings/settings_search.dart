@@ -85,10 +85,10 @@ List<SettingsSearchEntry> settingsSearchIndex(AppLocalizations l) {
     SettingsSearchEntry(l.settingsPlaybackPauseOnDisconnect, playback),
 
     SettingsSearchEntry(l.settingsEqualizer, equalizer),
-    SettingsSearchEntry(l.settingsEqBassBoost, equalizer),
-    SettingsSearchEntry(l.settingsEqSpeed, equalizer),
-    SettingsSearchEntry(l.settingsEqPitch, equalizer),
-    SettingsSearchEntry(l.settingsEqResetAll, equalizer),
+    SettingsSearchEntry(l.settingsEqualizerBassBoost, equalizer),
+    SettingsSearchEntry(l.settingsEqualizerSpeed, equalizer),
+    SettingsSearchEntry(l.settingsEqualizerPitch, equalizer),
+    SettingsSearchEntry(l.settingsEqualizerResetAll, equalizer),
 
     SettingsSearchEntry(l.settingsLibrary, library),
     SettingsSearchEntry(l.settingsLibraryMusicFolders, library),
@@ -119,10 +119,10 @@ List<SettingsSearchEntry> settingsSearchIndex(AppLocalizations l) {
 
     SettingsSearchEntry(l.settingsAbout, about),
     SettingsSearchEntry(l.changelogTitle, about),
-    SettingsSearchEntry(l.settingsContributors, about),
+    SettingsSearchEntry(l.settingsAboutContributors, about),
     SettingsSearchEntry(l.settingsAboutSourceCode, about),
     SettingsSearchEntry(l.settingsAboutLicences, about),
-    SettingsSearchEntry(l.settingsSupportKofi, about),
+    SettingsSearchEntry(l.settingsAboutKofi, about),
 
     SettingsSearchEntry(l.settingsUpdates, root),
     SettingsSearchEntry(l.settingsStorage, root),
@@ -146,7 +146,7 @@ List<SettingsSearchEntry> searchSettings(AppLocalizations l, String query) {
 // ==== destination presentation ====
 String destinationLabel(AppLocalizations l, SettingsDestination d) {
   return switch (d) {
-    SettingsDestination.root => l.settingsPageTitle,
+    SettingsDestination.root => l.commonSettings,
     SettingsDestination.profile => l.settingsProfileTitle,
     SettingsDestination.appearance => l.settingsAppearance,
     SettingsDestination.language => l.settingsLanguage,

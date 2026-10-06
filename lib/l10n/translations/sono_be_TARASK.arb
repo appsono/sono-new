@@ -27,14 +27,26 @@
         "description": "Tooltip on the add-to-playlist button in the queue view."
     },
     "navHome": "Галоўная",
-    "navLibrary": "Бібліятэка",
+    "commonLibrary": "Бібліятэка",
+    "@commonLibrary": {
+        "description": "The user's music library. Used as the bottom navigation tab, the library page title, and a section label on the appearance settings page."
+    },
     "navSearch": "Пошук",
     "homeActionCreatePlaylist": "Новы плэй-ліст",
     "homeHeaderNewsAndUpdates": "Навіны і абнаўленьні",
-    "homeHeaderSettings": "Налады",
+    "commonSettings": "Налады",
+    "@commonSettings": {
+        "description": "Settings. Used as the settings page title and as the tooltip of the settings button in page headers."
+    },
     "homeSectionRecentlyAdded": "Нядаўна даданыя",
-    "homeSectionAlbums": "Альбомы",
-    "homeSectionArtists": "Выканаўцы",
+    "commonAlbums": "Альбомы",
+    "@commonAlbums": {
+        "description": "Plural noun for albums. Used as a section header on the home and artist pages, as the library card and page title for all albums, and as a search filter."
+    },
+    "commonArtists": "Выканаўцы",
+    "@commonArtists": {
+        "description": "Plural noun for artists. Used as a section header on the home page and as the library card and page title for all artists."
+    },
     "homeGreetingEarlyBird": "Ого, раньняя птушка",
     "@homeGreetingEarlyBird": {
         "description": "Greeting shown roughly 04:00–06:00"
@@ -132,13 +144,12 @@
     "lyricsMenuRepeatAll": "Паўтараць усё",
     "lyricsMenuRepeatOne": "Паўтараць адну",
     "lyricsTooltipBackToPlayer": "Вярнуцца да прайгравальніка",
-    "lyricsTooltiplMore": "Яшчэ",
-    "authSignIn": "Увайсьці",
-    "settingsSupportKofi": "Падтрымаць мяне",
-    "settingsContributors": "Удзельнікі",
+    "lyricsTooltipMore": "Яшчэ",
+    "settingsAboutKofi": "Падтрымаць мяне",
+    "settingsAboutContributors": "Удзельнікі",
     "contributorsMaintainer": "Аўтар",
-    "contributorsCodeSection": "Распрацоўка",
-    "contributorsTranslatorSection": "Пераклады",
+    "contributorsSectionCode": "Распрацоўка",
+    "contributorsSectionTranslations": "Пераклады",
     "contributorsLoadFailed": "Не ўдалося загрузіць удзельнікаў :/",
     "commonFavorite": "Дадаць у абранае",
     "commonFavorited": "Дадана да абранага",
@@ -180,7 +191,7 @@
     },
     "commonAlbum": "Альбом",
     "@commonAlbum": {
-        "description": "Noun label for the album metadata field. Shown in info/details views."
+        "description": "Noun label for a single album. Used for the album metadata field in info/details views and as the release type of a standard album on the artist page, next to EP and Single."
     },
     "commonGenre": "Жанр",
     "@commonGenre": {
@@ -239,10 +250,6 @@
             }
         }
     },
-    "commonMoreOptions": "Больш опцый",
-    "@commonMoreOptions": {
-        "description": "Tooltip for a more-options button (e.g. opening a context sheet for the current item)."
-    },
     "commonCreatePlaylist": "Стварыць плэй-ліст",
     "@commonCreatePlaylist": {
         "description": "Button and action label for creating a new playlist."
@@ -250,10 +257,6 @@
     "commonEdit": "Рэдагаваць",
     "@commonEdit": {
         "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
-    },
-    "commonRename": "Перайменаваць",
-    "@commonRename": {
-        "description": "Rename action. Imperative verb. Used in object action sheets (e.g. playlists)."
     },
     "commonDelete": "Выдаліць",
     "@commonDelete": {
@@ -275,10 +278,6 @@
     "@commonRemoveFromPlaylist": {
         "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
     },
-    "libraryPageTitle": "Бібліятэка",
-    "@libraryPageTitle": {
-        "description": "Shown in the header next to the profile picture at the top of the page."
-    },
     "libraryCardGenres": "Жанры",
     "@libraryCardGenres": {
         "description": "Library page card label. Opens a list of genres."
@@ -299,17 +298,9 @@
     "@libraryCardFavoriteArtists": {
         "description": "Library page card label. Opens the list of artists the user has favorited."
     },
-    "libraryCardArtists": "Выканаўцы",
-    "@libraryCardArtists": {
-        "description": "Library page card label. Opens the full list of artists in the library."
-    },
     "libraryCardSongs": "Песьні",
     "@libraryCardSongs": {
         "description": "Library page card label. Opens the full list of songs in the library."
-    },
-    "libraryCardAlbums": "Альбомы",
-    "@libraryCardAlbums": {
-        "description": "Library page card label. Opens the full list of albums in the library."
     },
     "libraryEmptyPlaylists": "Плэй-лістоў пакуль што няма :/",
     "@libraryEmptyPlaylists": {
@@ -368,10 +359,6 @@
     "@playlistEmpty": {
         "description": "Empty state shown on a playlist detail page when no songs have been added yet."
     },
-    "playlistActionReorder": "Зьмяніць парадак песьняў",
-    "@playlistActionReorder": {
-        "description": "Tooltip for the toggle that switches the playlist into reorder/edit mode."
-    },
     "playlistAdded": "Дададзена да «{name}»",
     "@playlistAdded": {
         "description": "Snackbar shown after a song has been added to a playlist via the picker.",
@@ -389,10 +376,6 @@
                 "type": "String"
             }
         }
-    },
-    "albumTypeAlbum": "Альбом",
-    "@albumTypeAlbum": {
-        "description": "Type label for a standard album shown on the artist detail page."
     },
     "albumTypeEp": "Міні-альбом",
     "@albumTypeEp": {
@@ -498,30 +481,6 @@
     "@searchBrowseGenres": {
         "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
     },
-    "commonAlbumsCount": "{count, plural, =0{альбомаў няма} one{1 альбом} few{{count} альбома} other{{count} альбомаў}}",
-    "@commonAlbumsCount": {
-        "description": "Number of albums, used in library totals",
-        "placeholders": {
-            "count": {
-                "type": "int",
-                "format": "compact"
-            }
-        }
-    },
-    "commonArtistsCount": "{count, plural, =0{выканаўцаў няма} one{1 выканаўца} few{{count} выканаўцы} other{{count} выканаўцаў}}",
-    "@commonArtistsCount": {
-        "description": "Number of artists, used in library totals",
-        "placeholders": {
-            "count": {
-                "type": "int",
-                "format": "compact"
-            }
-        }
-    },
-    "settingsPageTitle": "Налады",
-    "@settingsPageTitle": {
-        "description": "Title shown in the header of the settings root page."
-    },
     "settingsSearchTooltip": "Пошук праз налады",
     "@settingsSearchTooltip": {
         "description": "Tooltip for the search action in the settings header action pill. Focuses the settings search field."
@@ -590,9 +549,9 @@
     "@settingsEqualizer": {
         "description": "Label of the row opening the equalizer subpage, and the title of that subpage."
     },
-    "settingsEqualizerOff": "Выключана",
-    "@settingsEqualizerOff": {
-        "description": "Value on the equalizer row when the equalizer is disabled."
+    "settingsEffectOff": "Выключана",
+    "@settingsEffectOff": {
+        "description": "Shown when an audio effect is turned off. Value on the equalizer row when the equalizer is disabled, and the normalisation mode that applies no gain."
     },
     "settingsLibrary": "Бібліятэка й сканаваньне",
     "@settingsLibrary": {
@@ -710,10 +669,6 @@
     "@settingsAppearanceReduceMotionSubtitle": {
         "description": "Subtitle under the reduce motion row."
     },
-    "settingsAppearanceSectionLibrary": "Бібліятэка",
-    "@settingsAppearanceSectionLibrary": {
-        "description": "Section label above the library appearance options on the appearance subpage."
-    },
     "settingsAppearanceGridDensity": "Шчыльнасьць сеткі",
     "@settingsAppearanceGridDensity": {
         "description": "Row controlling how tightly album and artist grids are packed. Currently marked as planned."
@@ -812,76 +767,72 @@
     "@settingsPlaybackPauseOnDisconnect": {
         "description": "Toggle that pauses playback when headphones are unplugged or bluetooth disconnects."
     },
-    "settingsEqPresetFlat": "Роўны",
-    "@settingsEqPresetFlat": {
+    "settingsEqualizerPresetFlat": "Роўны",
+    "@settingsEqualizerPresetFlat": {
         "description": "Equalizer preset, every band at zero."
     },
-    "settingsEqPresetBass": "Бас",
-    "@settingsEqPresetBass": {
+    "settingsEqualizerPresetBass": "Бас",
+    "@settingsEqualizerPresetBass": {
         "description": "Equalizer preset, lifts the lows."
     },
-    "settingsEqPresetTreble": "Дыскант",
-    "@settingsEqPresetTreble": {
+    "settingsEqualizerPresetTreble": "Дыскант",
+    "@settingsEqualizerPresetTreble": {
         "description": "Equalizer preset, lifts the highs."
     },
-    "settingsEqPresetVocal": "Вакал",
-    "@settingsEqPresetVocal": {
+    "settingsEqualizerPresetVocal": "Вакал",
+    "@settingsEqualizerPresetVocal": {
         "description": "Equalizer preset, lifts the mids where voices sit."
     },
-    "settingsEqPresetRock": "Рок",
-    "@settingsEqPresetRock": {
+    "settingsEqualizerPresetRock": "Рок",
+    "@settingsEqualizerPresetRock": {
         "description": "Equalizer preset, lifts the lows and highs."
     },
-    "settingsEqPresetElectronic": "Электроніка",
-    "@settingsEqPresetElectronic": {
+    "settingsEqualizerPresetElectronic": "Электроніка",
+    "@settingsEqualizerPresetElectronic": {
         "description": "Equalizer preset for electronic music, lifts the lows and highs."
     },
-    "settingsEqPresetBrainFryer": "Мазґаплаў",
-    "@settingsEqPresetBrainFryer": {
+    "settingsEqualizerPresetBrainFryer": "Мазґаплаў",
+    "@settingsEqualizerPresetBrainFryer": {
         "description": "Deliberately silly preset. Bass and treble maxed, mids scooped. Keep name silly."
     },
-    "settingsEqPresetFryerUltimate": "Мазґаплаў+",
-    "@settingsEqPresetFryerUltimate": {
+    "settingsEqualizerPresetFryerUltimate": "Мазґаплаў+",
+    "@settingsEqualizerPresetFryerUltimate": {
         "description": "The most extreme preset. A step beyond Brain Fryer. Keep name silly."
     },
-    "settingsEqPresetCustom": "Уласны",
-    "@settingsEqPresetCustom": {
+    "settingsEqualizerPresetCustom": "Уласны",
+    "@settingsEqualizerPresetCustom": {
         "description": "Shown instead of a preset name when the curve matches none of them."
     },
-    "settingsEqTitle": "Эквалайзэр",
-    "@settingsEqTitle": {
-        "description": "Title of the equalizer subpage. Shorter than the row label, which is 'Equalizer & effects'."
+    "settingsEqualizerTitle": "Эквалайзэр",
+    "@settingsEqualizerTitle": {
+        "description": "Title of the equalizer subpage and label of the toggle that switches the equalizer on and off. Shorter than the row label, which is 'Equalizer & effects'."
     },
-    "settingsEqEnable": "Эквалайзэр",
-    "@settingsEqEnable": {
-        "description": "Toggle that switches the equalizer on and off."
-    },
-    "settingsEqEnableSubtitle": "Прыменена праз ланцужок фільтраў mpv",
-    "@settingsEqEnableSubtitle": {
+    "settingsEqualizerEnableSubtitle": "Прыменена праз ланцужок фільтраў mpv",
+    "@settingsEqualizerEnableSubtitle": {
         "description": "Subtitle under the equalizer toggle. mpv is the playback engine and should stay untranslated."
     },
-    "settingsEqSectionPreset": "Набор наладаў",
-    "@settingsEqSectionPreset": {
+    "settingsEqualizerSectionPreset": "Набор наладаў",
+    "@settingsEqualizerSectionPreset": {
         "description": "Section label above the preset chips on the equalizer subpage."
     },
-    "settingsEqSectionEffects": "Эфэкты",
-    "@settingsEqSectionEffects": {
+    "settingsEqualizerSectionEffects": "Эфэкты",
+    "@settingsEqualizerSectionEffects": {
         "description": "Section label above bass boost, speed and pitch on the equalizer subpage."
     },
-    "settingsEqBassBoost": "Узмоцнены бас",
-    "@settingsEqBassBoost": {
+    "settingsEqualizerBassBoost": "Узмоцнены бас",
+    "@settingsEqualizerBassBoost": {
         "description": "Slider that lifts the low frequencies, separate from the equalizer bands."
     },
-    "settingsEqSpeed": "Хуткасьць",
-    "@settingsEqSpeed": {
+    "settingsEqualizerSpeed": "Хуткасьць",
+    "@settingsEqualizerSpeed": {
         "description": "Slider controlling playback rate without changing pitch."
     },
-    "settingsEqPitch": "Вышыня",
-    "@settingsEqPitch": {
+    "settingsEqualizerPitch": "Вышыня",
+    "@settingsEqualizerPitch": {
         "description": "Slider controlling pitch without changing playback rate."
     },
-    "settingsEqValueDb": "{value} дБ",
-    "@settingsEqValueDb": {
+    "settingsEqualizerValueDb": "{value} дБ",
+    "@settingsEqualizerValueDb": {
         "description": "Value next to the bass boost slider. dB is decibels and is normally left untranslated.",
         "placeholders": {
             "value": {
@@ -889,8 +840,8 @@
             }
         }
     },
-    "settingsEqValueRate": "{value}x",
-    "@settingsEqValueRate": {
+    "settingsEqualizerValueRate": "{value}x",
+    "@settingsEqualizerValueRate": {
         "description": "Value next to the speed and pitch sliders, as a multiplier, e.g. 1.00x.",
         "placeholders": {
             "value": {
@@ -898,12 +849,12 @@
             }
         }
     },
-    "settingsEqResetAll": "Скінуць усе эфэкты",
-    "@settingsEqResetAll": {
+    "settingsEqualizerResetAll": "Скінуць усе эфэкты",
+    "@settingsEqualizerResetAll": {
         "description": "Destructive action that clears the equalizer, bass boost, speed and pitch, and switches the equalizer off."
     },
-    "settingsEqResetTooltip": "Скінуць эквалайзэр",
-    "@settingsEqResetTooltip": {
+    "settingsEqualizerResetTooltip": "Скінуць эквалайзэр",
+    "@settingsEqualizerResetTooltip": {
         "description": "Tooltip on the header action that flattens the equalizer bands. Does not touch bass boost, speed or pitch."
     },
     "settingsLibrarySectionSources": "Крыніцы",
@@ -955,9 +906,9 @@
             }
         }
     },
-    "settingsLibraryMinLengthOff": "Выкл",
-    "@settingsLibraryMinLengthOff": {
-        "description": "Shown when no minimum length is set."
+    "settingsValueOff": "Выкл",
+    "@settingsValueOff": {
+        "description": "Shown on a settings row when nothing is set: no sleep timer running, or no minimum song length."
     },
     "settingsLibrarySectionGrouping": "Групы",
     "@settingsLibrarySectionGrouping": {
@@ -1281,12 +1232,12 @@
             }
         }
     },
-    "settingsUpdateSheetUpToDateTitle": "У вас апошняя вэрсія :D",
-    "@settingsUpdateSheetUpToDateTitle": {
+    "settingsUpdatesSheetUpToDateTitle": "У вас апошняя вэрсія :D",
+    "@settingsUpdatesSheetUpToDateTitle": {
         "description": "Title of the update sheet when no newer release exists."
     },
-    "settingsUpdateSheetUpToDateBody": "{version} з'яўляецца найноўшае вэрсіяю Sono.",
-    "@settingsUpdateSheetUpToDateBody": {
+    "settingsUpdatesSheetUpToDateBody": "{version} з'яўляецца найноўшае вэрсіяю Sono.",
+    "@settingsUpdatesSheetUpToDateBody": {
         "description": "Body of the update sheet when no newer release exists.",
         "placeholders": {
             "version": {
@@ -1294,8 +1245,8 @@
             }
         }
     },
-    "settingsUpdateSheetAvailableTitle": "Даступна Sono {version}",
-    "@settingsUpdateSheetAvailableTitle": {
+    "settingsUpdatesSheetAvailableTitle": "Даступна Sono {version}",
+    "@settingsUpdatesSheetAvailableTitle": {
         "description": "Title of the update sheet when a newer release was found.",
         "placeholders": {
             "version": {
@@ -1303,8 +1254,8 @@
             }
         }
     },
-    "settingsUpdateSheetFrom": "У вас {current}, найноўшая вэрсія — {latest}.",
-    "@settingsUpdateSheetFrom": {
+    "settingsUpdatesSheetFrom": "У вас {current}, найноўшая вэрсія — {latest}.",
+    "@settingsUpdatesSheetFrom": {
         "description": "Line above the release notes comparing the installed and newest versions.",
         "placeholders": {
             "current": {
@@ -1315,24 +1266,24 @@
             }
         }
     },
-    "settingsUpdateSheetOpen": "Адкрыць выпуск",
-    "@settingsUpdateSheetOpen": {
+    "settingsUpdatesSheetOpen": "Адкрыць выпуск",
+    "@settingsUpdatesSheetOpen": {
         "description": "Action that opens the GitHub release page in the browser."
     },
-    "settingsUpdateSheetSkip": "Прапусьціць гэтую вэрсію",
-    "@settingsUpdateSheetSkip": {
+    "settingsUpdatesSheetSkip": "Прапусьціць гэтую вэрсію",
+    "@settingsUpdatesSheetSkip": {
         "description": "Action that dismisses a release so it stops being announced."
     },
-    "settingsUpdateSheetSkipSubtitle": "Не паказваць банэр для гэтага выпуску",
-    "@settingsUpdateSheetSkipSubtitle": {
+    "settingsUpdatesSheetSkipSubtitle": "Не паказваць банэр для гэтага выпуску",
+    "@settingsUpdatesSheetSkipSubtitle": {
         "description": "Subtitle under the skip action in the update sheet."
     },
-    "settingsUpdateSheetFailedTitle": "Не ўдалося праверыць на абнаўленьні",
-    "@settingsUpdateSheetFailedTitle": {
+    "settingsUpdatesSheetFailedTitle": "Не ўдалося праверыць на абнаўленьні",
+    "@settingsUpdatesSheetFailedTitle": {
         "description": "Title of the update sheet when the check could not reach GitHub."
     },
-    "settingsUpdateSheetFailedBody": "Sono не ўдалося дасягнуць GitHub. Праверце вашае падключэньне й паспрабуйце яшчэ раз.",
-    "@settingsUpdateSheetFailedBody": {
+    "settingsUpdatesSheetFailedBody": "Sono не ўдалося дасягнуць GitHub. Праверце вашае падключэньне й паспрабуйце яшчэ раз.",
+    "@settingsUpdatesSheetFailedBody": {
         "description": "Body of the update sheet when the check failed."
     },
     "settingsAboutTitle": "Пра аплікацыю",
@@ -1611,48 +1562,40 @@
     "@settingsProfileStatsNone": {
         "description": "Placeholder where a top song or artist would go when there is none."
     },
-    "settingsPlaybackSleepTimerOff": "Выкл",
-    "@settingsPlaybackSleepTimerOff": {
-        "description": "Value shown next to the sleep timer row when no timer is running."
-    },
-    "normalisationSectionMode": "Рэжым",
-    "@normalisationSectionMode": {
+    "settingsNormalisationSectionMode": "Рэжым",
+    "@settingsNormalisationSectionMode": {
         "description": "Section label above the normalisation mode options."
     },
-    "normalisationSectionTuning": "Рэдагаваньне",
-    "@normalisationSectionTuning": {
+    "settingsNormalisationSectionTuning": "Рэдагаваньне",
+    "@settingsNormalisationSectionTuning": {
         "description": "Section label above the preamp and clipping options."
     },
-    "normalisationResetTooltip": "Скінуць нармалізацыю",
-    "@normalisationResetTooltip": {
+    "settingsNormalisationResetTooltip": "Скінуць нармалізацыю",
+    "@settingsNormalisationResetTooltip": {
         "description": "Tooltip on the header action that turns normalisation off and clears the preamp."
     },
-    "normalisationOff": "Выключана",
-    "@normalisationOff": {
-        "description": "Normalisation mode that applies no gain."
-    },
-    "normalisationTrack": "Для кожнае песьні",
-    "@normalisationTrack": {
+    "settingsNormalisationTrack": "Для кожнае песьні",
+    "@settingsNormalisationTrack": {
         "description": "Normalisation mode that brings every song to the same loudness."
     },
-    "normalisationTrackSubtitle": "У кожнае песьні адна й тая ж гучнасьць",
-    "@normalisationTrackSubtitle": {
+    "settingsNormalisationTrackSubtitle": "У кожнае песьні адна й тая ж гучнасьць",
+    "@settingsNormalisationTrackSubtitle": {
         "description": "Subtitle of the per track normalisation option."
     },
-    "normalisationAlbum": "Для кожнага альбому",
-    "@normalisationAlbum": {
+    "settingsNormalisationAlbum": "Для кожнага альбому",
+    "@settingsNormalisationAlbum": {
         "description": "Normalisation mode that normalises whole albums as one unit."
     },
-    "normalisationAlbumSubtitle": "Ва ўсіх песьнях альбома аднолькавая гучнасьць",
-    "@normalisationAlbumSubtitle": {
+    "settingsNormalisationAlbumSubtitle": "Ва ўсіх песьнях альбома аднолькавая гучнасьць",
+    "@settingsNormalisationAlbumSubtitle": {
         "description": "Subtitle of the per album normalisation option."
     },
-    "normalisationPreamp": "Папярэдні ўзмацняльнік",
-    "@normalisationPreamp": {
+    "settingsNormalisationPreamp": "Папярэдні ўзмацняльнік",
+    "@settingsNormalisationPreamp": {
         "description": "Slider for extra gain applied on top of the ReplayGain value."
     },
-    "normalisationPreampValue": "{db} дБ",
-    "@normalisationPreampValue": {
+    "settingsNormalisationPreampValue": "{db} дБ",
+    "@settingsNormalisationPreampValue": {
         "description": "Value shown next to the preamp slider, in decibels.",
         "placeholders": {
             "db": {
@@ -1660,12 +1603,12 @@
             }
         }
     },
-    "normalisationPreventClipping": "Папераджэньне завышэньня гучнасьці",
-    "@normalisationPreventClipping": {
+    "settingsNormalisationPreventClipping": "Папераджэньне завышэньня гучнасьці",
+    "@settingsNormalisationPreventClipping": {
         "description": "Toggle that lowers the gain instead of letting loud peaks distort."
     },
-    "normalisationPreventClippingSubtitle": "Памяньшаць узмацненьне, каб рэзкія павелічэньні гучнасьці не скажаліся",
-    "@normalisationPreventClippingSubtitle": {
+    "settingsNormalisationPreventClippingSubtitle": "Памяньшаць узмацненьне, каб рэзкія павелічэньні гучнасьці не скажаліся",
+    "@settingsNormalisationPreventClippingSubtitle": {
         "description": "Subtitle of the prevent clipping toggle."
     },
     "sleepTitle": "Таймэр сну",
@@ -1689,12 +1632,12 @@
     "@sleepUnderMinute": {
         "description": "Sleep timer value shown when less than a minute is left."
     },
-    "settingsPlaybackSleepTimerFade": "Даўжыня затуханьня",
-    "@settingsPlaybackSleepTimerFade": {
+    "sleepFadeLength": "Даўжыня затуханьня",
+    "@sleepFadeLength": {
         "description": "Slider controlling how long the fade to silence lasts before the sleep timer pauses playback."
     },
-    "settingsPlaybackSleepTimerFadeValue": "{seconds} с",
-    "@settingsPlaybackSleepTimerFadeValue": {
+    "sleepFadeLengthValue": "{seconds} с",
+    "@sleepFadeLengthValue": {
         "description": "Value shown next to the fade out length slider, in seconds.",
         "placeholders": {
             "seconds": {
@@ -1758,14 +1701,6 @@
     "sleepCancel": "Скасаваць таймэр",
     "@sleepCancel": {
         "description": "Button that stops a running sleep timer without pausing playback."
-    },
-    "sleepStarted": "Таймэр сну заданы",
-    "@sleepStarted": {
-        "description": "Confirmation shown after a sleep timer is started."
-    },
-    "sleepCancelled": "Таймэр сну скасаваны",
-    "@sleepCancelled": {
-        "description": "Confirmation shown after a running sleep timer is cancelled."
     },
     "settingsScrobbling": "Скробблінґ",
     "@settingsScrobbling": {
