@@ -245,6 +245,7 @@ class _BackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.sono;
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: onTap,
       child: SizedBox(
         width: _size,
