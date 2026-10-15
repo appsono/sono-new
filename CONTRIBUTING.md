@@ -1,6 +1,6 @@
 # Contributing to Sono
 
-Thanks for wanting to help <3
+Thanks for wanting to help <3 <br>
 Sono is a solo project right now, so any contribution matters.
 
 ---
