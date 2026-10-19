@@ -1,1 +1,91 @@
-{}
+{
+    "commonUnknown": "Неизвестно",
+    "commonUnknownArtist": "Нетзвестный артист",
+    "commonSongsCount": "Номер песни для исполнителя/альбома/плейлиста",
+    "@commonSongsCount": {
+        "description": "Number of songs for an artist/album/playlist",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "commonDurationLong": "'2ч 14 мин', '1ч 0мин'.",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "'47мин', '5мин'.",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonPlay": "Воспроизвести",
+    "@commonPlay": {
+        "description": "Play action. Button label and tooltip across the player, mini player, queue view, and media sheets. Imperative verb form."
+    },
+    "appName": "Соно",
+    "@appName": {
+        "description": "Application name, shown in window titles and stores"
+    },
+    "commonPause": "Пауза",
+    "@commonPause": {
+        "description": "Pause action. Used in the same contexts as commonPlay."
+    },
+    "commonShuffle": "Перемешать",
+    "@commonShuffle": {
+        "description": "Shuffle playback action label. Used as button label in the lyrics menu, song sheets, and elsewhere. Imperative verb form. Not the ongoing state, which is playerTooltipShuffleOn."
+    },
+    "commonShuffleAll": "Перемешать все",
+    "@commonShuffleAll": {
+        "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form. Please keep it short, there is limit space to use."
+    },
+    "commonRepeat": "Повторить",
+    "@commonRepeat": {
+        "description": "Repeat playback action label. Imperative form."
+    },
+    "commonLike": "Понравилось",
+    "@commonLike": {
+        "description": "Like a song. Imperative verb. Used in the lyrics menu, song sheet action card, and elsewhere. After-state is commonLiked."
+    },
+    "commonLiked": "Понравившиеся",
+    "@commonLiked": {
+        "description": "State label shown after a song has been liked. Past participle or adjective form, not imperative."
+    },
+    "commonFavorite": "Избраный",
+    "@commonFavorite": {
+        "description": "Favortie an album or artist. Imperative verb. After-state is commonFavorited."
+    },
+    "commonFavorited": "Избранные",
+    "@commonFavorited": {
+        "description": "State label shown after an album or artist has been favorited."
+    },
+    "commonSeeAll": "Показать все",
+    "@commonSeeAll": {
+        "description": "Affordance in a section header that opens the full list of matches for that category."
+    },
+    "commonShare": "Искать",
+    "@commonShare": {
+        "description": "Share action. Imperative verb."
+    },
+    "commonPlayAll": "Воспроизвести все",
+    "@commonPlayAll": {
+        "description": "Play all songs from an artist, album, or section. Imperative form."
+    },
+    "commonPlayNext": "Воспроизвести следующее",
+    "@commonPlayNext": {
+        "description": "Queue a song to play right after the current one. Imperative form."
+    }
+}
