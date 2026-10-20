@@ -80,12 +80,117 @@
     "@commonShare": {
         "description": "Share action. Imperative verb."
     },
-    "commonPlayAll": "Воспроизвести все",
+    "commonPlayAll": "Играть дальше",
     "@commonPlayAll": {
         "description": "Play all songs from an artist, album, or section. Imperative form."
     },
-    "commonPlayNext": "Воспроизвести следующее",
+    "commonPlayNext": "Играть следующее",
     "@commonPlayNext": {
         "description": "Queue a song to play right after the current one. Imperative form."
+    },
+    "commonAddToQueue": "Добавить в очередь",
+    "@commonAddToQueue": {
+        "description": "Append to the end of the playback queue. Imperative form."
+    },
+    "commonAddToPlaylist": "Добавить в плейлист",
+    "@commonAddToPlaylist": {
+        "description": "Add a song or album to a user playlist. Imperative form. Used as button label and tooltip."
+    },
+    "commonCreatePlaylist": "Создать плейлист",
+    "@commonCreatePlaylist": {
+        "description": "Button and action label for creating a new playlist."
+    },
+    "commonRemoveFromQueue": "Удалить из очереди",
+    "@commonRemoveFromQueue": {
+        "description": "Remove a song from the playback queue. Imperative form."
+    },
+    "commonGoToAlbum": "Перейти к альбому",
+    "@commonGoToAlbum": {
+        "description": "Navigate to the album page. Imperative form."
+    },
+    "commonGoToArtist": "Перейти к артисту",
+    "@commonGoToArtist": {
+        "description": "Navigate to the artist page. Imperative form."
+    },
+    "commonTitle": "Заголовок",
+    "@commonTitle": {
+        "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
+    },
+    "commonArtist": "Артист",
+    "@commonArtist": {
+        "description": "Noun label for the artist metadata field. Shown in info/details views."
+    },
+    "commonAlbum": "Альбом",
+    "@commonAlbum": {
+        "description": "Noun label for a single album. Used for the album metadata field in info/details views and as the release type of a standard album on the artist page, next to EP and Single."
+    },
+    "commonGenre": "Жанр",
+    "@commonGenre": {
+        "description": "Noun label for the genre metadata field. Shown in info/details views."
+    },
+    "commonDuration": "Мин : сек или ч : мин :сек",
+    "@commonDuration": {
+        "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
+    },
+    "commonReleased": "Выпустили",
+    "@commonReleased": {
+        "description": "Label for the release date metadata field. Past participle form."
+    },
+    "commonPath": "Путь",
+    "@commonPath": {
+        "description": "Label for the filesystem path metadata field."
+    },
+    "commonAlbums": "Альбомы",
+    "@commonAlbums": {
+        "description": "Plural noun for albums. Used as a section header on the home and artist pages, as the library card and page title for all albums, and as a search filter."
+    },
+    "commonArtists": "Артисты",
+    "@commonArtists": {
+        "description": "Plural noun for artists. Used as a section header on the home page and as the library card and page title for all artists."
+    },
+    "commonLibrary": "Библиотека",
+    "@commonLibrary": {
+        "description": "The user's music library. Used as the bottom navigation tab, the library page title, and a section label on the appearance settings page."
+    },
+    "commonSettings": "Настройки",
+    "@commonSettings": {
+        "description": "Settings. Used as the settings page title and as the tooltip of the settings button in page headers."
+    },
+    "commonEdit": "Редактировать",
+    "@commonEdit": {
+        "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
+    },
+    "commonDelete": "Удалить",
+    "@commonDelete": {
+        "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+    },
+    "commonCancel": "Отмена",
+    "@commonCancel": {
+        "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+    },
+    "commonSave": "Сохранить",
+    "@commonSave": {
+        "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+    },
+    "commonUndo": "Отменить",
+    "@commonUndo": {
+        "description": "Undo action on a snackbar to reverse the last action."
+    },
+    "commonRemoveFromPlaylist": "Удалить из плейлиста",
+    "@commonRemoveFromPlaylist": {
+        "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
+    },
+    "navHome": "Домой",
+    "navSearch": "Поиск",
+    "homeActionCreatePlaylist": "Создать плейлист",
+    "@homeActionCreatePlaylist": {
+        "description": "Shown on the Home Pages's Create Playlist action. Please keep the string as short as possible."
+    },
+    "homeHeaderNewsAndUpdates": "Новости & Обновления",
+    "homeSectionRecentlyAdded": "Недавно добавленные",
+    "homeSectionRecentlyPlayed": "Недавно игравшие",
+    "homeNewBadge": "Новое",
+    "@homeNewBadge": {
+        "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
     }
 }
