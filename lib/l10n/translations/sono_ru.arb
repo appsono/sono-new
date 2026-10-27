@@ -192,5 +192,92 @@
     "homeNewBadge": "Новое",
     "@homeNewBadge": {
         "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+    },
+    "homeFallbackPhrase3": "Что у нас сегодня?",
+    "homeFallbackPhrase4": "С возвращением :D",
+    "homeFallbackPhrase5": "Д- дурак!",
+    "homeFallbackPhrase7": "Хаха >:D",
+    "homeFallbackPhrase8": "Мяу :3",
+    "homeFallbackPhrase9": "Кто ты такой?!",
+    "homeFallbackPhrase10": "Придумай свой юз..",
+    "changelogTitle": "Что нового?",
+    "@changelogTitle": {
+        "description": "Heading of the changelog modal opened from the news/updates button in the home and library headers. Shows the latest release notes."
+    },
+    "changelogLoading": "Загрузка. . .",
+    "@changelogLoading": {
+        "description": "Placeholder shown in the changelog modal while the bundled changelog file is being read."
+    },
+    "changelogUnavailable": "Не удалось загрузить изменения",
+    "@changelogUnavailable": {
+        "description": "Shown in the changelog modal when the changelog file is missing or no release block could be parsed."
+    },
+    "searchPageTitle": "Поиск",
+    "@searchPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "searchFieldHint": "Поиск остального. . .",
+    "@searchFieldHint": {
+        "description": "Placeholder text inside the search field on the Search tab. Hints at the local-library categories that can be searched."
+    },
+    "searchFilterAll": "Остальное",
+    "@searchFilterAll": {
+        "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
+    },
+    "searchNoResults": "Не нашли результатов :(",
+    "@searchNoResults": {
+        "description": "Shown on the Search tab when a query returns no matching songs, albums, artists, playlists, or genres."
+    },
+    "searchRecentTitle": "Недавние запросы",
+    "@searchRecentTitle": {
+        "description": "Header above the list of the user's recent search terms, shown on the Search tab when the field is empty."
+    },
+    "searchRecentClear": "Отчистисть",
+    "@searchRecentClear": {
+        "description": "Action that removes all saved recent searches at once."
+    },
+    "searchRecentRemove": "Удалить",
+    "@searchRecentRemove": {
+        "description": "Accessibility label for the button that removes a single recent search term from the list."
+    },
+    "searchBrowseGenres": "Посмотреть жанры",
+    "@searchBrowseGenres": {
+        "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
+    },
+    "libraryCardGenres": "Жанры",
+    "@libraryCardGenres": {
+        "description": "Library page card label. Opens a list of genres."
+    },
+    "libraryCardPlaylists": "Плейлисты",
+    "@libraryCardPlaylists": {
+        "description": "Library page card label. Opens user playlists."
+    },
+    "libraryCardLikedSongs": "Любимые песни",
+    "@libraryCardLikedSongs": {
+        "description": "Library page card label. Opens the list of songs the user has liked."
+    },
+    "libraryCardFavoriteAlbums": "Любимые альбомы",
+    "@libraryCardFavoriteAlbums": {
+        "description": "Library page card label. Opens the list of albums the user has favorited."
+    },
+    "libraryCardFavoriteArtists": "Любимые артисты",
+    "@libraryCardFavoriteArtists": {
+        "description": "Library page card label. Opens the list of artists the user has favorited."
+    },
+    "libraryCardSongs": "Песни",
+    "@libraryCardSongs": {
+        "description": "Library page card label. Opens the full list of songs in the library."
+    },
+    "libraryEmptyPlaylists": "Пока что у вас нет плейлистов :/",
+    "@libraryEmptyPlaylists": {
+        "description": "Empty state on the Playlists list page when the user has not created any playlists."
+    },
+    "libraryEmptyLikedSongs": "Ты пока что не лайкнул ни одну песню. Иди и лайкай",
+    "@libraryEmptyLikedSongs": {
+        "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
+    },
+    "libraryEmptyFavoriteAlbums": "У вас пока что нет любимых альбомов :/",
+    "@libraryEmptyFavoriteAlbums": {
+        "description": "Empty state on the Favorite Albums list page when the user has not favorited any albums."
     }
 }
