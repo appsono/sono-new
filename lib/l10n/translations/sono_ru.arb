@@ -1,0 +1,283 @@
+{
+    "commonUnknown": "Неизвестно",
+    "commonUnknownArtist": "Неизвестный исполнитель",
+    "commonSongsCount": "{count, plural, =0{песен нет} one{{count} песня} few{{count} песни} other{{count} песен}}",
+    "@commonSongsCount": {
+        "description": "Number of songs for an artist/album/playlist",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "commonDurationLong": "{hours}ч {minutes}мин",
+    "@commonDurationLong": {
+        "description": "Compact total-duration format with hours and minutes. Used for playlist and album totals. Examples: '2h 14m', '1h 0m'.",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonDurationShort": "{minutes}мин",
+    "@commonDurationShort": {
+        "description": "Compact total-duration format with only minutes. Used when the total is under one hour. Examples: '47m', '5m'.",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "commonPlay": "Воспроизвести",
+    "@commonPlay": {
+        "description": "Play action. Button label and tooltip across the player, mini player, queue view, and media sheets. Imperative verb form."
+    },
+    "appName": "Sono",
+    "@appName": {
+        "description": "Application name, shown in window titles and stores"
+    },
+    "commonPause": "Пауза",
+    "@commonPause": {
+        "description": "Pause action. Used in the same contexts as commonPlay."
+    },
+    "commonShuffle": "Перемешать",
+    "@commonShuffle": {
+        "description": "Shuffle playback action label. Used as button label in the lyrics menu, song sheets, and elsewhere. Imperative verb form. Not the ongoing state, which is playerTooltipShuffleOn."
+    },
+    "commonShuffleAll": "Перемешать все",
+    "@commonShuffleAll": {
+        "description": "Shuffle-all action label. Used on the home page button and on artist sheets. Imperative form. Please keep it short, there is limit space to use."
+    },
+    "commonRepeat": "Повторить",
+    "@commonRepeat": {
+        "description": "Repeat playback action label. Imperative form."
+    },
+    "commonLike": "Понравилось",
+    "@commonLike": {
+        "description": "Like a song. Imperative verb. Used in the lyrics menu, song sheet action card, and elsewhere. After-state is commonLiked."
+    },
+    "commonLiked": "Понравившиеся",
+    "@commonLiked": {
+        "description": "State label shown after a song has been liked. Past participle or adjective form, not imperative."
+    },
+    "commonFavorite": "Избранный",
+    "@commonFavorite": {
+        "description": "Favortie an album or artist. Imperative verb. After-state is commonFavorited."
+    },
+    "commonFavorited": "Избранные",
+    "@commonFavorited": {
+        "description": "State label shown after an album or artist has been favorited."
+    },
+    "commonSeeAll": "Показать все",
+    "@commonSeeAll": {
+        "description": "Affordance in a section header that opens the full list of matches for that category."
+    },
+    "commonShare": "Поделится",
+    "@commonShare": {
+        "description": "Share action. Imperative verb."
+    },
+    "commonPlayAll": "Играть всё",
+    "@commonPlayAll": {
+        "description": "Play all songs from an artist, album, or section. Imperative form."
+    },
+    "commonPlayNext": "Играть следующее",
+    "@commonPlayNext": {
+        "description": "Queue a song to play right after the current one. Imperative form."
+    },
+    "commonAddToQueue": "Добавить в очередь",
+    "@commonAddToQueue": {
+        "description": "Append to the end of the playback queue. Imperative form."
+    },
+    "commonAddToPlaylist": "Добавить в плейлист",
+    "@commonAddToPlaylist": {
+        "description": "Add a song or album to a user playlist. Imperative form. Used as button label and tooltip."
+    },
+    "commonCreatePlaylist": "Создать плейлист",
+    "@commonCreatePlaylist": {
+        "description": "Button and action label for creating a new playlist."
+    },
+    "commonRemoveFromQueue": "Удалить из очереди",
+    "@commonRemoveFromQueue": {
+        "description": "Remove a song from the playback queue. Imperative form."
+    },
+    "commonGoToAlbum": "Перейти к альбому",
+    "@commonGoToAlbum": {
+        "description": "Navigate to the album page. Imperative form."
+    },
+    "commonGoToArtist": "Перейти к артисту",
+    "@commonGoToArtist": {
+        "description": "Navigate to the artist page. Imperative form."
+    },
+    "commonTitle": "Заголовок",
+    "@commonTitle": {
+        "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
+    },
+    "commonArtist": "Исполнитель",
+    "@commonArtist": {
+        "description": "Noun label for the artist metadata field. Shown in info/details views."
+    },
+    "commonAlbum": "Альбом",
+    "@commonAlbum": {
+        "description": "Noun label for a single album. Used for the album metadata field in info/details views and as the release type of a standard album on the artist page, next to EP and Single."
+    },
+    "commonGenre": "Жанр",
+    "@commonGenre": {
+        "description": "Noun label for the genre metadata field. Shown in info/details views."
+    },
+    "commonDuration": "Продолжительность",
+    "@commonDuration": {
+        "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
+    },
+    "commonReleased": "Выпустили",
+    "@commonReleased": {
+        "description": "Label for the release date metadata field. Past participle form."
+    },
+    "commonPath": "Путь",
+    "@commonPath": {
+        "description": "Label for the filesystem path metadata field."
+    },
+    "commonAlbums": "Альбомы",
+    "@commonAlbums": {
+        "description": "Plural noun for albums. Used as a section header on the home and artist pages, as the library card and page title for all albums, and as a search filter."
+    },
+    "commonArtists": "Исполнители",
+    "@commonArtists": {
+        "description": "Plural noun for artists. Used as a section header on the home page and as the library card and page title for all artists."
+    },
+    "commonLibrary": "Библиотека",
+    "@commonLibrary": {
+        "description": "The user's music library. Used as the bottom navigation tab, the library page title, and a section label on the appearance settings page."
+    },
+    "commonSettings": "Настройки",
+    "@commonSettings": {
+        "description": "Settings. Used as the settings page title and as the tooltip of the settings button in page headers."
+    },
+    "commonEdit": "Редактировать",
+    "@commonEdit": {
+        "description": "Edit action. Imperative verb. Used as tooltip on the edit-tags icon button in the song sheet info tab."
+    },
+    "commonDelete": "Удалить",
+    "@commonDelete": {
+        "description": "Delete action. Imperative verb. Used in object action sheets and confirm prompts."
+    },
+    "commonCancel": "Отмена",
+    "@commonCancel": {
+        "description": "Cancel action. Dismisses a modal or confirm prompt without committing."
+    },
+    "commonSave": "Сохранить",
+    "@commonSave": {
+        "description": "Save action. Imperative verb. Used as confirm label in edit modals."
+    },
+    "commonUndo": "Отменить",
+    "@commonUndo": {
+        "description": "Undo action on a snackbar to reverse the last action."
+    },
+    "commonRemoveFromPlaylist": "Удалить из плейлиста",
+    "@commonRemoveFromPlaylist": {
+        "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
+    },
+    "navHome": "Домой",
+    "navSearch": "Поиск",
+    "homeActionCreatePlaylist": "Создать плейлист",
+    "@homeActionCreatePlaylist": {
+        "description": "Shown on the Home Pages's Create Playlist action. Please keep the string as short as possible."
+    },
+    "homeHeaderNewsAndUpdates": "Новости и обновления",
+    "homeSectionRecentlyAdded": "Недавно добавленные",
+    "homeSectionRecentlyPlayed": "Недавно игравшие",
+    "homeNewBadge": "НОВОЕ",
+    "@homeNewBadge": {
+        "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
+    },
+    "homeFallbackPhrase3": "Что у нас сегодня?",
+    "homeFallbackPhrase4": "С возвращением :D",
+    "homeFallbackPhrase5": "Д- дурак!",
+    "homeFallbackPhrase7": "Хаха >:D",
+    "homeFallbackPhrase8": "Мяу :3",
+    "homeFallbackPhrase9": "Кто ты такой?!",
+    "homeFallbackPhrase10": "Придумай свой юз..",
+    "changelogTitle": "Что нового",
+    "@changelogTitle": {
+        "description": "Heading of the changelog modal opened from the news/updates button in the home and library headers. Shows the latest release notes."
+    },
+    "changelogLoading": "Загрузка…",
+    "@changelogLoading": {
+        "description": "Placeholder shown in the changelog modal while the bundled changelog file is being read."
+    },
+    "changelogUnavailable": "Не удалось загрузить изменения",
+    "@changelogUnavailable": {
+        "description": "Shown in the changelog modal when the changelog file is missing or no release block could be parsed."
+    },
+    "searchPageTitle": "Поиск",
+    "@searchPageTitle": {
+        "description": "Shown in the header next to the profile picture at the top of the page."
+    },
+    "searchFieldHint": "Поиск чего-нибудь…",
+    "@searchFieldHint": {
+        "description": "Placeholder text inside the search field on the Search tab. Hints at the local-library categories that can be searched."
+    },
+    "searchFilterAll": "Остальное",
+    "@searchFilterAll": {
+        "description": "First filter chip on the Search tab. Scopes results to every category (songs, albums, artists, playlists, genres) rather than one. The other chips reuse the libraryCard* labels."
+    },
+    "searchNoResults": "Не нашли результатов :(",
+    "@searchNoResults": {
+        "description": "Shown on the Search tab when a query returns no matching songs, albums, artists, playlists, or genres."
+    },
+    "searchRecentTitle": "Недавние запросы",
+    "@searchRecentTitle": {
+        "description": "Header above the list of the user's recent search terms, shown on the Search tab when the field is empty."
+    },
+    "searchRecentClear": "Очистить",
+    "@searchRecentClear": {
+        "description": "Action that removes all saved recent searches at once."
+    },
+    "searchRecentRemove": "Удалить",
+    "@searchRecentRemove": {
+        "description": "Accessibility label for the button that removes a single recent search term from the list."
+    },
+    "searchBrowseGenres": "Посмотреть жанры",
+    "@searchBrowseGenres": {
+        "description": "Header above a grid of genres in the library, shown on the Search tab when the field is empty so the user can browse without typing."
+    },
+    "libraryCardGenres": "Жанры",
+    "@libraryCardGenres": {
+        "description": "Library page card label. Opens a list of genres."
+    },
+    "libraryCardPlaylists": "Плейлисты",
+    "@libraryCardPlaylists": {
+        "description": "Library page card label. Opens user playlists."
+    },
+    "libraryCardLikedSongs": "Любимые песни",
+    "@libraryCardLikedSongs": {
+        "description": "Library page card label. Opens the list of songs the user has liked."
+    },
+    "libraryCardFavoriteAlbums": "Любимые альбомы",
+    "@libraryCardFavoriteAlbums": {
+        "description": "Library page card label. Opens the list of albums the user has favorited."
+    },
+    "libraryCardFavoriteArtists": "Любимые артисты",
+    "@libraryCardFavoriteArtists": {
+        "description": "Library page card label. Opens the list of artists the user has favorited."
+    },
+    "libraryCardSongs": "Песни",
+    "@libraryCardSongs": {
+        "description": "Library page card label. Opens the full list of songs in the library."
+    },
+    "libraryEmptyPlaylists": "Пока что у вас нет плейлистов :/",
+    "@libraryEmptyPlaylists": {
+        "description": "Empty state on the Playlists list page when the user has not created any playlists."
+    },
+    "libraryEmptyLikedSongs": "Ты пока что не лайкнул ни одну песню. Иди и лайкай",
+    "@libraryEmptyLikedSongs": {
+        "description": "Empty state on the Liked Songs list page when no songs have been liked yet."
+    },
+    "libraryEmptyFavoriteAlbums": "У вас пока что нет любимых альбомов :/",
+    "@libraryEmptyFavoriteAlbums": {
+        "description": "Empty state on the Favorite Albums list page when the user has not favorited any albums."
+    }
+}
