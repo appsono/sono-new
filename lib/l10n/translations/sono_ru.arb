@@ -80,7 +80,7 @@
     "@commonShare": {
         "description": "Share action. Imperative verb."
     },
-    "commonPlayAll": "Играть дальше",
+    "commonPlayAll": "Играть всё",
     "@commonPlayAll": {
         "description": "Play all songs from an artist, album, or section. Imperative form."
     },
@@ -116,7 +116,7 @@
     "@commonTitle": {
         "description": "Noun label for the title metadata field of a song or album. Shown in info/details views."
     },
-    "commonArtist": "Артист",
+    "commonArtist": "Исполнитель",
     "@commonArtist": {
         "description": "Noun label for the artist metadata field. Shown in info/details views."
     },
@@ -128,7 +128,7 @@
     "@commonGenre": {
         "description": "Noun label for the genre metadata field. Shown in info/details views."
     },
-    "commonDuration": "Мин : сек или ч : мин :сек",
+    "commonDuration": "Продолжительность",
     "@commonDuration": {
         "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
     },
@@ -144,7 +144,7 @@
     "@commonAlbums": {
         "description": "Plural noun for albums. Used as a section header on the home and artist pages, as the library card and page title for all albums, and as a search filter."
     },
-    "commonArtists": "Артисты",
+    "commonArtists": "Исполнители",
     "@commonArtists": {
         "description": "Plural noun for artists. Used as a section header on the home page and as the library card and page title for all artists."
     },
@@ -186,10 +186,10 @@
     "@homeActionCreatePlaylist": {
         "description": "Shown on the Home Pages's Create Playlist action. Please keep the string as short as possible."
     },
-    "homeHeaderNewsAndUpdates": "Новости & Обновления",
+    "homeHeaderNewsAndUpdates": "Новости и обновления",
     "homeSectionRecentlyAdded": "Недавно добавленные",
     "homeSectionRecentlyPlayed": "Недавно игравшие",
-    "homeNewBadge": "Новое",
+    "homeNewBadge": "НОВОЕ",
     "@homeNewBadge": {
         "description": "Badge on the newest songs in the Recently Added section on the home page. Very short, uppercase."
     },
@@ -200,11 +200,11 @@
     "homeFallbackPhrase8": "Мяу :3",
     "homeFallbackPhrase9": "Кто ты такой?!",
     "homeFallbackPhrase10": "Придумай свой юз..",
-    "changelogTitle": "Что нового?",
+    "changelogTitle": "Что нового",
     "@changelogTitle": {
         "description": "Heading of the changelog modal opened from the news/updates button in the home and library headers. Shows the latest release notes."
     },
-    "changelogLoading": "Загрузка. . .",
+    "changelogLoading": "Загрузка…",
     "@changelogLoading": {
         "description": "Placeholder shown in the changelog modal while the bundled changelog file is being read."
     },
@@ -216,7 +216,7 @@
     "@searchPageTitle": {
         "description": "Shown in the header next to the profile picture at the top of the page."
     },
-    "searchFieldHint": "Поиск остального. . .",
+    "searchFieldHint": "Поиск чего-нибудь…",
     "@searchFieldHint": {
         "description": "Placeholder text inside the search field on the Search tab. Hints at the local-library categories that can be searched."
     },
@@ -232,7 +232,7 @@
     "@searchRecentTitle": {
         "description": "Header above the list of the user's recent search terms, shown on the Search tab when the field is empty."
     },
-    "searchRecentClear": "Отчистисть",
+    "searchRecentClear": "Очистить",
     "@searchRecentClear": {
         "description": "Action that removes all saved recent searches at once."
     },
