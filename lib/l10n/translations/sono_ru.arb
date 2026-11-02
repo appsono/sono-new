@@ -132,7 +132,7 @@
     "@commonDuration": {
         "description": "Noun label for the duration metadata field. Shown in info/details views, with a value formatted as M:SS or H:MM:SS."
     },
-    "commonReleased": "Выпустили",
+    "commonReleased": "Выпущено",
     "@commonReleased": {
         "description": "Label for the release date metadata field. Past participle form."
     },
@@ -172,11 +172,11 @@
     "@commonSave": {
         "description": "Save action. Imperative verb. Used as confirm label in edit modals."
     },
-    "commonUndo": "Отменить",
+    "commonUndo": "Назад",
     "@commonUndo": {
         "description": "Undo action on a snackbar to reverse the last action."
     },
-    "commonRemoveFromPlaylist": "Удалить из плейлиста",
+    "commonRemoveFromPlaylist": "Убрать из плейлиста",
     "@commonRemoveFromPlaylist": {
         "description": "Action label to remove a song from a playlist. Imperative form. Used in the song sheet when opened from a playlist's detail page."
     },
@@ -236,7 +236,7 @@
     "@searchRecentClear": {
         "description": "Action that removes all saved recent searches at once."
     },
-    "searchRecentRemove": "Удалить",
+    "searchRecentRemove": "Убрать",
     "@searchRecentRemove": {
         "description": "Accessibility label for the button that removes a single recent search term from the list."
     },
@@ -279,5 +279,55 @@
     "libraryEmptyFavoriteAlbums": "У вас пока что нет любимых альбомов :/",
     "@libraryEmptyFavoriteAlbums": {
         "description": "Empty state on the Favorite Albums list page when the user has not favorited any albums."
+    },
+    "homeGreetingEarlyBird": "Вау ранняя птичка",
+    "@homeGreetingEarlyBird": {
+        "description": "Greeting shown roughly 04:00–06:00"
+    },
+    "homeGreetingMorning": "Утречко",
+    "@homeGreetingMorning": {
+        "description": "Greeting shown roughly 06:00–11:00"
+    },
+    "homeGreetingMidday": "День",
+    "@homeGreetingMidday": {
+        "description": "Greeting shown roughly 11:00–14:00"
+    },
+    "homeGreetingAfternoon": "Полдень",
+    "@homeGreetingAfternoon": {
+        "description": "Greeting shown roughly 14:00–17:00"
+    },
+    "homeGreetingEvening": "Вечер",
+    "@homeGreetingEvening": {
+        "description": "Greeting shown roughly 17:00–20:00"
+    },
+    "homeGreetingNight": "Ночь",
+    "@homeGreetingNight": {
+        "description": "Greeting shown roughly 20:00–24:00"
+    },
+    "homeGreetingLate": "Эииии иди спи",
+    "@homeGreetingLate": {
+        "description": "Greeting shown roughly 00:00–04:00"
+    },
+    "homeFallbackPhrase1": "наслаждайся чем бы не занимался",
+    "@homeFallbackPhrase1": {
+        "description": "Random subtitle shown next to the greeting when no username is set. Keep these casual/playful; match the tone, not the literal words."
+    },
+    "homeFallbackPhrase2": "Слушай и Наслаждайся!",
+    "homeFallbackPhrase6": "чё делаем?",
+    "libraryEmptyFavoriteArtists": "Нет избранных исполнителей...┐(￣ヘ￣)┌",
+    "@libraryEmptyFavoriteArtists": {
+        "description": "Empty state on the Favorite Artists list page when the user has not favorited any artists."
+    },
+    "libraryEmptySongs": "Пока нет песен в библиотеке...(￣з￣)",
+    "@libraryEmptySongs": {
+        "description": "Empty state on the Songs list page when no songs have been scanned."
+    },
+    "libraryEmptyAlbums": "Пока нет альбомов в библиотеке...(ー_ー;)",
+    "@libraryEmptyAlbums": {
+        "description": "Empty state on the Albums list page when no albums have been scanned."
+    },
+    "libraryEmptyArtists": "Пока нет исполнителей в библиотеке...(；￣Д￣)？",
+    "@libraryEmptyArtists": {
+        "description": "Empty state on the Artists list page when no artists have been scanned."
     }
 }
